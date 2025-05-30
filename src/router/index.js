@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
 import GoogleMapView from "@/views/GoogleMapView.vue";
+import EmailSettings from "@/views/EmailSettings.vue";
 
 const routes = [
   {
@@ -12,6 +13,11 @@ const routes = [
     path: "/map",
     name: "map",
     component: GoogleMapView,
+  },
+  {
+    path: "/emailSettings",
+    name: "emailSettings",
+    component: EmailSettings,
   },
 ];
 
