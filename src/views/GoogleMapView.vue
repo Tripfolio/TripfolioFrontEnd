@@ -122,7 +122,6 @@
         >
           ‹
         </button>
-
         <!-- 圖片 -->
         <img
           :src="
@@ -148,6 +147,7 @@
           ›
         </button>
       </div>
+      <button @click="addToItinerary">🤍 加入行程</button>
     </div>
   </div>
   <div class="controls">
@@ -167,6 +167,7 @@
 
 <script setup>
 import { ref, onMounted, watch } from "vue";
+import axios from "axios";
 
 // 地圖與搜尋
 const mapRef = ref(null);              // 地圖容器 (initMap)
@@ -254,7 +255,6 @@ function searchPlace() {
   };
   service.textSearch(request, handleResults);
 }
-
 // 處理搜尋結果
 function handleResults(results, status, pagination) {
   if (status !== google.maps.places.PlacesServiceStatus.OK || !results.length) {
@@ -298,8 +298,8 @@ function handleResults(results, status, pagination) {
         // "adr_address",
         // "postal_address",
         // "short_formatted_address",
-        "business_status",
-        "icon", // =icon_mask_base_uri + icon_background_color
+        // "business_status",
+        // "icon", // =icon_mask_base_uri + icon_background_color
         // 其他field欄位參考：https://developers.google.com/maps/documentation/places/web-service/legacy/details?hl=zh-tw#fields
       ],
     };
@@ -329,6 +329,31 @@ function loadNextPage() {
     nextPageFunc.value();
   }
 }
+// 加入行程
+async function addToItinerary() {
+  if (!selectedPlace.value) {
+    alert('請先選擇一個地點');
+    return;
+  }
+  try {
+    const response = await axios.post('http://localhost:3000/api/itinerary/add-place', {
+      itineraryId: 1,
+      name: selectedPlace.value.name,
+      address: selectedPlace.value.formatted_address || ''
+    });
+    console.log('送出的資料:', response);
+
+    if (response.data.success) {
+      alert('✅ 成功加入行程！');
+    } else {
+      alert('❌ 加入失敗：' + response.data.message);
+    }
+  } catch (error) {
+    console.error('加入失敗:', error);
+    alert('🚨 發生錯誤：' + error.message);
+  }
+}
+
 // 計算路線
 function calculateRoute(origin, destination) {
   directionsService.route(
