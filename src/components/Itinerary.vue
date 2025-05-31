@@ -1,19 +1,48 @@
 <template>
-  <h3 class="text-lg font-bold mt-4">已加入的景點</h3>
-  <ul>
-    <li v-for="(p, index) in itineraryPlaces" :key="index" class="mb-2">
-      <strong>{{ p.name }}</strong
-      ><br />
-      <strong>{{ p.rating }}</strong
-      ><br />
-      <span class="text-sm text-gray-600">{{ p.address }}</span>
-    </li>
-  </ul>
+  <div
+    class="fixed bottom-4 right-4 w-72 bg-white shadow-lg rounded-lg p-4 z-50 max-h-[90vh] overflow-y-auto"
+  >
+    <h3 class="text-lg font-bold mb-4">已加入的景點</h3>
+    <ul>
+      <li
+        v-for="(p, index) in itineraryPlaces"
+        :key="index"
+        class="mb-4 border-b last:border-none"
+      >
+        <strong class="block">{{ p.name }}</strong>
+        <strong class="block text-yellow-600">{{ p.rating }}</strong>
+        <span class="text-sm text-gray-600">{{ p.address }}</span>
+        <br />
+        <button @click="removePlace(p)">🗑️ remove</button>
+      </li>
+    </ul>
+  </div>
 </template>
 
 <script setup>
   import { ref } from 'vue'
   import axios from 'axios'
+  import { onMounted } from 'vue'
+
+  onMounted(() => {
+    loadItinerary()
+  })
+
+  async function loadItinerary() {
+    try {
+      const res = await axios.get(
+        'http://localhost:3000/api/itinerary/places',
+        {
+          params: {
+            itineraryId: 1
+          }
+        }
+      )
+      itineraryPlaces.value = res.data.places
+    } catch (error) {
+      console.error('載入行程失敗:', error)
+    }
+  }
 
   const props = defineProps({
     selectedPlace: Object
@@ -21,7 +50,7 @@
   const itineraryPlaces = ref([])
 
   // 加入行程
-  async function addToItinerary() {
+  async function addPlace() {
     if (!props.selectedPlace) {
       alert('請先選擇一個地點')
       return
@@ -36,7 +65,7 @@
     }
 
     try {
-      const response = await axios.post(
+      const rep = await axios.post(
         'http://localhost:3000/api/itinerary/add-place',
         {
           itineraryId: 1,
@@ -45,7 +74,7 @@
         }
       )
 
-      if (response.data.success) {
+      if (rep.data.success) {
         itineraryPlaces.value.push({
           name: props.selectedPlace.name,
           address: props.selectedPlace.formatted_address,
@@ -53,13 +82,35 @@
         })
         alert('✅ 成功加入行程！')
       } else {
-        alert('❌ 加入失敗：' + response.data.message)
+        alert('❌ 加入失敗：' + rep.data.message)
       }
     } catch (error) {
       console.error('加入失敗:', error)
       alert('🚨 發生錯誤：' + error.message)
     }
   }
+  // 刪除行程
+  async function removePlace(place) {
+    console.log('刪除景點資料', place)
 
-  defineExpose({ addToItinerary })
+    try {
+      const url = `http://localhost:3000/api/itinerary/place?itineraryId=1&name=${encodeURIComponent(
+        place.name
+      )}`
+      const response = await axios.delete(url)
+
+      if (response.data.success) {
+        itineraryPlaces.value = itineraryPlaces.value.filter(
+          (p) => p.name !== place.name
+        )
+        alert('✅ 成功刪除景點')
+      } else {
+        alert('❌ 刪除失敗：' + response.data.message)
+      }
+    } catch (error) {
+      console.error('刪除錯誤:', error)
+      alert('🚨 發生錯誤：' + error.message)
+    }
+  }
+  defineExpose({ addPlace })
 </script>

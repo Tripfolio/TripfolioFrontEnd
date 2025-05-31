@@ -200,10 +200,10 @@ let directionsRenderer;                // 路線顯示器 (onMounted)
 // 子元件 Itinerary.vue
 const itineraryRef = ref(null) 
 function callItinerary() {
-  if (itineraryRef.value && typeof itineraryRef.value.addToItinerary === 'function') {
-    itineraryRef.value.addToItinerary()
+  if (itineraryRef.value && typeof itineraryRef.value.addPlace === 'function') {
+    itineraryRef.value.addPlace()
   } else {
-    console.warn('itineraryRef 尚未掛載，無法呼叫 addToItinerary')
+    console.warn('itineraryRef 尚未掛載，無法呼叫 addPlace')
   }
 }
 
