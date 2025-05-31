@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import SignUp from '../views/SignUp.vue'
-import HomeView from '../views/HomeView.vue'
-import GoogleMapView from "@/views/GoogleMapView.vue";
+import SignUp from '@/views/SignUp.vue'
+import HomeView from '@/views/HomeView.vue'
+import GoogleMapView from '@/views/GoogleMapView.vue';
 
 const routes = [
   {
