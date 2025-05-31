@@ -172,6 +172,7 @@ import { ref, onMounted, watch } from "vue";
 const mapRef = ref(null);              // 地圖容器 (initMap)
 const searchQuery = ref("");           // 搜尋關鍵字 (searchPlace)
 const isToggled = ref(false);          // 切換地圖 / 卡片視圖
+const searchInput = ref(null);         // 輸入搜尋關鍵字
 
 // 地點資料
 const placeDetails = ref([]);          // 搜尋結果詳細資訊 (searchPlace, handleResults)
@@ -249,12 +250,11 @@ function searchPlace() {
   hasMoreResults.value = false;
 
   const request = {
-    location: map.getCenter(),
-    radius: 5000,
-    keyword: searchQuery.value,
+    query: searchQuery.value,
   };
-  service.nearbySearch(request, handleResults);
+  service.textSearch(request, handleResults);
 }
+
 // 處理搜尋結果
 function handleResults(results, status, pagination) {
   if (status !== google.maps.places.PlacesServiceStatus.OK || !results.length) {
@@ -378,7 +378,21 @@ onMounted(async () => {
       suppressMarkers: true,
     });
     directionsRenderer.setMap(map);
-
+    // 初始化 autocomplete
+    const autocomplete = new google.maps.places.Autocomplete(
+      searchInput.value,
+      {
+        fields: ['geometry', 'name'],
+        types: ['(cities)'] // 可依需求改成 ['geocode'] 或移除限制
+      }
+    )
+    // 當使用者選擇建議項目後，自動觸發搜尋
+    autocomplete.addListener('place_changed', () => {
+      const place = autocomplete.getPlace()
+      if (!place.geometry) return
+      searchQuery.value = place.name
+      searchPlace()
+    })
     // 設置地圖點擊事件
     map.addListener("click", (e) => {
       if (markers.length >= 2) reset();
