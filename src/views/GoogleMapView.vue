@@ -147,7 +147,7 @@
           ›
         </button>
       </div>
-      <button @click="addToItinerary">🤍 加入行程</button>
+      <button @click="callItinerary">🤍 加入行程</button>
     </div>
   </div>
   <div class="controls">
@@ -163,11 +163,12 @@
       </select>
     </label>
   </div>
+  <Itinerary ref="itineraryRef" :selectedPlace="selectedPlace"/>
 </template>
 
 <script setup>
 import { ref, onMounted, watch } from "vue";
-import axios from "axios";
+import Itinerary from "../components/itinerary.vue";
 
 // 地圖與搜尋
 const mapRef = ref(null);              // 地圖容器 (initMap)
@@ -196,6 +197,15 @@ let service = null;                    // 地點服務 (initMap)
 let directionsService;                 // 路線服務 (onMounted)
 let directionsRenderer;                // 路線顯示器 (onMounted)
 
+// 子元件 Itinerary.vue
+const itineraryRef = ref(null) 
+function callItinerary() {
+  if (itineraryRef.value && typeof itineraryRef.value.addToItinerary === 'function') {
+    itineraryRef.value.addToItinerary()
+  } else {
+    console.warn('itineraryRef 尚未掛載，無法呼叫 addToItinerary')
+  }
+}
 
 //當 selectedPlace 改變時，重設圖片索引
 watch(selectedPlace, (newVal) => {
@@ -329,31 +339,6 @@ function loadNextPage() {
     nextPageFunc.value();
   }
 }
-// 加入行程
-async function addToItinerary() {
-  if (!selectedPlace.value) {
-    alert('請先選擇一個地點');
-    return;
-  }
-  try {
-    const response = await axios.post('http://localhost:3000/api/itinerary/add-place', {
-      itineraryId: 1,
-      name: selectedPlace.value.name,
-      address: selectedPlace.value.formatted_address || ''
-    });
-    console.log('送出的資料:', response);
-
-    if (response.data.success) {
-      alert('✅ 成功加入行程！');
-    } else {
-      alert('❌ 加入失敗：' + response.data.message);
-    }
-  } catch (error) {
-    console.error('加入失敗:', error);
-    alert('🚨 發生錯誤：' + error.message);
-  }
-}
-
 // 計算路線
 function calculateRoute(origin, destination) {
   directionsService.route(
