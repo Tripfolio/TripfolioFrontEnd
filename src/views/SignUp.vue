@@ -1,0 +1,112 @@
+<template>
+	<h2 class="text-center text-xl font-semibold mb-4">註冊頁面</h2>
+
+	<!-- 錯誤訊息區塊 -->
+	<div v-if="showError"
+		class="w-[300px] mx-auto bg-red-100 text-red-800 border border-red-200 px-4 py-3 rounded-md mb-4">
+		<ul class="list-disc list-inside text-sm">
+			<li v-for="(msg, index) in errorMessages" :key="index">
+				{{ msg }}
+			</li>
+		</ul>
+	</div>
+
+	<!-- 成功訊息區塊 -->
+	<div v-if="showSuccess"
+		class="w-[300px] mx-auto bg-blue-100 text-black border border-blue-200 px-4 py-3 rounded-md mb-4">
+		{{ successMessage }}
+	</div>
+
+	<!-- 註冊表單 -->
+	<form class="flex flex-col gap-[10px] w-[300px] mx-auto" @submit.prevent="signUp">
+		<input
+			v-model="email"
+			type="email"
+			placeholder="請輸入電子郵件"
+			class="p-[8px] text-[14px] border border-[#aaa] rounded"
+		/>
+		<input
+			v-model="password"
+			type="password"
+			placeholder="請輸入密碼"
+			class="p-[8px] text-[14px] border border-[#aaa] rounded"
+		/>
+		<input
+			v-model="phone"
+			placeholder="請輸入手機號碼"
+			class="p-[8px] text-[14px] border border-[#aaa] rounded"
+		/>
+		<button
+			type="submit"
+			class="p-[10px] bg-[#6a5acd] text-white border-0 rounded cursor-pointer hover:bg-[#483d8b]"
+		>
+			註冊
+		</button>
+	</form>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+import axios from 'axios'
+
+// 表單欄位
+const email = ref('')
+const password = ref('')
+const phone = ref('')
+
+// Vue Router
+const router = useRouter()
+
+// 狀態：錯誤
+const showError = ref(false)
+const errorMessages = ref([])
+
+// 狀態：成功
+const showSuccess = ref(false)
+const successMessage = ref('')
+
+// 清空輸入欄位
+const clearText = () => {
+	email.value = ''
+	password.value = ''
+	phone.value = ''
+}
+
+// 提交註冊表單
+const signUp = async () => {
+	showError.value = false
+	errorMessages.value = []
+	showSuccess.value = false
+	successMessage.value = ''
+
+	try {
+		// 發送 API 請求
+		const response = await axios.post("http://localhost:3000/api/signup", {
+			email: email.value,
+			password: password.value,
+			phone: phone.value
+		})
+
+		// 成功處理
+		clearText()
+		showSuccess.value = true
+		successMessage.value = response.data.message || '註冊成功，請重新登入'
+
+		// 2 秒後導回首頁
+		setTimeout(() => {
+			showSuccess.value = false
+			router.push('/')
+		}, 2000)
+
+	} catch (err) {
+		// 錯誤處理
+		showError.value = true
+		if (err.response && err.response.data && Array.isArray(err.response.data.errors)) {
+			errorMessages.value = err.response.data.errors
+		} else {
+			errorMessages.value = ['註冊失敗，請稍後重試']
+		}
+	}
+}
+</script>

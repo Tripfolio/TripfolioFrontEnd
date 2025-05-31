@@ -1,5 +1,6 @@
-import { createRouter, createWebHistory } from "vue-router";
-import HomeView from "../views/HomeView.vue";
+import { createRouter, createWebHistory } from 'vue-router'
+import SignUp from '../views/SignUp.vue'
+import HomeView from '../views/HomeView.vue'
 import GoogleMapView from "@/views/GoogleMapView.vue";
 
 const routes = [
@@ -8,6 +9,11 @@ const routes = [
     name: "home",
     component: HomeView,
   },
+  {
+		path: "/signup",
+		name: "signup",
+		component: SignUp, 
+	},
   {
     path: "/map",
     name: "map",
