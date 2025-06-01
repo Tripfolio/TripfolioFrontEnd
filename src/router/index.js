@@ -1,17 +1,11 @@
 import { createRouter, createWebHistory } from "vue-router";
-import HomeView from "../views/HomeView.vue";
-import GoogleMapView from "@/views/GoogleMapView.vue";
+import MemberProfile from "../views/MemberProfile.vue";
 
 const routes = [
   {
-    path: "/",
-    name: "home",
-    component: HomeView,
-  },
-  {
-    path: "/map",
-    name: "map",
-    component: GoogleMapView,
+    path: "/profile",
+    name: "profile",
+    component: MemberProfile,
   },
 ];
 

@@ -1,1 +1,17 @@
 @import "tailwindcss";
+
+button{
+    border: 1px solid #dddddd;
+    border-radius: 2px;
+    background-color: #dddddd;
+}
+
+input{
+    border: 1px solid #dddddd;
+    border-radius: 2px;
+    background-color: rgb(255, 255, 255);  
+}
+
+h2{
+    font-size: 20px;
+}
