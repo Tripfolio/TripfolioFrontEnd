@@ -1,4 +1,5 @@
 <template>
+
   <div
     class="absolute top-2.5 left-1/2 -translate-x-1/2 z-[999] flex items-center gap-2.5 bg-gray-400/90 px-2.5 py-2.5 rounded-full"
   >
@@ -32,6 +33,7 @@
         搜尋
       </button>
     </div>
+
     <!-- Toggle switch -->
     <label class="relative inline-block w-20 h-8.5">
       <input type="checkbox" v-model="isToggled" class="opacity-0 w-0 h-0" />
@@ -48,7 +50,9 @@
       </span>
     </label>
   </div>
+
   <div v-show="!isToggled" ref="mapRef" class="w-screen h-screen m-0 p-0"></div>
+
   <div
     v-show="isToggled"
     v-if="placeDetails.length"
@@ -88,6 +92,7 @@
       </button>
     </div>
   </div>
+
   <!--地點詳細資訊 -->
   <div
     v-if="selectedPlace"
@@ -150,6 +155,7 @@
       </div>
     </div>
   </div>
+
   <div class="controls">
     <div v-if="result">
       <p>兩點距離：{{ result.distance }}，預估時間：{{ result.duration }}</p>
@@ -163,6 +169,17 @@
       </select>
     </label>
   </div>
+
+  <!-- 選擇地區 -->
+<div class="absolute top-4 left-4 bg-white p-3 rounded shadow z-10">
+  <select @change="onCityChange($event)">
+    <option value="none">當前</option>
+    <option v-for="city in cities" :key="city.name" :value="city.name">
+      {{ city.name }}
+    </option>
+  </select>
+</div>
+
 </template>
 
 <script setup>
@@ -182,6 +199,34 @@ const defaultImage = "https://picsum.photos/1000?image";
 // 選擇的地點與圖片
 const selectedPlace = ref(null);       // 使用者選擇的地點 (點擊 marker 或卡片)
 const selectedPlacePhotoIndex = ref(0);// 當前顯示的圖片索引 (watch selectedPlace)
+const selectedCityName = ref("none"); // 預設為「當前」
+
+const selectedMarkers = []; // 用於存儲選擇的標記 (點擊地圖)
+const cities = [
+  { name: '台北市', lat: 25.033964, lng: 121.564472 },
+  { name: '新北市', lat: 25.016982, lng: 121.462786 },
+  { name: '基隆市', lat: 25.131122, lng: 121.739622 },
+  { name: '桃園市', lat: 24.993628, lng: 121.300979 },
+  { name: '新竹市', lat: 24.80395, lng: 120.964675 },
+  { name: '新竹縣', lat: 24.838722, lng: 121.002295 },
+  { name: '苗栗縣', lat: 24.560159, lng: 120.821426 },
+  { name: '台中市', lat: 24.147736, lng: 120.673648 },
+  { name: '彰化縣', lat: 24.068523, lng: 120.562447 },
+  { name: '南投縣', lat: 23.958842, lng: 120.971863 },
+  { name: '雲林縣', lat: 23.709203, lng: 120.542994 },
+  { name: '嘉義市', lat: 23.480075, lng: 120.449111 },
+  { name: '嘉義縣', lat: 23.451842, lng: 120.255461 },
+  { name: '台南市', lat: 22.999728, lng: 120.227028 },
+  { name: '高雄市', lat: 22.627278, lng: 120.301435 },
+  { name: '屏東縣', lat: 22.551975, lng: 120.548759 },
+  { name: '宜蘭縣', lat: 24.702107, lng: 121.73775 },
+  { name: '花蓮縣', lat: 23.987158, lng: 121.601571 },
+  { name: '台東縣', lat: 22.764364, lng: 121.113207 },
+  { name: '澎湖縣', lat: 23.57104, lng: 119.579369 },
+  { name: '金門縣', lat: 24.436679, lng: 118.317088 },
+  { name: '連江縣', lat: 26.16058, lng: 119.950946 },
+]; // 城市列表
+
 
 // 路線規劃
 const travelMode = ref("DRIVING");     // 交通方式 (select dropdown)
@@ -220,6 +265,7 @@ function loadGoogleMaps() {
     document.head.appendChild(script);
   });
 }
+
 // 初始化地圖
 function initMap() {
   map = new google.maps.Map(mapRef.value, {
@@ -238,6 +284,7 @@ function initMap() {
   });
   service = new google.maps.places.PlacesService(map);
 }
+
 // 搜尋地點
 function searchPlace() {
   if (!searchQuery.value || !map) return;
@@ -248,24 +295,49 @@ function searchPlace() {
   nextPageFunc.value = null;
   hasMoreResults.value = false;
 
-  const request = {
-    location: map.getCenter(),
-    radius: 5000,
-    keyword: searchQuery.value,
-  };
-  service.nearbySearch(request, handleResults);
+  if (selectedCityName.value !== "none") {
+    // ✅ 用文字搜尋 + 城市名
+    const center = map.getCenter();
+    const request = {
+      query: `${searchQuery.value} ${selectedCityName.value}`,
+      location: center,
+      radius: 5000,
+    };
+    service.textSearch(request, handleResults);
+  } else {
+    // ✅ 用附近搜尋（用定位）
+    const center = map.getCenter();
+    const request = {
+      location: center,
+      radius: 5000,
+      keyword: searchQuery.value,
+    };
+    service.nearbySearch(request, handleResults);
+  }
 }
+
+
 // 處理搜尋結果
 function handleResults(results, status, pagination) {
   if (status !== google.maps.places.PlacesServiceStatus.OK || !results.length) {
     alert("找不到地點！");
     return;
   }
+
+if (results.length && results[0].geometry && results[0].geometry.location) {
+  map.setCenter(results[0].geometry.location);
+}
+
   results.forEach((place) => {
     if (!place.geometry || !place.geometry.location) return;
 
-    map.setCenter(place.geometry.location);
-
+    if (
+    selectedCityName.value !== "none" &&
+    (!place.formatted_address || !place.formatted_address.includes(selectedCityName.value))
+  ) {
+    return; // 不屬於該地區就略過
+  }
+    
     const marker = new google.maps.Marker({
       map,
       position: place.geometry.location,
@@ -323,12 +395,14 @@ function handleResults(results, status, pagination) {
     hasMoreResults.value = false;
   }
 }
+
 // 載入下一頁
 function loadNextPage() {
   if (nextPageFunc.value) {
     nextPageFunc.value();
   }
 }
+
 // 計算路線
 function calculateRoute(origin, destination) {
   directionsService.route(
@@ -352,6 +426,14 @@ function calculateRoute(origin, destination) {
     }
   );
 }
+
+//  重新計算路線
+function recalculateRoute() {
+  if (markers.length === 2) {
+    calculateRoute(markers[0].getPosition(), markers[1].getPosition());
+  }
+}
+
 // 重設地圖和標記
 function reset() {
   result.value = null;
@@ -361,46 +443,229 @@ function reset() {
     directionsRenderer.setDirections({ routes: [] });
   }
 }
-//  重新計算路線
-function recalculateRoute() {
-  if (markers.length === 2) {
-    calculateRoute(markers[0].getPosition(), markers[1].getPosition());
+
+// 選擇縣市後移動地圖並搜尋景點
+function moveToCity(event) {
+  const cityName = event.target.value;
+  selectedCityName.value = cityName;
+
+  if (cityName === "none") {
+    markers.forEach((m) => m.setMap(null));
+    markers = [];
+
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const userLat = position.coords.latitude;
+          const userLng = position.coords.longitude;
+
+          const center = new google.maps.LatLng(userLat, userLng);
+          map.setCenter(center);
+          map.setZoom(15);
+          searchNearby(userLat, userLng, 2000);
+        },
+        () => {
+          alert("⚠️ 無法取得你的定位！");
+        }
+      );
+    } else {
+      alert("你的瀏覽器不支援定位功能");
+    }
+    return;
+  }
+
+  const city = cities.find((c) => c.name === cityName);
+  if (!city || !map) return;
+
+  const center = new google.maps.LatLng(city.lat, city.lng);
+  map.setCenter(center);
+  map.setZoom(13);
+
+  searchNearbyByText(cityName, center, 5000);
+}
+
+// 當選擇的縣市改變時，重設搜尋關鍵字並移動地圖
+function onCityChange(event) {
+  const newCity = event.target.value;
+
+  // 連點相同地區 視為取消選取
+  if (newCity === selectedCityName.value) {
+    selectedCityName.value = "none";
+    event.target.value = "none";
+    searchQuery.value = "";
+    moveToCity({ target: { value: "none" } });
+  } else {
+    selectedCityName.value = newCity;
+    searchQuery.value = "";
+    moveToCity(event);
   }
 }
+
+
+// 搜尋附近旅遊景點(用半徑)
+function searchNearby(lat, lng, radius = 5000) {
+  if (!service) {
+    service = new google.maps.places.PlacesService(map);
+  }
+
+  const location = new google.maps.LatLng(lat, lng);
+
+  markers.forEach((m) => m.setMap(null));
+  markers = [];
+
+  service.nearbySearch(
+    {
+      location,
+      radius,
+      type: "tourist_attraction",
+    },
+    (results, status) => {
+      if (status === google.maps.places.PlacesServiceStatus.OK) {
+        results.forEach((place) => {
+          const marker = new google.maps.Marker({
+            map,
+            position: place.geometry.location,
+            title: place.name,
+          });
+          marker.addListener("click", () => {
+            selectedPlace.value = place;
+          });
+          markers.push(marker);
+        });
+      }
+    }
+  );
+}
+
+// 搜尋附近旅遊景點(用城市名稱)
+function searchNearbyByText(cityName, center, radius = 5000) {
+  if (!service) {
+    service = new google.maps.places.PlacesService(map);
+  }
+
+  markers.forEach((m) => m.setMap(null));
+  markers = [];
+
+  service.textSearch(
+    {
+      query: `tourist attractions ${cityName}`,
+      location: center,
+      radius,
+    },
+    (results, status) => {
+      if (status === google.maps.places.PlacesServiceStatus.OK) {
+        results.forEach((place) => {
+          const marker = new google.maps.Marker({
+            map,
+            position: place.geometry.location,
+            title: place.name,
+          });
+          marker.addListener("click", () => {
+            selectedPlace.value = place;
+          });
+          markers.push(marker);
+        });
+      }
+    }
+  );
+}
+
 onMounted(async () => {
   try {
-    await loadGoogleMaps(); // 等待 API 載入
-    initMap(); // 初始化地圖
+    await loadGoogleMaps();
+    initMap();
 
-    // 初始化方向服務
     directionsService = new google.maps.DirectionsService();
     directionsRenderer = new google.maps.DirectionsRenderer({
       suppressMarkers: true,
     });
     directionsRenderer.setMap(map);
+    service = new google.maps.places.PlacesService(map);
 
-    // 設置地圖點擊事件
-    map.addListener("click", (e) => {
-      if (markers.length >= 2) reset();
+    map.addListener("click", (event) => {
+      markers.forEach((marker) => marker.setMap(null));
+      markers = [];
+      placeDetails.value = [];
+      nextPageFunc.value = null;
+      hasMoreResults.value = false;
+      if (isToggled.value) return;
 
-      const marker = new google.maps.Marker({
-        position: e.latLng,
-        map,
-      });
+      if (event.placeId) {
+        event.stop();
+        const placeId = event.placeId;
+        const detailRequest = {
+          placeId,
+          fields: [
+            "name",
+            "formatted_address",
+            "geometry",
+            "rating",
+            "user_ratings_total",
+            "photos",
+            "business_status",
+            "icon",
+          ],
+        };
 
-      markers.push(marker);
+        service.getDetails(detailRequest, (detailResult, detailStatus) => {
+          if (detailStatus === google.maps.places.PlacesServiceStatus.OK) {
+            // 第三個點時，重置
+            if (selectedMarkers.length === 2) {
+              selectedMarkers.forEach((m) => m.setMap(null));
+              selectedMarkers.length = 0;
+              selectedPlace.value = null;
+              if (directionsRenderer)
+                directionsRenderer.setDirections({ routes: [] });
+            }
 
-      if (markers.length === 2) {
-        const origin = markers[0].getPosition();
-        const destination = markers[1].getPosition();
-        calculateRoute(origin, destination);
+            const marker = new google.maps.Marker({
+              position: detailResult.geometry.location,
+              map,
+              title: detailResult.name,
+            });
+            selectedMarkers.push(marker);
+
+            if (selectedMarkers.length === 1) {
+              // 第一次點，顯示卡片
+              selectedPlace.value = detailResult;
+            } else if (selectedMarkers.length === 2) {
+              // 第二次點，收卡片，畫路線
+              selectedPlace.value = null;
+              calculateRoute(
+                selectedMarkers[0].getPosition(),
+                selectedMarkers[1].getPosition()
+              );
+            }
+          } else {
+            console.warn("取得詳細資料失敗", detailStatus);
+          }
+        });
+      } else {
+        // 點地圖非place的地方，這邊可以自己調整邏輯，這裡先不處理
+        // 或你想也可以讓它reset狀態
+        console.log("點擊了非place地點");
       }
     });
   } catch (err) {
     alert("❌ Google Maps 載入失敗");
     console.error(err);
   }
+  // 檢視卡片頁面樣式
+  // placeDetails.value = [
+  //   {
+  //     name: "星巴克台北101店",
+  //     formatted_address: "台北市信義區信義路五段7號",
+  //     photos: [
+  //       {
+  //         getUrl: ({ maxWidth }) => `https://picsum.photos/${maxWidth}/600?random=1`,
+  //       },
+  //     ],
+  //     rating: 4.3,
+  //     user_ratings_total: 152,
+  //   }
+  // ];
 });
+
 </script>
 
 <style scoped>
