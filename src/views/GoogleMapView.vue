@@ -288,6 +288,9 @@ function initMap() {
 // 搜尋地點
 function searchPlace() {
   if (!searchQuery.value || !map) return;
+  
+  selectedMarkers.forEach((m) => m.setMap(null));
+  selectedMarkers.length = 0;
 
   markers.forEach((marker) => marker.setMap(null));
   markers = [];
@@ -446,6 +449,9 @@ function reset() {
 
 // 選擇縣市後移動地圖並搜尋景點
 function moveToCity(event) {
+  selectedMarkers.forEach((m) => m.setMap(null));
+  selectedMarkers.length = 0;
+
   const cityName = event.target.value;
   selectedCityName.value = cityName;
 
@@ -486,21 +492,9 @@ function moveToCity(event) {
 
 // 當選擇的縣市改變時，重設搜尋關鍵字並移動地圖
 function onCityChange(event) {
-  const newCity = event.target.value;
-
-  // 連點相同地區 視為取消選取
-  if (newCity === selectedCityName.value) {
-    selectedCityName.value = "none";
-    event.target.value = "none";
-    searchQuery.value = "";
-    moveToCity({ target: { value: "none" } });
-  } else {
-    selectedCityName.value = newCity;
-    searchQuery.value = "";
-    moveToCity(event);
-  }
+  searchQuery.value = "";        
+  moveToCity(event);             
 }
-
 
 // 搜尋附近旅遊景點(用半徑)
 function searchNearby(lat, lng, radius = 5000) {
