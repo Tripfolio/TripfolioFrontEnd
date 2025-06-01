@@ -1,6 +1,7 @@
 <template>
+    <Itinerary ref="itineraryRef" :selectedPlace="selectedPlace" class="z-[4]"/>
   <div
-    class="absolute top-2.5 left-1/2 -translate-x-1/2 z-[999] flex items-center gap-2.5 bg-gray-400/90 px-2.5 py-2.5 rounded-full"
+    class="absolute top-2.5 left-1/2 -translate-x-1/2 z-[2] flex items-center gap-2.5 bg-gray-400/90 px-2.5 py-2.5 rounded-full"
   >
     <div class="relative w-[300px]">
       <svg
@@ -52,7 +53,7 @@
   <div
     v-show="isToggled"
     v-if="placeDetails.length"
-    class="absolute top-20 left-0 z-[1000] bg-white p-2.5 box-border grid max-w-full grid-cols-[repeat(auto-fill,minmax(250px,max-content))] justify-start gap-2.5 overflow-y-auto"
+    class="absolute top-20 left-0 z-[3] bg-white p-2.5 box-border grid max-w-full grid-cols-[repeat(auto-fill,minmax(250px,max-content))] justify-start gap-2.5 overflow-y-auto"
   >
     <div
       v-for="(place, index) in placeDetails"
@@ -91,7 +92,7 @@
   <!--地點詳細資訊 -->
   <div
     v-if="selectedPlace"
-    class="fixed inset-0 bg-black/50 flex items-center justify-center z-[9999]"
+    class="fixed inset-0 bg-black/50 flex items-center justify-center z-[4]"
     @click.self="selectedPlace = null"
   >
     <div class="bg-white rounded-lg p-6 w-full max-w-md relative">
@@ -163,7 +164,6 @@
       </select>
     </label>
   </div>
-  <Itinerary ref="itineraryRef" :selectedPlace="selectedPlace"/>
 </template>
 
 <script setup>
