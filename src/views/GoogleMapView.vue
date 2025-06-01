@@ -168,7 +168,7 @@
 
 <script setup>
 import { ref, onMounted, watch } from "vue";
-import Itinerary from "../components/itinerary.vue";
+import Itinerary from "../components/Itinerary.vue";
 
 // 地圖與搜尋
 const mapRef = ref(null);              // 地圖容器 (initMap)
