@@ -13,18 +13,16 @@
 
 		<form v-if="!isLoggedIn" @submit.prevent="login" class="space-y-6">
 			<div>
-				<label for="email" class="block text-sm font-medium text-gray-700">Email</label>
-				<input v-model="email" type="email" id="email" required
-					class="mb-5 block w-1/2 rounded-md border border-gray-300 shadow-sm p-2" />
+				<input v-model="email" type="email" id="email" placeholder="請輸入電子郵件" required
+					class="mb-5 block w-[300px] rounded-md border border-gray-300 shadow-sm p-2" />
 			</div>
 
 			<div>
-				<label for="password" class="block text-sm font-medium text-gray-700">密碼</label>
-				<input v-model="password" type="password" id="password" required
-					class="mb-5 block w-1/2 rounded-md border border-gray-300 shadow-sm p-2 " />
+				<input v-model="password" type="password" id="password" placeholder="請輸入密碼" required
+					class="mb-5 block w-[300px] rounded-md border border-gray-300 shadow-sm p-2 " />
 			</div>
 
-			<div class="flex justify-end gap-[20px] mt-[10px] w-1/2">
+			<div class="flex justify-center gap-[20px] mt-[10px] w-[300px]">
 				<button type="submit" class="w-[100px] bg-blue-200 text-black py-2 rounded transition">登入</button>
 				<button type="button" class="w-[100px] bg-gray-200 text-black py-2 rounded transition">註冊</button>
 			</div>
@@ -41,7 +39,6 @@
   <script setup>
   import { ref, onMounted } from 'vue'
   import axios from 'axios'
-  import { useRouter } from 'vue-router'
   
   const TOKEN_NAME = 'user_token'
   const email = ref('')
@@ -118,8 +115,6 @@
   </script>
   
   <style scoped>
-  .container {
-    max-width: 500px;
-  }
+  
   </style>
   
