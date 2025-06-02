@@ -204,10 +204,10 @@ watch(selectedPlace, (newVal) => {
 // 載入 Google Maps API
 function loadGoogleMaps() {
   return new Promise((resolve, reject) => {
-    if (window.google && window.google.maps) {
-      resolve();
-      return;
-    }
+    // if (window.google && window.google.maps) {
+    //   resolve();
+    //   return;
+    // }
     const script = document.createElement("script");
     script.src = `https://maps.googleapis.com/maps/api/js?key=${
       import.meta.env.VITE_GOOGLE_MAPS_API_KEY
@@ -226,7 +226,7 @@ function initMap() {
     zoom: 15,
     mapTypeControl: false,
     zoomControl: false,
-    cameraControl: false,
+    cameraControl: false, // API 中沒有這項，可能是寫錯的
     scaleControl: false,
     fullscreenControl: false,
     errorControl: true,
