@@ -13,6 +13,11 @@ const routes = [
     name: "map",
     component: GoogleMapView,
   },
+  {
+    path: '/calendar',
+    name: 'calendar',
+    component: () => import('../views/GoogleCalendarTest.vue')
+  },
 ];
 
 const router = createRouter({
