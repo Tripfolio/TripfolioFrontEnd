@@ -161,4 +161,12 @@ function createEvent(summary, startDateTime, endDateTime) {
         console.error('建立行程失敗', error)
     })
 }
+// ✅ 複製連結功能
+function copyLink() {
+    if (eventLink.value) {
+        navigator.clipboard.writeText(eventLink.value)
+            .then(() => alert('連結已複製！'))
+            .catch(err => alert('失敗：' + err))
+    }
+}
 </script>
