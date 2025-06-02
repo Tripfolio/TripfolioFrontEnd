@@ -167,7 +167,7 @@
 
 <script setup>
 import { ref, onMounted, watch } from "vue";
-import { MapIcons } from "@/assets/MapIcons";
+import { MapIcons, SubSetIcon } from "@/assets/MapIcons";
 // 地圖與搜尋
 const mapRef = ref(null); // 地圖容器 (initMap)
 const searchQuery = ref(""); // 搜尋關鍵字 (searchPlace)
@@ -223,7 +223,7 @@ function loadGoogleMaps() {
 function initMap() {
   map = new google.maps.Map(mapRef.value, {
     center: { lat: 25.033964, lng: 121.564472 },
-    zoom: 15,
+    zoom: 18,
     mapTypeControl: false,
     zoomControl: false,
     cameraControl: false, // API 中沒有這項，可能是寫錯的
@@ -396,18 +396,23 @@ function recalculateRoute() {
 // }
 
 function getPlaceIconUrl(types = []) {
-  for (const type of types) {
-    if (MapIcons[type]) {
-      return (
-        "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(MapIcons[type])
-      );
+  if (map.getZoom() >= 18) {
+    for (const type of types) {
+      if (MapIcons[type]) {
+        return (
+          "data:image/svg+xml;charset=UTF-8," +
+          encodeURIComponent(MapIcons[type])
+        );
+      }
     }
+  } else if (map.getZoom() < 18) {
+    //在這邊
   }
 
   // 沒有對應圖示就使用 default
-  return (
-    "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(MapIcons.default)
-  );
+  // return (
+  //   "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(MapIcons.default)
+  // );
 }
 
 onMounted(async () => {
