@@ -4,8 +4,8 @@
 
     <div
       v-if="showError"
-      class="w-1/2 flex items-center gap-2 bg-red-100 text-red-800 border border-red-200 px-4 py-3 rounded-md mb-4">
-      <i class="fas fa-triangle-exclamation text-sm text-red-800 mt-[2px]"></i>
+      class="w-[300px] flex items-center gap-2 bg-red-100 text-red-800 border border-red-200 px-4 py-3 rounded-md mb-4">
+      <font-awesome-icon icon="exclamation-triangle" class="mr-2 mt-0.5 text-red-600" />
       <span class="text-sm">
         {{ errorMessage }}
       </span>
