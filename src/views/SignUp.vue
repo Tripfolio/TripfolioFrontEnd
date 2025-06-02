@@ -1,13 +1,12 @@
 <template>
 	<h2 class="text-center text-xl font-semibold mb-4">註冊頁面</h2>
 
-	<div v-if="showError"
-		class="w-[300px] mx-auto bg-red-100 text-red-800 border border-red-200 px-4 py-3 rounded-md mb-4">
-		<ul class="list-disc list-inside text-sm">
-			<li v-for="(msg, index) in errorMessages" :key="index">
-				{{ msg }}
-			</li>
-		</ul>
+	<div v-if="showError" class="space-y-2 w-[300px] mx-auto">
+		<div v-for="(msg, index) in errorMessages" :key="index"
+			class="flex items-start bg-red-100 text-red-800 border border-red-200 px-4 py-3 rounded-md text-sm">
+			<font-awesome-icon icon="exclamation-triangle" class="mr-2 mt-0.5 text-red-600" />
+			<span>{{ msg }}</span>
+		</div>
 	</div>
 
 	<div v-if="showSuccess"
@@ -15,7 +14,7 @@
 		{{ successMessage }}
 	</div>
 
-	<form class="flex flex-col gap-[10px] w-[300px] mx-auto" @submit.prevent="signUp">
+	<form class="flex flex-col gap-[10px] w-[300px] mx-auto mt-2" @submit.prevent="signUp">
 		<input
 			v-model="email"
 			type="email"
@@ -46,6 +45,10 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import axios from 'axios'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons'
+import { library } from '@fortawesome/fontawesome-svg-core'
+library.add(faExclamationTriangle)
 
 const email = ref('')
 const password = ref('')
