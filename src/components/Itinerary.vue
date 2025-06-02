@@ -11,6 +11,7 @@
       >
         <strong class="block">{{ p.name }}</strong>
         <strong class="block text-yellow-600">{{ p.rating }}</strong>
+        <img :src="p.photo" class="aspect-[4/3]"></img>
         <span class="text-sm text-gray-600">{{ p.address }}</span>
         <br />
         <button @click="removePlace(p)">🗑️ remove</button>
@@ -45,7 +46,8 @@
   }
 
   const props = defineProps({
-    selectedPlace: Object
+    selectedPlace: Object,
+    defaultImage: String
   })
   const itineraryPlaces = ref([])
 
@@ -78,7 +80,8 @@
         itineraryPlaces.value.push({
           name: props.selectedPlace.name,
           address: props.selectedPlace.formatted_address,
-          rating: props.selectedPlace.rating || 'N/A'
+          rating: props.selectedPlace.rating || 'N/A',
+          photo: props.selectedPlace.photos && props.selectedPlace.photos.length ? props.selectedPlace.photos[0].getUrl({ maxWidth: 1000 }) : props.defaultImage
         })
         alert('✅ 成功加入行程！')
       } else {

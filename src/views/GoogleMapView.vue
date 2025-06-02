@@ -1,5 +1,5 @@
 <template>
-    <Itinerary ref="itineraryRef" :selectedPlace="selectedPlace" class="z-[4]"/>
+    <Itinerary ref="itineraryRef" :selectedPlace="selectedPlace" class="z-[4]" :default-image="defaultImage"/>
   <div
     class="absolute top-2.5 left-1/2 -translate-x-1/2 z-[2] flex items-center gap-2.5 bg-gray-400/90 px-2.5 py-2.5 rounded-full"
   >
