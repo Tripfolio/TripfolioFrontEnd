@@ -288,7 +288,7 @@ function initMap() {
 // 搜尋地點
 function searchPlace() {
   if (!searchQuery.value || !map) return;
-  
+
   selectedMarkers.forEach((m) => m.setMap(null));
   selectedMarkers.length = 0;
 
@@ -299,7 +299,7 @@ function searchPlace() {
   hasMoreResults.value = false;
 
   if (selectedCityName.value !== "none") {
-    // ✅ 用文字搜尋 + 城市名
+    // 用文字搜尋 + 城市名
     const center = map.getCenter();
     const request = {
       query: `${searchQuery.value} ${selectedCityName.value}`,
@@ -308,7 +308,7 @@ function searchPlace() {
     };
     service.textSearch(request, handleResults);
   } else {
-    // ✅ 用附近搜尋（用定位）
+    // 用附近搜尋（用定位）
     const center = map.getCenter();
     const request = {
       location: center,
@@ -506,6 +506,9 @@ function searchNearby(lat, lng, radius = 5000) {
 
   markers.forEach((m) => m.setMap(null));
   markers = [];
+  placeDetails.value = [];
+  hasMoreResults.value = false;
+
 
   service.nearbySearch(
     {
@@ -525,6 +528,7 @@ function searchNearby(lat, lng, radius = 5000) {
             selectedPlace.value = place;
           });
           markers.push(marker);
+          placeDetails.value.push(place);
         });
       }
     }
@@ -539,6 +543,8 @@ function searchNearbyByText(cityName, center, radius = 5000) {
 
   markers.forEach((m) => m.setMap(null));
   markers = [];
+  placeDetails.value = [];
+  hasMoreResults.value = false;
 
   service.textSearch(
     {
@@ -558,6 +564,7 @@ function searchNearbyByText(cityName, center, radius = 5000) {
             selectedPlace.value = place;
           });
           markers.push(marker);
+          placeDetails.value.push(place);
         });
       }
     }
