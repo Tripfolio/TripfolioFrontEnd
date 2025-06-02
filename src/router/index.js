@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
 import GoogleMapView from "@/views/GoogleMapView.vue";
-
+import GoogleCalendar from "@/views/GoogleCalendar.vue";
 const routes = [
   {
     path: "/",
@@ -16,7 +16,7 @@ const routes = [
   {
     path: '/calendar',
     name: 'calendar',
-    component: () => import('../views/GoogleCalendarTest.vue')
+    component: GoogleCalendar,
   },
 ];
 
