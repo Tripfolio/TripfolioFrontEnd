@@ -152,10 +152,10 @@ function createEvent(summary, startDateTime, endDateTime) {
         calendarId: 'primary',
         resource: event,
     }).then(response => {
-        message.value = '成功建立行程：',
-        eventLink.value = response.result.htmlLink,
-        isLink.value = true,
-        console.log('行程建立成功', response)
+        message.value = '成功建立行程：';
+        eventLink.value = response.result.htmlLink;
+        isLink.value = true;
+        console.log('行程建立成功', response);
     }).catch(error => {
         message.value = '建立行程錯誤：' + error.message;
         console.error('建立行程失敗', error)
