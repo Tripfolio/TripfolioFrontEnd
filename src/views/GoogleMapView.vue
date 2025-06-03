@@ -1,6 +1,7 @@
 <template>
+    <Itinerary ref="itineraryRef" :selectedPlace="selectedPlace" class="z-[4]" :default-image="defaultImage"/>
   <div
-    class="absolute top-2.5 left-1/2 -translate-x-1/2 z-[999] flex items-center gap-2.5 bg-gray-400/90 px-2.5 py-2.5 rounded-full"
+    class="absolute top-2.5 left-1/2 -translate-x-1/2 z-[2] flex items-center gap-2.5 bg-gray-400/90 px-2.5 py-2.5 rounded-full"
   >
     <div class="relative w-[300px]">
       <svg
@@ -52,7 +53,7 @@
   <div
     v-show="isToggled"
     v-if="placeDetails.length"
-    class="absolute top-20 left-0 z-[1000] bg-white p-2.5 box-border grid max-w-full grid-cols-[repeat(auto-fill,minmax(250px,max-content))] justify-start gap-2.5 overflow-y-auto"
+    class="absolute top-20 left-0 z-[3] bg-white p-2.5 box-border grid max-w-full grid-cols-[repeat(auto-fill,minmax(250px,max-content))] justify-start gap-2.5 overflow-y-auto"
   >
     <div
       v-for="(place, index) in placeDetails"
@@ -91,7 +92,7 @@
   <!--地點詳細資訊 -->
   <div
     v-if="selectedPlace"
-    class="fixed inset-0 bg-black/50 flex items-center justify-center z-[9999]"
+    class="fixed inset-0 bg-black/50 flex items-center justify-center z-[4]"
     @click.self="selectedPlace = null"
   >
     <div class="bg-white rounded-lg p-6 w-full max-w-md relative">
@@ -122,7 +123,6 @@
         >
           ‹
         </button>
-
         <!-- 圖片 -->
         <img
           :src="
@@ -148,6 +148,7 @@
           ›
         </button>
       </div>
+      <button @click="callItinerary">🤍 加入行程</button>
     </div>
   </div>
   <aside
@@ -213,12 +214,25 @@
 </template>
 
 <script setup>
+
 import { ref, onMounted, watch, onUnmounted } from "vue";
+import Itinerary from "../components/Itinerary.vue";
+
+// 子元件 Itinerary.vue
+const itineraryRef = ref(null) 
+function callItinerary() {
+  if (itineraryRef.value && typeof itineraryRef.value.addPlace === 'function') {
+    itineraryRef.value.addPlace()
+  } else {
+    console.warn('itineraryRef 尚未掛載，無法呼叫 addPlace')
+  }
+}
 
 // 地圖與搜尋
 const mapRef = ref(null); // 地圖容器 (initMap)
 const searchQuery = ref(""); // 搜尋關鍵字 (searchPlace)
 const isToggled = ref(false); // 切換地圖 / 卡片視圖
+const searchInput = ref(null); // 輸入搜尋關鍵字
 
 // 地點資料
 const placeDetails = ref([]); // 搜尋結果詳細資訊 (searchPlace, handleResults)
@@ -249,6 +263,7 @@ const categories = ref([
   { type: "tourist_attraction", label: "📍" },
   // { type: "other_options", label: "+" },
 ]);
+
 //待添加種類
 const placeCategories = ref([
   { type: "cafe", label: "咖啡廳" },
@@ -272,6 +287,7 @@ let markers = []; // 所有標記 (searchPlace, 點擊地圖)
 let service = null; // 地點服務 (initMap)
 let directionsService; // 路線服務 (onMounted)
 let directionsRenderer; // 路線顯示器 (onMounted)
+
 
 //當 selectedPlace 改變時，重設圖片索引
 watch(selectedPlace, (newVal) => {
@@ -327,11 +343,9 @@ function searchPlace() {
   hasMoreResults.value = false;
 
   const request = {
-    location: map.getCenter(),
-    radius: 5000,
-    keyword: searchQuery.value,
+    query: searchQuery.value,
   };
-  service.nearbySearch(request, handleResults);
+  service.textSearch(request, handleResults);
 }
 // 處理搜尋結果
 function handleResults(results, status, pagination) {
@@ -376,8 +390,8 @@ function handleResults(results, status, pagination) {
         // "adr_address",
         // "postal_address",
         // "short_formatted_address",
-        "business_status",
-        "icon", // =icon_mask_base_uri + icon_background_color
+        // "business_status",
+        // "icon", // =icon_mask_base_uri + icon_background_color
         // 其他field欄位參考：https://developers.google.com/maps/documentation/places/web-service/legacy/details?hl=zh-tw#fields
       ],
     };
@@ -546,7 +560,21 @@ onMounted(async () => {
       suppressMarkers: true,
     });
     directionsRenderer.setMap(map);
-
+    // 初始化 autocomplete
+    const autocomplete = new google.maps.places.Autocomplete(
+      searchInput.value,
+      {
+        fields: ['geometry', 'name'],
+        types: ['(cities)'] // 可依需求改成 ['geocode'] 或移除限制
+      }
+    )
+    // 當使用者選擇建議項目後，自動觸發搜尋
+    autocomplete.addListener('place_changed', () => {
+      const place = autocomplete.getPlace()
+      if (!place.geometry) return
+      searchQuery.value = place.name
+      searchPlace()
+    })
     // 設置地圖點擊事件
     map.addListener("click", (e) => {
       if (markers.length >= 2) reset();
