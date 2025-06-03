@@ -2,6 +2,8 @@ import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
 import GoogleMapView from "@/views/GoogleMapView.vue";
 import GoogleCalendar from "@/views/GoogleCalendar.vue";
+import EmailSettings from "@/views/EmailSettings.vue";
+
 const routes = [
   {
     path: "/",
@@ -17,6 +19,11 @@ const routes = [
     path: '/calendar',
     name: 'calendar',
     component: GoogleCalendar,
+  },
+  {
+    path: "/emailSettings",
+    name: "emailSettings",
+    component: EmailSettings,
   },
 ];
 
