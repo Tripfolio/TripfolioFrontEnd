@@ -37,8 +37,9 @@
 
   
   <script setup>
-  import { ref, onMounted } from 'vue'
-  import axios from 'axios'
+  import { ref, onMounted } from 'vue';
+  import axios from 'axios';
+  import jwtDecode from "jwt-decode";
   
   const TOKEN_NAME = 'user_token'
   const email = ref('')
@@ -69,6 +70,11 @@
     const token = res.data.token
     localStorage.setItem(TOKEN_NAME, token)
     axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
+    
+    const decoed = jwtDecode(token)
+    localStorage.setItem('memberId', decoed.id)
+
+
     isLoggedIn.value = true
     showError.value = false
     clearText()
@@ -84,6 +90,7 @@
   
 
     localStorage.removeItem(TOKEN_NAME)
+    localStorage.removeItem('memberId')
     isLoggedIn.value = false
     clearText()
     
