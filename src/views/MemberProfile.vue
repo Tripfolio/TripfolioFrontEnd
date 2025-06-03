@@ -177,37 +177,37 @@ const changePassword = async () => {
         <div>
             <img v-if="previewUrl || profileData.avatar" :src="previewUrl !== '' ? previewUrl : profileData.avatar" alt="大頭貼"/> 
             <input type="file" @change="uploadAvatar" accept="image/*" />
-            <button @click="saveAvatar" class="rounded-none ..." >儲存大頭貼</button>
+            <button @click="saveAvatar" class="w-24 bg-sky-500/50" >儲存大頭貼</button>
         </div>
         <form @submit.prevent="saveProfile">
             <span>名稱：</span>
-            <input type="text" v-model="profileData.name" placeholder="名稱" maxlength="10"/>
+            <input type="text" v-model="profileData.name" placeholder="名稱" class="border-2 border-solid"/>
             <span>性別：</span>
-            <select name="" id="" v-model="profileData.gender">
+            <select name="" id="" v-model="profileData.gender"  class="border-2 border-solid">
                 <option value="male">男</option>
                 <option value="female">女</option>
             </select>
             <div>
                 <span>手機號碼：</span>
-                <input type="tel" v-model="profileData.phone" placeholder="手機號碼" maxlength="10"/>
+                <input type="tel" v-model="profileData.phone" placeholder="手機號碼"  class="border-2 border-solid"/>
                 <p v-if="phoneError" style="color:red">{{ phoneError }}</p>
             </div>
             <!-- <input type="email" v-model="profileData.email" placeholder="電子郵件" /> -->
             <span>生日：</span>
-            <input type="date" v-model="profileData.birthday"/>
-            <button type="submit">儲存會員資料</button>
+            <input type="date" v-model="profileData.birthday"  class="border-2 border-solid"/>
+            <button type="submit" class="w-24 bg-sky-500/50">儲存會員資料</button>
         </form>
 
         <h2>密碼修改</h2>
         <form @submit.prevent="changePassword">
             <div>
-                <input :type="showOld? 'text' : 'password'" v-model="passwordData.oldPassword" placeholder="舊密碼" />
+                <input :type="showOld? 'text' : 'password'" v-model="passwordData.oldPassword" placeholder="舊密碼"  class="border-2 border-solid"/>
                 <span @click="showOld = !showOld">
                     <font-awesome-icon :icon="showOld ? 'fa-eye-slash' : 'fa-eye'" />
                 </span>
             </div>
             <div>
-                <input :type="showNew? 'text' : 'password'" v-model="passwordData.newPassword" placeholder="新密碼" />
+                <input :type="showNew? 'text' : 'password'" v-model="passwordData.newPassword" placeholder="新密碼"  class="border-2 border-solid"/>
                 <span @click="showNew = !showNew">
                     <font-awesome-icon :icon="showNew ? 'fa-eye-slash' : 'fa-eye'" />
                 </span>     
@@ -215,12 +215,12 @@ const changePassword = async () => {
                 <p v-if="passwordError" style="color:red">{{ passwordError }}</p>    
             </div>
             <div>
-                <input :type="showConfirm? 'text' : 'password'" v-model="passwordData.confirmPassword" placeholder="再次輸入新密碼" />
+                <input :type="showConfirm? 'text' : 'password'" v-model="passwordData.confirmPassword" placeholder="再次輸入新密碼"  class="border-2 border-solid"/>
                 <span @click="showConfirm = !showConfirm">
                     <font-awesome-icon :icon="showConfirm ? 'fa-eye-slash' : 'fa-eye'" />
                 </span>
             </div>
-            <button type="submit">送出修改密碼</button>
+            <button type="submit" class="w-24 bg-sky-500/50">送出修改密碼</button>
         </form>
     </div>
 </template>

@@ -4,6 +4,15 @@ import { RouterLink, RouterView } from "vue-router";
 
 <template>
 
+  <div v-if="$route.path !== '/map'">
+    <RouterLink to="/map">景點地圖</RouterLink>
+  </div>
+  <div v-if="$route.path !== '/emailSettings'">
+    <RouterLink to="/emailSettings">Email通知設定</RouterLink>
+  </div>
+  <div v-if="$route.path !== '/profile'">
+  <RouterLink to="/profile">會員資料修改</RouterLink>
+  </div>
   <RouterView />
   
 </template>
