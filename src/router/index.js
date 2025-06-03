@@ -1,10 +1,26 @@
-import { createRouter, createWebHistory } from "vue-router";
-import MemberProfile from "../views/MemberProfile.vue";
-import HomeView from "../views/HomeView.vue";
-import GoogleMapView from "@/views/GoogleMapView.vue";
-import EmailSettings from "@/views/EmailSettings.vue";
+import { createRouter, createWebHistory } from 'vue-router'
+import SignUp from '@/views/SignUp.vue'
+import HomeView from '@/views/HomeView.vue'
+import GoogleMapView from '@/views/GoogleMapView.vue'
+import MemberProfile from '@/views/MemberProfile.vue'
+import EmailSettings from '@/views/EmailSettings.vue'
 
 const routes = [
+  {
+    path: "/",
+    name: "home",
+    component: HomeView,
+  },
+  {
+    path: "/signup",
+    name: "signup",
+    component: SignUp,
+  },
+  {
+    path: "/map",
+    name: "map",
+    component: GoogleMapView,
+  },
   {
     path: "/profile",
     name: "profile",
