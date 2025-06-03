@@ -3,8 +3,8 @@ import { RouterLink, RouterView } from "vue-router";
 </script>
 
 <template>
-  <div v-if="$route.path !== '/map'">
-    <RouterLink to="/map">景點地圖</RouterLink>
+  <div v-if="$route.path !== '/travelSchedule'">
+    <RouterLink to="/travelSchedule">行程總覽</RouterLink>
   </div>
   <RouterView />
 </template>
