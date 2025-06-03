@@ -72,7 +72,10 @@
         {
           itineraryId: 1,
           name: props.selectedPlace.name,
-          address: props.selectedPlace.formatted_address || ''
+          address: props.selectedPlace.formatted_address || '',
+          photo: props.selectedPlace.photos && props.selectedPlace.photos.length
+        ? props.selectedPlace.photos[0].getUrl({ maxWidth: 1000 })
+        : props.defaultImage
         }
       )
 
