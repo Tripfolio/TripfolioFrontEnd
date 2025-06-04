@@ -6,6 +6,8 @@ import { RouterLink, RouterView } from "vue-router";
 
   <div v-if="$route.path !== '/map'">
     <RouterLink to="/map">景點地圖</RouterLink>
+
+    <RouterLink to="/calendar">連結 Google Calendar</RouterLink>
   </div>
 
   <div v-if="$route.path !== '/signup'">
