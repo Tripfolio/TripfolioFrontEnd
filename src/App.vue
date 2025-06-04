@@ -5,13 +5,13 @@ import { RouterLink, RouterView } from "vue-router";
 <template>
 
 <div class="w-full h-screen flex flex-col relative">
-
   <div>
       <template v-if="$route.path === '/'">
         <RouterLink to="/map">景點地圖</RouterLink>
         <RouterLink to="/signup">註冊</RouterLink>
         <RouterLink to="/emailSettings">Email 通知</RouterLink>
         <RouterLink to="/profile">會員資料</RouterLink>
+        <RouterLink to="/calendar">連結 Google Calendar</RouterLink>
       </template>
 
     <div class="flex-1 relative">

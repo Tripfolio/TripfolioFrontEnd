@@ -3,6 +3,7 @@ import SignUp from '@/views/SignUp.vue'
 import HomeView from '@/views/HomeView.vue'
 import GoogleMapView from '@/views/GoogleMapView.vue'
 import MemberProfile from '@/views/MemberProfile.vue'
+import GoogleCalendar from "@/views/GoogleCalendar.vue";
 import EmailSettings from '@/views/EmailSettings.vue'
 
 const routes = [
@@ -20,6 +21,11 @@ const routes = [
     path: "/map",
     name: "map",
     component: GoogleMapView,
+  },
+  {
+    path: '/calendar',
+    name: 'calendar',
+    component: GoogleCalendar,
   },
   {
     path: "/profile",
