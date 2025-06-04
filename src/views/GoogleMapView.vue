@@ -350,7 +350,7 @@ function loadGoogleMaps() {
     const script = document.createElement("script");
     script.src = `https://maps.googleapis.com/maps/api/js?key=${
       import.meta.env.VITE_GOOGLE_MAPS_API_KEY
-    }&libraries=places`;
+    }&libraries=places,geometry`;
     script.async = true;
     script.defer = true;
     script.onload = resolve;
@@ -423,17 +423,21 @@ function handleResults(results, status, pagination) {
 if (results.length && results[0].geometry && results[0].geometry.location) {
   map.setCenter(results[0].geometry.location);
 }
+results.forEach((place) => {
+  if (!place.geometry || !place.geometry.location) return;
 
-  results.forEach((place) => {
-    if (!place.geometry || !place.geometry.location) return;
-
-    if (
-    selectedCityName.value !== "none" &&
-    (!place.formatted_address || !place.formatted_address.includes(selectedCityName.value))
-  ) {
-    return; // 不屬於該地區就略過
+  if (selectedCityName.value !== "none") {
+    const city = cities.find((c) => c.name === selectedCityName.value);
+    if (city) {
+      const cityLatLng = new google.maps.LatLng(city.lat, city.lng);
+      const distance = google.maps.geometry.spherical.computeDistanceBetween(
+        cityLatLng,
+        place.geometry.location
+      );
+      if (distance > 6000) return; 
+    }
   }
-    
+
     const marker = new google.maps.Marker({
       map,
       position: place.geometry.location,
@@ -680,6 +684,7 @@ function searchByCategory(type) {
   };
 
   service.nearbySearch(request, handleResults);
+  
 }
 //個人定位
 function locateUser(map) {

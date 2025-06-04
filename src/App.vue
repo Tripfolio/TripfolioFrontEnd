@@ -14,7 +14,7 @@ import { RouterLink, RouterView } from "vue-router";
         <RouterLink to="/calendar">連結 Google Calendar</RouterLink>
       </template>
 
-    <div class="flex-1 relative">
+    <div class="relative">
       <RouterView />
     </div>
   </div>
