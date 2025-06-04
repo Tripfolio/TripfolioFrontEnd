@@ -167,7 +167,8 @@
 
 <script setup>
 import { ref, onMounted, watch } from "vue";
-import { MapIcons, SubSetIcon } from "@/assets/MapIcons";
+import { MapIcons } from "@/assets/MapIcons";
+import { MarkerClusterer } from "@googlemaps/markerclusterer"; //marker的集合
 // 地圖與搜尋
 const mapRef = ref(null); // 地圖容器 (initMap)
 const searchQuery = ref(""); // 搜尋關鍵字 (searchPlace)
@@ -225,7 +226,7 @@ function initMap() {
     center: { lat: 25.033964, lng: 121.564472 },
     zoom: 18,
     mapTypeControl: false,
-    zoomControl: false,
+    zoomControl: true,
     cameraControl: false, // API 中沒有這項，可能是寫錯的
     scaleControl: false,
     fullscreenControl: false,
@@ -293,6 +294,35 @@ function handleResults(results, status, pagination) {
     });
 
     markers.push(marker);
+    const markerCluster = new MarkerClusterer({
+      map: map,
+      markers: markers,
+      renderer: {
+        render({ count, position }) {
+          const svg = `
+        <svg width="50" height="50" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="25" cy="25" r="22" fill="red" />
+          <text x="25" y="30" text-anchor="middle" font-size="18" fill="white" font-weight="bold">${count}</text>
+        </svg>
+      `;
+          return new google.maps.Marker({
+            position,
+            // icon: {
+            //   url:
+            //     "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(svg),
+            //   scaledSize: new google.maps.Size(50, 50),
+            //   anchor: new google.maps.Point(25, 25),
+            // },
+            label: {
+              text: String(count),
+              color: "white",
+              fontSize: "20px",
+              fontWeight: "bold",
+            },
+          });
+        },
+      },
+    });
 
     const detailRequest = {
       placeId: place.place_id,
@@ -405,14 +435,12 @@ function getPlaceIconUrl(types = []) {
         );
       }
     }
-  } else if (map.getZoom() < 18) {
-    //在這邊
   }
 
   // 沒有對應圖示就使用 default
-  // return (
-  //   "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(MapIcons.default)
-  // );
+  return (
+    "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(MapIcons.default)
+  );
 }
 
 onMounted(async () => {
