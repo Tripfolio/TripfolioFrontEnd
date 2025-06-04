@@ -1,13 +1,22 @@
 import { createRouter, createWebHistory } from "vue-router";
-import HomeView from "../views/HomeView.vue";
-import GoogleMapView from "@/views/GoogleMapView.vue";
+import HomeView from '@/views/HomeView.vue'
+import SignUp from '@/views/SignUp.vue'
 import LoginPage from '@/views/LoginPage.vue'
+import GoogleMapView from "@/views/GoogleMapView.vue";
+import MemberProfile from '@/views/MemberProfile.vue'
+import EmailSettings from '@/views/EmailSettings.vue'
+
 
 const routes = [
   {
     path: "/",
     name: "home",
     component: HomeView,
+  },
+  {
+    path: "/signup",
+    name: "signup",
+    component: SignUp,
   },
   {
     path: "/map",
@@ -19,6 +28,16 @@ const routes = [
     name: 'login',
     component: LoginPage,
   },
+  {
+    path: "/profile",
+    name: "profile",
+    component: MemberProfile,
+  },
+  {
+    path: "/emailSettings",
+    name: "emailSettings",
+    component: EmailSettings,
+  },
 ];
 
 const router = createRouter({
@@ -27,3 +46,4 @@ const router = createRouter({
 });
 
 export default router;
+
