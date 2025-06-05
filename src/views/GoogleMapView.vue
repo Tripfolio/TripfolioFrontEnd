@@ -194,6 +194,7 @@ let markers = []; // 所有標記 (searchPlace, 點擊地圖)
 let service = null; // 地點服務 (initMap)
 let directionsService; // 路線服務 (onMounted)
 let directionsRenderer; // 路線顯示器 (onMounted)
+let markerCluster = null;
 
 //當 selectedPlace 改變時，重設圖片索引
 watch(selectedPlace, (newVal) => {
@@ -213,7 +214,7 @@ function loadGoogleMaps() {
     script.src = `https://maps.googleapis.com/maps/api/js?key=${
       import.meta.env.VITE_GOOGLE_MAPS_API_KEY
     }&libraries=places`;
-    script.async = true;
+    // script.async = true;
     script.defer = true;
     script.onload = resolve;
     script.onerror = reject;
@@ -278,6 +279,13 @@ function handleResults(results, status, pagination) {
     alert("找不到地點！");
     return;
   }
+  markers.forEach((marker) => marker.setMap(null));
+  markers = [];
+  if (markerCluster) {
+    markerCluster.clearMarkers();
+    markerCluster = null;
+  }
+
   results.forEach((place) => {
     if (!place.geometry || !place.geometry.location) return;
 
@@ -294,35 +302,6 @@ function handleResults(results, status, pagination) {
     });
 
     markers.push(marker);
-    const markerCluster = new MarkerClusterer({
-      map: map,
-      markers: markers,
-      renderer: {
-        render({ count, position }) {
-          const svg = `
-        <svg width="50" height="50" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="25" cy="25" r="22" fill="red" />
-          <text x="25" y="30" text-anchor="middle" font-size="18" fill="white" font-weight="bold">${count}</text>
-        </svg>
-      `;
-          return new google.maps.Marker({
-            position,
-            // icon: {
-            //   url:
-            //     "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(svg),
-            //   scaledSize: new google.maps.Size(50, 50),
-            //   anchor: new google.maps.Point(25, 25),
-            // },
-            label: {
-              text: String(count),
-              color: "white",
-              fontSize: "20px",
-              fontWeight: "bold",
-            },
-          });
-        },
-      },
-    });
 
     const detailRequest = {
       placeId: place.place_id,
@@ -363,6 +342,25 @@ function handleResults(results, status, pagination) {
         });
       }
     });
+  });
+
+  markerCluster = new MarkerClusterer({
+    map: map,
+    markers: markers,
+    renderer: {
+      render({ count, position }) {
+        return new google.maps.Marker({
+          position,
+
+          label: {
+            text: String(count),
+            color: "white",
+            fontSize: "20px",
+            fontWeight: "bold",
+          },
+        });
+      },
+    },
   });
 
   // 分頁處理
@@ -426,17 +424,13 @@ function recalculateRoute() {
 // }
 
 function getPlaceIconUrl(types = []) {
-  if (map.getZoom() >= 18) {
-    for (const type of types) {
-      if (MapIcons[type]) {
-        return (
-          "data:image/svg+xml;charset=UTF-8," +
-          encodeURIComponent(MapIcons[type])
-        );
-      }
+  for (const type of types) {
+    if (MapIcons[type]) {
+      return (
+        "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(MapIcons[type])
+      );
     }
   }
-
   // 沒有對應圖示就使用 default
   return (
     "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(MapIcons.default)
