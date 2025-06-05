@@ -393,16 +393,16 @@ function searchPlace() {
   hasMoreResults.value = false;
 
   if (selectedCityName.value !== "none") {
-    // 選縣市 搜尋欄用文字搜尋
+    // 選縣市+搜尋欄 用文字搜尋
     const center = map.getCenter();
     const request = {
       query: `${searchQuery.value} ${selectedCityName.value}`,
       location: center,
-      radius: 3000,
+      radius: 1000,
     };
     service.textSearch(request, handleResults);
   } else {
-    // 選擇當前 搜尋欄用附近搜尋
+    // 選擇當前+搜尋欄 用附近搜尋
     const center = map.getCenter();
     const request = {
       location: center,
@@ -551,7 +551,7 @@ function moveToCity(event) {
           const center = new google.maps.LatLng(userLat, userLng);
           map.setCenter(center);
           map.setZoom(15);
-          searchNearby(userLat, userLng, 2000);
+          searchNearby(userLat, userLng, 3000);
         },
         () => {
           alert("⚠️ 無法取得你的定位！");
@@ -570,7 +570,7 @@ function moveToCity(event) {
   map.setCenter(center);
   map.setZoom(13);
 
-  searchNearbyByText(cityName, center, 5000);
+  searchNearbyByText(cityName, center, 4000);
 }
 
 // 當選擇的縣市改變時，重設搜尋關鍵字並移動地圖
@@ -580,7 +580,7 @@ function onCityChange(event) {
 }
 
 // 搜尋附近旅遊景點(用半徑)
-function searchNearby(lat, lng, radius = 5000) {
+function searchNearby(lat, lng, radius= 5000) {
   if (!service) {
     service = new google.maps.places.PlacesService(map);
   }
@@ -619,7 +619,7 @@ function searchNearby(lat, lng, radius = 5000) {
 }
 
 // 搜尋附近旅遊景點(用城市名稱)
-function searchNearbyByText(cityName, center, radius = 5000) {
+function searchNearbyByText(cityName, center, radius= 5000) {
   if (!service) {
     service = new google.maps.places.PlacesService(map);
   }
