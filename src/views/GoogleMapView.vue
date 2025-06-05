@@ -156,7 +156,9 @@
       <button @click="callItinerary">🤍 加入行程</button>
     </div>
   </div>
-  <aside
+
+  <aside 
+    v-show="!isToggled"
     class="w-20 p-4 space-y-2 bg-gray-400/30 absolute left-5 top-1/2 translate-y-[-50%] rounded-full shadow-4xl backdrop-blur-2xl"
     ref="menuRef"
   >
