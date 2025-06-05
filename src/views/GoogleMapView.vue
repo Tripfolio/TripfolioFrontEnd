@@ -398,7 +398,7 @@ function searchPlace() {
     const request = {
       query: `${searchQuery.value} ${selectedCityName.value}`,
       location: center,
-      radius: 5000,
+      radius: 3000,
     };
     service.textSearch(request, handleResults);
   } else {
@@ -406,7 +406,7 @@ function searchPlace() {
     const center = map.getCenter();
     const request = {
       location: center,
-      radius: 5000,
+      radius: 3000,
       keyword: searchQuery.value,
     };
     service.nearbySearch(request, handleResults);
@@ -421,23 +421,8 @@ function handleResults(results, status, pagination) {
     return;
   }
 
-if (results.length && results[0].geometry && results[0].geometry.location) {
-  map.setCenter(results[0].geometry.location);
-}
-results.forEach((place) => {
-  if (!place.geometry || !place.geometry.location) return;
-
-  if (selectedCityName.value !== "none") {
-    const city = cities.find((c) => c.name === selectedCityName.value);
-    if (city) {
-      const cityLatLng = new google.maps.LatLng(city.lat, city.lng);
-      const distance = google.maps.geometry.spherical.computeDistanceBetween(
-        cityLatLng,
-        place.geometry.location
-      );
-      if (distance > 6000) return; 
-    }
-  }
+  results.forEach((place) => {
+    if (!place.geometry || !place.geometry.location) return;// 防錯機制
 
     const marker = new google.maps.Marker({
       map,
@@ -680,7 +665,7 @@ function searchByCategory(type) {
   const service = new window.google.maps.places.PlacesService(map);
   const request = {
     location: map.getCenter(),
-    radius: 1000,
+    radius: 3000,
     type,
   };
 
