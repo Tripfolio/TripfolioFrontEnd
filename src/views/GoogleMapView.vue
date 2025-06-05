@@ -657,6 +657,9 @@ function searchNearbyByText(cityName, center, radius= 5000) {
 //篩選景點
 function searchByCategory(type) {
   if (!map || !type) return;
+  
+  // 點側邊 icon 時，清空搜尋欄文字
+  searchQuery.value = "";
 
   // 清除舊有 marker
   markers.forEach((m) => m.setMap(null));
