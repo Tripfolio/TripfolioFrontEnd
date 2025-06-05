@@ -57,7 +57,7 @@
   <div
     v-show="isToggled"
     v-if="placeDetails.length"
-    class="absolute top-20 left-0 z-[3] bg-white p-2.5 box-border grid max-w-full grid-cols-[repeat(auto-fill,minmax(250px,max-content))] justify-start gap-2.5 overflow-y-auto"
+    class="absolute top-20 left-50 z-[3] bg-white p-2.5 box-border grid w-60% grid-cols-[repeat(auto-fill,minmax(250px,max-content))] justify-start gap-2.5 overflow-y-auto"
   >
     <div
       v-for="(place, index) in placeDetails"
@@ -158,8 +158,7 @@
   </div>
 
   <aside 
-    v-show="!isToggled"
-    class="w-20 p-4 space-y-2 bg-gray-400/30 absolute left-5 top-1/2 translate-y-[-50%] rounded-full shadow-4xl backdrop-blur-2xl"
+    class="w-20 p-4 space-y-2 bg-gray-400/30 fixed z-50 left-5 top-1/2 translate-y-[-50%] rounded-full shadow-4xl backdrop-blur-2xl"
     ref="menuRef"
   >
     <button
@@ -394,7 +393,7 @@ function searchPlace() {
   hasMoreResults.value = false;
 
   if (selectedCityName.value !== "none") {
-    // 用文字搜尋 + 城市名
+    // 選縣市 搜尋欄用文字搜尋
     const center = map.getCenter();
     const request = {
       query: `${searchQuery.value} ${selectedCityName.value}`,
@@ -403,7 +402,7 @@ function searchPlace() {
     };
     service.textSearch(request, handleResults);
   } else {
-    // 用附近搜尋（用定位）
+    // 選擇當前 搜尋欄用附近搜尋
     const center = map.getCenter();
     const request = {
       location: center,
