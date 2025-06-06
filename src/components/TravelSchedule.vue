@@ -1,6 +1,9 @@
 <script setup>
 import{ ref, watch, onMounted } from 'vue';
 import axios from 'axios'; 
+import { Cropper } from 'vue-advanced-cropper'
+import 'vue-advanced-cropper/dist/style.css';
+
 const emit = defineEmits(['close'])
 
 
@@ -19,6 +22,10 @@ const endDate = ref('')
 const days = ref(0)
 const description = ref('')
 const isDirty = ref(false)
+const showCropper = ref(false)
+const cropImage = ref(null)
+const cropperRef = ref(null)
+
 
 //預覽封面圖片
 const coverPriviewUrl = ref('')
@@ -32,11 +39,24 @@ const uploadFile = () => {
     fileInput.value.click()
 };
 
-//使用者選了圖片後產生預覽網址
+//圖片一上傳進入裁切模式
 const handleFile = (event) => {
     file.value = event.target.files[0]
     if(file.value) {
-        coverPriviewUrl.value = URL.createObjectURL(file.value)
+        cropImage.value = URL.createObjectURL(file.value)
+        showCropper.value = true
+    }
+};
+
+//處理裁切的圖
+const applyCrop = () => {
+    const canvas = cropperRef.value?.getResult()?.canvas
+    if(canvas){
+        canvas.toBlob((blob) => {
+            file.value = new File([blob],`crooper-image.png`, { type: 'image/png'})
+            coverPriviewUrl.value = URL.createObjectURL(file.value)
+            showCropper.value = false
+        }, 'image/png' )
     }
 };
 
@@ -58,6 +78,7 @@ watch([startDate, endDate], () => {
 watch([title, startDate, endDate, description, file], () => {
     isDirty.value = true
 });
+
 
 //點X確認是否離開
 const handleClose = () => {
@@ -122,6 +143,16 @@ const scheduleSubmit = () => {
                     <button type="button" @click="uploadFile" class="bg-white px-3 py-1 rounded-full shadow flex items-center gap-1"><font-awesome-icon :icon="['fas', 'pen-to-square']" />上傳圖片</button>
                 </div>
                 <input ref="fileInput" type="file" accept="image/*" @change="handleFile" class="hidden">
+            </div>
+
+            <div v-if="showCropper" class="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50">
+                <div class="bg-white p-4 rounded-lg max-w-md w-full">
+                    <cropper ref="cropperRef" :src="cropImage" :stencil-props="{ aspect: 2 }" :autoZoom = "true" :resizeImage="true" class="w-full h-64" />
+                    <div class="flex justify-end gap-2 mt-4">
+                        <button @click="showCropper = false" class="bg-gray-300 px-4 py-2 rounded">取消</button>
+                        <button type="button" @click="applyCrop" class="bg-blue-500 text-white px-4 py-2 rounded">裁切</button>                   
+                    </div>
+                </div>
             </div>
 
             <div>
