@@ -657,9 +657,13 @@ function searchNearbyByText(cityName, center, radius= 5000) {
 //篩選景點
 function searchByCategory(type) {
   if (!map || !type) return;
-  
+    
   // 點側邊 icon 時，清空搜尋欄文字
   searchQuery.value = "";
+
+  // 清空資料，避免殘影
+  placeDetails.value = [];
+  selectedPlace.value = null;
 
   // 清除舊有 marker
   markers.forEach((m) => m.setMap(null));
@@ -672,9 +676,29 @@ function searchByCategory(type) {
     type,
   };
 
-  service.nearbySearch(request, handleResults);
-  
-}
+  service.nearbySearch(request, (results, status, pagination) => {
+    
+    //確認有結果才執行後續處理
+    if (status === google.maps.places.PlacesServiceStatus.OK && results.length) {
+      results.forEach((place) => {
+        const marker = new google.maps.Marker({
+          map,
+          position: place.geometry.location,
+          title: place.name,
+        });
+        markers.push(marker);
+
+        marker.addListener("click", () => {
+          selectedPlace.value = place;
+        });
+      });
+
+      placeDetails.value = results; //卡片模式會立即刷新
+    }
+  })
+};
+
+
 //個人定位
 function locateUser(map) {
   if (!navigator.geolocation) {
@@ -781,9 +805,8 @@ onMounted(async () => {
       searchPlace();
     });
 
-    // 地圖點擊事件：結合雙方功能
+    // 地圖點擊事件
     map.addListener("click", (event) => {
-      // 點擊邏輯來自你的 HEAD 分支
       markers.forEach((marker) => marker.setMap(null));
       markers = [];
       placeDetails.value = [];
@@ -844,7 +867,7 @@ onMounted(async () => {
       }
     });
 
-    // 額外來自 dev 分支：handleClickOutside 功能（若你有定義）
+    // 使用者點擊地圖任意位置時，執行 handleClickOutside
     map.addListener("click", handleClickOutside);
 
   } catch (err) {
