@@ -1,3 +1,57 @@
+<template>
+    <div class="relative max-w-xl mx-auto p-4 border rounded bg-white">
+        <button type="button" @click="handleClose" class="absolute top-2 right-2 text-xl"><font-awesome-icon :icon="['fas', 'xmark']" /></button>
+        <form @submit.prevent="scheduleSubmit" class="space-y-4 p-4 rounded max-w-xl mx-auto">
+            <span class="text-2xl font-bold">行程設定</span>
+
+            <div class="relative">
+                <img :src="coverPriviewUrl || defaultCover" class="w-full h-48 object-cover rounded-xl shadow" alt="封面圖片">
+                <div class="absolute op-0 right-0 size-40">
+                    <button type="button" @click="uploadFile" class="bg-white px-3 py-1 rounded-full shadow flex items-center gap-1"><font-awesome-icon :icon="['fas', 'pen-to-square']" />上傳圖片</button>
+                </div>
+                <input ref="fileInput" type="file" accept="image/*" @change="handleFile" class="hidden">
+            </div>
+
+            <div v-if="showCropper" class="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50">
+                <div class="bg-white p-4 rounded-lg max-w-md w-full">
+                    <cropper ref="cropperRef" :src="cropImage" :stencil-props="{ aspect: 2 }" :autoZoom = "true" :resizeImage="true" class="w-full h-64" />
+                    <div class="flex justify-end gap-2 mt-4">
+                        <button @click="showCropper = false" class="bg-gray-300 px-4 py-2 rounded">取消</button>
+                        <button type="button" @click="applyCrop" class="bg-blue-500 text-white px-4 py-2 rounded">裁切</button>                   
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <label class="block mb-1">行程名稱<span class="text-red-500">*</span></label>
+                <input type="text" v-model="title" class="border p-2 w-full rounded" placeholder="幫行程取個名字⸜(*ˊᗜˋ*)⸝">
+            </div>
+
+            <div>
+                <label class="block mb-1">行程日期<span class="text-red-500">*</span></label>
+                <div>
+                    <input type="date" v-model="startDate" class="border p-2 rounded"/>
+                    <span> - </span>
+                    <input type="date" v-model="endDate" :min="startDate" class="border p-2 rounded"/>
+                    <span v-if="days > 0" class="text-sm text-gray-500 mt-1"> 共 {{ days }} 天</span>
+                </div>
+            </div>
+
+            <div>
+                <label class="block mb-1">行程描述(可選填)</label>
+                <textarea v-model="description" class="border p-2 w-full h-24 rounded" placeholder="請簡單記錄一下自己的行程吧~(ﾉ˶>ᗜ​<˵)ﾉ"></textarea>
+            </div>
+
+            <div class="flex justify-end gap-2">
+                <button type="button" @click="scheduleCancel" class="bg-gray-300 hover:bg-gray-200 px-4 py-2 rounded">取消</button>
+                <button type="submit" class="bg-blue-400 hover:bg-blue-300 text-white px-4 py-2 rounded">建立</button>
+            </div>
+        </form>
+    </div>
+</template>
+
+
+
 <script setup>
 import{ ref, watch, onMounted } from 'vue';
 import axios from 'axios'; 
@@ -102,86 +156,43 @@ const scheduleCancel = () => {
     isDirty.value = false
 };
 
-//點儲存打包成formData (還沒串後端)
-const scheduleSubmit = () => {
+//點儲存打包成formData
+const scheduleSubmit = async() => {
     if(!title.value || !startDate.value || !endDate.value){
         alert ('請填寫行程名稱及行程開始/結束日期')
         return
     }
 
     const formData = new FormData()
-        if(file.value)
-        formData.append('cover', file.value)
-        formData.append('title', title.value)
-        formData.append('startDate', startDate.value)
-        formData.append('endDate', endDate.value)
-        formData.append('description', description.value)
-        formData.append('memberId', localStorage.getItem('memberId') || '1')
+    if(file.value)
+    formData.append('cover', file.value)
+    formData.append('title', title.value)
+    formData.append('startDate', startDate.value)
+    formData.append('endDate', endDate.value)
+    formData.append('description', description.value)
+    formData.append('memberId', localStorage.getItem('memberId') || '1')
 
-    //暫時先log 之後再串後端
-    for (let pair of formData.entries()){
-        console.log(pair[0],':',pair[1])
+    try{
+        const response = await axios.post('http://localhost:3000/api/travelSchedule', formData, {
+            headers:{
+                'Content-Type': 'multipart/form-data',
+            },
+        })
+
+        console.log('建立成功', response.data)
+        alert('已儲存')
+        isDirty.value = false
+        emit('close')
+    } catch (err) {
+        console.log('建立失敗', error)
+        alert('儲存失敗，請稍後再試')
     }
-    alert('已儲存')
-    isDirty.value = false
-    emit('close')
 };
 
 
 </script>
 
 
-<template>
-    <div class="relative max-w-xl mx-auto p-4 border rounded bg-white">
-        <button type="button" @click="handleClose" class="absolute top-2 right-2 text-xl"><font-awesome-icon :icon="['fas', 'xmark']" /></button>
-        <form @submit.prevent="scheduleSubmit" class="space-y-4 p-4 rounded max-w-xl mx-auto">
-            <span class="text-2xl font-bold">行程設定</span>
-
-            <div class="relative">
-                <img :src="coverPriviewUrl || defaultCover" class="w-full h-48 object-cover rounded-xl shadow" alt="封面圖片">
-                <div class="absolute op-0 right-0 size-40">
-                    <button type="button" @click="uploadFile" class="bg-white px-3 py-1 rounded-full shadow flex items-center gap-1"><font-awesome-icon :icon="['fas', 'pen-to-square']" />上傳圖片</button>
-                </div>
-                <input ref="fileInput" type="file" accept="image/*" @change="handleFile" class="hidden">
-            </div>
-
-            <div v-if="showCropper" class="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50">
-                <div class="bg-white p-4 rounded-lg max-w-md w-full">
-                    <cropper ref="cropperRef" :src="cropImage" :stencil-props="{ aspect: 2 }" :autoZoom = "true" :resizeImage="true" class="w-full h-64" />
-                    <div class="flex justify-end gap-2 mt-4">
-                        <button @click="showCropper = false" class="bg-gray-300 px-4 py-2 rounded">取消</button>
-                        <button type="button" @click="applyCrop" class="bg-blue-500 text-white px-4 py-2 rounded">裁切</button>                   
-                    </div>
-                </div>
-            </div>
-
-            <div>
-                <label class="block mb-1">行程名稱<span class="text-red-500">*</span></label>
-                <input type="text" v-model="title" class="border p-2 w-full rounded" placeholder="幫行程取個名字⸜(*ˊᗜˋ*)⸝">
-            </div>
-
-            <div>
-                <label class="block mb-1">行程日期<span class="text-red-500">*</span></label>
-                <div>
-                    <input type="date" v-model="startDate" class="border p-2 rounded"/>
-                    <span> - </span>
-                    <input type="date" v-model="endDate" :min="startDate" class="border p-2 rounded"/>
-                    <span v-if="days > 0" class="text-sm text-gray-500 mt-1"> 共 {{ days }} 天</span>
-                </div>
-            </div>
-
-            <div>
-                <label class="block mb-1">行程描述(可選填)</label>
-                <textarea v-model="description" class="border p-2 w-full h-24 rounded" placeholder="請簡單記錄一下自己的行程吧~(ﾉ˶>ᗜ​<˵)ﾉ"></textarea>
-            </div>
-
-            <div class="flex justify-end gap-2">
-                <button type="button" @click="scheduleCancel" class="bg-gray-300 hover:bg-gray-200 px-4 py-2 rounded">取消</button>
-                <button type="submit" class="bg-blue-400 hover:bg-blue-300 text-white px-4 py-2 rounded">建立</button>
-            </div>
-        </form>
-    </div>
-</template>
 
 <style>
 
