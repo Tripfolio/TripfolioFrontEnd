@@ -10,14 +10,65 @@
       ghost-class="bg-yellow-100"
       animation="200"
     >
-      <template #item="{ element: p }">
-        <li class="mb-4 border-b p-5 last:border-none bg-gray-500">
-          <strong class="block">{{ p.name }}</strong>
-          <strong class="block text-yellow-600">{{ p.rating }}</strong>
-          <img :src="p.photo" class="aspect-[4/3]" />
-          <span class="text-sm text-gray-200">{{ p.address }}</span>
+      <template #item="{ element: p, index }">
+        <li
+          class="mb-4 border-b bg-gray-500 list-none flex justify-between rounded-2xl w-l relative items-stretch"
+        >
+          <!-- 右半邊 -->
+          <div class="w-1/2 p-3">
+            <h3 class="block text-white text-l mb-1.5">{{ p.name }}</h3>
+            <button class="flex flex-col items-start">
+              <p
+                v-if="!p.editingTime"
+                class="text-white cursor-pointer text-xs pb-5"
+                @click="p.editingTime = true"
+              >
+                {{ arrivalTime }}抵達
+              </p>
+            </button>
+            <p class="text-xs text-white">離開時間：{{ leaveTime }}</p>
+          </div>
+          <!-- 右半邊end -->
+          <img
+            :src="p.photo"
+            class="w-1/2 rounded-tr-lg rounded-br-lg object-cover"
+          />
+          <!-- <strong class="block text-yellow-600">{{ p.rating }}</strong> -->
+          <!-- <span class="text-sm text-gray-200">{{ p.address }}</span> -->
           <br />
-          <button @click="removePlace(p)">🗑️ remove</button>
+          <!-- 選單按鈕 -->
+          <div
+            class="relative"
+            v-click-outside="{
+              handler: () => {
+                menuOpen = false;
+              },
+            }"
+          >
+            <button
+              @click="toggleMenu(index)"
+              class="button-list absolute right-0"
+            >
+              <font-awesome-icon
+                icon="ellipsis-h"
+                class="p-1 text-white bg-cyan-800 rounded-full cursor-pointer absolute right-2 top-2"
+              />
+            </button>
+            <ul
+              v-if="openMenuIndex === index"
+              class="absolute right-0 mt-12 bg-white shadow rounded"
+            >
+              <li>
+                <button
+                  @click="removePlace(p)"
+                  class="w-full text-left px-4 py-2 hover:bg-gray-100"
+                >
+                  🗑️ remove
+                </button>
+              </li>
+            </ul>
+          </div>
+          <!-- 選單按鈕end -->
         </li>
       </template>
     </draggable>
@@ -29,6 +80,7 @@ import { ref } from "vue";
 import axios from "axios";
 import { onMounted } from "vue";
 import draggable from "vuedraggable";
+
 onMounted(() => {
   loadItinerary();
 });
@@ -51,6 +103,23 @@ const props = defineProps({
   defaultImage: String,
 });
 const itineraryPlaces = ref([]);
+const arrivalTime = ref("12:00");
+const leaveTime = ref("13:00");
+let menuOpen = ref(false);
+// const toggleMenu = () => {
+//   menuOpen.value = !menuOpen.value;
+// };
+
+const openMenuIndex = ref(null);
+
+const toggleMenu = (index) => {
+  openMenuIndex.value = openMenuIndex.value === index ? null : index;
+};
+
+const closeMenu = () => {
+  console.log("outside"); // ⬅️ 如果這個出現了就代表成功
+  menuOpen.value = false;
+};
 
 // 加入行程
 async function addPlace() {

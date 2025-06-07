@@ -1,22 +1,30 @@
-import './assets/main.css'
+import "./assets/main.css";
 
-import { createApp } from 'vue'
-import { createPinia } from 'pinia'
+import { createApp } from "vue";
+import { createPinia } from "pinia";
 
-import App from './App.vue'
-import router from './router'
+import App from "./App.vue";
+import router from "./router";
 
-import { library } from '@fortawesome/fontawesome-svg-core'
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { faExclamationTriangle, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons'
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import vClickOutside from "v-click-outside";
 
-library.add(faExclamationTriangle, faEye, faEyeSlash)
+import {
+  faExclamationTriangle,
+  faEye,
+  faEyeSlash,
+  faEllipsisH,
+} from "@fortawesome/free-solid-svg-icons";
 
-const app = createApp(App)
+library.add(faExclamationTriangle, faEye, faEyeSlash, faEllipsisH);
 
-app.use(createPinia())
-app.use(router)
+const app = createApp(App);
 
-app.component('FontAwesomeIcon', FontAwesomeIcon)
+app.use(createPinia());
+app.use(router);
+app.use(vClickOutside);
 
-app.mount('#app')
+app.component("FontAwesomeIcon", FontAwesomeIcon);
+
+app.mount("#app");
