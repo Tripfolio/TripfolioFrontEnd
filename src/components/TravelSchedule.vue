@@ -5,7 +5,7 @@
             <span class="text-2xl font-bold">行程設定</span>
 
             <div class="relative">
-                <img :src="coverPriviewUrl || defaultCover" class="w-full h-48 object-cover rounded-xl shadow" alt="封面圖片">
+                <img :src="coverPreviewUrl || defaultCover" class="w-full h-48 object-cover rounded-xl shadow" alt="封面圖片">
                 <div class="absolute op-0 right-0 size-40">
                     <button type="button" @click="uploadFile" class="bg-white px-3 py-1 rounded-full shadow flex items-center gap-1"><font-awesome-icon :icon="['fas', 'pen-to-square']" />上傳圖片</button>
                 </div>
@@ -53,7 +53,7 @@
 
 
 <script setup>
-import{ ref, watch, onMounted } from 'vue';
+import{ ref, watch } from 'vue';
 import axios from 'axios'; 
 import { Cropper } from 'vue-advanced-cropper'
 import 'vue-advanced-cropper/dist/style.css';
@@ -62,11 +62,13 @@ const emit = defineEmits(['close'])
 
 
 //確認會員登入
-const memberId = localStorage.getItem('memberId') || '1'
-if(!memberId){
-    alert ('請先登入會員')
-    throw new Error('memberId 不存在')
+const token = localStorage.getItem("token");
+if(!token){
+    alert("請先登入會員");
+    emit('close')
+    throw new Error("尚未登入");
 };
+
 
 //狀態
 const file = ref(null)
@@ -82,7 +84,7 @@ const cropperRef = ref(null)
 
 
 //預覽封面圖片
-const coverPriviewUrl = ref('')
+const coverPreviewUrl = ref('')
 const defaultCover = 'https://via.placeholder.com/800x400?text=行程封面'
 
 //DOM元素參考
@@ -108,7 +110,7 @@ const applyCrop = () => {
     if(canvas){
         canvas.toBlob((blob) => {
             file.value = new File([blob],`crooper-image.png`, { type: 'image/png'})
-            coverPriviewUrl.value = URL.createObjectURL(file.value)
+            coverPreviewUrl.value = URL.createObjectURL(file.value)
             showCropper.value = false
         }, 'image/png' )
     }
@@ -156,7 +158,7 @@ const scheduleCancel = () => {
     isDirty.value = false
 };
 
-//點儲存打包成formData
+//點儲存打包成formData送到後端
 const scheduleSubmit = async() => {
     if(!title.value || !startDate.value || !endDate.value){
         alert ('請填寫行程名稱及行程開始/結束日期')
@@ -170,12 +172,12 @@ const scheduleSubmit = async() => {
     formData.append('startDate', startDate.value)
     formData.append('endDate', endDate.value)
     formData.append('description', description.value)
-    formData.append('memberId', localStorage.getItem('memberId') || '1')
 
     try{
         const response = await axios.post('http://localhost:3000/api/travelSchedule', formData, {
             headers:{
                 'Content-Type': 'multipart/form-data',
+                Authorization: `Bearer ${ token }`,
             },
         })
 
@@ -184,7 +186,7 @@ const scheduleSubmit = async() => {
         isDirty.value = false
         emit('close')
     } catch (err) {
-        console.log('建立失敗', error)
+        console.log('建立失敗', err)
         alert('儲存失敗，請稍後再試')
     }
 };
