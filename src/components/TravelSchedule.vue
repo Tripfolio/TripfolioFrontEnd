@@ -61,15 +61,6 @@ import 'vue-advanced-cropper/dist/style.css';
 const emit = defineEmits(['close'])
 
 
-//確認會員登入
-const token = localStorage.getItem("token");
-if(!token){
-    alert("請先登入會員");
-    emit('close')
-    throw new Error("尚未登入");
-};
-
-
 //狀態
 const file = ref(null)
 const title = ref('')
@@ -161,33 +152,35 @@ const scheduleCancel = () => {
 //點儲存打包成formData送到後端
 const scheduleSubmit = async() => {
     if(!title.value || !startDate.value || !endDate.value){
-        alert ('請填寫行程名稱及行程開始/結束日期')
-        return
+        alert('請填寫行程名稱及行程開始/結束日期');
+        return;
     }
 
-    const formData = new FormData()
+    const token = localStorage.getItem('token');
+
+    const formData = new FormData();
     if(file.value)
-    formData.append('cover', file.value)
-    formData.append('title', title.value)
-    formData.append('startDate', startDate.value)
-    formData.append('endDate', endDate.value)
-    formData.append('description', description.value)
+        formData.append('cover', file.value);
+        formData.append('title', title.value);
+        formData.append('startDate', startDate.value);
+        formData.append('endDate', endDate.value);
+        formData.append('description', description.value);
 
-    try{
+    try {
         const response = await axios.post('http://localhost:3000/api/travelSchedule', formData, {
-            headers:{
+            headers: {
                 'Content-Type': 'multipart/form-data',
-                Authorization: `Bearer ${ token }`,
+                Authorization: `Bearer ${token}`,
             },
-        })
+        });
 
-        console.log('建立成功', response.data)
-        alert('已儲存')
-        isDirty.value = false
-        emit('close')
+        console.log('建立成功', response.data);
+        alert('已儲存');
+        isDirty.value = false;
+        emit('close');
     } catch (err) {
-        console.log('建立失敗', err)
-        alert('儲存失敗，請稍後再試')
+        console.log('建立失敗', err);
+        alert('儲存失敗，請稍後再試');
     }
 };
 
