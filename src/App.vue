@@ -19,7 +19,11 @@ import { RouterLink, RouterView } from "vue-router";
   </div>
   
   <div v-if="$route.path !== '/profile'">
-  <RouterLink to="/profile">會員資料修改</RouterLink>
+    <RouterLink to="/profile">會員資料修改</RouterLink>
+  </div>
+
+  <div v-if="$route.path !== '/trips'">
+    <RouterLink to="/trips">行程建立</RouterLink>
   </div>
   <RouterView />
   

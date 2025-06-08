@@ -1,22 +1,45 @@
-import './assets/main.css'
+import './assets/main.css';
 
-import { createApp } from 'vue'
-import { createPinia } from 'pinia'
+import { createApp } from 'vue';
+import { createPinia } from 'pinia';
 
-import App from './App.vue'
-import router from './router'
+import App from './App.vue';
+import router from './router';
 
-import { library } from '@fortawesome/fontawesome-svg-core'
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { faExclamationTriangle, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons'
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import {
+    faXmark,
+    faPenToSquare,
+    faAngleLeft,
+    faAngleRight,     
+    faPlus,
+    faArrowLeft,
+    faCamera,
+} from '@fortawesome/free-solid-svg-icons';
 
-library.add(faExclamationTriangle, faEye, faEyeSlash)
 
-const app = createApp(App)
+library.add(
+    faXmark,
+    faPenToSquare,
+    faAngleLeft,
+    faAngleRight,
+    faPlus,
+    faArrowLeft,
+    faCamera,
+);
 
-app.use(createPinia())
-app.use(router)
+const app = createApp(App);
+const pinia = createPinia();
 
-app.component('FontAwesomeIcon', FontAwesomeIcon)
+app.use(pinia);
 
-app.mount('#app')
+import { useTripStore } from '@/stores/tripStore';
+const tripStore = useTripStore();
+tripStore.load();
+
+app.use(router);
+
+app.component('FontAwesomeIcon', FontAwesomeIcon);
+
+app.mount('#app');
