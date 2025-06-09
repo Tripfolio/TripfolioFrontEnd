@@ -17,36 +17,63 @@
           <!-- 右半邊 -->
           <div class="w-1/2 p-3">
             <h3 class="block text-white text-l mb-1.5">{{ p.name }}</h3>
-            <button class="flex flex-col items-start">
+            <!-- 時間選單與按鈕 -->
+            <div class="flex flex-col items-start text-white text-xs">
               <p
                 v-if="!p.editingTime"
-                class="text-white cursor-pointer text-xs pb-5"
-                @click="p.editingTime = true"
+                class="cursor-pointer pb-2"
+                @click="startEditing(p)"
               >
-                {{ arrivalTime }}抵達
+                抵達時間：{{ formatTime(p.arrivalHour, p.arrivalMinute) }}
               </p>
-            </button>
-            <p class="text-xs text-white">離開時間：{{ leaveTime }}</p>
+
+              <div v-else class="flex flex-col gap-1">
+                <div class="flex gap-1 items-center">
+                  <!-- 小時 -->
+                  <select
+                    v-model="p.arrivalHourTemp"
+                    class="appearance-none outline-0"
+                  >
+                    <option v-for="h in 24" :key="h" :value="h - 1">
+                      {{ (h - 1).toString().padStart(2, "0") }}
+                    </option>
+                  </select>
+                  :
+                  <!-- 分鐘 -->
+                  <select
+                    v-model="p.arrivalMinuteTemp"
+                    class="appearance-none outline-0"
+                  >
+                    <option v-for="m in [0, 15, 30, 45]" :key="m" :value="m">
+                      {{ m.toString().padStart(2, "0") }}
+                    </option>
+                  </select>
+                  抵達
+                </div>
+
+                <div class="flex gap-2 mt-1">
+                  <button @click="confirmTime(p)" class="text-green-300">
+                    ✔ 更改
+                  </button>
+                  <button @click="cancelEditing(p)" class="text-red-300">
+                    ✘ 取消
+                  </button>
+                </div>
+              </div>
+            </div>
+            <!-- <p class="text-xs text-white">離開時間：{{ leaveTime }}</p> -->
           </div>
           <!-- 右半邊end -->
           <img
             :src="p.photo"
             class="w-1/2 rounded-tr-lg rounded-br-lg object-cover"
           />
-          <!-- <strong class="block text-yellow-600">{{ p.rating }}</strong> -->
-          <!-- <span class="text-sm text-gray-200">{{ p.address }}</span> -->
+
           <br />
           <!-- 選單按鈕 -->
-          <div
-            class="relative"
-            v-click-outside="{
-              handler: () => {
-                menuOpen = false;
-              },
-            }"
-          >
+          <div class="relative">
             <button
-              @click="toggleMenu(index)"
+              @click.stop="toggleMenu(index)"
               class="button-list absolute right-0"
             >
               <font-awesome-icon
@@ -76,15 +103,18 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted, onBeforeUnmount } from "vue";
 import axios from "axios";
-import { onMounted } from "vue";
 import draggable from "vuedraggable";
 
 onMounted(() => {
   loadItinerary();
+  window.addEventListener("click", onClickOutside);
 });
 
+onBeforeUnmount(() => {
+  window.removeEventListener("click", onClickOutside);
+});
 async function loadItinerary() {
   try {
     const res = await axios.get("http://localhost:3000/api/itinerary/places", {
@@ -92,6 +122,7 @@ async function loadItinerary() {
         itineraryId: 1,
       },
     });
+
     itineraryPlaces.value = res.data.places;
   } catch (error) {
     console.error("載入行程失敗:", error);
@@ -102,25 +133,61 @@ const props = defineProps({
   selectedPlace: Object,
   defaultImage: String,
 });
-const itineraryPlaces = ref([]);
-const arrivalTime = ref("12:00");
-const leaveTime = ref("13:00");
-let menuOpen = ref(false);
-// const toggleMenu = () => {
-//   menuOpen.value = !menuOpen.value;
-// };
 
 const openMenuIndex = ref(null);
+const itineraryPlaces = ref([]);
+const leaveTime = ref("13;00");
+let menuOpen = ref(false);
 
 const toggleMenu = (index) => {
   openMenuIndex.value = openMenuIndex.value === index ? null : index;
 };
 
-const closeMenu = () => {
-  console.log("outside"); // ⬅️ 如果這個出現了就代表成功
-  menuOpen.value = false;
-};
+// 全局點擊事件處理
+function onClickOutside(event) {
+  // 判斷點擊的目標元素
+  // 這裡用 class 名稱判斷，建議你的按鈕和選單都有明確 class
+  const target = event.target;
+  if (
+    !target.closest(".button-list") && // 按鈕外面
+    !target.closest(".menu-list") // 選單外面
+  ) {
+    openMenuIndex.value = null;
+  }
+}
 
+function startEditing(p) {
+  p.editingTime = true;
+  // 暫存目前的時間
+  p.arrivalHourTemp = p.arrivalHour ?? 0;
+  p.arrivalMinuteTemp = p.arrivalMinute ?? 0;
+}
+
+async function confirmTime(p) {
+  p.arrivalHour = p.arrivalHourTemp;
+  p.arrivalMinute = p.arrivalMinuteTemp;
+  p.editingTime = false;
+
+  try {
+    await axios.put(`http://localhost:3000/api/itinerary/places/${p.id}`, {
+      arrivalHour: p.arrivalHour,
+      arrivalMinute: p.arrivalMinute,
+    });
+    console.log("✅ 抵達時間更新成功");
+  } catch (err) {
+    console.error("❌ 更新抵達時間失敗：", err);
+  }
+}
+
+function cancelEditing(p) {
+  p.editingTime = false;
+}
+
+function formatTime(hour, minute) {
+  const h = (hour ?? 0).toString().padStart(2, "0");
+  const m = (minute ?? 0).toString().padStart(2, "0");
+  return `${h}:${m}`;
+}
 // 加入行程
 async function addPlace() {
   if (!props.selectedPlace) {
@@ -137,6 +204,11 @@ async function addPlace() {
   }
 
   try {
+    const defaultHour = 9;
+    const defaultMinute = 0;
+    // const arrivalTime = `${place.arrivalHour
+    //   .toString()
+    //   .padStart(2, "0")}:${place.arrivalMinute.toString().padStart(2, "0")}`;
     const rep = await axios.post(
       "http://localhost:3000/api/itinerary/add-place",
       {
@@ -147,6 +219,8 @@ async function addPlace() {
           props.selectedPlace.photos && props.selectedPlace.photos.length
             ? props.selectedPlace.photos[0].getUrl({ maxWidth: 1000 })
             : props.defaultImage,
+        arrivalHour: defaultHour,
+        arrivalMinute: defaultMinute,
       }
     );
 
@@ -159,6 +233,8 @@ async function addPlace() {
           props.selectedPlace.photos && props.selectedPlace.photos.length
             ? props.selectedPlace.photos[0].getUrl({ maxWidth: 1000 })
             : props.defaultImage,
+        arrivalHour: defaultHour,
+        arrivalMinute: defaultMinute,
       });
       alert("✅ 成功加入行程！");
     } else {
@@ -194,3 +270,9 @@ async function removePlace(place) {
 }
 defineExpose({ addPlace });
 </script>
+
+<style scoped>
+input[type="time"]::-webkit-calendar-picker-indicator {
+  display: none;
+}
+</style>
