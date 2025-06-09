@@ -1,95 +1,121 @@
 <template>
     <Itinerary ref="itineraryRef" :selectedPlace="selectedPlace" class="z-[4]" :default-image="defaultImage"/>
   
-  <div
-    class="absolute top-2.5 left-1/2 -translate-x-1/2 z-[2] flex items-center gap-2.5 bg-gray-400/90 px-2.5 py-2.5 rounded-full"
-  >
-    <div class="relative w-[300px]">
+  <div class="absolute top-2.5 left-1/2 -translate-x-1/2 z-[2] flex items-center gap-2.5 bg-gray-400/95 px-2 py-1 rounded-full">
+    <div class="relative w-fit">
+      <select
+        @change="onCityChange($event)"
+        class="appearance-none bg-gray-500/80 text-white text-sm py-2 pl-4 pr-10 rounded-full focus:outline-none hover:bg-gray-400 transition duration-200 cursor-pointer shadow-inner"
+      >
+        <option value="none">當前</option>
+        <option v-for="city in cities" :key="city.name" :value="city.name">
+          {{ city.name }}
+        </option>
+      </select>
       <svg
-        xmlns="http://www.w3.org/2000/svg"
+        class="w-4 h-4 absolute right-3 top-1/2 -translate-y-1/2 text-white pointer-events-none"
         fill="none"
-        viewBox="0 0 24 24"
-        stroke-width="1.5"
         stroke="currentColor"
-        class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-white pointer-events-none"
+        stroke-width="2"
+        viewBox="0 0 24 24"
       >
         <path
           stroke-linecap="round"
           stroke-linejoin="round"
-          d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
+          d="M19 9l-7 7-7-7"
         />
       </svg>
-      <input
-        type="text"
-        v-model="searchQuery"
-        placeholder="輸入地點"
-        class="w-full rounded-full border-none text-white bg-gray-600/70 px-10 py-2.5 box-border text-base placeholder-white"
-        ref="searchInput"
-        @keyup.enter="searchPlace"
-      />
-      <button
-        @click.prevent="searchPlace"
-        class="absolute right-1.5 top-1/2 -translate-y-1/2 bg-gray-400 px-2.5 py-1.5 rounded-full border-none cursor-pointer text-xs text-white"
-      >
-        搜尋
-      </button>
+    </div>
+      <div class="relative w-[300px]">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="absolute left-0 top-1/2 -translate-y-1/2 w-5 h-5 text-white pointer-events-none"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
+          />
+        </svg>
+        <input
+          type="text"
+          v-model="searchQuery"
+          placeholder="輸入地點"
+          class="w-full rounded-full border-none text-white px-7 py-1.5 box-border text-base placeholder-white focus:outline-none"
+          ref="searchInput"
+          @keyup.enter="searchPlace"
+        />
+        <button
+          @click.prevent="searchPlace"
+          class="absolute right-0.5 top-1/2 -translate-y-1/2 bg-white px-2.5 py-1.5 rounded-full border-none cursor-pointer text-xs text-gray-800"
+        >
+          搜尋
+        </button>
+      </div>
     </div>
 
-    <!-- Toggle switch -->
-    <label class="relative inline-block w-20 h-8.5">
-      <input type="checkbox" v-model="isToggled" class="opacity-0 w-0 h-0" />
-      <span
-        class="absolute cursor-pointer top-0 left-0 right-0 bottom-0 bg-gray-300 transition duration-300 rounded-full"
-      >
-        <span
-          class="absolute h-6 w-10 left-1.5 bottom-1.5 bg-white rounded-full flex items-center justify-center text-xs font-bold text-black transition duration-300"
-          :class="{ 'translate-x-7': isToggled }"
-          :style="{ content: isToggled ? `'卡片'` : `'地圖'` }"
-        >
-          {{ isToggled ? "卡片" : "地圖" }}
-        </span>
-      </span>
-    </label>
-  </div>
+  <div ref="mapRef" class="w-screen h-screen m-0 p-0"></div>
 
-  <div v-show="!isToggled" ref="mapRef" class="w-screen h-screen m-0 p-0"></div>
-
+  <!-- 景點卡片滑動列 -->
   <div
-    v-show="isToggled"
     v-if="placeDetails.length"
-    class="absolute top-20 left-50 z-[3] bg-white p-2.5 box-border grid w-60% grid-cols-[repeat(auto-fill,minmax(250px,max-content))] justify-start gap-2.5 overflow-y-auto"
+    class="absolute bottom-2 left-1/2 -translate-x-1/2 z-[3] w-[92%] max-w-screen-xl"
   >
     <div
-      v-for="(place, index) in placeDetails"
-      :key="index"
-      @click="selectedPlace = place"
-      class="bg-gray-300 rounded-lg p-3 shadow-sm min-w-0 max-w-full hover:bg-slate-400 cursor-pointer transition duration-300"
+      class="relative bg-white/80 backdrop-blur-lg rounded-2xl shadow-xl px-6 py-4"
     >
-      <h2
-        :title="place.name"
-        class="w-full text-xl font-bold whitespace-nowrap overflow-hidden text-ellipsis mb-2"
-      >
-        {{ place.name }}
-      </h2>
-
-      <img
-        :src="
-          place.photos && place.photos.length
-            ? place.photos[0].getUrl({ maxWidth: 1000 })
-            : defaultImage
-        "
-        @error="(e) => (e.target.src = defaultImage)"
-        alt="地點圖片"
-        class="max-w-full aspect-[4/3] object-cover rounded-lg mt-2.5"
-      />
-    </div>
-
-    <div v-if="hasMoreResults" class="col-span-full text-center mt-2.5">
       <button
-        class="bg-gray-500 text-white py-2.5 px-5 rounded-full cursor-pointer text-lg w-1/2 hover:bg-gray-800"
-        @click="loadNextPage"
+        @click="scrollLeft"
+        class="absolute left-0 top-1/2 -translate-y-1/2 z-20 bg-white/90 hover:bg-white shadow px-3 py-2 rounded-full"
       >
-        🔄 載入更多
+        ‹
+      </button>
+
+      <div
+        ref="cardContainer"
+        class="flex gap-4 overflow-x-auto scroll-smooth px-4 pr-6 scrollbar-hidden snap-x snap-mandatory"
+      >
+        <div
+          v-for="(place, index) in placeDetails"
+          :key="index"
+          @click="selectedPlace = place"
+          class="w-[70vw] sm:w-[250px] flex-shrink-0 bg-white rounded-xl shadow p-3 hover:shadow-md transition duration-200 cursor-pointer snap-start"
+        >
+          <img
+            :src="place.photos?.[0]?.getUrl({ maxWidth: 800 }) || defaultImage"
+            @error="(e) => (e.target.src = defaultImage)"
+            alt="地點圖片"
+            class="w-full aspect-[3/2] object-cover rounded-md mb-2"
+          />
+          <h2 class="text-sm font-semibold truncate" :title="place.name">
+            {{ place.name }}
+          </h2>
+          <p
+            v-if="place.rating"
+            class="text-xs text-yellow-600 mt-1 whitespace-nowrap overflow-hidden text-ellipsis"
+          >
+            ⭐ {{ place.rating }} / {{ place.user_ratings_total }} 則評價
+          </p>
+        </div>
+        <div v-if="hasMoreResults" class="flex items-center justify-center">
+          <button
+            class="bg-gray-400 text-white py-2 px-4 rounded-full text-sm hover:bg-gray-700 whitespace-nowrap"
+            @click="loadNextPage"
+          >
+            更多
+          </button>
+        </div>
+      </div>
+
+      <button
+        @click="scrollRight"
+        class="absolute right-0 top-1/2 -translate-y-1/2 z-20 bg-white/90 hover:bg-white shadow px-3 py-2 rounded-full"
+      >
+        ›
       </button>
     </div>
   </div>
@@ -101,12 +127,6 @@
     @click.self="selectedPlace = null"
   >
     <div class="bg-white rounded-lg p-6 w-full max-w-md relative">
-      <!-- <button
-        class="absolute top-6 right-5 hover:cursor-pointer text-yellow-600 text-2xl"
-        @click="selectedPlace = null"
-      >
-        ✖︎
-      </button> -->
       <h2 class="text-2xl font-bold mb-3">{{ selectedPlace.name }}</h2>
       <p class="text-gray-600 text-sm mb-3">
         {{ selectedPlace.formatted_address }}
@@ -204,30 +224,19 @@
     <!-- 🔽 新增自訂分類選單 -->
   </aside>
 
-  <div class="controls">
+  <div class="absolute bottom-10 left-5 bg-white/90 px-3 py-2 rounded-md shadow-md flex gap-2.5 items-center z-[1]">
     <div v-if="result">
       <p>兩點距離：{{ result.distance }}，預估時間：{{ result.duration }}</p>
     </div>
-    <label
-      >選擇交通方式：
-      <select v-model="travelMode" @change="recalculateRoute">
+    <label class="flex items-center gap-2">
+      <span>選擇交通方式：</span> 
+      <select v-model="travelMode" @change="recalculateRoute" class="px-2 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400">
         <option value="DRIVING">🚗 開車</option>
         <option value="WALKING">🚶‍♀️ 步行</option>
         <option value="TRANSIT">🚇 大眾運輸</option>
       </select>
     </label>
   </div>
-
-  <!-- 選擇地區 -->
-<div class="absolute top-4 left-4 bg-white p-3 rounded shadow z-10">
-  <select @change="onCityChange($event)">
-    <option value="none">當前</option>
-    <option v-for="city in cities" :key="city.name" :value="city.name">
-      {{ city.name }}
-    </option>
-  </select>
-</div>
-
 </template>
 
 <script setup>
@@ -325,6 +334,21 @@ const placeCategories = ref([
   { type: "supermarket", label: "超市" },
   { type: "night_club", label: "夜店" },
 ]);
+
+//樣式
+  const cardContainer = ref(null)
+
+  function scrollLeft() {
+    if (cardContainer.value) {
+      cardContainer.value.scrollBy({ left: -300, behavior: 'smooth' })
+    }
+  }
+
+  function scrollRight() {
+    if (cardContainer.value) {
+      cardContainer.value.scrollBy({ left: 300, behavior: 'smooth' })
+    }
+  }
 
 // Google Maps 實例與服務
 let map = null; // 地圖實例 (initMap)
@@ -884,17 +908,11 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
-.controls {
-  position: absolute;
-  bottom: 40px;
-  left: 20px;
-  background: rgba(255, 255, 255, 0.9);
-  padding: 8px 12px;
-  border-radius: 6px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  z-index: 1;
+.scrollbar-hidden::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hidden {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 </style>
