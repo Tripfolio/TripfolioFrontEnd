@@ -14,6 +14,7 @@
 		{{ successMessage }}
 	</div>
 
+
 	<form class="flex flex-col gap-[10px] w-[300px] mx-auto mt-2" @submit.prevent="signUp">
 		<input
 			v-model="email"
@@ -38,11 +39,13 @@
 		>
 			註冊
 		</button>
+		<!-- 透過google帳號註冊 -->
+		<div id="google-login-btn"></div>
 	</form>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import axios from 'axios'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
@@ -98,5 +101,28 @@ const signUp = async () => {
 			errorMessages.value = ['註冊失敗，請稍後重試']
 		}
 	}
+}
+
+//google
+onMounted(() => {
+	initGoogleLogin();
+}); //初始化
+
+async function initGoogleLogin() {
+	google.accounts.id.initialize({
+		client_id:import.meta.env.VITE_GOOGLE_CLIENT_ID,
+		callback: handleCredentialResponse,
+	});
+
+	google.accounts.id.renderButton(
+		document.getElementById('google-login-btn'),
+		{ theme: 'outline', size: 'large' }
+	);
+}
+
+async function handleCredentialResponse(response) {
+	const id_token = response.credential;
+	console.log('取得Google ID Token:', id_token);
+	const res = await axios.post('/api/auth/google', { id_token });
 }
 </script>
