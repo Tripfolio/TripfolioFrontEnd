@@ -1,10 +1,10 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import SignUp from '@/views/SignUp.vue'
-import HomeView from '@/views/HomeView.vue'
-import GoogleMapView from '@/views/GoogleMapView.vue'
-import MemberProfile from '@/views/MemberProfile.vue'
+import { createRouter, createWebHistory } from "vue-router";
+import SignUp from "@/views/SignUp.vue";
+import HomeView from "@/views/HomeView.vue";
+import GoogleMapView from "@/views/GoogleMapView.vue";
+import MemberProfile from "@/views/MemberProfile.vue";
 import GoogleCalendar from "@/views/GoogleCalendar.vue";
-import EmailSettings from '@/views/EmailSettings.vue'
+import EmailSettings from "@/views/EmailSettings.vue";
 
 const routes = [
   {
@@ -23,8 +23,8 @@ const routes = [
     component: GoogleMapView,
   },
   {
-    path: '/calendar',
-    name: 'calendar',
+    path: "/calendar",
+    name: "calendar",
     component: GoogleCalendar,
   },
   {
@@ -36,6 +36,11 @@ const routes = [
     path: "/emailSettings",
     name: "emailSettings",
     component: EmailSettings,
+  },
+  {
+    path: "/GetInvite",
+    name: "GetInvite",
+    component: GetInvite,
   },
 ];
 
