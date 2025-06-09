@@ -9,7 +9,7 @@
 ## 安裝步驟
 1. 克隆這個專案：
     ```bash
-    git clone https://github.com/LeoChen517/Tripfolio-Frontend.git
+    git clone https://github.com/Tripfolio/TripfolioFrontEnd.git
     ```
 2. 安裝依賴：
     ```bash

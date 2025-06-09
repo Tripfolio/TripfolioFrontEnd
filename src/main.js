@@ -10,13 +10,17 @@ import { faXmark, faPenToSquare } from '@fortawesome/free-solid-svg-icons'
 import App from './App.vue'
 import router from './router'
 
-library.add(faXmark, faPenToSquare)
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { faExclamationTriangle, faEye, faEyeSlash, faXmark, faPenToSquare } from '@fortawesome/free-solid-svg-icons'
 
+library.add(faExclamationTriangle, faEye, faEyeSlash, faXmark, faPenToSquare )
 
 const app = createApp(App)
 
 app.use(createPinia())
 app.use(router)
 
-app.component('font-awesome-icon', FontAwesomeIcon)
+app.component('FontAwesomeIcon', FontAwesomeIcon)
+
 app.mount('#app')
