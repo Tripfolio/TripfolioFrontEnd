@@ -9,6 +9,7 @@
       item-key="name"
       ghost-class="bg-yellow-100"
       animation="200"
+      @end="updateOrder"
     >
       <template #item="{ element: p, index }">
         <li
@@ -16,6 +17,11 @@
         >
           <!-- 右半邊 -->
           <div class="w-1/2 p-3">
+            <p
+              class="number bg-red-600 w-6 text-center rounded-2xl text-amber-50"
+            >
+              {{ index + 1 }}
+            </p>
             <h3 class="block text-white text-l mb-1.5">{{ p.name }}</h3>
             <!-- 時間選單與按鈕 -->
             <div class="flex flex-col items-start text-white text-xs">
@@ -24,7 +30,7 @@
                 class="cursor-pointer pb-2"
                 @click="startEditing(p)"
               >
-                抵達時間：{{ formatTime(p.arrivalHour, p.arrivalMinute) }}
+                {{ formatTime(p.arrivalHour, p.arrivalMinute) }}抵達
               </p>
 
               <div v-else class="flex flex-col gap-1">
@@ -136,7 +142,8 @@ const props = defineProps({
 
 const openMenuIndex = ref(null);
 const itineraryPlaces = ref([]);
-const leaveTime = ref("13;00");
+let newOrder = ref([]);
+
 let menuOpen = ref(false);
 
 const toggleMenu = (index) => {
@@ -188,6 +195,7 @@ function formatTime(hour, minute) {
   const m = (minute ?? 0).toString().padStart(2, "0");
   return `${h}:${m}`;
 }
+
 // 加入行程
 async function addPlace() {
   if (!props.selectedPlace) {
@@ -206,9 +214,7 @@ async function addPlace() {
   try {
     const defaultHour = 9;
     const defaultMinute = 0;
-    // const arrivalTime = `${place.arrivalHour
-    //   .toString()
-    //   .padStart(2, "0")}:${place.arrivalMinute.toString().padStart(2, "0")}`;
+
     const rep = await axios.post(
       "http://localhost:3000/api/itinerary/add-place",
       {
