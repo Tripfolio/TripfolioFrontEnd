@@ -136,8 +136,63 @@ async function initGoogleLogin() {
 async function handleCredentialResponse(response) {
 	const id_token = response.credential;
 	console.log("取得Google ID Token:", id_token);
-	const res = await axios.post("http://localhost:3000/api/auth/google", {
+	try {
+		const res = await axios.post("http://localhost:3000/api/auth/google", {
 		id_token,
-	});
+		});
+		console.log("後端回傳結果", res.data);
+
+		if (res.data && res.data.accessToken){
+			const myAppToken = res.data.accessToken;
+			
+			localStorage.setItem("myAppToken", myAppToken);// 儲存到 localStorage
+			console.log("應用程式 Token 已儲存到 localStorage:", myAppToken);
+
+			// 儲存後端回傳的使用者資訊
+			if (res.data.user) {
+				localStorage.setItem("currentUser", JSON.stringify(res.data.user)); 
+				console.log("使用者資訊已儲存到 localStorage:", res.data.user);
+			}
+			alert("Google 登入成功");
+			fetchDataWithAuth();
+			router.push('/dashboard'); // 導向到會員資料頁面
+
+		} else {
+			console.warn("後端回傳資料中未找到應用程式 Token");
+		}
+	} catch (error) {
+		console.error("Google 登入失敗", error); // 處理錯誤
+		showError.value = true; // 顯示錯誤訊息
+		if (error.response){
+			console.error("錯誤詳情", error.response.data);
+			alert(`登入失敗: ${error.response.data.message || '未知錯誤'}`)
+		} else if (error.request) {
+			console.error("沒有收到伺服器回應:", error.request); // 請求已發出但沒有收到回應
+			alert("登入失敗: 無法連接到伺服器");
+		} else {
+			alert("登入失敗: 發生未知錯誤");
+		}
+	}
+	
+}
+
+// 需要手動在 Google 登入後獲取受保護資料時，才需要保留和呼叫此函數
+function fetchDataWithAuth() {
+    const token = localStorage.getItem("myAppToken"); 
+    if (token) { 
+        axios.get("http://localhost:3000/api/protected-data", { 
+            headers: { Authorization: `Bearer ${token}` }
+        })
+        .then(response => { 
+            console.log("受保護資料:", response.data);
+        })
+        .catch(error => { 
+            console.error("獲取受保護資料失敗:", error);
+            // Token 可能過期或無效，需要重新登入
+        });
+    } else { 
+        console.warn("未找到應用程式 Token，請先登入。");
+        router.push('/'); // 導向首頁
+    }
 }
 </script>
