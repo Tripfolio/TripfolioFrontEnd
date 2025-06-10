@@ -380,6 +380,7 @@ function loadGoogleMaps() {
     script.onload = resolve;
     script.onerror = reject;
     document.head.appendChild(script);
+    console.log('API KEY:', import.meta.env.VITE_GOOGLE_MAPS_API_KEY);
   });
 }
 
@@ -437,7 +438,6 @@ function initMap() {
     if (type === SearchType.TEXT) {
       request.query = `${query} ${cityName}`
       request.location = location
-      request.radius = radius
       service.textSearch(request, (results, status, pagination) => {
         if (results?.[0]?.geometry?.location) {
           map.setCenter(results[0].geometry.location)
@@ -474,7 +474,6 @@ function initMap() {
     } else if (type === SearchType.CITY_DEFAULT) {
       request.query = `tourist attractions ${cityName}`
       request.location = location
-      request.radius = radius
       service.textSearch(request, (results, status, pagination) => {
         if (results?.[0]?.geometry?.location) {
           map.setCenter(results[0].geometry.location)
