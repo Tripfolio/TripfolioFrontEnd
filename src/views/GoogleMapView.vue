@@ -1,6 +1,12 @@
 <template>
-    <Itinerary ref="itineraryRef" :selectedPlace="selectedPlace" class="z-[4]" :default-image="defaultImage"/>
-  
+
+  <Itinerary
+    ref="itineraryRef"
+    :selectedPlace="selectedPlace"
+    class="z-[4]"
+    :default-image="defaultImage"
+  />
+
   <div
     class="absolute top-2.5 left-1/2 -translate-x-1/2 z-[2] flex items-center gap-2.5 bg-gray-400/90 px-2.5 py-2.5 rounded-full"
   >
@@ -231,17 +237,17 @@
 </template>
 
 <script setup>
-
 import { ref, onMounted, watch, onUnmounted } from "vue";
-import Itinerary from "../components/Itinerary.vue";
+import { MapIcons } from "@/assets/MapIcons";
+import { MarkerClusterer } from "@googlemaps/markerclusterer"; //marker的集合import Itinerary from "../components/Itinerary.vue";
 
 // 子元件 Itinerary.vue
-const itineraryRef = ref(null) 
+const itineraryRef = ref(null);
 function callItinerary() {
-  if (itineraryRef.value && typeof itineraryRef.value.addPlace === 'function') {
-    itineraryRef.value.addPlace()
+  if (itineraryRef.value && typeof itineraryRef.value.addPlace === "function") {
+    itineraryRef.value.addPlace();
   } else {
-    console.warn('itineraryRef 尚未掛載，無法呼叫 addPlace')
+    console.warn("itineraryRef 尚未掛載，無法呼叫 addPlace");
   }
 }
 
@@ -332,7 +338,7 @@ let markers = []; // 所有標記 (searchPlace, 點擊地圖)
 let service = null; // 地點服務 (initMap)
 let directionsService; // 路線服務 (onMounted)
 let directionsRenderer; // 路線顯示器 (onMounted)
-
+let markerCluster = null; //marker的集合
 
 //當 selectedPlace 改變時，重設圖片索引
 watch(selectedPlace, (newVal) => {
@@ -344,15 +350,10 @@ watch(selectedPlace, (newVal) => {
 // 載入 Google Maps API
 function loadGoogleMaps() {
   return new Promise((resolve, reject) => {
-    if (window.google && window.google.maps) {
-      resolve();
-      return;
-    }
     const script = document.createElement("script");
     script.src = `https://maps.googleapis.com/maps/api/js?key=${
       import.meta.env.VITE_GOOGLE_MAPS_API_KEY
     }&libraries=places,geometry`;
-    script.async = true;
     script.defer = true;
     script.onload = resolve;
     script.onerror = reject;
@@ -364,9 +365,9 @@ function loadGoogleMaps() {
 function initMap() {
   map = new google.maps.Map(mapRef.value, {
     center: { lat: 25.033964, lng: 121.564472 },
-    zoom: 15,
+    zoom: 18,
     mapTypeControl: false,
-    zoomControl: false,
+    zoomControl: true,
     cameraControl: false,
     scaleControl: false,
     fullscreenControl: false,
@@ -375,6 +376,23 @@ function initMap() {
     streetViewControlOptions: {
       position: google.maps.ControlPosition.LEFT_TOP,
     },
+    styles: [
+      {
+        featureType: "poi",
+        elementType: "labels",
+        stylers: [{ visibility: "off" }],
+      },
+      {
+        featureType: "transit.station",
+        elementType: "all",
+        stylers: [{ visibility: "off" }],
+      },
+      {
+        featureType: "road",
+        elementType: "labels",
+        stylers: [{ visibility: "off" }],
+      },
+    ],
   });
   service = new google.maps.places.PlacesService(map);
 }
@@ -421,13 +439,27 @@ function handleResults(results, status, pagination) {
     return;
   }
 
+  markers.forEach((marker) => marker.setMap(null));
+  markers = [];
+  if (markerCluster) {
+    markerCluster.clearMarkers();
+    markerCluster = null;
+  }
+
   results.forEach((place) => {
-    if (!place.geometry || !place.geometry.location) return;// 防錯機制
+    if (!place.geometry || !place.geometry.location) return;
+
+    map.setCenter(place.geometry.location);
+    const iconUrl = getPlaceIconUrl(place.types);
+
 
     const marker = new google.maps.Marker({
       map,
       position: place.geometry.location,
       title: place.name,
+      icon: {
+        url: iconUrl,
+      }, // 這裡套用分類 SVG
     });
 
     markers.push(marker);
@@ -471,6 +503,25 @@ function handleResults(results, status, pagination) {
         });
       }
     });
+  });
+
+  markerCluster = new MarkerClusterer({
+    map: map,
+    markers: markers,
+    renderer: {
+      render({ count, position }) {
+        return new google.maps.Marker({
+          position,
+
+          label: {
+            text: String(count),
+            color: "white",
+            fontSize: "20px",
+            fontWeight: "bold",
+          },
+        });
+      },
+    },
   });
 
   // 分頁處理
@@ -773,6 +824,21 @@ function handleClickOutside(event) {
   }
 }
 
+//讓svg可以被地圖使用
+function getPlaceIconUrl(types = []) {
+  for (const type of types) {
+    if (MapIcons[type]) {
+      return (
+        "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(MapIcons[type])
+      );
+    }
+  }
+  // 沒有對應圖示就使用 default
+  return (
+    "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(MapIcons.default)
+  );
+}
+
 onMounted(async () => {
   try {
     await loadGoogleMaps(); // 等待 API 載入
@@ -793,17 +859,29 @@ onMounted(async () => {
     const autocomplete = new google.maps.places.Autocomplete(
       searchInput.value,
       {
-        fields: ['geometry', 'name'],
-        types: ['(cities)'] // 可依需求改成 ['geocode'] 或移除限制
+        fields: ["geometry", "name"],
+        types: ["(cities)"], // 可依需求改成 ['geocode'] 或移除限制
       }
     );
 
-    autocomplete.addListener('place_changed', () => {
+    // 當使用者選擇建議項目後，自動觸發搜尋
+    autocomplete.addListener("place_changed", () => {
+
       const place = autocomplete.getPlace();
       if (!place.geometry) return;
       searchQuery.value = place.name;
       searchPlace();
     });
+
+    // 設置地圖點擊事件
+    map.addListener("click", (e) => {
+      if (markers.length >= 2) reset();
+
+      const marker = new google.maps.Marker({
+        position: e.latLng,
+        map,
+      });
+
 
     // 地圖點擊事件
     map.addListener("click", (event) => {
