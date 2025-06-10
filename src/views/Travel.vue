@@ -70,7 +70,7 @@ const deleteSchedule = async(id) => {
       }
     });
 
-    schedules.value = schedules.value.filter(s => s. id!== id)
+    schedules.value = schedules.value.filter(s => s.id!== id)
     alert("刪除成功")
   } catch (err) {
     console.error("刪除失敗", err)
