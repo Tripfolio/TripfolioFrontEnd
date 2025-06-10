@@ -67,7 +67,6 @@
                 </div>
               </div>
             </div>
-            <!-- <p class="text-xs text-white">離開時間：{{ leaveTime }}</p> -->
           </div>
           <!-- 右半邊end -->
           <img
@@ -121,6 +120,7 @@ onMounted(() => {
 onBeforeUnmount(() => {
   window.removeEventListener("click", onClickOutside);
 });
+
 async function loadItinerary() {
   try {
     const res = await axios.get("http://localhost:3000/api/itinerary/places", {
@@ -140,12 +140,12 @@ const props = defineProps({
   defaultImage: String,
 });
 
-const openMenuIndex = ref(null);
 const itineraryPlaces = ref([]);
-let newOrder = ref([]);
 
-let menuOpen = ref(false);
+//景點選單順序
+const openMenuIndex = ref(null);
 
+//控制景點選單開關
 const toggleMenu = (index) => {
   openMenuIndex.value = openMenuIndex.value === index ? null : index;
 };
@@ -170,6 +170,7 @@ function startEditing(p) {
   p.arrivalMinuteTemp = p.arrivalMinute ?? 0;
 }
 
+//確認更改時間
 async function confirmTime(p) {
   p.arrivalHour = p.arrivalHourTemp;
   p.arrivalMinute = p.arrivalMinuteTemp;
@@ -189,11 +190,33 @@ async function confirmTime(p) {
 function cancelEditing(p) {
   p.editingTime = false;
 }
-
+//制定時間規格
 function formatTime(hour, minute) {
   const h = (hour ?? 0).toString().padStart(2, "0");
   const m = (minute ?? 0).toString().padStart(2, "0");
   return `${h}:${m}`;
+}
+
+//更新順序
+async function updateOrder() {
+  const newOrder = itineraryPlaces.value.map((place, index) => ({
+    id: place.id,
+    order: index + 1,
+  }));
+
+  console.log("📦 要傳到後端的資料：", newOrder);
+
+  try {
+    const response = await axios.put(
+      "http://localhost:3000/api/itinerary/places/reorder",
+      {
+        places: newOrder,
+      }
+    );
+    console.log("✅ 順序已更新", response.data);
+  } catch (err) {
+    console.error("❌ 無法更新順序：", err.response?.data || err.message);
+  }
 }
 
 // 加入行程
@@ -227,6 +250,7 @@ async function addPlace() {
             : props.defaultImage,
         arrivalHour: defaultHour,
         arrivalMinute: defaultMinute,
+        order: itineraryPlaces.value.length + 1,
       }
     );
 
@@ -241,6 +265,7 @@ async function addPlace() {
             : props.defaultImage,
         arrivalHour: defaultHour,
         arrivalMinute: defaultMinute,
+        order: itineraryPlaces.value.length + 1,
       });
       alert("✅ 成功加入行程！");
     } else {
@@ -277,8 +302,4 @@ async function removePlace(place) {
 defineExpose({ addPlace });
 </script>
 
-<style scoped>
-input[type="time"]::-webkit-calendar-picker-indicator {
-  display: none;
-}
-</style>
+<style scoped></style>
