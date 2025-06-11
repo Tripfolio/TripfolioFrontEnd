@@ -239,7 +239,7 @@
 <script setup>
 import { ref, onMounted, watch, onUnmounted } from "vue";
 import { MapIcons } from "@/assets/MapIcons";
-import { MarkerClusterer } from "@googlemaps/markerclusterer"; //marker的集合import Itinerary from "../components/Itinerary.vue";
+import { MarkerClusterer } from "@googlemaps/markerclusterer"; //marker的集合
 import Itinerary from "../components/Itinerary.vue";
   
 // 子元件 Itinerary.vue
