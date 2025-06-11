@@ -881,7 +881,7 @@ onMounted(async () => {
         position: e.latLng,
         map,
       });
-
+})
 
     // 地圖點擊事件
     map.addListener("click", (event) => {
