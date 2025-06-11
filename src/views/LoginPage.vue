@@ -39,7 +39,7 @@
   <script setup>
   import { ref, onMounted } from 'vue';
   import axios from 'axios';
-  import jwtDecode from "jwt-decode";
+  import {jwtDecode} from "jwt-decode";
   
   const TOKEN_NAME = 'user_token'
   const email = ref('')
