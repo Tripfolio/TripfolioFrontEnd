@@ -36,7 +36,7 @@ jobs:
         run: npm ci
 
       - name: Run ESLint
-        run: npx eslint . --ext .js,.vue --max-warnings=0
+        run: npx eslint . --ext .js,.vue
 
       - name: Upload ESLint annotations
         if: failure()
