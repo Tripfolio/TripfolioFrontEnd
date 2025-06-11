@@ -5,6 +5,8 @@ import LoginPage from '@/views/LoginPage.vue'
 import GoogleMapView from "@/views/GoogleMapView.vue";
 import MemberProfile from '@/views/MemberProfile.vue'
 import EmailSettings from '@/views/EmailSettings.vue'
+import GoogleCalendar from "@/views/GoogleCalendar.vue";
+
 
 
 const routes = [
@@ -29,6 +31,11 @@ const routes = [
     component: LoginPage,
   },
   {
+    path: '/calendar',
+    name: 'calendar',
+    component: GoogleCalendar,
+  },
+  {
     path: "/profile",
     name: "profile",
     component: MemberProfile,
@@ -46,4 +53,3 @@ const router = createRouter({
 });
 
 export default router;
-
