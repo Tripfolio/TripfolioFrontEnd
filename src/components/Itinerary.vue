@@ -5,8 +5,8 @@
     <h3 class="text-lg font-bold mb-4">已加入的景點</h3>
     <ul>
       <li
-        v-for="(p, index) in itineraryPlaces"
-        :key="index"
+        v-for="p in itineraryPlaces"
+        :key="p.id"
         class="mb-4 border-b last:border-none"
       >
         <strong class="block">{{ p.name }}</strong>
@@ -32,7 +32,7 @@
   async function loadItinerary() {
     try {
       const res = await axios.get(
-        'http://localhost:3000/api/itinerary/places',
+      `${import.meta.env.VITE_API_URL}/api/itinerary/places`,
         {
           params: {
             itineraryId: 1
@@ -62,13 +62,13 @@
       (p) => p.name === props.selectedPlace.name
     )
     if (exists) {
-      alert('⚠️ 這個景點已經加入行程！')
+      alert('這個景點已經加入行程！')
       return
     }
 
     try {
       const rep = await axios.post(
-        'http://localhost:3000/api/itinerary/add-place',
+        `${import.meta.env.VITE_API_URL}/api/itinerary/add-place`,
         {
           itineraryId: 1,
           name: props.selectedPlace.name,
@@ -86,13 +86,13 @@
           rating: props.selectedPlace.rating || 'N/A',
           photo: props.selectedPlace.photos && props.selectedPlace.photos.length ? props.selectedPlace.photos[0].getUrl({ maxWidth: 1000 }) : props.defaultImage
         })
-        alert('✅ 成功加入行程！')
+        alert('成功加入行程！')
       } else {
-        alert('❌ 加入失敗：' + rep.data.message)
+        alert('加入失敗：' + rep.data.message)
       }
     } catch (error) {
       console.error('加入失敗:', error)
-      alert('🚨 發生錯誤：' + error.message)
+      alert('發生錯誤：' + error.message)
     }
   }
   // 刪除行程
@@ -100,7 +100,7 @@
     console.log('刪除景點資料', place)
 
     try {
-      const url = `http://localhost:3000/api/itinerary/place?itineraryId=1&name=${encodeURIComponent(
+      const url = `${import.meta.env.VITE_API_URL}/api/itinerary/place?itineraryId=1&name=${encodeURIComponent(
         place.name
       )}`
       const response = await axios.delete(url)
@@ -109,13 +109,13 @@
         itineraryPlaces.value = itineraryPlaces.value.filter(
           (p) => p.name !== place.name
         )
-        alert('✅ 成功刪除景點')
+        alert('成功刪除景點')
       } else {
-        alert('❌ 刪除失敗：' + response.data.message)
+        alert('刪除失敗：' + response.data.message)
       }
     } catch (error) {
       console.error('刪除錯誤:', error)
-      alert('🚨 發生錯誤：' + error.message)
+      alert('發生錯誤：' + error.message)
     }
   }
   defineExpose({ addPlace })
