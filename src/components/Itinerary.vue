@@ -129,7 +129,8 @@ async function loadItinerary() {
       },
     });
 
-    itineraryPlaces.value = res.data.places;
+    // itineraryPlaces.value = res.data.places;
+    itineraryPlaces.value = res.data.places.sort((a, b) => a.order - b.order);
   } catch (error) {
     console.error("載入行程失敗:", error);
   }
@@ -177,7 +178,7 @@ async function confirmTime(p) {
   p.editingTime = false;
 
   try {
-    await axios.put(`http://localhost:3000/api/itinerary/places/${p.id}`, {
+    await axios.put(`http://localhost:3000/api/itineraries/places/${p.id}`, {
       arrivalHour: p.arrivalHour,
       arrivalMinute: p.arrivalMinute,
     });
