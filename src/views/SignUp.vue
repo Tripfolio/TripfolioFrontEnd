@@ -49,19 +49,26 @@
 		>
 			註冊
 		</button>
-		<!-- 透過google帳號註冊 -->
-		<div id="google-login-btn"></div>
+		<div class="flex justify-center mt-2">
+            <GoogleLogin 
+				:callback="handleCredentialResponse" 
+				:client-id="googleClientId" 
+				prompt auto-select 
+			/>
+        </div>
 	</form>
 </template>
 
 <script setup>
-import { onMounted, ref } from "vue";
+import { ref } from "vue";
 import { useRouter } from "vue-router";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
 import { library } from "@fortawesome/fontawesome-svg-core";
+import { GoogleLogin } from "vue3-google-login"; 
 library.add(faExclamationTriangle);
+
 
 const email = ref("");
 const password = ref("");
@@ -74,6 +81,8 @@ const errorMessages = ref([]);
 
 const showSuccess = ref(false);
 const successMessage = ref("");
+
+const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
 const clearText = () => {
 	email.value = "";
@@ -116,61 +125,54 @@ const signUp = async () => {
 	}
 };
 
-// google
-onMounted(() => {
-	initGoogleLogin();
-}); // 初始化
-
-async function initGoogleLogin() {
-	google.accounts.id.initialize({
-		client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
-		callback: handleCredentialResponse,
-	});
-
-	google.accounts.id.renderButton(document.getElementById("google-login-btn"), {
-		theme: "outline",
-		size: "large",
-	});
-}
-
 async function handleCredentialResponse(response) {
+    showError.value = false;
+    errorMessages.value = [];
+    showSuccess.value = false;
+    successMessage.value = "";
+
 	const id_token = response.credential;
 	console.log("取得Google ID Token:", id_token);
 	try {
 		const res = await axios.post("http://localhost:3000/api/auth/google", {
-		id_token,
+			id_token,
 		});
 		console.log("後端回傳結果", res.data);
 
-		if (res.data && res.data.accessToken){
+		if (res.data && res.data.accessToken) {
 			const myAppToken = res.data.accessToken;
 			
-			localStorage.setItem("myAppToken", myAppToken);// 儲存到 localStorage
+			localStorage.setItem("myAppToken", myAppToken);
 			console.log("應用程式 Token 已儲存到 localStorage:", myAppToken);
 
-			// 儲存後端回傳的使用者資訊
 			if (res.data.user) {
 				localStorage.setItem("currentUser", JSON.stringify(res.data.user)); 
 				console.log("使用者資訊已儲存到 localStorage:", res.data.user);
 			}
-			alert("Google 登入成功");
+			showSuccess.value = true;
+			successMessage.value = "Google 登入成功";
+
 			fetchDataWithAuth();
-			router.push('/dashboard'); // 導向到會員資料頁面
+			router.push('/members'); 
 
 		} else {
 			console.warn("後端回傳資料中未找到應用程式 Token");
+			showError.value = true;
+			errorMessages.value = ["Google 登入失敗，後端未回傳有效的 Token"]; 
 		}
 	} catch (error) {
-		console.error("Google 登入失敗", error); // 處理錯誤
-		showError.value = true; // 顯示錯誤訊息
-		if (error.response){
+		console.error("Google 登入失敗", error); 
+		showError.value = true;
+		if (error.response) {
 			console.error("錯誤詳情", error.response.data);
-			alert(`登入失敗: ${error.response.data.message || '未知錯誤'}`)
+			errorMessages.value = [
+                `登入失敗: ${error.response.data.message || "未知錯誤"}`,
+            ];		
 		} else if (error.request) {
-			console.error("沒有收到伺服器回應:", error.request); // 請求已發出但沒有收到回應
-			alert("登入失敗: 無法連接到伺服器");
+			console.error("沒有收到伺服器回應:", error.request); 
+			errorMessages.value = ["登入失敗: 無法連接到伺服器"];
 		} else {
-			alert("登入失敗: 發生未知錯誤");
+			errorMessages.value = ["登入失敗: 發生未知錯誤"];
 		}
 	}
 	
