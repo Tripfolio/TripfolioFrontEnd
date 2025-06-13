@@ -12,10 +12,13 @@ import {
     faXmark,
     faPenToSquare,
     faAngleLeft,
-    faAngleRight,     
+    faAngleRight,
     faPlus,
     faArrowLeft,
     faCamera,
+    faEye,
+    faEyeSlash,
+    faExclamationTriangle,
 } from '@fortawesome/free-solid-svg-icons';
 
 
@@ -27,6 +30,9 @@ library.add(
     faPlus,
     faArrowLeft,
     faCamera,
+    faEye,
+    faEyeSlash,
+    faExclamationTriangle,
 );
 
 const app = createApp(App);
@@ -39,7 +45,5 @@ const tripStore = useTripStore();
 tripStore.load();
 
 app.use(router);
-
 app.component('FontAwesomeIcon', FontAwesomeIcon);
-
 app.mount('#app');

@@ -1,14 +1,14 @@
 import { createRouter, createWebHistory } from "vue-router";
-import HomeView from '@/views/HomeView.vue'
-import SignUp from '@/views/SignUp.vue'
-import LoginPage from '@/views/LoginPage.vue'
+import HomeView from "@/views/HomeView.vue";
+import SignUp from "@/views/SignUp.vue";
+import LoginPage from "@/views/LoginPage.vue";
 import GoogleMapView from "@/views/GoogleMapView.vue";
-import MemberProfile from '@/views/MemberProfile.vue'
-import EmailSettings from '@/views/EmailSettings.vue'
+import MemberProfile from "@/views/MemberProfile.vue";
 import GoogleCalendar from "@/views/GoogleCalendar.vue";
-import TripPlannerView from '@/views/TripPlannerView.vue';; 
+import TripPlannerView from "@/views/TripPlannerView.vue";
 
-
+import EmailSettings from "@/views/EmailSettings.vue";
+import Travel from "@/views/Travel.vue";
 
 const routes = [
   {
@@ -27,13 +27,13 @@ const routes = [
     component: GoogleMapView,
   },
   {
-    path: '/login',
-    name: 'login',
+    path: "/login",
+    name: "login",
     component: LoginPage,
   },
   {
-    path: '/calendar',
-    name: 'calendar',
+    path: "/calendar",
+    name: "calendar",
     component: GoogleCalendar,
   },
   {
@@ -50,7 +50,12 @@ const routes = [
     path: "/trips",
     name: "trips",
     component: TripPlannerView,
-},
+  },
+  {
+    path: "/schedule",
+    name: "schedule",
+    component: Travel,
+  },
 ];
 
 const router = createRouter({
