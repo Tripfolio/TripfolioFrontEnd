@@ -1,7 +1,71 @@
+<template>
+    <div class="profile">
+
+        <h2>資料修改</h2>
+
+        <div class = "relative w-40 h-40 mx-auto">
+            <img v-if="!showCropper && (previewUrl || profileData.avatar)" :src="previewUrl || profileData.avatar" class = "w-full h-full rounded-full object-cover border border-gray-300" alt="大頭貼"/>
+            <label for="avatar-upload" class="avatar-upload absolute bottom-2 right-2 bg-white border border-gray-300 rounded-full p-2 cursor-pointer hover:bg-gray-100 shadow-md" title="更換大頭貼"><font-awesome-icon :icon="['fas', 'pen-to-square']" /></label>
+            <input type="file" id="avatar-upload" @change="uploadAvatar" accept="image/*" class="hidden"/>
+        </div>
+        <div v-if="showCropper" class="absolute top-0 left-0 w-full h-full bg-white/80 flex flex-col items-center justify-center z-50">
+            <Cropper ref="cropperRef" :src="previewUrl" :stensil-props="{ aspectRatio: 1 }" class="w-40 h-40 rounded-full" />
+            <button @click="saveAvatar" class="w-24 bg-sky-500/50 mt-2" >儲存大頭貼</button>
+        </div>
+
+        <form @submit.prevent="saveProfile">
+            <span>名稱：</span>
+            <input type="text" v-model="profileData.name" placeholder="名稱" class="border-2 border-solid"/>
+            <span>性別：</span>
+            <select name="" id="" v-model="profileData.gender"  class="border-2 border-solid">
+                <option value="male">男</option>
+                <option value="female">女</option>
+            </select>
+            <div>
+                <span>手機號碼：</span>
+                <input type="tel" v-model="profileData.phone" placeholder="手機號碼"  class="border-2 border-solid"/>
+                <p v-if="phoneError" style="color:red">{{ phoneError }}</p>
+            </div>
+            <!-- <input type="email" v-model="profileData.email" placeholder="電子郵件" /> -->
+            <span>生日：</span>
+            <input type="date" v-model="profileData.birthday"  class="border-2 border-solid"/>
+            <button type="submit" class="w-24 bg-sky-500/50">儲存會員資料</button>
+        </form>
+
+        <h2>密碼修改</h2>
+        <form @submit.prevent="changePassword">
+            <div>
+                <input :type="showOld? 'text' : 'password'" v-model="passwordData.oldPassword" placeholder="舊密碼"  class="border-2 border-solid"/>
+                <span @click="showOld = !showOld">
+                    <font-awesome-icon :icon="showOld ? 'fa-eye-slash' : 'fa-eye'" />
+                </span>
+            </div>
+            <div>
+                <input :type="showNew? 'text' : 'password'" v-model="passwordData.newPassword" placeholder="新密碼"  class="border-2 border-solid"/>
+                <span @click="showNew = !showNew">
+                    <font-awesome-icon :icon="showNew ? 'fa-eye-slash' : 'fa-eye'" />
+                </span>     
+                <p>需輸入8位以上字元，密碼需包含數字+英文</p>
+                <p v-if="passwordError" style="color:red">{{ passwordError }}</p>    
+            </div>
+            <div>
+                <input :type="showConfirm? 'text' : 'password'" v-model="passwordData.confirmPassword" placeholder="再次輸入新密碼"  class="border-2 border-solid"/>
+                <span @click="showConfirm = !showConfirm">
+                    <font-awesome-icon :icon="showConfirm ? 'fa-eye-slash' : 'fa-eye'" />
+                </span>
+            </div>
+            <button type="submit" class="w-24 bg-sky-500/50">送出修改密碼</button>
+        </form>
+    </div>
+</template>
+
+
+
 <script setup>
-import { ref, watch, onMounted } from 'vue'
-import axios from 'axios'
-defineProps()
+import { ref, watch, onMounted } from 'vue';
+import axios from 'axios';
+import { Cropper } from 'vue-advanced-cropper';
+import 'vue-advanced-cropper/dist/style.css';
 
 
 //確認會員登入 抓id
@@ -44,40 +108,47 @@ const profileData = ref({
 
 const avatarFile = ref(null)
 const previewUrl = ref('')
+const cropperRef = ref(null)
+const showCropper = ref(false)
 
 
-//上傳大頭貼圖片預覽
+//上傳大頭貼裁切預覽
 const uploadAvatar = (event) => {
-    avatarFile.value = event.target.files[0]
-    if(avatarFile.value) {
-        previewUrl.value = URL.createObjectURL(avatarFile.value)
-    }
+    const file = event.target.files[0]
+    if(!file) return
+    avatarFile.value = file
+    previewUrl.value = URL.createObjectURL(file)
+    showCropper.value = true
 }
 
 
 //儲存大頭貼傳至後端
 const saveAvatar = async () => {
-    if(!avatarFile.value) {
-        alert('請先選擇圖片')
+    const canvas = cropperRef.value.getResult().canvas
+    if(!canvas){
+        alert('請先裁切圖片')
         return
     }
 
-    const formData = new FormData()
-    formData.append('avatar', avatarFile.value)
-    formData.append('memberId', memberId)
-
-    try {
-        const res = await axios.post('http://localhost:3000/api/upload-avatar', formData)
-        alert('大頭貼上傳成功')
+    canvas.toBlob(async (blob) => {
+        const formData = new FormData()
+        formData.append('avatar', blob, avatarFile.value.name)
+        formData.append('memberId', memberId)
         
-        const profileRes = await axios.get(`${import.meta.env.VITE_API_URL}/api/members/${memberId}`)
-        profileData.value = profileRes.data
-        previewUrl.value = ''
-    } catch (err) {
+        try {
+            const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/members/upload-avatar`, formData)
+            alert('大頭貼上傳成功')
+        
+            const profileRes = await axios.get(`${import.meta.env.VITE_API_URL}/api/members/${memberId}`)
+            profileData.value = profileRes.data
+            previewUrl.value = ''
+            showCropper.value = false
+        } catch (err) {
         console.error('上傳失敗', err)
         alert('上傳失敗')
-    }
-}
+        }
+    }, 'image/jpeg')
+};
 
 
 const phoneError = ref('');
@@ -95,7 +166,7 @@ watch(() => profileData.value.phone,(newPhone) => {
 //儲存會員資料送去資料庫
 const saveProfile = async () => {
     try {
-        const res = await axios.put(`http://localhost:3000/api/members/${memberId}`, profileData.value)
+        const res = await axios.put(`${import.meta.env.VITE_API_URL}/api/members/${memberId}`, profileData.value)
         alert('儲存成功')
         profileData.value = res.data
     } catch (err) {
@@ -154,7 +225,7 @@ const changePassword = async () => {
     }
 
     try{
-        const res = await axios.put(`http://localhost:3000/api/members/${memberId}/password`, { oldPassword:passwordData.value.oldPassword,newPassword:passwordData.value.newPassword
+        const res = await axios.put(`${import.meta.env.VITE_API_URL}/api/members/${memberId}/password`, { oldPassword:passwordData.value.oldPassword,newPassword:passwordData.value.newPassword
          })
     alert('密碼修改成功');
 
@@ -168,64 +239,3 @@ const changePassword = async () => {
   }
 }
 </script>
-
-<template>
-    <div class="profile">
-
-        <h2>資料修改</h2>
-
-        <div>
-            <img v-if="previewUrl || profileData.avatar" :src="previewUrl !== '' ? previewUrl : profileData.avatar" alt="大頭貼"/> 
-            <input type="file" @change="uploadAvatar" accept="image/*" />
-            <button @click="saveAvatar" class="w-24 bg-sky-500/50" >儲存大頭貼</button>
-        </div>
-        <form @submit.prevent="saveProfile">
-            <span>名稱：</span>
-            <input type="text" v-model="profileData.name" placeholder="名稱" class="border-2 border-solid"/>
-            <span>性別：</span>
-            <select name="" id="" v-model="profileData.gender"  class="border-2 border-solid">
-                <option value="male">男</option>
-                <option value="female">女</option>
-            </select>
-            <div>
-                <span>手機號碼：</span>
-                <input type="tel" v-model="profileData.phone" placeholder="手機號碼"  class="border-2 border-solid"/>
-                <p v-if="phoneError" style="color:red">{{ phoneError }}</p>
-            </div>
-            <!-- <input type="email" v-model="profileData.email" placeholder="電子郵件" /> -->
-            <span>生日：</span>
-            <input type="date" v-model="profileData.birthday"  class="border-2 border-solid"/>
-            <button type="submit" class="w-24 bg-sky-500/50">儲存會員資料</button>
-        </form>
-
-        <h2>密碼修改</h2>
-        <form @submit.prevent="changePassword">
-            <div>
-                <input :type="showOld? 'text' : 'password'" v-model="passwordData.oldPassword" placeholder="舊密碼"  class="border-2 border-solid"/>
-                <span @click="showOld = !showOld">
-                    <font-awesome-icon :icon="showOld ? 'fa-eye-slash' : 'fa-eye'" />
-                </span>
-            </div>
-            <div>
-                <input :type="showNew? 'text' : 'password'" v-model="passwordData.newPassword" placeholder="新密碼"  class="border-2 border-solid"/>
-                <span @click="showNew = !showNew">
-                    <font-awesome-icon :icon="showNew ? 'fa-eye-slash' : 'fa-eye'" />
-                </span>     
-                <p>需輸入8位以上字元，密碼需包含數字+英文</p>
-                <p v-if="passwordError" style="color:red">{{ passwordError }}</p>    
-            </div>
-            <div>
-                <input :type="showConfirm? 'text' : 'password'" v-model="passwordData.confirmPassword" placeholder="再次輸入新密碼"  class="border-2 border-solid"/>
-                <span @click="showConfirm = !showConfirm">
-                    <font-awesome-icon :icon="showConfirm ? 'fa-eye-slash' : 'fa-eye'" />
-                </span>
-            </div>
-            <button type="submit" class="w-24 bg-sky-500/50">送出修改密碼</button>
-        </form>
-    </div>
-</template>
-
-
-<style>
-
-</style>

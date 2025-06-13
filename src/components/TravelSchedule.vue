@@ -55,7 +55,7 @@
 <script setup>
 import{ ref, watch } from 'vue';
 import axios from 'axios'; 
-import { Cropper } from 'vue-advanced-cropper'
+import { Cropper } from 'vue-advanced-cropper';
 import 'vue-advanced-cropper/dist/style.css';
 
 const emit = defineEmits(['close'])
@@ -186,10 +186,3 @@ const scheduleSubmit = async() => {
 
 
 </script>
-
-
-
-<style>
-
-
-</style>
