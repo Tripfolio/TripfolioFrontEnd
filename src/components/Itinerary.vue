@@ -189,6 +189,17 @@ async function confirmTime(p) {
   p.arrivalHour = p.arrivalHourTemp;
   p.arrivalMinute = p.arrivalMinuteTemp;
   p.editingTime = false;
+  const newTime = p.arrivalHourTemp * 60 + p.arrivalMinuteTemp;
+  const hasConflict = itineraryPlaces.value.some(
+    (place) =>
+      place.id !== p.id &&
+      place.arrivalHour * 60 + place.arrivalMinute === newTime
+  );
+
+  if (hasConflict) {
+    alert("有其他景點的抵達時間重複，請選擇不同的時間！");
+    return;
+  }
 
   try {
     await axios.put(`http://localhost:3000/api/itineraryTime/places/${p.id}`, {
