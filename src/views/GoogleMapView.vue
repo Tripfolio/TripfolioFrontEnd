@@ -362,21 +362,18 @@ function scrollRight() {
   }
 }
 
-
-let map = null; 
-let markers = []; 
-let service = null; 
+let map = null;
+let markers = [];
+let service = null;
 let directionsService; // 路線服務
-let directionsRenderer; // 路線顯示器 
+let directionsRenderer; // 路線顯示器
 let markerCluster = null; //marker的集合
-
 
 watch(selectedPlace, (newVal) => {
   if (newVal) {
     selectedPlacePhotoIndex.value = 0;
   }
 });
-
 
 function loadGoogleMaps() {
   return new Promise((resolve, reject) => {
@@ -391,7 +388,6 @@ function loadGoogleMaps() {
     console.log("API KEY:", import.meta.env.VITE_GOOGLE_MAPS_API_KEY);
   });
 }
-
 
 function initMap() {
   map = new google.maps.Map(mapRef.value, {
@@ -429,9 +425,9 @@ function initMap() {
 }
 
 const SearchType = {
-  TEXT: "TEXT", 
-  NEARBY_KEYWORD: "NEARBY_KEYWORD", 
-  NEARBY_TYPE: "NEARBY_TYPE", 
+  TEXT: "TEXT",
+  NEARBY_KEYWORD: "NEARBY_KEYWORD",
+  NEARBY_TYPE: "NEARBY_TYPE",
   CITY_DEFAULT: "CITY_DEFAULT",
 };
 
@@ -460,15 +456,16 @@ function performSearch({
 
   console.log("搜尋參數:", { type, query, cityName, location, radius });
 
+  function handleSearchCallback(results, status, pagination) {
+    if (results?.[0]?.geometry?.location) {
+      map.setCenter(results[0].geometry.location);
+    }
+    handleResults(results, status, pagination);
+  }
   if (type === SearchType.TEXT) {
     request.query = `${query} ${cityName}`;
     request.location = location;
-    service.textSearch(request, (results, status, pagination) => {
-      if (results?.[0]?.geometry?.location) {
-        map.setCenter(results[0].geometry.location);
-      }
-      handleResults(results, status, pagination);
-    });
+    service.textSearch(request, handleSearchCallback);
   } else if (type === SearchType.NEARBY_KEYWORD) {
     if (!query) {
       console.warn("NEARBY_KEYWORD 缺少 query 參數，取消搜尋");
@@ -477,31 +474,16 @@ function performSearch({
     request.query = query;
     request.location = location;
     request.radius = radius;
-    service.textSearch(request, (results, status, pagination) => {
-      if (results?.[0]?.geometry?.location) {
-        map.setCenter(results[0].geometry.location);
-      }
-      handleResults(results, status, pagination);
-    });
+    service.textSearch(request, handleSearchCallback);
   } else if (type === SearchType.NEARBY_TYPE) {
     request.location = location;
     request.radius = radius;
     request.type = query;
-    service.nearbySearch(request, (results, status, pagination) => {
-      if (results?.[0]?.geometry?.location) {
-        map.setCenter(results[0].geometry.location);
-      }
-      handleResults(results, status, pagination);
-    });
+    service.nearbySearch(request, handleSearchCallback);
   } else if (type === SearchType.CITY_DEFAULT) {
     request.query = `tourist attractions ${cityName}`;
     request.location = location;
-    service.textSearch(request, (results, status, pagination) => {
-      if (results?.[0]?.geometry?.location) {
-        map.setCenter(results[0].geometry.location);
-      }
-      handleResults(results, status, pagination);
-    });
+    service.textSearch(request, handleSearchCallback);
   }
 }
 
@@ -757,7 +739,7 @@ function locateUser(map) {
 
 function addCategory(item) {
   const exists = categories.value.some((cat) => cat.type === item.type);
-  if (exists) return; 
+  if (exists) return;
   if (categories.value.length >= maxCategoryCount) {
     alert("❗ 已達上限，最多只能選擇 5 種類別");
     return;
@@ -769,9 +751,7 @@ function addCategory(item) {
   );
 }
 
-
 function removeCategory(item) {
-
   categories.value = categories.value.filter((cat) => cat.type !== item.type);
 
   const exists = placeCategories.value.some((cat) => cat.type === item.type);
@@ -785,7 +765,6 @@ function handleClickOutside(event) {
     showCustomCategory.value = false;
   }
 }
-
 
 function getPlaceIconUrl(types = []) {
   for (const type of types) {
@@ -803,7 +782,7 @@ function getPlaceIconUrl(types = []) {
 onMounted(async () => {
   try {
     await loadGoogleMaps();
-    initMap(); 
+    initMap();
     await locateUser(map);
 
     // 初始化方向服務

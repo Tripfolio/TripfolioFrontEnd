@@ -7,8 +7,6 @@ import MemberProfile from '@/views/MemberProfile.vue'
 import EmailSettings from '@/views/EmailSettings.vue'
 import GoogleCalendar from "@/views/GoogleCalendar.vue";
 
-
-
 const routes = [
   {
     path: "/",
