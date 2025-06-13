@@ -130,7 +130,9 @@ async function loadItinerary() {
     });
 
     // itineraryPlaces.value = res.data.places;
-    itineraryPlaces.value = res.data.places.sort((a, b) => a.order - b.order);
+    itineraryPlaces.value = res.data.places.sort(
+      (a, b) => a.arrivalHour - b.arrivalHour
+    );
   } catch (error) {
     console.error("載入行程失敗:", error);
   }
@@ -171,6 +173,17 @@ function startEditing(p) {
   p.arrivalMinuteTemp = p.arrivalMinute ?? 0;
 }
 
+function cancelEditing(p) {
+  p.editingTime = false;
+}
+
+//制定時間規格
+function formatTime(hour, minute) {
+  const h = (hour ?? 0).toString().padStart(2, "0");
+  const m = (minute ?? 0).toString().padStart(2, "0");
+  return `${h}:${m}`;
+}
+
 //確認更改時間
 async function confirmTime(p) {
   p.arrivalHour = p.arrivalHourTemp;
@@ -186,16 +199,6 @@ async function confirmTime(p) {
   } catch (err) {
     console.error("❌ 更新抵達時間失敗：", err);
   }
-}
-
-function cancelEditing(p) {
-  p.editingTime = false;
-}
-//制定時間規格
-function formatTime(hour, minute) {
-  const h = (hour ?? 0).toString().padStart(2, "0");
-  const m = (minute ?? 0).toString().padStart(2, "0");
-  return `${h}:${m}`;
 }
 
 //更新順序
