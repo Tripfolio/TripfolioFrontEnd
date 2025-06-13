@@ -121,6 +121,7 @@ const itineraryPlaces = ref([]);
 const API_URL = import.meta.env.VITE_API_URL;
 onMounted(() => {
   loadItinerary();
+
   window.addEventListener("click", onClickOutside);
 });
 onBeforeUnmount(() => {
@@ -134,7 +135,6 @@ async function loadItinerary() {
         itineraryId: 1,
       },
     });
-
     itineraryPlaces.value = res.data.places.sort(
       (a, b) => a.arrivalHour - b.arrivalHour
     );
@@ -237,14 +237,7 @@ async function addPlace() {
     alert("請先選擇一個地點");
     return;
   }
-  const {
-    name,
-    formatted_address,
-    photos,
-    arrivalHour,
-    arrivalMinute,
-    placeOrder,
-  } = selectedPlace.value;
+  const { name, formatted_address, photos } = selectedPlace.value;
 
   const exists = itineraryPlaces.value.some((p) => p.name === name);
   if (exists) {
@@ -264,9 +257,6 @@ async function addPlace() {
       name,
       address: formatted_address || "",
       photo,
-      arrivalHour: defaultHour,
-      arrivalMinute: defaultMinute,
-      placeOrder: itineraryPlaces.value.length + 1,
     });
 
     if (rep.data.success) {
