@@ -8,7 +8,6 @@ import GoogleCalendar from "@/views/GoogleCalendar.vue";
 import EmailSettings from '@/views/EmailSettings.vue';
 import Travel from "@/views/Travel.vue";
 
-
 const routes = [
   {
     path: "/",
