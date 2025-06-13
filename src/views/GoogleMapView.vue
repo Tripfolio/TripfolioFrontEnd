@@ -513,7 +513,6 @@ function moveToCity(event) {
   searchQuery.value = "";
 
   if (cityName === "none") {
-    if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const center = new google.maps.LatLng(
@@ -529,13 +528,9 @@ function moveToCity(event) {
           });
         },
         () => {
-          alert("⚠️ 無法取得你的定位！");
+          alert("無法取得你的定位！");
         }
       );
-    } else {
-      alert("你的瀏覽器不支援定位功能");
-    }
-    return;
   }
 
   const city = cities.find((c) => c.name === cityName);
@@ -701,11 +696,6 @@ function onCityChange(event) {
 }
 
 function locateUser(map) {
-  if (!navigator.geolocation) {
-    alert("❗ 你的瀏覽器不支援定位功能");
-    return;
-  }
-
   navigator.geolocation.getCurrentPosition(
     (position) => {
       const userLocation = {
@@ -731,7 +721,7 @@ function locateUser(map) {
       map.setZoom(15);
     },
     (error) => {
-      alert("❗ 無法取得你的定位資訊");
+      alert("無法取得你的定位資訊");
       console.error(error);
     }
   );
@@ -741,7 +731,7 @@ function addCategory(item) {
   const exists = categories.value.some((cat) => cat.type === item.type);
   if (exists) return;
   if (categories.value.length >= maxCategoryCount) {
-    alert("❗ 已達上限，最多只能選擇 5 種類別");
+    alert("已達上限，最多只能選擇 5 種類別");
     return;
   }
 
@@ -858,7 +848,7 @@ onMounted(async () => {
 
     map.addListener("click", handleClickOutside);
   } catch (err) {
-    alert("❌ Google Maps 載入失敗");
+    alert("Google Maps 載入失敗");
     console.error(err);
   }
 });
