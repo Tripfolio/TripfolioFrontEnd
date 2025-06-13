@@ -191,13 +191,13 @@ async function confirmTime(p) {
   p.editingTime = false;
 
   try {
-    await axios.put(`http://localhost:3000/api/itineraries/places/${p.id}`, {
+    await axios.put(`http://localhost:3000/api/itineraryTime/places/${p.id}`, {
       arrivalHour: p.arrivalHour,
       arrivalMinute: p.arrivalMinute,
     });
-    console.log("✅ 抵達時間更新成功");
+    console.log("抵達時間更新成功");
   } catch (err) {
-    console.error("❌ 更新抵達時間失敗：", err);
+    console.error("更新抵達時間失敗：", err);
   }
 }
 
@@ -208,7 +208,7 @@ async function updateOrder() {
     placeOrder: index + 1,
   }));
 
-  console.log("📦 要傳到後端的資料：", newOrder);
+  console.log("要傳到後端的資料：", newOrder);
 
   try {
     const response = await axios.put(
@@ -217,9 +217,9 @@ async function updateOrder() {
         places: newOrder,
       }
     );
-    console.log("✅ 順序已更新", response.data);
+    console.log("順序已更新", response.data);
   } catch (err) {
-    console.error("❌ 無法更新順序：", err.response?.data || err.message);
+    console.error("無法更新順序：", err.response?.data || err.message);
   }
 }
 
@@ -271,13 +271,13 @@ async function addPlace() {
         arrivalMinute: defaultMinute,
         placeOrder: itineraryPlaces.value.length + 1,
       });
-      alert("✅ 成功加入行程！");
+      alert("成功加入行程！");
     } else {
-      alert("❌ 加入失敗：" + rep.data.message);
+      alert("加入失敗：" + rep.data.message);
     }
   } catch (error) {
     console.error("加入失敗:", error);
-    alert("🚨 發生錯誤：" + error.message);
+    alert("發生錯誤：" + error.message);
   }
 }
 // 刪除行程
