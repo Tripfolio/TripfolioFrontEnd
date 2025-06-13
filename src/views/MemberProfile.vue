@@ -1,12 +1,14 @@
 <template>
-    <div class="profile">
+    <div class="profile p-4 max-w-md mx-auto">
 
-        <h2>資料修改</h2>
+        <h2 class="text-xl font-bold mb-4">資料修改</h2>
 
-        <div class = "relative w-40 h-40 mx-auto">
-            <img v-if="!showCropper && (previewUrl || profileData.avatar)" :src="previewUrl || profileData.avatar" class = "w-full h-full rounded-full object-cover border border-gray-300" alt="大頭貼"/>
-            <label for="avatar-upload" class="avatar-upload absolute bottom-2 right-2 bg-white border border-gray-300 rounded-full p-2 cursor-pointer hover:bg-gray-100 shadow-md" title="更換大頭貼"><font-awesome-icon :icon="['fas', 'pen-to-square']" /></label>
-            <input type="file" id="avatar-upload" @change="uploadAvatar" accept="image/*" class="hidden"/>
+        <div class = "flex flex-col items-center mb-4">
+            <div class="relative w-40 h-40">
+                <img v-if="!showCropper && (previewUrl || profileData.avatar)" :src="previewUrl || profileData.avatar" class = "w-full h-full rounded-full object-cover border border-gray-300" alt="大頭貼"/>
+                <label for="avatar-upload" class="avatar-upload absolute bottom-2 right-2 bg-white border border-gray-300 rounded-full p-2 cursor-pointer hover:bg-gray-100 shadow-md" title="更換大頭貼"><font-awesome-icon :icon="['fas', 'pen-to-square']" /></label>
+                <input type="file" id="avatar-upload" @change="uploadAvatar" accept="image/*" class="hidden"/>
+            </div>
         </div>
         <div v-if="showCropper" class="absolute top-0 left-0 w-full h-full bg-white/80 flex flex-col items-center justify-center z-50">
             <Cropper ref="cropperRef" :src="previewUrl" :stensil-props="{ aspectRatio: 1 }" class="w-40 h-40 rounded-full" />
