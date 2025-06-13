@@ -205,7 +205,7 @@ async function confirmTime(p) {
 async function updateOrder() {
   const newOrder = itineraryPlaces.value.map((place, index) => ({
     id: place.id,
-    order: index + 1,
+    placeOrder: index + 1,
   }));
 
   console.log("📦 要傳到後端的資料：", newOrder);
@@ -254,7 +254,7 @@ async function addPlace() {
             : props.defaultImage,
         arrivalHour: defaultHour,
         arrivalMinute: defaultMinute,
-        order: itineraryPlaces.value.length + 1,
+        placeOrder: itineraryPlaces.value.length + 1,
       }
     );
 
@@ -269,7 +269,7 @@ async function addPlace() {
             : props.defaultImage,
         arrivalHour: defaultHour,
         arrivalMinute: defaultMinute,
-        order: itineraryPlaces.value.length + 1,
+        placeOrder: itineraryPlaces.value.length + 1,
       });
       alert("✅ 成功加入行程！");
     } else {
