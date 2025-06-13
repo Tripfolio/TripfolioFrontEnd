@@ -108,28 +108,33 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from "vue";
+import { toRefs, ref, onMounted, onBeforeUnmount } from "vue";
 import axios from "axios";
 import draggable from "vuedraggable";
 
+const props = defineProps({
+  selectedPlace: Object,
+  defaultImage: String,
+});
+const { selectedPlace, defaultImage } = toRefs(props);
+const itineraryPlaces = ref([]);
+const API_URL = import.meta.env.VITE_API_URL;
 onMounted(() => {
   loadItinerary();
   window.addEventListener("click", onClickOutside);
 });
-
 onBeforeUnmount(() => {
   window.removeEventListener("click", onClickOutside);
 });
 
 async function loadItinerary() {
   try {
-    const res = await axios.get("http://localhost:3000/api/itinerary/places", {
+    const res = await axios.get(`${API_URL}/api/itinerary/places`, {
       params: {
         itineraryId: 1,
       },
     });
 
-    // itineraryPlaces.value = res.data.places;
     itineraryPlaces.value = res.data.places.sort(
       (a, b) => a.arrivalHour - b.arrivalHour
     );
@@ -137,13 +142,6 @@ async function loadItinerary() {
     console.error("載入行程失敗:", error);
   }
 }
-
-const props = defineProps({
-  selectedPlace: Object,
-  defaultImage: String,
-});
-
-const itineraryPlaces = ref([]);
 
 //景點選單順序
 const openMenuIndex = ref(null);
@@ -202,7 +200,7 @@ async function confirmTime(p) {
   }
 
   try {
-    await axios.put(`http://localhost:3000/api/itineraryTime/places/${p.id}`, {
+    await axios.put(`${API_URL}/api/itineraryTime/places/${p.id}`, {
       arrivalHour: p.arrivalHour,
       arrivalMinute: p.arrivalMinute,
     });
@@ -223,7 +221,7 @@ async function updateOrder() {
 
   try {
     const response = await axios.put(
-      "http://localhost:3000/api/itinerary/places/reorder",
+      `${API_URL}/api/itinerary/places/reorder`,
       {
         places: newOrder,
       }
@@ -234,50 +232,48 @@ async function updateOrder() {
   }
 }
 
-// 加入行程
 async function addPlace() {
-  if (!props.selectedPlace) {
+  if (!selectedPlace.value) {
     alert("請先選擇一個地點");
     return;
   }
+  const {
+    name,
+    formatted_address,
+    photos,
+    arrivalHour,
+    arrivalMinute,
+    placeOrder,
+  } = selectedPlace.value;
 
-  const exists = itineraryPlaces.value.some(
-    (p) => p.name === props.selectedPlace.name
-  );
+  const exists = itineraryPlaces.value.some((p) => p.name === name);
   if (exists) {
-    alert("⚠️ 這個景點已經加入行程！");
+    alert("這個景點已經加入行程！");
     return;
   }
 
-  try {
-    const defaultHour = 9;
-    const defaultMinute = 0;
+  const photo = photos?.length
+    ? photos[0].getUrl({ maxWidth: 1000 })
+    : defaultImage.value;
 
-    const rep = await axios.post(
-      "http://localhost:3000/api/itinerary/add-place",
-      {
-        itineraryId: 1,
-        name: props.selectedPlace.name,
-        address: props.selectedPlace.formatted_address || "",
-        photo:
-          props.selectedPlace.photos && props.selectedPlace.photos.length
-            ? props.selectedPlace.photos[0].getUrl({ maxWidth: 1000 })
-            : props.defaultImage,
-        arrivalHour: defaultHour,
-        arrivalMinute: defaultMinute,
-        placeOrder: itineraryPlaces.value.length + 1,
-      }
-    );
+  try {
+    const defaultHour = 0;
+    const defaultMinute = 0;
+    const rep = await axios.post(`${API_URL}/api/itinerary/add-place`, {
+      itineraryId: 1,
+      name,
+      address: formatted_address || "",
+      photo,
+      arrivalHour: defaultHour,
+      arrivalMinute: defaultMinute,
+      placeOrder: itineraryPlaces.value.length + 1,
+    });
 
     if (rep.data.success) {
       itineraryPlaces.value.push({
-        name: props.selectedPlace.name,
-        address: props.selectedPlace.formatted_address,
-        rating: props.selectedPlace.rating || "N/A",
-        photo:
-          props.selectedPlace.photos && props.selectedPlace.photos.length
-            ? props.selectedPlace.photos[0].getUrl({ maxWidth: 1000 })
-            : props.defaultImage,
+        name,
+        address: formatted_address || "",
+        photo,
         arrivalHour: defaultHour,
         arrivalMinute: defaultMinute,
         placeOrder: itineraryPlaces.value.length + 1,
@@ -291,12 +287,10 @@ async function addPlace() {
     alert("發生錯誤：" + error.message);
   }
 }
-// 刪除行程
-async function removePlace(place) {
-  console.log("刪除景點資料", place);
 
+async function removePlace(place) {
   try {
-    const url = `http://localhost:3000/api/itinerary/place?itineraryId=1&name=${encodeURIComponent(
+    const url = `${API_URL}/api/itinerary/place?itineraryId=1&name=${encodeURIComponent(
       place.name
     )}`;
     const response = await axios.delete(url);
@@ -305,15 +299,15 @@ async function removePlace(place) {
       itineraryPlaces.value = itineraryPlaces.value.filter(
         (p) => p.name !== place.name
       );
-      alert("✅ 成功刪除景點");
+      alert("成功刪除景點");
     } else {
-      alert("❌ 刪除失敗：" + response.data.message);
+      alert("刪除失敗：" + response.data.message);
     }
   } catch (error) {
-    console.error("刪除錯誤:", error);
-    alert("🚨 發生錯誤：" + error.message);
+    alert("發生錯誤：" + error.message);
   }
 }
+
 defineExpose({ addPlace });
 </script>
 
