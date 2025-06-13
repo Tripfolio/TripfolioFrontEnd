@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <template>
     <Itinerary ref="itineraryRef" :selectedPlace="selectedPlace" class="z-[4]" :default-image="defaultImage"/>
   <div
@@ -619,3 +620,915 @@ onUnmounted(() => {
   z-index: 1;
 }
 </style>
+=======
+<template>
+
+    <Itinerary ref="itineraryRef" :selectedPlace="selectedPlace" class="z-[4]" :default-image="defaultImage"/>
+  
+  <div class="absolute top-2.5 left-1/2 -translate-x-1/2 z-[2] flex items-center gap-2.5 bg-gray-400/95 px-2 py-1 rounded-full">
+    <div class="relative w-fit">
+      <select
+        @change="onCityChange($event)"
+        class="appearance-none bg-gray-500/80 text-white text-sm py-2 pl-4 pr-10 rounded-full focus:outline-none hover:bg-gray-400 transition duration-200 cursor-pointer shadow-inner"
+      >
+        <option value="none">當前</option>
+        <option v-for="city in cities" :key="city.name" :value="city.name">
+          {{ city.name }}
+        </option>
+      </select>
+      
+      <svg
+        class="w-4 h-4 absolute right-3 top-1/2 -translate-y-1/2 text-white pointer-events-none"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        viewBox="0 0 24 24"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M19 9l-7 7-7-7"
+        />
+      </svg>
+    </div>
+      <div class="relative w-[300px]">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="absolute left-0 top-1/2 -translate-y-1/2 w-5 h-5 text-white pointer-events-none"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
+          />
+        </svg>
+        <input
+          type="text"
+          v-model="searchQuery"
+          placeholder="輸入地點"
+          class="w-full rounded-full border-none text-white px-7 py-1.5 box-border text-base placeholder-white focus:outline-none"
+          ref="searchInput"
+          @keyup.enter="searchPlace"
+        />
+        <button
+          @click.prevent="searchPlace"
+          class="absolute right-0.5 top-1/2 -translate-y-1/2 bg-white px-2.5 py-1.5 rounded-full border-none cursor-pointer text-xs text-gray-800"
+        >
+          搜尋
+        </button>
+      </div>
+    </div>
+
+  <div ref="mapRef" class="w-screen h-screen m-0 p-0"></div>
+
+  <!-- 景點卡片滑動列 -->
+  <div
+    v-if="placeDetails.length"
+    class="absolute bottom-2 left-1/2 -translate-x-1/2 z-[3] w-[92%] max-w-screen-xl"
+  >
+    <div
+      class="relative bg-white/80 backdrop-blur-lg rounded-2xl shadow-xl px-6 py-4"
+    >
+      <button
+        @click="scrollLeft"
+        class="absolute left-0 top-1/2 -translate-y-1/2 z-20 bg-white/90 hover:bg-white shadow px-3 py-2 rounded-full"
+      >
+        ‹
+      </button>
+
+      <div
+        ref="cardContainer"
+        class="flex gap-4 overflow-x-auto scroll-smooth px-4 pr-6 scrollbar-hidden snap-x snap-mandatory"
+      >
+        <div
+          v-for="(place, index) in placeDetails"
+          :key="index"
+          @click="selectedPlace = place"
+          class="w-[70vw] sm:w-[250px] flex-shrink-0 bg-white rounded-xl shadow p-3 hover:shadow-md transition duration-200 cursor-pointer snap-start"
+        >
+          <img
+            :src="place.photos?.[0]?.getUrl({ maxWidth: 800 }) || defaultImage"
+            @error="(e) => (e.target.src = defaultImage)"
+            alt="地點圖片"
+            class="w-full aspect-[3/2] object-cover rounded-md mb-2"
+          />
+          <h2 class="text-sm font-semibold truncate" :title="place.name">
+            {{ place.name }}
+          </h2>
+          <p
+            v-if="place.rating"
+            class="text-xs text-yellow-600 mt-1 whitespace-nowrap overflow-hidden text-ellipsis"
+          >
+            ⭐ {{ place.rating }} / {{ place.user_ratings_total }} 則評價
+          </p>
+        </div>
+        <div v-if="hasMoreResults" class="flex items-center justify-center">
+          <button
+            class="bg-gray-400 text-white py-2 px-4 rounded-full text-sm hover:bg-gray-700 whitespace-nowrap"
+            @click="loadNextPage"
+          >
+            更多
+          </button>
+        </div>
+      </div>
+
+      <button
+        @click="scrollRight"
+        class="absolute right-0 top-1/2 -translate-y-1/2 z-20 bg-white/90 hover:bg-white shadow px-3 py-2 rounded-full"
+      >
+        ›
+      </button>
+    </div>
+  </div>
+
+  <!--地點詳細資訊 -->
+  <div
+    v-if="selectedPlace"
+    class="fixed inset-0 bg-black/50 flex items-center justify-center z-[4]"
+    @click.self="selectedPlace = null"
+  >
+    <div class="bg-white rounded-lg p-6 w-full max-w-md relative">
+      <h2 class="text-2xl font-bold mb-3">{{ selectedPlace.name }}</h2>
+      <p class="text-gray-600 text-sm mb-3">
+        {{ selectedPlace.formatted_address }}
+      </p>
+      <p v-if="selectedPlace.rating" class="text-yellow-600 mb-3">
+        ⭐ {{ selectedPlace.rating }}（共
+        {{ selectedPlace.user_ratings_total }} 則評價）
+      </p>
+      <div class="relative w-full aspect-[4/3]">
+        <button
+          v-if="selectedPlace.photos && selectedPlace.photos.length > 1"
+          @click.stop="
+            selectedPlacePhotoIndex =
+              (selectedPlacePhotoIndex - 1 + selectedPlace.photos.length) %
+              selectedPlace.photos.length
+          "
+          class="absolute top-1/2 left-2 -translate-y-1/2 bg-black bg-opacity-40 text-white rounded-full w-8 h-8 flex items-center justify-center hover:bg-gray-700"
+          aria-label="上一張圖片"
+        >
+          ‹
+        </button>
+        <!-- 圖片 -->
+        <img
+          :src="
+            selectedPlace.photos && selectedPlace.photos.length
+              ? selectedPlace.photos[selectedPlacePhotoIndex].getUrl({
+                  maxWidth: 800,
+                })
+              : defaultImage
+          "
+          @error="(e) => (e.target.src = defaultImage)"
+          alt="地點圖片"
+          class="max-w-full aspect-[4/3] object-cover rounded-lg mt-2.5"
+        />
+        <button
+          v-if="selectedPlace.photos && selectedPlace.photos.length > 1"
+          @click.stop="
+            selectedPlacePhotoIndex =
+              (selectedPlacePhotoIndex + 1) % selectedPlace.photos.length
+          "
+          class="absolute top-1/2 right-2 -translate-y-1/2 bg-black bg-opacity-40 text-white rounded-full w-8 h-8 flex items-center justify-center hover:bg-gray-700"
+          aria-label="下一張圖片"
+        >
+          ›
+        </button>
+      </div>
+      <button @click="callItinerary">🤍 加入行程</button>
+    </div>
+  </div>
+
+  <aside 
+    class="w-20 p-4 space-y-2 bg-gray-400/30 fixed z-50 left-5 top-1/2 translate-y-[-50%] rounded-full shadow-4xl backdrop-blur-2xl"
+    ref="menuRef"
+  >
+    <button
+      v-for="item in categories"
+      :key="item.type"
+      @click="searchByCategory(item.type)"
+      class="block w-full text-left px-3 py-2 rounded hover:bg-blue-100"
+    >
+      {{ item.label }}
+    </button>
+    <!-- 🔽 新增自訂分類選單 -->
+    <div class="relative">
+      <button
+        @click="showCustomCategory = !showCustomCategory"
+        class="block w-full text-left px-3 py-2 rounded hover:bg-green-100 text-green-700 font-semibold left-3.5"
+      >
+        ➕
+      </button>
+
+      <div
+        v-if="showCustomCategory"
+        class="absolute z-10 bg-gray-400/90 rounded-4xl p-3 w-80 shadow-md bottom-1 left-18 transform transition-all duration-300 ease-in-out translate-x-0 opacity-100"
+      >
+        <button
+          @click="removeCategory(item)"
+          v-for="item in categories"
+          :key="item.type"
+          class="m-4"
+        >
+          {{ item.label }} ❌
+        </button>
+        <hr />
+        <button
+          @click="addCategory(item)"
+          v-for="item in placeCategories"
+          :key="item.type"
+          class="m-4 cursor-pointer"
+        >
+          {{ item.label }}
+        </button>
+      </div>
+    </div>
+    <!-- 🔽 新增自訂分類選單 -->
+  </aside>
+
+  <div class="absolute bottom-10 left-5 bg-white/90 px-3 py-2 rounded-md shadow-md flex gap-2.5 items-center z-[1]">
+    <div v-if="result">
+      <p>兩點距離：{{ result.distance }}，預估時間：{{ result.duration }}</p>
+    </div>
+    <label class="flex items-center gap-2">
+      <span>選擇交通方式：</span> 
+      <select v-model="travelMode" @change="recalculateRoute" class="px-2 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400">
+        <option value="DRIVING">🚗 開車</option>
+        <option value="WALKING">🚶‍♀️ 步行</option>
+        <option value="TRANSIT">🚇 大眾運輸</option>
+      </select>
+    </label>
+  </div>
+</template>
+
+<script setup>
+import { ref, onMounted, watch, onUnmounted } from "vue";
+import { MapIcons } from "@/assets/MapIcons";
+import { MarkerClusterer } from "@googlemaps/markerclusterer"; //marker的集合
+import Itinerary from "../components/Itinerary.vue";
+  
+// 子元件 Itinerary.vue
+const itineraryRef = ref(null);
+function callItinerary() {
+  if (itineraryRef.value && typeof itineraryRef.value.addPlace === "function") {
+    itineraryRef.value.addPlace();
+  } else {
+    console.warn("itineraryRef 尚未掛載，無法呼叫 addPlace");
+  }
+}
+
+// 地圖與搜尋
+const mapRef = ref(null); // 地圖容器 (initMap)
+const searchQuery = ref(""); // 搜尋關鍵字 (searchPlace)
+const searchInput = ref(null); // 輸入搜尋關鍵字
+
+// 地點資料
+const placeDetails = ref([]); // 搜尋結果詳細資訊 (searchPlace, handleResults)
+const nextPageFunc = ref(null); // 分頁函式 (handleResults, loadNextPage)
+const hasMoreResults = ref(false); // 是否有更多結果 (searchPlace, handleResults)
+const defaultImage = "https://picsum.photos/1000?image";
+
+// 選擇的地點與圖片
+const selectedPlace = ref(null);       // 使用者選擇的地點 (點擊 marker 或卡片)
+const selectedPlacePhotoIndex = ref(0);// 當前顯示的圖片索引 (watch selectedPlace)
+const selectedCityName = ref("none"); // 預設為「當前」
+
+const selectedMarkers = []; // 用於存儲選擇的標記 (點擊地圖)
+const cities = [
+  { name: '台北市', lat: 25.033964, lng: 121.564472 },
+  { name: '新北市', lat: 25.016982, lng: 121.462786 },
+  { name: '基隆市', lat: 25.131122, lng: 121.739622 },
+  { name: '桃園市', lat: 24.993628, lng: 121.300979 },
+  { name: '新竹市', lat: 24.80395, lng: 120.964675 },
+  { name: '新竹縣', lat: 24.838722, lng: 121.002295 },
+  { name: '苗栗縣', lat: 24.560159, lng: 120.821426 },
+  { name: '台中市', lat: 24.147736, lng: 120.673648 },
+  { name: '彰化縣', lat: 24.068523, lng: 120.562447 },
+  { name: '南投縣', lat: 23.958842, lng: 120.971863 },
+  { name: '雲林縣', lat: 23.709203, lng: 120.542994 },
+  { name: '嘉義市', lat: 23.480075, lng: 120.449111 },
+  { name: '嘉義縣', lat: 23.451842, lng: 120.255461 },
+  { name: '台南市', lat: 22.999728, lng: 120.227028 },
+  { name: '高雄市', lat: 22.627278, lng: 120.301435 },
+  { name: '屏東縣', lat: 22.551975, lng: 120.548759 },
+  { name: '宜蘭縣', lat: 24.702107, lng: 121.73775 },
+  { name: '花蓮縣', lat: 23.987158, lng: 121.601571 },
+  { name: '台東縣', lat: 22.764364, lng: 121.113207 },
+  { name: '澎湖縣', lat: 23.57104, lng: 119.579369 },
+  { name: '金門縣', lat: 24.436679, lng: 118.317088 },
+  { name: '連江縣', lat: 26.16058, lng: 119.950946 },
+]; // 城市列表
+
+
+// 路線規劃
+const travelMode = ref("DRIVING"); // 交通方式 (select dropdown)
+const result = ref(null); // 路線結果（距離與時間）(calculateRoute)
+
+//整個篩選區塊的容器，用來判斷點擊事件是不是發生在外部。
+const menuRef = ref(null);
+
+//側邊景點種類篩選
+const showCustomCategory = ref(false); //是否顯示選單
+const maxCategoryCount = 5; //側邊骰選選單的最大長度
+
+//篩選種類
+const categories = ref([
+  { type: "restaurant", label: "🍽️" },
+  { type: "lodging", label: "🏨" },
+  { type: "residence", label: "🏠" },
+  { type: "tourist_attraction", label: "📍" },
+  // { type: "other_options", label: "+" },
+]);
+
+//待添加種類
+const placeCategories = ref([
+  { type: "cafe", label: "咖啡廳" },
+  { type: "museum", label: "博物館" },
+  { type: "park", label: "公園" },
+  { type: "zoo", label: "動物園" },
+  { type: "amusement_park", label: "遊樂園" },
+  { type: "aquarium", label: "水族館" },
+  { type: "art_gallery", label: "藝廊" },
+  { type: "bar", label: "酒吧" },
+  { type: "book_store", label: "書店" },
+  { type: "gym", label: "健身房" },
+  { type: "shopping_mall", label: "購物中心" },
+  { type: "supermarket", label: "超市" },
+  { type: "night_club", label: "夜店" },
+]);
+
+//樣式
+  const cardContainer = ref(null)
+
+  function scrollLeft() {
+    if (cardContainer.value) {
+      cardContainer.value.scrollBy({ left: -300, behavior: 'smooth' })
+    }
+  }
+
+  function scrollRight() {
+    if (cardContainer.value) {
+      cardContainer.value.scrollBy({ left: 300, behavior: 'smooth' })
+    }
+  }
+
+// Google Maps 實例與服務
+let map = null; // 地圖實例 (initMap)
+let markers = []; // 所有標記 (searchPlace, 點擊地圖)
+let service = null; // 地點服務 (initMap)
+let directionsService; // 路線服務 (onMounted)
+let directionsRenderer; // 路線顯示器 (onMounted)
+let markerCluster = null; //marker的集合
+
+//當 selectedPlace 改變時，重設圖片索引
+watch(selectedPlace, (newVal) => {
+  if (newVal) {
+    selectedPlacePhotoIndex.value = 0;
+  }
+});
+
+// 載入 Google Maps API
+function loadGoogleMaps() {
+  return new Promise((resolve, reject) => {
+    const script = document.createElement("script");
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${
+      import.meta.env.VITE_GOOGLE_MAPS_API_KEY
+    }&libraries=places,geometry`;
+    script.defer = true;
+    script.onload = resolve;
+    script.onerror = reject;
+    document.head.appendChild(script);
+    console.log('API KEY:', import.meta.env.VITE_GOOGLE_MAPS_API_KEY);
+  });
+}
+
+// 初始化地圖
+function initMap() {
+  map = new google.maps.Map(mapRef.value, {
+    center: { lat: 25.033964, lng: 121.564472 },
+    zoom: 18,
+    mapTypeControl: false,
+    zoomControl: true,
+    cameraControl: false,
+    scaleControl: false,
+    fullscreenControl: false,
+    errorControl: true,
+    streetViewControl: false,
+    streetViewControlOptions: {
+      position: google.maps.ControlPosition.LEFT_TOP,
+    },
+    styles: [
+      {
+        featureType: "poi",
+        elementType: "labels",
+        stylers: [{ visibility: "off" }],
+      },
+      {
+        featureType: "transit.station",
+        elementType: "all",
+        stylers: [{ visibility: "off" }],
+      },
+      {
+        featureType: "road",
+        elementType: "labels",
+        stylers: [{ visibility: "off" }],
+      },
+    ],
+  });
+  service = new google.maps.places.PlacesService(map);
+}
+
+  const SearchType = {
+    TEXT: 'TEXT', // 選定城市 + 輸入關鍵字
+    NEARBY_KEYWORD: 'NEARBY_KEYWORD', // 當前 + 輸入關鍵字
+    NEARBY_TYPE: 'NEARBY_TYPE', // 當前 + 分類
+    CITY_DEFAULT: 'CITY_DEFAULT' // 選定城市
+  }
+
+  function clearMap() {
+    selectedMarkers.forEach((m) => m.setMap(null))
+    selectedMarkers.length = 0
+    markers.forEach((marker) => marker.setMap(null))
+    markers = []
+    placeDetails.value = []
+    nextPageFunc.value = null
+    hasMoreResults.value = false
+    selectedPlace.value = null
+  }
+
+  function performSearch({
+    type,
+    query = '',
+    cityName = '',
+    location,
+    radius = 3000
+  }) {
+    clearMap()
+    if (!service) service = new google.maps.places.PlacesService(map)
+
+    const request = {}
+
+    console.log('🔍 搜尋參數:', { type, query, cityName, location, radius })
+
+    if (type === SearchType.TEXT) {
+      request.query = `${query} ${cityName}`
+      request.location = location
+      service.textSearch(request, (results, status, pagination) => {
+        if (results?.[0]?.geometry?.location) {
+          map.setCenter(results[0].geometry.location)
+        }
+        handleResults(results, status, pagination)
+      })
+
+    } else if (type === SearchType.NEARBY_KEYWORD) {
+      if (!query) {
+        console.warn('❗ NEARBY_KEYWORD 缺少 query 參數，取消搜尋')
+        return
+      }
+      request.query = query
+      request.location = location
+      request.radius = radius
+      service.textSearch(request, (results, status, pagination) => {
+        if (results?.[0]?.geometry?.location) {
+          map.setCenter(results[0].geometry.location)
+        }
+        handleResults(results, status, pagination)
+      })
+
+    } else if (type === SearchType.NEARBY_TYPE) {
+      request.location = location
+      request.radius = radius
+      request.type = query
+      service.nearbySearch(request, (results, status, pagination) => {
+        if (results?.[0]?.geometry?.location) {
+          map.setCenter(results[0].geometry.location)
+        }
+        handleResults(results, status, pagination)
+      })
+
+    } else if (type === SearchType.CITY_DEFAULT) {
+      request.query = `tourist attractions ${cityName}`
+      request.location = location
+      service.textSearch(request, (results, status, pagination) => {
+        if (results?.[0]?.geometry?.location) {
+          map.setCenter(results[0].geometry.location)
+        }
+        handleResults(results, status, pagination)
+      })
+    }
+  }
+
+  function searchPlace() {
+    if (!searchQuery.value || !map) return
+    const center = map.getCenter()
+
+    if (selectedCityName.value !== 'none') {
+      performSearch({
+        type: SearchType.TEXT,
+        query: searchQuery.value,
+        cityName: selectedCityName.value,
+        location: center
+      })
+    } else {
+      performSearch({
+        type: SearchType.NEARBY_KEYWORD,
+        query: searchQuery.value,
+        location: center
+      })
+    }
+  }
+
+  function moveToCity(event) {
+    const cityName = event.target.value
+    selectedCityName.value = cityName
+    searchQuery.value = ''
+
+    if (cityName === 'none') {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const center = new google.maps.LatLng(
+              position.coords.latitude,
+              position.coords.longitude
+            )
+            map.setCenter(center)
+            map.setZoom(15)
+            performSearch({
+              type: SearchType.NEARBY_TYPE,
+              query: 'tourist_attraction',
+              location: center
+            })
+          },
+          () => {
+            alert('⚠️ 無法取得你的定位！')
+          }
+        )
+      } else {
+        alert('你的瀏覽器不支援定位功能')
+      }
+      return
+    }
+
+    const city = cities.find((c) => c.name === cityName)
+    if (!city || !map) return
+
+    const center = new google.maps.LatLng(city.lat, city.lng)
+    map.setCenter(center)
+    map.setZoom(13)
+
+    performSearch({ type: SearchType.CITY_DEFAULT, cityName, location: center })
+  }
+
+  function searchByCategory(type) {
+    if (!map || !type) return
+    const center = map.getCenter()
+    searchQuery.value = ''
+
+    performSearch({
+      type: SearchType.NEARBY_TYPE,
+      query: type,
+      location: center
+    })
+  }
+
+
+// 處理搜尋結果
+function handleResults(results, status, pagination) {
+  if (status !== google.maps.places.PlacesServiceStatus.OK || !results.length) {
+    alert("找不到地點！");
+    return;
+  }
+
+  markers.forEach((marker) => marker.setMap(null));
+  markers = [];
+  if (markerCluster) {
+    markerCluster.clearMarkers();
+    markerCluster = null;
+  }
+
+  results.forEach((place) => {
+    if (!place.geometry || !place.geometry.location) return;
+
+    map.setCenter(place.geometry.location);
+    const iconUrl = getPlaceIconUrl(place.types);
+
+
+    const marker = new google.maps.Marker({
+      map,
+      position: place.geometry.location,
+      title: place.name,
+      icon: {
+        url: iconUrl,
+      }, // 這裡套用分類 SVG
+    });
+
+    markers.push(marker);
+
+    const detailRequest = {
+      placeId: place.place_id,
+      fields: [
+        "name",
+        "formatted_address",
+        "geometry",
+        // "types",
+        "rating",
+        "user_ratings_total",
+        // "formatted_phone_number",
+        // "international_phone_number",
+        // "opening_hours",
+        // "current_opening_hours",
+        // "secondary_opening_hours",
+        "photos",
+        // "reviews",
+        // "price_level",
+        // "website",
+        // "url", //開啟 Google 地圖
+        // "vicinity", //附近描述（適用於搜尋 API，如 "near Taipei 101"）
+        // "address_components",
+        // "adr_address",
+        // "postal_address",
+        // "short_formatted_address",
+        // "business_status",
+        // "icon", // =icon_mask_base_uri + icon_background_color
+        // 其他field欄位參考：https://developers.google.com/maps/documentation/places/web-service/legacy/details?hl=zh-tw#fields
+      ],
+    };
+
+    service.getDetails(detailRequest, (detailResult, detailStatus) => {
+      if (detailStatus === google.maps.places.PlacesServiceStatus.OK) {
+        placeDetails.value.push(detailResult);
+
+        marker.addListener("click", () => {
+          selectedPlace.value = detailResult;
+        });
+      }
+    });
+  });
+
+  markerCluster = new MarkerClusterer({
+    map: map,
+    markers: markers,
+    renderer: {
+      render({ count, position }) {
+        return new google.maps.Marker({
+          position,
+
+          label: {
+            text: String(count),
+            color: "white",
+            fontSize: "20px",
+            fontWeight: "bold",
+          },
+        });
+      },
+    },
+  });
+
+  // 分頁處理
+  if (pagination && pagination.hasNextPage) {
+    nextPageFunc.value = () => pagination.nextPage();
+    hasMoreResults.value = true;
+  } else {
+    hasMoreResults.value = false;
+  }
+}
+
+// 載入下一頁
+function loadNextPage() {
+  if (nextPageFunc.value) {
+    nextPageFunc.value();
+  }
+}
+
+// 計算路線
+function calculateRoute(origin, destination) {
+  directionsService.route(
+    {
+      origin,
+      destination,
+      travelMode: travelMode.value,
+    },
+    (response, status) => {
+      if (status === "OK") {
+        directionsRenderer.setDirections(response);
+
+        const leg = response.routes[0].legs[0];
+        result.value = {
+          distance: leg.distance.text,
+          duration: leg.duration.text,
+        };
+      } else {
+        alert("路線規劃失敗：" + status);
+      }
+    }
+  );
+}
+
+//  重新計算路線
+function recalculateRoute() {
+  if (markers.length === 2) {
+    calculateRoute(markers[0].getPosition(), markers[1].getPosition());
+  }
+}
+
+// 當選擇的縣市改變時，重設搜尋關鍵字並移動地圖
+function onCityChange(event) {
+  searchQuery.value = "";        
+  moveToCity(event);             
+}
+
+//個人定位
+function locateUser(map) {
+  if (!navigator.geolocation) {
+    alert("❗ 你的瀏覽器不支援定位功能");
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(
+    (position) => {
+      const userLocation = {
+        lat: position.coords.latitude,
+        lng: position.coords.longitude,
+      };
+
+      // 在地圖上加上使用者位置的標記
+      const userMarker = new google.maps.Marker({
+        position: userLocation,
+        map: map,
+        title: "你的位置",
+        icon: {
+          path: google.maps.SymbolPath.CIRCLE,
+          scale: 15,
+          fillColor: "#4285F4",
+          fillOpacity: 0.9,
+          strokeColor: "#fff",
+          strokeWeight: 2,
+        },
+      });
+
+      // 將地圖中心移動到使用者位置
+      map.setCenter(userLocation);
+      map.setZoom(15);
+    },
+    (error) => {
+      alert("❗ 無法取得你的定位資訊");
+      console.error(error);
+    }
+  );
+}
+
+//添加篩選種類
+function addCategory(item) {
+  const exists = categories.value.some((cat) => cat.type === item.type);
+  if (exists) return; // 已存在就不處理
+  if (categories.value.length >= maxCategoryCount) {
+    alert("❗ 已達上限，最多只能選擇 5 種類別");
+    return;
+  }
+
+  categories.value.push(item);
+  placeCategories.value = placeCategories.value.filter(
+    (cat) => cat.type !== item.type
+  );
+}
+
+//移除篩選種類
+function removeCategory(item) {
+  // 從已選類別移除
+  categories.value = categories.value.filter((cat) => cat.type !== item.type);
+
+  // 加回候選清單，如果還沒在裡面
+  const exists = placeCategories.value.some((cat) => cat.type === item.type);
+  if (!exists) {
+    placeCategories.value.push(item);
+  }
+}
+
+// 點擊外部時關閉自訂分類
+function handleClickOutside(event) {
+  if (menuRef.value && !menuRef.value.contains(event.target)) {
+    showCustomCategory.value = false;
+  }
+}
+
+//讓svg可以被地圖使用
+function getPlaceIconUrl(types = []) {
+  for (const type of types) {
+    if (MapIcons[type]) {
+      return (
+        "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(MapIcons[type])
+      );
+    }
+  }
+  // 沒有對應圖示就使用 default
+  return (
+    "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(MapIcons.default)
+  );
+}
+
+onMounted(async () => {
+  try {
+    await loadGoogleMaps(); // 等待 API 載入
+    initMap(); // 初始化地圖
+    await locateUser(map);
+
+    // 初始化方向服務
+    directionsService = new google.maps.DirectionsService();
+    directionsRenderer = new google.maps.DirectionsRenderer({
+      suppressMarkers: true,
+    });
+    directionsRenderer.setMap(map);
+
+    // 初始化 PlacesService（for 點擊地圖查詢）
+    service = new google.maps.places.PlacesService(map);
+
+    // 地圖點擊事件
+    map.addListener("click", (event) => {
+      markers.forEach((marker) => marker.setMap(null));
+      markers = [];
+      placeDetails.value = [];
+      nextPageFunc.value = null;
+      hasMoreResults.value = false;
+
+      if (event.placeId) {
+        event.stop();
+        const placeId = event.placeId;
+        const detailRequest = {
+          placeId,
+          fields: [
+            "name",
+            "formatted_address",
+            "geometry",
+            "rating",
+            "user_ratings_total",
+            "photos",
+            "business_status",
+            "icon",
+          ],
+        };
+
+        service.getDetails(detailRequest, (detailResult, detailStatus) => {
+          if (detailStatus === google.maps.places.PlacesServiceStatus.OK) {
+            // 第三個點時，重置
+            if (selectedMarkers.length === 2) {
+              selectedMarkers.forEach((m) => m.setMap(null));
+              selectedMarkers.length = 0;
+              selectedPlace.value = null;
+              if (directionsRenderer)
+                directionsRenderer.setDirections({ routes: [] });
+            }
+
+            const marker = new google.maps.Marker({
+              position: detailResult.geometry.location,
+              map,
+              title: detailResult.name,
+            });
+            selectedMarkers.push(marker);
+
+            if (selectedMarkers.length === 1) {
+              selectedPlace.value = detailResult;
+            } else if (selectedMarkers.length === 2) {
+              selectedPlace.value = null;
+              calculateRoute(
+                selectedMarkers[0].getPosition(),
+                selectedMarkers[1].getPosition()
+              );
+            }
+          } else {
+            console.warn("取得詳細資料失敗", detailStatus);
+          }
+        });
+      } else {
+        console.log("點擊了非place地點");
+      }
+    });
+
+    // 使用者點擊地圖任意位置時，執行 handleClickOutside
+    map.addListener("click", handleClickOutside);
+
+  } catch (err) {
+    alert("❌ Google Maps 載入失敗");
+    console.error(err);
+  }
+});
+
+// onUnmounted 清理監聽器（防止記憶體洩漏）
+onUnmounted(() => {
+  map.removeListener("click", handleClickOutside);
+});
+
+</script>
+
+<style scoped>
+.scrollbar-hidden::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hidden {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+</style>
+>>>>>>> 1451605952e1f9c7bf283a1be1bc4e6f08331899
