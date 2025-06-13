@@ -11,6 +11,7 @@
         <RouterLink to="/emailSettings">Email 通知</RouterLink>
         <RouterLink to="/profile">會員資料修改</RouterLink>
         <RouterLink to="/calendar">連結 Google Calendar</RouterLink>
+        <RouterLink to="/schedule">個人行程</RouterLink>
         <RouterLink to="/login">登入頁面</RouterLink>
         <RouterLink to="/trips">行程建立</RouterLink>
       </div>
