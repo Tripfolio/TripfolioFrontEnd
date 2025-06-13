@@ -167,7 +167,7 @@ const scheduleSubmit = async() => {
         formData.append('description', description.value);
 
     try {
-        const response = await axios.post('http://localhost:3000/api/travelSchedule', formData, {
+        const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/travelSchedule`, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
                 Authorization: `Bearer ${token}`,

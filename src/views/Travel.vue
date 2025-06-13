@@ -55,7 +55,7 @@ const fetchSchedules = async () => {
   if(!token) return
 
   try {
-    const res = await axios.get("http://localhost:3000/api/travelSchedule", {
+    const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/travelSchedule`, {
       headers: {
         Authorization: `Bearer ${token}`
       }

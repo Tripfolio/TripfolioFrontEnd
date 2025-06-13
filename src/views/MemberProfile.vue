@@ -68,7 +68,7 @@ import { ref, watch, onMounted } from 'vue';
 import axios from 'axios';
 import { Cropper } from 'vue-advanced-cropper';
 import 'vue-advanced-cropper/dist/style.css';
-
+import dayjs from 'dayjs';
 
 //確認會員登入 抓id
 const memberId = localStorage.getItem('memberId') || '1'
@@ -85,9 +85,7 @@ onMounted(async () => {
 
     //生日時區
     if (data.birthday) {
-      const date = new Date(data.birthday)
-      const adjustedDate = new Date(date.getTime() + (8 * 60 * 60 * 1000))
-      data.birthday = adjustedDate.toISOString().slice(0, 10)
+      data.birthday = dayjs(data.birthday).format('YYYY-MM-DD')
     }
 
     profileData.value = {
