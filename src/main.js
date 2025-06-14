@@ -14,9 +14,17 @@ import {
   faEyeSlash,
   faXmark,
   faPenToSquare,
+  faEllipsisH,
 } from "@fortawesome/free-solid-svg-icons";
 
-library.add(faExclamationTriangle, faEye, faEyeSlash, faXmark, faPenToSquare);
+library.add(
+  faExclamationTriangle,
+  faEye,
+  faEyeSlash,
+  faXmark,
+  faPenToSquare,
+  faEllipsisH
+);
 
 const app = createApp(App);
 
