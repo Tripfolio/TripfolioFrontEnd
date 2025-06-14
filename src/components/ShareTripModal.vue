@@ -72,7 +72,7 @@
       <div v-if="shareUrl" class="flex flex-col items-center space-y-3 my-4">
         <qrcode-vue :value="shareUrl" :size="160" />
         <p class="text-sm text-gray-500 text-center leading-snug">
-          手機掃描條碼，即可查看此行程<br />24 小時內有效
+          手機掃描條碼，即可查看此行程
         </p>
       </div>
 
@@ -160,13 +160,16 @@ const setPermission = async (type) => {
 
 const generateShareUrl = async () => {
   try {
-    const res = await axios.post(`/api/trip-shares/${props.tripId}`, {
-      permission: permission.value,
-    });
+    const res = await axios.post(
+      `${import.meta.env.VITE_API_URL}/api/trip-shares/${props.tripId}`,
+      {
+        permission: permission.value,
+      }
+    );
     shareUrl.value = res.data.shareLink;
     await fetchMembers();
   } catch (err) {
-    console.error("產生連結失敗", err);
+    alert("產生連結失敗。");
   }
 };
 
@@ -183,7 +186,9 @@ const copyToClipboard = async () => {
 
 const fetchMembers = async () => {
   try {
-    const res = await axios.get(`/api/trip-shares/${props.tripId}`);
+    const res = await axios.get(
+      `${import.meta.env.VITE_API_URL}/api/trip-shares/${props.tripId}`
+    );
     members.value = res.data.map((item) => ({
       token: item.token, // 加上 token 供後續修改/刪除用
       permission: item.permission,
@@ -191,15 +196,18 @@ const fetchMembers = async () => {
       // avatarUrl: "/default-avatar.png", // 頭像須從user資料取得
     }));
   } catch (err) {
-    console.error("取得共編成員失敗", err);
+    alert("取得共編成員失敗。");
   }
 };
 
 const changePermission = async (member) => {
   try {
-    await axios.put(`/api/trip-shares/${member.token}`, {
-      permission: member.permission,
-    });
+    await axios.put(
+      `${import.meta.env.VITE_API_URL}/api/trip-shares/${member.token}`,
+      {
+        permission: member.permission,
+      }
+    );
   } catch (err) {
     alert("變更權限失敗");
   }
@@ -208,7 +216,9 @@ const changePermission = async (member) => {
 const removeMember = async (member) => {
   if (!confirm(`確定要移除 ${member.name} 嗎？`)) return;
   try {
-    await axios.delete(`/api/trip-shares/${member.token}`);
+    await axios.delete(
+      `${import.meta.env.VITE_API_URL}/api/trip-shares/${member.token}`
+    );
     await fetchMembers();
   } catch (err) {
     alert("移除失敗");

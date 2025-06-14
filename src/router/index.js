@@ -5,6 +5,7 @@ import GoogleMapView from "@/views/GoogleMapView.vue";
 import MemberProfile from "@/views/MemberProfile.vue";
 import GoogleCalendar from "@/views/GoogleCalendar.vue";
 import EmailSettings from "@/views/EmailSettings.vue";
+import GetInvite from "@/views/GetInvite.vue";
 
 const routes = [
   {

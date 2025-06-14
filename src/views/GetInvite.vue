@@ -47,7 +47,9 @@ const joined = ref(false);
 // 取得邀請資訊
 const fetchInviteInfo = async () => {
   try {
-    const res = await axios.get(`/api/trip-shares/${token}/inviteInfo`);
+    const res = await axios.get(
+      `${import.meta.env.VITE_API_URL}/api/trip-shares/${token}/inviteInfo`
+    );
     trip.value = res.data.trip;
     joined.value = res.data.alreadyJoined;
   } catch (err) {
@@ -64,7 +66,9 @@ const fetchInviteInfo = async () => {
 // 點擊加入共編
 const acceptShare = async () => {
   try {
-    await axios.post(`/api/trip-shares/${token}/accept`);
+    await axios.post(
+      `${import.meta.env.VITE_API_URL}/api/trip-shares/${token}/accept`
+    );
     joined.value = true;
   } catch (err) {
     if (err.response?.status === 409) {
