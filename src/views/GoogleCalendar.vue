@@ -13,7 +13,6 @@
             class="mt-4 p-3 rounded border"
             :class="message.includes('成功') ? 'border-green-500 bg-green-100 text-green-700' : 'border-red-500 bg-red-100 text-red-700'"
         >
-            <!-- 成功綠底，錯誤紅底 -->
             <p>{{ message }}</p>
 
             <div v-if="isLink" class="mt-2 space-x-2">
@@ -27,7 +26,7 @@
                 <button @click="copyLink"
                 class="bg-gray-300 text-gray-800 py-1 px-2 rounded hover:bg-gray-400 transition"
                 >
-                📋 複製連結
+                    複製連結
                 </button>
             </div>
         </div>
@@ -39,7 +38,7 @@ import { ref, onMounted } from 'vue'
 
 const message = ref('')
 const eventLink = ref('')
-const loading = ref(false) //避免使用者連點按鈕（避免重複請求）
+const loading = ref(false) //避免使用者重複請求
 const isLink = ref(false)
 
 const CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID
@@ -48,8 +47,8 @@ const DISCOVERY_DOC = 'https://www.googleapis.com/discovery/v1/apis/calendar/v3/
 const SCOPES = 'https://www.googleapis.com/auth/calendar.events'
 
 let gapi = null
-let tokenClient = null //access token
-let gapiInitialized = false //判斷 gapi client 是否已完成初始化
+let accessToken = null 
+let gapiInitialized = false 
 
 onMounted(() => {
     // 載入 gapi
@@ -70,7 +69,6 @@ onMounted(() => {
     console.log('API_KEY:', API_KEY)
 })
 
-//登入初始化
 function initializeGapiClient() {
     if (!CLIENT_ID || !API_KEY) {
         console.error('缺少 CLIENT_ID 或 API_KEY')
@@ -96,8 +94,8 @@ function handleAuthClick() {
         return
     }
 
-    if (!tokenClient) {
-        tokenClient = google.accounts.oauth2.initTokenClient({
+    if (!accessToken) {
+        accessToken = google.accounts.oauth2.initTokenClient({
             client_id: CLIENT_ID,
             scope: SCOPES,
             callback: (resp) => {
@@ -112,15 +110,13 @@ function handleAuthClick() {
         })
     }
 
-    tokenClient.requestAccessToken()
+    accessToken.requestAccessToken()
 }
 
-/**
- * [開發測試用] 建立一筆固定時間與標題的 Google Calendar 行程
- * 可用於本地測試授權與 API 是否正常運作
- * ❗不要在正式頁面中自動執行
- */
 function createTestEvent() {
+    if (import.meta.env.MODE !== 'development') {
+        return; // 僅在開發模式下執行
+    }
     const startDate = new Date('2025-08-01T10:00:00+08:00');
     const endDate = new Date('2025-08-01T11:00:00+08:00');
 
@@ -131,9 +127,6 @@ function createTestEvent() {
     endDate.toISOString()
     );
 }
-
-// [開發測試用] 如需測試請取消註解
-// createTestEvent();
 
 function createEvent(summary, startDateTime, endDateTime) {
     const event = {
@@ -161,7 +154,7 @@ function createEvent(summary, startDateTime, endDateTime) {
         console.error('建立行程失敗', error)
     })
 }
-// ✅ 複製連結功能
+
 function copyLink() {
     if (eventLink.value) {
         navigator.clipboard.writeText(eventLink.value)
