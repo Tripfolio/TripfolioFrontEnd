@@ -44,7 +44,7 @@ async function loadItinerary() {
     });
     itineraryPlaces.value = res.data.places;
   } catch (error) {
-    console.error("載入行程失敗:", error);
+    alert("載入行程失敗:");
   }
 }
 
@@ -84,7 +84,6 @@ async function addPlace() {
       alert("加入失敗：" + rep.data.message);
     }
   } catch (error) {
-    console.error("加入失敗:", error);
     alert("發生錯誤：" + error.message);
   }
 }
