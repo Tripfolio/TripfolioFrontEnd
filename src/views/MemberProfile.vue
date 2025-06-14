@@ -28,7 +28,6 @@
                 <input type="tel" v-model="profileData.phone" placeholder="手機號碼"  class="border-2 border-solid"/>
                 <p v-if="phoneError" style="color:red">{{ phoneError }}</p>
             </div>
-            <!-- <input type="email" v-model="profileData.email" placeholder="電子郵件" /> -->
             <span>生日：</span>
             <input type="date" v-model="profileData.birthday"  class="border-2 border-solid"/>
             <button type="submit" class="w-24 bg-sky-500/50">儲存會員資料</button>
@@ -70,12 +69,20 @@ import { Cropper } from 'vue-advanced-cropper';
 import 'vue-advanced-cropper/dist/style.css';
 import dayjs from 'dayjs';
 
-//確認會員登入 抓id
+//確認會員登入 抓id 上線前'1'要刪除
 const memberId = localStorage.getItem('memberId') || '1'
 if (!memberId) {
   alert('請先登入會員')
   throw new Error('memberId 不存在')
 }
+
+const profileData = ref({
+    name: '',
+    gender: '',
+    phone: '',
+    birthday: '',
+    avatar: '',
+}) 
 
 //元件掛載時載入會員資料
 onMounted(async () => {
@@ -95,22 +102,13 @@ onMounted(async () => {
   } catch (error) {
     console.error('讀取會員資料失敗', error)
   }
-})
+});
 
-const profileData = ref({
-    name: '',
-    gender: '',
-    phone: '',
-    email: '',
-    birthday: '',
-    avatar: '',
-}) 
 
 const avatarFile = ref(null)
 const previewUrl = ref('')
 const cropperRef = ref(null)
 const showCropper = ref(false)
-
 
 //上傳大頭貼裁切預覽
 const uploadAvatar = (event) => {
@@ -119,7 +117,7 @@ const uploadAvatar = (event) => {
     avatarFile.value = file
     previewUrl.value = URL.createObjectURL(file)
     showCropper.value = true
-}
+};
 
 
 //儲存大頭貼傳至後端
@@ -161,7 +159,7 @@ watch(() => profileData.value.phone,(newPhone) => {
     } else {
         phoneError.value = '';
     }
-})
+});
 
 //儲存會員資料送去資料庫
 const saveProfile = async () => {
@@ -173,7 +171,7 @@ const saveProfile = async () => {
         console.log('更新失敗：', err)
         alert('儲存失敗')
     }
-}
+};
 
 const passwordData = ref({
     oldPassword:'',
@@ -193,7 +191,6 @@ watch(() => passwordData.value.newPassword, (newPwd) => {
     const hasLetter = /[A-Za-z]/.test(newPwd)
     const hasNumber = /\d/.test(newPwd)
     const isSameAsName = newPwd === profileData.value.name
-    const isSameAsEmail = newPwd === profileData.value.email
 
     if(!hasMinLength) {
         passwordError.value = '密碼至少需8個字元'
@@ -201,12 +198,12 @@ watch(() => passwordData.value.newPassword, (newPwd) => {
         passwordError.value = '密碼需包含英文字母'
     } else if (!hasNumber) {
         passwordError.value = '密碼需包含數字'
-    } else if (isSameAsName || isSameAsEmail) {
-        passwordError.value = '密碼不可與帳號相同'
+    } else if (isSameAsName) {
+        passwordError.value = '密碼不可與姓名相同'
     } else {
         passwordError.value = ''
     }
-})
+});
 
 
 //修改密碼送到後端
@@ -225,8 +222,11 @@ const changePassword = async () => {
     }
 
     try{
-        const res = await axios.put(`${import.meta.env.VITE_API_URL}/api/members/${memberId}/password`, { oldPassword:passwordData.value.oldPassword,newPassword:passwordData.value.newPassword
-         })
+        await axios.put(`${import.meta.env.VITE_API_URL}/api/users/${memberId}/password`, 
+        {   
+            oldPassword:passwordData.value.oldPassword,
+            newPassword:passwordData.value.newPassword
+        })
     alert('密碼修改成功');
 
     passwordData.value.oldPassword = '';
@@ -237,5 +237,5 @@ const changePassword = async () => {
         alert(errorMessage);
         console.error('密碼修改失敗', err);
   }
-}
+};
 </script>
