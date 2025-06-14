@@ -3,14 +3,15 @@ import './assets/main.css'
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 
+
 import App from './App.vue'
 import router from './router'
 
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { faExclamationTriangle, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons'
+import { faExclamationTriangle, faEye, faEyeSlash, faXmark, faPenToSquare } from '@fortawesome/free-solid-svg-icons'
 
-library.add(faExclamationTriangle, faEye, faEyeSlash)
+library.add(faExclamationTriangle, faEye, faEyeSlash, faXmark, faPenToSquare )
 
 const app = createApp(App)
 
