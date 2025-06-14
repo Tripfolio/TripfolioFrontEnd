@@ -4,7 +4,7 @@
     <div v-if="loading">載入中...</div>
     <div v-else>
       <div
-        v-for="(value, key) in preferences"
+        v-for="(_value, key) in preferences"
         :key="key"
         class="flex items-center justify-between py-2 border-b"
       >
@@ -49,13 +49,20 @@ const labels = {
   onCustomerReply: "客服回覆",
 };
 
-const loading = ref(true);
+const loading = ref(false);
 
 const fetchPreferences = async () => {
+  loading.value = true;
   try {
     const token = localStorage.getItem("token");
+
+    if (!token) {
+      alert("尚未登入，無法載入偏好設定。");
+      return; // 提早結束
+    }
+
     const { data } = await axios.get(
-      "http://localhost:3000/api/email-preferences",
+      `${import.meta.env.VITE_API_URL}/api/email-preferences`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -64,7 +71,7 @@ const fetchPreferences = async () => {
     );
     preferences.value = data;
   } catch (err) {
-    console.error("載入偏好設定失敗", err);
+    alert("載入偏好設定失敗。");
   } finally {
     loading.value = false;
   }
@@ -73,8 +80,14 @@ const fetchPreferences = async () => {
 const savePreferences = async () => {
   try {
     const token = localStorage.getItem("token");
+
+    if (!token) {
+      alert("尚未登入，無法儲存設定。");
+      return;
+    }
+
     await axios.put(
-      "http://localhost:3000/api/email-preferences",
+      `${import.meta.env.VITE_API_URL}/api/email-preferences`,
       { preferences: preferences.value },
       {
         headers: {
@@ -84,7 +97,6 @@ const savePreferences = async () => {
     );
     alert("偏好設定已更新！");
   } catch (err) {
-    console.error("更新失敗", err);
     alert("儲存失敗，請稍後再試。");
   }
 };
