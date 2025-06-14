@@ -134,7 +134,7 @@ async function handleCredentialResponse(response) {
 	const id_token = response.credential;
 	console.log("取得Google ID Token:", id_token);
 	try {
-		const res = await axios.post("http://localhost:3000/api/auth/google", {
+		const res = await axios.post("http://localhost:3000/api/auth/google-login", {
 			id_token,
 		});
 		console.log("後端回傳結果", res.data);
