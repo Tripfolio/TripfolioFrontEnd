@@ -102,6 +102,12 @@
           </div>
           <!-- 選單按鈕end -->
         </li>
+        <TrafficBetween
+          v-if="index < itineraryPlaces.length - 1"
+          :fromPlaceId="p.id"
+          :toPlaceId="itineraryPlaces[index + 1].id"
+          defaultMode="driving"
+        />
       </template>
     </draggable>
   </div>
@@ -111,6 +117,7 @@
 import { toRefs, ref, onMounted, onBeforeUnmount } from "vue";
 import axios from "axios";
 import draggable from "vuedraggable";
+import TrafficBetween from './TrafficBetween.vue';
 
 const props = defineProps({
   selectedPlace: Object,
