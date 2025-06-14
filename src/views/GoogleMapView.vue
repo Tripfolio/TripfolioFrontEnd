@@ -255,7 +255,8 @@
 
 <script setup>
 import { ref, onMounted, watch, onUnmounted } from "vue";
-import { MapIcons } from "@/assets/MapIcons";
+// import { MapIcons } from "@/assets/MapIcons";
+
 import { MarkerClusterer } from "@googlemaps/markerclusterer"; //marker的集合
 import Itinerary from "../components/Itinerary.vue";
 
@@ -755,17 +756,13 @@ function handleClickOutside(event) {
   }
 }
 
-function getPlaceIconUrl(types = []) {
+function getPlaceIconUrl(types) {
+  // 只要類別與檔名一致，直接組合路徑
   for (const type of types) {
-    if (MapIcons[type]) {
-      return (
-        "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(MapIcons[type])
-      );
-    }
+    // 你可以用 fetch 或其他方式檢查檔案是否存在
+    return `src/assets/icons/mapIcons/${type}.svg`;
   }
-  return (
-    "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(MapIcons.default)
-  );
+  return "src/assets/icons/mapIcons/default.svg";
 }
 
 onMounted(async () => {
