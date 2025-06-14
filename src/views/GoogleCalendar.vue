@@ -24,9 +24,14 @@
                     </button>
                 </a>
                 <button @click="copyLink"
-                class="bg-gray-300 text-gray-800 py-1 px-2 rounded hover:bg-gray-400 transition"
+                class="group 
+                bg-[#44484d] text-base-content /* font & icon */
+                py-1 px-2 rounded 
+                hover:bg-[#5d636a]
+                transition"
                 >
-                    複製連結
+                <font-awesome-icon :icon="['fas', 'paste']" size="xs" class="icon-text-color" />
+                複製連結
                 </button>
             </div>
         </div>
