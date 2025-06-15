@@ -258,6 +258,7 @@ import { ref, onMounted, watch, onUnmounted } from "vue";
 import { MarkerClusterer } from "@googlemaps/markerclusterer";
 import { useMapSearch, SearchType } from "../composable/useMapSearch";
 import Itinerary from "../components/Itinerary.vue";
+import { loadGoogleMaps } from "../composable/loadGoogleMaps";
 
 const itineraryRef = ref(null);
 function callItinerary() {
@@ -282,7 +283,7 @@ const selectedPlace = ref(null);
 const selectedPlacePhotoIndex = ref(0);
 const selectedCityName = ref("none"); // 預設為「當前」
 
-const selectedMarkers = []; 
+const selectedMarkers = [];
 
 let markers = [];
 let service = null;
@@ -369,18 +370,18 @@ watch(selectedPlace, (newVal) => {
   }
 });
 
-function loadGoogleMaps() {
-  return new Promise((resolve, reject) => {
-    const script = document.createElement("script");
-    script.src = `https://maps.googleapis.com/maps/api/js?key=${
-      import.meta.env.VITE_GOOGLE_MAPS_API_KEY
-    }&libraries=places,geometry`;
-    script.defer = true;
-    script.onload = resolve;
-    script.onerror = reject;
-    document.head.appendChild(script);
-  });
-}
+// function loadGoogleMaps() {
+//   return new Promise((resolve, reject) => {
+//     const script = document.createElement("script");
+//     script.src = `https://maps.googleapis.com/maps/api/js?key=${
+//       import.meta.env.VITE_GOOGLE_MAPS_API_KEY
+//     }&libraries=places,geometry`;
+//     script.defer = true;
+//     script.onload = resolve;
+//     script.onerror = reject;
+//     document.head.appendChild(script);
+//   });
+// }
 
 function initMap() {
   map.value = new google.maps.Map(mapRef.value, {
@@ -460,7 +461,7 @@ function moveToCity(event) {
           position.coords.latitude,
           position.coords.longitude
         );
-        map.value.setCenter(center)
+        map.value.setCenter(center);
         map.value.setZoom(15);
         performSearch({
           type: SearchType.NEARBY_TYPE,
@@ -762,7 +763,7 @@ onMounted(async () => {
 
             const marker = new google.maps.Marker({
               position: detailResult.geometry.location,
-              map:map.value,
+              map: map.value,
               title: detailResult.name,
             });
             selectedMarkers.push(marker);
