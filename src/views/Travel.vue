@@ -62,7 +62,6 @@ const fetchSchedules = async () => {
     })
     schedules.value = res.data.schedules
   } catch (err) {
-    console.error("行程載入失敗", err)
   }
 };
 
@@ -114,7 +113,6 @@ const deleteSchedule = async(id) => {
     schedules.value = schedules.value.filter(s => s.id!== id)
     alert("刪除成功")
   } catch (err) {
-    console.error("刪除失敗", err)
     alert("刪除失敗，請稍後再試")
   }
 };
