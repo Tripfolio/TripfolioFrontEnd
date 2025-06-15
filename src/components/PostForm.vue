@@ -64,8 +64,10 @@ function handleImageUpload(e) {
   if (!file) return;
 
   const acceptedTypes = ["image/jpeg", "image/png", "image/webp"];
-  if (!acceptedTypes.includes(file.type)) {
-    alert("不支援的圖片格式，請上傳 JPG、PNG 或 WebP。");
+  const maxSizeBytes = 3145728; 
+  if (!acceptedTypes.includes(file.type) ||file.size > maxSizeBytes ) {
+
+    alert("格式不支援或檔案太大。請上傳 JPG、PNG 或 WebP。檔案最高3MB");
 
     const selected = schedules.value.find(
       (s) => s.id === selectedScheduleId.value
