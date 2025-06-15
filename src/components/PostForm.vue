@@ -65,6 +65,14 @@ function handleImageUpload(e) {
     alert("沒有選到");
     return;
   }
+  const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+  if (!allowedTypes.includes(file.type)) {
+    alert("不支援的圖片格式！請選擇 JPEG, PNG, GIF 或 WEBP 格式的圖片。");
+    e.target.value = ""; // 清空 input，否則同一張圖片不會重新觸發 change
+    imageFile.value = null;
+    previewImage.value = null;
+    return;
+  }
   imageFile.value = file;
   previewImage.value = URL.createObjectURL(file);
 }
