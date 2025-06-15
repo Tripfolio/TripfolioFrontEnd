@@ -7,6 +7,7 @@ import MemberProfile from '@/views/MemberProfile.vue'
 import GoogleCalendar from "@/views/GoogleCalendar.vue";
 import EmailSettings from '@/views/EmailSettings.vue';
 import Travel from "@/views/Travel.vue";
+import UserActivity from "@/views/UserActivity.vue";
 
 const routes = [
   {
@@ -48,6 +49,11 @@ const routes = [
     path: "/schedule",
     name: "schedule",
     component: Travel,
+  },
+    {
+    path: "/activity",
+    name: "activity",
+    component: UserActivity,
   },
 ];
 
