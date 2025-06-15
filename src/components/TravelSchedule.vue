@@ -100,7 +100,7 @@ const applyCrop = () => {
     const canvas = cropperRef.value?.getResult()?.canvas
     if(canvas){
         canvas.toBlob((blob) => {
-            file.value = new File([blob],`crooper-image.png`, { type: 'image/png'})
+            file.value = new File([blob],`cropper-image.png`, { type: 'image/png'})
             coverPreviewUrl.value = URL.createObjectURL(file.value)
             showCropper.value = false
         }, 'image/png' )
