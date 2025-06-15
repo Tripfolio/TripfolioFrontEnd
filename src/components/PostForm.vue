@@ -61,21 +61,27 @@ function onScheduleChange() {
 
 function handleImageUpload(e) {
   const file = e.target?.files?.[0];
-  if (!file) {
-    alert("沒有選到");
+  if (!file) return;
+
+  const acceptedTypes = ["image/jpeg", "image/png", "image/webp"];
+  if (!acceptedTypes.includes(file.type)) {
+    alert("不支援的圖片格式，請上傳 JPG、PNG 或 WebP。");
+
+    const selected = schedules.value.find(
+      (s) => s.id === selectedScheduleId.value
+    );
+    if (selected) {
+      previewImage.value = selected.coverURL || null;
+      imageFile.value = null;
+    }
+    e.target.value = ""; 
     return;
   }
-  const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
-  if (!allowedTypes.includes(file.type)) {
-    alert("不支援的圖片格式！請選擇 JPEG, PNG, GIF 或 WEBP 格式的圖片。");
-    e.target.value = ""; // 清空 input，否則同一張圖片不會重新觸發 change
-    imageFile.value = null;
-    previewImage.value = null;
-    return;
-  }
+
   imageFile.value = file;
   previewImage.value = URL.createObjectURL(file);
 }
+
 
 async function submitPost() {
   if (!selectedScheduleId.value || !content.value) {
