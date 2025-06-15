@@ -679,38 +679,38 @@ function onCityChange(event) {
   moveToCity(event);
 }
 
-function locateUser(map) {
-  navigator.geolocation.getCurrentPosition(
-    (position) => {
-      const userLocation = {
-        lat: position.coords.latitude,
-        lng: position.coords.longitude,
-      };
+// function locateUser(map) {
+//   navigator.geolocation.getCurrentPosition(
+//     (position) => {
+//       const userLocation = {
+//         lat: position.coords.latitude,
+//         lng: position.coords.longitude,
+//       };
 
-      new google.maps.Marker({
-        position: userLocation,
-        map: map.value,
-        title: "你的位置",
-        icon: {
-          path: google.maps.SymbolPath.CIRCLE,
-          scale: 15,
-          fillColor: "#4285F4",
-          fillOpacity: 0.9,
-          strokeColor: "#fff",
-          strokeWeight: 2,
-        },
-      });
+//       new google.maps.Marker({
+//         position: userLocation,
+//         map: map.value,
+//         title: "你的位置",
+//         icon: {
+//           path: google.maps.SymbolPath.CIRCLE,
+//           scale: 15,
+//           fillColor: "#4285F4",
+//           fillOpacity: 0.9,
+//           strokeColor: "#fff",
+//           strokeWeight: 2,
+//         },
+//       });
 
-      map.value.setCenter(userLocation);
-      map.value.setZoom(15);
-      isLocated.value = true;
-    },
-    (error) => {
-      isLocated.value = true;
-      alert("無法取得你的定位資訊", error);
-    }
-  );
-}
+//       map.value.setCenter(userLocation);
+//       map.value.setZoom(15);
+//       isLocated.value = true;
+//     },
+//     (error) => {
+//       isLocated.value = true;
+//       alert("無法取得你的定位資訊", error);
+//     }
+//   );
+// }
 
 function addCategory(item) {
   const exists = categories.value.some((cat) => cat.type === item.type);
@@ -757,7 +757,7 @@ onMounted(async () => {
   try {
     await loadGoogleMaps();
     initMap();
-    await locateUser(map);
+    // await locateUser(map);
 
     // 初始化方向服務
     directionsService = new google.maps.DirectionsService();
