@@ -25,9 +25,14 @@
                     </button>
                 </a>
                 <button @click="copyLink"
-                class="bg-gray-300 text-gray-800 py-1 px-2 rounded hover:bg-gray-400 transition"
+                class="group 
+                bg-[#44484d] text-base-content /* font & icon */
+                py-1 px-2 rounded 
+                hover:bg-[#5d636a]
+                transition"
                 >
-                📋 複製連結
+                <font-awesome-icon :icon="['fas', 'paste']" size="xs" class="icon-text-color" />
+                複製連結
                 </button>
             </div>
         </div>
@@ -118,6 +123,9 @@ function handleAuthClick() {
  * ❗不要在正式頁面中自動執行
  */
 function createTestEvent() {
+    if (import.meta.env.MODE !== 'development') {
+        return; // 僅在開發模式下執行
+    }
     const startDate = new Date('2025-08-01T10:00:00+08:00');
     const endDate = new Date('2025-08-01T11:00:00+08:00');
 

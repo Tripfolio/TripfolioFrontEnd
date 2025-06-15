@@ -3,8 +3,9 @@ import SignUp from '@/views/SignUp.vue'
 import HomeView from '@/views/HomeView.vue'
 import GoogleMapView from '@/views/GoogleMapView.vue'
 import MemberProfile from '@/views/MemberProfile.vue'
-import GoogleCalendar from "@/views/GoogleCalendar.vue";
+import GoogleCalendar from "@/views/GoogleCalendar.vue"
 import EmailSettings from '@/views/EmailSettings.vue'
+import ProfilePreview from '@/views/ProfilePreview.vue'
 
 const routes = [
   {
@@ -36,6 +37,11 @@ const routes = [
     path: "/emailSettings",
     name: "emailSettings",
     component: EmailSettings,
+  },
+  {
+    path: "/profilePreview",
+    name: "profilePreview",
+    component: ProfilePreview,
   },
 ];
 

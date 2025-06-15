@@ -1,1 +1,16 @@
 @import "tailwindcss";
+/* @tailwind base;
+@tailwind components;
+@tailwind utilities; */
+
+.icon-text-color {
+    color:  #a7a5a5;
+    margin-right: 0.25rem;
+    margin-top: 0.125rem;
+}
+
+.text-base-content {
+    color: #a7a5a5;
+}
+
+
