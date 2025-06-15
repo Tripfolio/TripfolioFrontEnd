@@ -1,6 +1,6 @@
 <template>
-  <div ref="mapRef" class="hidden"></div>
-  <div class="min-h-screen mainpage-bg">
+  <!-- <div ref="mapRef" class="hidden"></div> -->
+  <div class="min-h-screen homepage-bg">
     <div class="min-h-screen px-4 py-6">
       <div class="w-[80vw] mx-auto">
         <header
@@ -29,7 +29,6 @@
             <RouterLink to="/login" class="underline">登入</RouterLink>
           </div>
         </header>
-
         <section
           class="mt-10 bg-gray-300 rounded-[3rem] h-[300px] md:h-[400px] shadow-inner"
         >
@@ -50,7 +49,6 @@
           </section>
         </section>
       </div>
-
       <div class="w-[60vw] mx-auto -mt-16 z-10">
         <section class="bg-gray-800 text-white rounded-4xl py-3 px-6 shadow-md">
           <!-- search -->
@@ -59,6 +57,7 @@
           >
             <div class="relative w-fit">
               <select
+                :value="route.query.city || 'none'"
                 @change="onCityChange($event)"
                 class="appearance-none bg-gray-500/80 text-white text-sm py-2 pl-4 pr-10 rounded-full focus:outline-none hover:bg-gray-400 transition duration-200 cursor-pointer shadow-inner"
               >
@@ -71,7 +70,6 @@
                   {{ city.name }}
                 </option>
               </select>
-
               <svg
                 class="w-4 h-4 absolute right-3 top-1/2 -translate-y-1/2 text-white pointer-events-none"
                 fill="none"
@@ -117,7 +115,6 @@
               </button>
             </div>
           </div>
-
           <!-- type -->
           <div class="mt-4 flex flex-wrap gap-2">
             <button
@@ -135,7 +132,6 @@
               >
                 + others
               </button>
-
               <div
                 v-if="showCustomCategory"
                 class="absolute z-10 bg-gray-400/90 rounded-4xl p-3 w-80 shadow-md bottom-1 left-18 transform transition-all duration-300 ease-in-out translate-x-0 opacity-100"
@@ -187,7 +183,6 @@
             📍 {{ place.formatted_address }}
           </p>
         </div>
-
         <div v-if="hasMoreResults" class="flex justify-center pt-4">
           <button
             class="bg-gray-500 text-white py-2 px-6 rounded-full text-sm hover:bg-gray-700"
@@ -200,18 +195,22 @@
     </div>
   </div>
 </template>
+
 <script setup>
 import { ref, onMounted, watch, onUnmounted } from "vue";
-import { RouterLink } from "vue-router";
-import { MarkerClusterer } from "@googlemaps/markerclusterer";
-import { useMapSearch, SearchType } from "../composable/useMapSearch";
-import { loadGoogleMaps } from "../composable/loadGoogleMaps";
+import { RouterLink, useRouter, useRoute } from "vue-router";
+// import { MarkerClusterer } from "@googlemaps/markerclusterer";
+// import { useMapSearch } from "../composable/useMapSearch";
+// import { loadGoogleMaps } from "../composable/loadGoogleMaps";
 import { cities } from "../composable/city";
 
-const mapRef = ref(null);
+const route = useRoute();
+const router = useRouter();
+
+// const mapRef = ref(null);
 const searchQuery = ref("");
 const searchInput = ref(null);
-const map = ref(null);
+// const map = ref(null);
 
 const placeDetails = ref([]);
 const nextPageFunc = ref(null);
@@ -221,12 +220,12 @@ const selectedPlace = ref(null);
 const selectedPlacePhotoIndex = ref(0);
 const selectedCityName = ref("none");
 
-const selectedMarkers = [];
+// const selectedMarkers = [];
 
-let markers = [];
-let service = null;
-let directionsRenderer;
-let markerCluster = null;
+// let markers = [];
+// let service = null;
+// let directionsRenderer;
+// let markerCluster = null;
 
 const menuRef = ref(null);
 const showCustomCategory = ref(false);
@@ -256,179 +255,145 @@ const placeCategories = ref([
   { type: "night_club", label: "夜店" },
 ]);
 
-watch(selectedPlace, (newVal) => {
-  if (newVal) {
-    selectedPlacePhotoIndex.value = 0;
-  }
-});
+// watch(selectedPlace, (newVal) => {
+//   if (newVal) {
+//     selectedPlacePhotoIndex.value = 0;
+//   }
+// });
 
-function clearMap() {
-  selectedMarkers.forEach((m) => m.setMap(null));
-  selectedMarkers.length = 0;
-  markers.forEach((marker) => marker.setMap(null));
-  markers = [];
-  placeDetails.value = [];
-  nextPageFunc.value = null;
-  hasMoreResults.value = false;
-  selectedPlace.value = null;
-}
+// function clearMap() {
+//   selectedMarkers.forEach((m) => m.setMap(null));
+//   selectedMarkers.length = 0;
+//   markers.forEach((marker) => marker.setMap(null));
+//   markers = [];
+//   placeDetails.value = [];
+//   nextPageFunc.value = null;
+//   hasMoreResults.value = false;
+//   selectedPlace.value = null;
+// }
 
 function searchPlace() {
-  if (!searchQuery.value || !map.value) return;
-  const center = map.value.getCenter();
-
-  if (selectedCityName.value !== "none") {
-    performSearch({
-      type: SearchType.TEXT,
-      query: searchQuery.value,
-      cityName: selectedCityName.value,
-      location: center,
-    });
-  } else {
-    performSearch({
-      type: SearchType.NEARBY_KEYWORD,
-      query: searchQuery.value,
-      location: center,
-    });
-  }
-}
-
-function moveToCity(event) {
-  const cityName = event.target.value;
-  selectedCityName.value = cityName;
-  searchQuery.value = "";
-
-  if (cityName === "none") {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const center = new google.maps.LatLng(
-          position.coords.latitude,
-          position.coords.longitude
-        );
-        map.value.setCenter(center);
-        map.value.setZoom(15);
-        performSearch({
-          type: SearchType.NEARBY_TYPE,
-          query: "tourist_attraction",
-          location: center,
-        });
-      },
-      () => {
-        alert("無法取得你的定位！");
-      }
-    );
-  }
-
-  const city = cities.find((c) => c.name === cityName);
-  if (!city || !map.value) return;
-
-  const center = new google.maps.LatLng(city.lat, city.lng);
-  map.value.setCenter(center);
-  map.value.setZoom(13);
-
-  performSearch({ type: SearchType.CITY_DEFAULT, cityName, location: center });
+  if (!searchQuery.value) return;
+  router.push({
+    path: "/map",
+    query: {
+      searchQuery: searchQuery.value,
+      // city: route.query.city || "none",
+    },
+  });
 }
 
 function searchByCategory(type) {
-  if (!map.value || !type) return;
-  const center = map.value.getCenter();
+  if (!type) return;
+
   searchQuery.value = "";
 
-  performSearch({
-    type: SearchType.NEARBY_TYPE,
-    query: type,
-    location: center,
-  });
-}
-
-function handleResults(results, status, pagination) {
-  if (status !== google.maps.places.PlacesServiceStatus.OK || !results.length) {
-    alert("找不到地點！");
-    return;
-  }
-
-  markers.forEach((marker) => marker.setMap(null));
-  markers = [];
-  if (markerCluster) {
-    markerCluster.clearMarkers();
-    markerCluster = null;
-  }
-
-  results.forEach((place) => {
-    if (!place.geometry || !place.geometry.location) return;
-
-    map.value.setCenter(place.geometry.location);
-    const iconUrl = getPlaceIconUrl(place.types);
-
-    const marker = new google.maps.Marker({
-      map: map.value,
-      position: place.geometry.location,
-      title: place.name,
-      icon: {
-        url: iconUrl,
-      },
-    });
-
-    markers.push(marker);
-
-    const detailRequest = {
-      placeId: place.place_id,
-      fields: [
-        "name",
-        "formatted_address",
-        "geometry",
-        "rating",
-        "user_ratings_total",
-        "photos",
-      ],
-    };
-
-    service.getDetails(detailRequest, (detailResult, detailStatus) => {
-      if (detailStatus === google.maps.places.PlacesServiceStatus.OK) {
-        placeDetails.value.push(detailResult);
-
-        marker.addListener("click", () => {
-          selectedPlace.value = detailResult;
-        });
-      }
-    });
-  });
-
-  markerCluster = new MarkerClusterer({
-    map: map.value,
-    markers: markers,
-    renderer: {
-      render({ count, position }) {
-        return new google.maps.Marker({
-          position,
-          label: {
-            text: String(count),
-            color: "white",
-            fontSize: "20px",
-            fontWeight: "bold",
-          },
-        });
-      },
+  router.push({
+    path: "/map",
+    query: {
+      searchQuery: type,
+      city: selectedCityName.value || "none",
     },
   });
-
-  if (pagination && pagination.hasNextPage) {
-    nextPageFunc.value = () => pagination.nextPage();
-    hasMoreResults.value = true;
-  } else {
-    hasMoreResults.value = false;
-  }
 }
 
-function loadNextPage() {
-  if (nextPageFunc.value) {
-    nextPageFunc.value();
-  }
-}
+// function handleResults(results, status, pagination) {
+//   if (status !== google.maps.places.PlacesServiceStatus.OK || !results.length) {
+//     alert("找不到地點！");
+//     return;
+//   }
+
+//   markers.forEach((marker) => marker.setMap(null));
+//   markers = [];
+//   if (markerCluster) {
+//     markerCluster.clearMarkers();
+//     markerCluster = null;
+//   }
+
+//   results.forEach((place) => {
+//     if (!place.geometry || !place.geometry.location) return;
+
+//     map.value.setCenter(place.geometry.location);
+//     const iconUrl = getPlaceIconUrl(place.types);
+
+//     const marker = new google.maps.Marker({
+//       map: map.value,
+//       position: place.geometry.location,
+//       title: place.name,
+//       icon: {
+//         url: iconUrl,
+//       },
+//     });
+
+//     markers.push(marker);
+
+//     // const detailRequest = {
+//     //   placeId: place.place_id,
+//     //   fields: [
+//     //     "name",
+//     //     "formatted_address",
+//     //     "geometry",
+//     //     "rating",
+//     //     "user_ratings_total",
+//     //     "photos",
+//     //   ],
+//     // };
+
+//     // service.getDetails(detailRequest, (detailResult, detailStatus) => {
+//     //   if (detailStatus === google.maps.places.PlacesServiceStatus.OK) {
+//     //     placeDetails.value.push(detailResult);
+
+//     //     marker.addListener("click", () => {
+//     //       selectedPlace.value = detailResult;
+//     //     });
+//     //   }
+//     // });
+//   });
+
+//   // markerCluster = new MarkerClusterer({
+//   //   map: map.value,
+//   //   markers: markers,
+//   //   renderer: {
+//   //     render({ count, position }) {
+//   //       return new google.maps.Marker({
+//   //         position,
+//   //         label: {
+//   //           text: String(count),
+//   //           color: "white",
+//   //           fontSize: "20px",
+//   //           fontWeight: "bold",
+//   //         },
+//   //       });
+//   //     },
+//   //   },
+//   // });
+
+//   if (pagination && pagination.hasNextPage) {
+//     nextPageFunc.value = () => pagination.nextPage();
+//     hasMoreResults.value = true;
+//   } else {
+//     hasMoreResults.value = false;
+//   }
+// }
+
+// function loadNextPage() {
+//   if (nextPageFunc.value) {
+//     nextPageFunc.value();
+//   }
+// }
 
 function onCityChange(event) {
-  searchQuery.value = "";
-  moveToCity(event);
+  const cityName = event.target.value;
+  selectedCityName.value = cityName;
+
+  router.push({
+    path: "/map",
+    query: {
+      searchQuery: searchQuery.value || "tourist_attraction",
+      city: cityName || "none",
+      t: Date.now(),
+    },
+  });
 }
 
 function addCategory(item) {
@@ -460,47 +425,47 @@ function handleClickOutside(event) {
   }
 }
 
-function getPlaceIconUrl(types) {
-  for (const type of types) {
-    return `src/assets/icons/mapIcons/${type}.svg`;
-  }
-  return "src/assets/icons/mapIcons/default.svg";
-}
+// function getPlaceIconUrl(types) {
+//   for (const type of types) {
+//     return `src/assets/icons/mapIcons/${type}.svg`;
+//   }
+//   return "src/assets/icons/mapIcons/default.svg";
+// }
 
-let performSearch = () => {};
+// let performSearch = () => {};
 
 onMounted(async () => {
-  try {
-    await loadGoogleMaps();
+  // try {
+    // await loadGoogleMaps();
 
-    map.value = new google.maps.Map(mapRef.value, {
-      center: { lat: 25.033964, lng: 121.564472 },
-      zoom: 15,
-      disableDefaultUI: true,
-    });
+    // map.value = new google.maps.Map(mapRef.value, {
+    //   center: { lat: 25.033964, lng: 121.564472 },
+    //   zoom: 15,
+    //   disableDefaultUI: true,
+    // });
 
-    directionsRenderer = new google.maps.DirectionsRenderer({
-      suppressMarkers: true,
-    });
-    directionsRenderer.setMap(map.value);
+    // directionsRenderer = new google.maps.DirectionsRenderer({
+    //   suppressMarkers: true,
+    // });
+    // directionsRenderer.setMap(map.value);
 
-    service = new google.maps.places.PlacesService(map.value);
+    // service = new google.maps.places.PlacesService(map.value);
 
-    performSearch = useMapSearch({
-      map: map.value,
-      service,
-      clearMap,
-      handleResults,
-    }).performSearch;
+    // performSearch = useMapSearch({
+    //   map: map.value,
+    //   // service,
+    //   clearMap,
+    //   handleResults,
+    // }).performSearch;
 
     document.addEventListener("click", handleClickOutside);
-    setTimeout(() => {
-      searchPlace();
-    }, 300);
-  } catch (err) {
-    alert("Google Maps 載入失敗");
-    alert(err);
-  }
+    // setTimeout(() => {
+    //   searchPlace();
+    // }, 300);
+  // } catch (err) {
+  //   alert("Google Maps 載入失敗");
+  //   alert(err);
+  // }
 });
 
 onUnmounted(() => {
@@ -509,7 +474,7 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
-.mainpage-bg {
+.homepage-bg {
   background-image: radial-gradient(#999 1px, transparent 1px),
     linear-gradient(to right, rgba(0, 0, 0, 0.08) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(0, 0, 0, 0.08) 1px, transparent 1px);

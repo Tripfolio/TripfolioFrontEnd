@@ -2,7 +2,6 @@
   <Itinerary
     ref="itineraryRef"
     :selectedPlace="selectedPlace"
-    class="z-[4]"
     :default-image="defaultImage"
   />
 
@@ -11,6 +10,7 @@
   >
     <div class="relative w-fit">
       <select
+        :value="route.query.city || 'none'"
         @change="onCityChange($event)"
         class="appearance-none bg-gray-500/80 text-white text-sm py-2 pl-4 pr-10 rounded-full focus:outline-none hover:bg-gray-400 transition duration-200 cursor-pointer shadow-inner"
       >
@@ -51,7 +51,8 @@
       </svg>
       <input
         type="text"
-        v-model="searchQuery"
+        :value="route.query.searchQuery || ''"
+        @input="onSearchInput"
         placeholder="輸入地點"
         class="w-full rounded-full border-none text-white px-7 py-1.5 box-border text-base placeholder-white focus:outline-none"
         ref="searchInput"
@@ -68,8 +69,7 @@
 
   <div ref="mapRef" class="w-screen h-screen m-0 p-0"></div>
 
-  <!-- 景點卡片滑動列 -->
-  <div
+  <!-- <div
     v-if="placeDetails.length"
     class="absolute bottom-2 left-1/2 -translate-x-1/2 z-[3] w-[92%] max-w-screen-xl"
   >
@@ -126,7 +126,7 @@
         ›
       </button>
     </div>
-  </div>
+  </div> -->
 
   <!--地點詳細資訊 -->
   <div
@@ -259,6 +259,12 @@ import { MarkerClusterer } from "@googlemaps/markerclusterer";
 import { useMapSearch, SearchType } from "../composable/useMapSearch";
 import Itinerary from "../components/Itinerary.vue";
 import { loadGoogleMaps } from "../composable/loadGoogleMaps";
+import { useRoute, useRouter } from "vue-router";
+
+const route = useRoute();
+const router = useRouter();
+const selectedCity = ref(route.query.city || "none");
+const isLocated = ref(false);
 
 const itineraryRef = ref(null);
 function callItinerary() {
@@ -370,19 +376,66 @@ watch(selectedPlace, (newVal) => {
   }
 });
 
-// function loadGoogleMaps() {
-//   return new Promise((resolve, reject) => {
-//     const script = document.createElement("script");
-//     script.src = `https://maps.googleapis.com/maps/api/js?key=${
-//       import.meta.env.VITE_GOOGLE_MAPS_API_KEY
-//     }&libraries=places,geometry`;
-//     script.defer = true;
-//     script.onload = resolve;
-//     script.onerror = reject;
-//     document.head.appendChild(script);
-//   });
-// }
+watch(
+  () => route.query,
+  (newQuery) => {
+    if (!isLocated.value || !map.value) return;
 
+    const queryText = newQuery.searchQuery;
+    const queryCity = newQuery.city;
+
+    if (!queryText) return;
+
+    let center = null;
+
+    if (queryCity && queryCity !== "none") {
+      const city = cities.find((c) => c.name === queryCity);
+      if (!city) return;
+
+      center = new google.maps.LatLng(city.lat, city.lng);
+      map.value.setCenter(center);
+      map.value.setZoom(13);
+
+      performSearch({
+        type: SearchType.TEXT,
+        query: queryText,
+        cityName: queryCity,
+        location: center,
+      });
+    } else {
+      // 這裡改成 TEXT
+      performSearch({
+        type: SearchType.TEXT,
+        query: queryText,
+        location: map.value.getCenter(),
+      });
+    }
+  }
+  // 不要 immediate: true
+);
+
+function searchByCategory(type) {
+  if (!map.value || !type) return;
+  const center = map.value.getCenter();
+  searchQuery.value = "";
+
+  // 這裡也改成 TEXT
+  performSearch({
+    type: SearchType.TEXT,
+    query: type,
+    location: center,
+  });
+}
+
+
+function onSearchInput(e) {
+  router.replace({
+    query: {
+      ...route.query,
+      searchQuery: e.target.value,
+    },
+  });
+}
 function initMap() {
   map.value = new google.maps.Map(mapRef.value, {
     center: { lat: 25.033964, lng: 121.564472 },
@@ -431,9 +484,9 @@ function clearMap() {
 
 function searchPlace() {
   if (!searchQuery.value || !map.value) return;
-  const center = map.value.getCenter();
 
   if (selectedCityName.value !== "none") {
+    const center = map.value.getCenter();
     performSearch({
       type: SearchType.TEXT,
       query: searchQuery.value,
@@ -442,9 +495,9 @@ function searchPlace() {
     });
   } else {
     performSearch({
-      type: SearchType.NEARBY_KEYWORD,
+      type: SearchType.TEXT,
       query: searchQuery.value,
-      location: center,
+      location: map.value.getCenter(),
     });
   }
 }
@@ -470,7 +523,7 @@ function moveToCity(event) {
         });
       },
       () => {
-        alert("無法取得你的定位！");
+        console.log("無法取得你的定位！");
       }
     );
   }
@@ -485,22 +538,15 @@ function moveToCity(event) {
   performSearch({ type: SearchType.CITY_DEFAULT, cityName, location: center });
 }
 
-function searchByCategory(type) {
-  if (!map.value || !type) return;
-  const center = map.value.getCenter();
-  searchQuery.value = "";
-
-  performSearch({
-    type: SearchType.NEARBY_TYPE,
-    query: type,
-    location: center,
-  });
-}
 
 function handleResults(results, status, pagination) {
   if (status !== google.maps.places.PlacesServiceStatus.OK || !results.length) {
     alert("找不到地點！");
     return;
+  }
+
+  if (results[0] && results[0].geometry && results[0].geometry.location) {
+    map.value.setCenter(results[0].geometry.location);
   }
 
   markers.forEach((marker) => marker.setMap(null));
@@ -513,7 +559,6 @@ function handleResults(results, status, pagination) {
   results.forEach((place) => {
     if (!place.geometry || !place.geometry.location) return;
 
-    map.value.setCenter(place.geometry.location);
     const iconUrl = getPlaceIconUrl(place.types);
 
     const marker = new google.maps.Marker({
@@ -658,9 +703,11 @@ function locateUser(map) {
 
       map.value.setCenter(userLocation);
       map.value.setZoom(15);
+      isLocated.value = true;
     },
     (error) => {
-      alert("無法取得你的定位資訊");
+      isLocated.value = true;
+      alert("無法取得你的定位資訊", error);
     }
   );
 }
@@ -704,6 +751,7 @@ function getPlaceIconUrl(types) {
 }
 
 let performSearch = () => {};
+let mapClickListener = null;
 
 onMounted(async () => {
   try {
@@ -726,6 +774,29 @@ onMounted(async () => {
       handleResults,
     }).performSearch;
 
+    const queryText = route.query.searchQuery;
+    const queryCity = route.query.city;
+
+    if (queryText && queryCity && queryCity !== "none") {
+  const city = cities.find((c) => c.name === queryCity);
+  if (city) {
+    const center = new google.maps.LatLng(city.lat, city.lng);
+    map.value.setCenter(center);
+    map.value.setZoom(13);
+    performSearch({
+      type: SearchType.TEXT,
+      query: queryText,
+      cityName: queryCity,
+      location: center,
+    });
+  }
+} else if (queryText) {
+  performSearch({
+    type: SearchType.TEXT,
+    query: queryText,
+    location: map.value.getCenter(),
+  });
+}
     map.value.addListener("click", (event) => {
       markers.forEach((marker) => marker.setMap(null));
       markers = [];
@@ -786,17 +857,18 @@ onMounted(async () => {
       }
     });
 
-    map.value.addListener("click", handleClickOutside);
-    setTimeout(() => {
-      searchPlace();
-    }, 300);
+    mapClickListener = google.maps.event.addListener(
+      map.value,
+      "click",
+      handleClickOutside
+    );
   } catch (err) {
     alert("Google Maps 載入失敗");
   }
 });
 
 onUnmounted(() => {
-  map.value.removeListener("click", handleClickOutside);
+  google.maps.event.removeListener(mapClickListener);
 });
 </script>
 
