@@ -10,7 +10,7 @@
   >
     <div class="relative w-fit">
       <select
-        :value="route.query.city || 'none'"
+        v-model="selectedCityName"
         @change="onCityChange($event)"
         class="appearance-none bg-gray-500/80 text-white text-sm py-2 pl-4 pr-10 rounded-full focus:outline-none hover:bg-gray-400 transition duration-200 cursor-pointer shadow-inner"
       >
@@ -188,7 +188,7 @@
   >
    <button
     @click="locateUser"
-    class="block w-full text-left bg-gray-500/80 hover:bg-gray-400 text-white px-4 py-2 rounded-full shadow cursor-pointer shadow-inner"
+    class="block w-full text-left bg-gray-500/80 hover:bg-gray-400 text-white px-4 py-2 rounded-full cursor-pointer shadow-inner"
   >
     ⚙︎
   </button>
@@ -266,7 +266,6 @@ import { cities } from "../composable/city";
 
 const route = useRoute();
 const router = useRouter();
-const selectedCity = ref(route.query.city || "none");
 const isLocated = ref(false);
 
 const itineraryRef = ref(null);
@@ -290,7 +289,7 @@ const defaultImage = "https://picsum.photos/1000?image";
 
 const selectedPlace = ref(null);
 const selectedPlacePhotoIndex = ref(0);
-const selectedCityName = ref("none"); 
+const selectedCityName = ref(route.query.city || "none");
 
 const selectedMarkers = [];
 
@@ -345,6 +344,13 @@ function scrollRight() {
   }
 }
 
+watch(
+  () => route.query.city,
+  (newCity) => {
+    selectedCityName.value = newCity || "none";
+  }
+);
+
 watch(selectedPlace, (newVal) => {
   if (newVal) {
     selectedPlacePhotoIndex.value = 0;
@@ -390,7 +396,7 @@ watch(
 function searchByCategory(type) {
   if (!map.value || !type) return;
   const center = map.value.getCenter();
-  searchQuery.value = "";
+  searchQuery.value = type;
 
   performSearch({
     type: SearchType.TEXT,
