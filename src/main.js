@@ -40,9 +40,6 @@ const pinia = createPinia();
 
 app.use(pinia);
 
-import { useTripStore } from '@/stores/tripStore';
-const tripStore = useTripStore();
-tripStore.load();
 
 app.use(router);
 app.component('FontAwesomeIcon', FontAwesomeIcon);
