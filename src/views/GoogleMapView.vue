@@ -5,12 +5,7 @@
     :default-image="defaultImage"
   />
   
-  <button
-    @click="locateUser"
-    class="absolute z-50 top-5 left-5 bg-blue-500 text-white px-4 py-2 rounded shadow hover:bg-blue-600"
-  >
-    取得我的位置
-  </button>
+ 
 
   <div
     class="absolute top-2.5 left-1/2 -translate-x-1/2 z-[2] flex items-center gap-2.5 bg-gray-400/95 px-2 py-1 rounded-full"
@@ -136,6 +131,12 @@
     class="w-20 p-4 space-y-2 bg-gray-400/30 fixed z-50 left-5 top-1/2 translate-y-[-50%] rounded-full shadow-4xl backdrop-blur-2xl"
     ref="menuRef"
   >
+   <button
+    @click="locateUser"
+    class="block w-full text-left bg-gray-500/80 hover:bg-gray-400 text-white px-4 py-2 rounded-full shadow cursor-pointer shadow-inner"
+  >
+    ⚙︎
+  </button>
     <button
       v-for="item in categories"
       :key="item.type"
