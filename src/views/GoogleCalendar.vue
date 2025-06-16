@@ -75,9 +75,6 @@ onMounted(() => {
   const gisScript = document.createElement("script");
   gisScript.src = "https://accounts.google.com/gsi/client";
   document.body.appendChild(gisScript);
-
-  console.log("CLIENT_ID:", CLIENT_ID);
-  console.log("API_KEY:", API_KEY);
 });
 
 function initializeGapiClient() {
