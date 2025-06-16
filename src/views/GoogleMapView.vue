@@ -4,8 +4,6 @@
     :selectedPlace="selectedPlace"
     :default-image="defaultImage"
   />
-  
- 
 
   <div
     class="absolute top-2.5 left-1/2 -translate-x-1/2 z-[2] flex items-center gap-2.5 bg-gray-400/95 px-2 py-1 rounded-full"
@@ -70,7 +68,64 @@
   </div>
 
   <div ref="mapRef" class="w-screen h-screen m-0 p-0"></div>
+ <div
+    v-if="placeDetails.length"
+    class="absolute bottom-2 left-1/2 -translate-x-1/2 z-[3] w-[92%] max-w-screen-xl"
+  >
+    <div
+      class="relative bg-white/80 backdrop-blur-lg rounded-2xl shadow-xl px-6 py-4"
+    >
+      <button
+        @click="scrollLeft"
+        class="absolute left-0 top-1/2 -translate-y-1/2 z-20 bg-white/90 hover:bg-white shadow px-3 py-2 rounded-full"
+      >
+        ‹
+      </button>
 
+      <div
+        ref="cardContainer"
+        class="flex gap-4 overflow-x-auto scroll-smooth px-4 pr-6 scrollbar-hidden snap-x snap-mandatory"
+      >
+        <div
+          v-for="(place, index) in placeDetails"
+          :key="index"
+          @click="selectedPlace = place"
+          class="w-[70vw] sm:w-[250px] flex-shrink-0 bg-white rounded-xl shadow p-3 hover:shadow-md transition duration-200 cursor-pointer snap-start"
+        >
+          <img
+            :src="place.photos?.[0]?.getUrl({ maxWidth: 800 }) || defaultImage"
+            @error="(e) => (e.target.src = defaultImage)"
+            alt="地點圖片"
+            class="w-full aspect-[3/2] object-cover rounded-md mb-2"
+          />
+          <h2 class="text-sm font-semibold truncate" :title="place.name">
+            {{ place.name }}
+          </h2>
+          <p
+            v-if="place.rating"
+            class="text-xs text-yellow-600 mt-1 whitespace-nowrap overflow-hidden text-ellipsis"
+          >
+            ⭐ {{ place.rating }} / {{ place.user_ratings_total }} 則評價
+          </p>
+        </div>
+        <div v-if="hasMoreResults" class="flex items-center justify-center">
+          <button
+            class="bg-gray-400 text-white py-2 px-4 rounded-full text-sm hover:bg-gray-700 whitespace-nowrap"
+            @click="loadNextPage"
+          >
+            更多
+          </button>
+        </div>
+      </div>
+
+      <button
+        @click="scrollRight"
+        class="absolute right-0 top-1/2 -translate-y-1/2 z-20 bg-white/90 hover:bg-white shadow px-3 py-2 rounded-full"
+      >
+        ›
+      </button>
+    </div>
+  </div>
   <div
     v-if="selectedPlace"
     class="fixed inset-0 bg-black/50 flex items-center justify-center z-[4]"

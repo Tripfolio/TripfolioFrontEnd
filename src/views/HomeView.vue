@@ -194,7 +194,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch, onUnmounted } from "vue";
+import { ref, onMounted, onUnmounted } from "vue";
 import { RouterLink, useRouter, useRoute } from "vue-router";
 import { cities } from "../composable/city";
 
@@ -205,11 +205,9 @@ const searchQuery = ref("");
 const searchInput = ref(null);
 
 const placeDetails = ref([]);
-const nextPageFunc = ref(null);
 const hasMoreResults = ref(false);
 
 const selectedPlace = ref(null);
-const selectedPlacePhotoIndex = ref(0);
 const selectedCityName = ref("none");
 
 const menuRef = ref(null);
