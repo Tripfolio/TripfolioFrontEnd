@@ -358,6 +358,7 @@ function initMap() {
     center: { lat: 25.033964, lng: 121.564472 },
     zoom: 18,
     mapTypeControl: false,
+    mapTypeControlOptions: null,
     zoomControl: false,
     cameraControl: false,
     scaleControl: false,
@@ -704,6 +705,17 @@ onMounted(async () => {
     map.value = new google.maps.Map(mapRef.value, {
     center: { lat: 25.038, lng: 121.5645 },
     zoom: 12,
+    mapTypeControl: false,
+    mapTypeControlOptions: null,
+    zoomControl: false,
+    cameraControl: false,
+    scaleControl: false,
+    fullscreenControl: false,
+    errorControl: false,
+    streetViewControl: false,
+    streetViewControlOptions: {
+      position: google.maps.ControlPosition.LEFT_TOP,
+    }
   });
     await locateUser();
 
