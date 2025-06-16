@@ -15,6 +15,7 @@ import {
   faXmark,
   faPenToSquare,
   faEllipsisH,
+  faPaste
 } from "@fortawesome/free-solid-svg-icons";
 
 library.add(
@@ -23,7 +24,8 @@ library.add(
   faEyeSlash,
   faXmark,
   faPenToSquare,
-  faEllipsisH
+  faEllipsisH,
+  faPaste
 );
 
 const app = createApp(App);
