@@ -135,7 +135,9 @@ const toTravelPage = () => {
 // 取得留言
 const fetchComments = async () => {
   try {
-    const response = await axios.get(`/api/posts/${props.post.id}/comments`);
+    const response = await axios.get(
+      "http://localhost:3000//api/community/comments"
+    );
     comments.value = response.data;
   } catch (error) {
     console.error("取得留言失敗:", error);
