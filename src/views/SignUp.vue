@@ -60,7 +60,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
@@ -106,7 +106,7 @@ const signUp = async () => {
     setTimeout(() => {
       showSuccess.value = false;
       router.push("/");
-    }, 2000);
+    }, 200);
   } catch (err) {
     showError.value = true;
     if (
@@ -120,6 +120,7 @@ const signUp = async () => {
     }
   }
 };
+
 const handleGoogleLogin = () => {
   window.location.href = "http://localhost:3000/auth/google";
 };
