@@ -19,8 +19,8 @@ import {
     faEye,
     faEyeSlash,
     faExclamationTriangle,
+    faEllipsisH,
 } from '@fortawesome/free-solid-svg-icons';
-
 
 library.add(
     faXmark,
@@ -33,13 +33,12 @@ library.add(
     faEye,
     faEyeSlash,
     faExclamationTriangle,
+    faEllipsisH
 );
 
 const app = createApp(App);
-const pinia = createPinia();
 
-app.use(pinia);
-
+app.use(createPinia()); 
 
 app.use(router);
 app.component('FontAwesomeIcon', FontAwesomeIcon);

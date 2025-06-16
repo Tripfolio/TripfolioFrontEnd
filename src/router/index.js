@@ -6,8 +6,11 @@ import GoogleMapView from "@/views/GoogleMapView.vue";
 import MemberProfile from "@/views/MemberProfile.vue";
 import GoogleCalendar from "@/views/GoogleCalendar.vue";
 import TripPlannerView from "@/views/TripPlannerView.vue";
+
 import EmailSettings from "@/views/EmailSettings.vue";
 import Travel from "@/views/Travel.vue";
+import Post from "@/components/PostForm.vue";
+import Community from "@/views/CommunityList.vue";
 
 const routes = [
   {
@@ -54,6 +57,16 @@ const routes = [
     path: "/schedule",
     name: "schedule",
     component: Travel,
+  },
+  {
+    path: "/community/post",
+    name: "communityPost",
+    component: Post,
+  },
+  {
+    path: "/community",
+    name: "community",
+    component: Community,
   },
 ];
 
