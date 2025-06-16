@@ -1,33 +1,7 @@
 <template>
   <div class="bg-white p-6 rounded-xl shadow-md w-full max-w-md mx-auto">
-    <!-- 分頁標籤 -->
-    <div class="flex border-b mb-4">
-      <button
-        class="flex-1 py-2 text-center font-semibold"
-        :class="
-          activeTab === 'share'
-            ? 'border-b-2 border-blue-500 text-blue-500'
-            : 'text-gray-500'
-        "
-        @click="activeTab = 'share'"
-      >
-        分享行程
-      </button>
-      <button
-        class="flex-1 py-2 text-center font-semibold"
-        :class="
-          activeTab === 'invite'
-            ? 'border-b-2 border-blue-500 text-blue-500'
-            : 'text-gray-500'
-        "
-        @click="activeTab = 'invite'"
-      >
-        邀請共編
-      </button>
-    </div>
-
-    <!-- Tab: 邀請共編 -->
-    <div v-if="activeTab === 'invite'">
+    <div class="flex border-b mb-4">邀請共編</div>
+    <div>
       <!-- 權限選單 -->
       <div class="relative mb-4">
         <button
@@ -142,7 +116,6 @@ const props = defineProps({
   },
 });
 
-const activeTab = ref("invite");
 const permission = ref("editor");
 const shareUrl = ref("");
 const showDropdown = ref(false);
@@ -156,6 +129,7 @@ const setPermission = async (type) => {
   permission.value = type;
   showDropdown.value = false;
   await generateShareUrl();
+  alert("邀請連結已更新");
 };
 
 const generateShareUrl = async () => {
@@ -190,10 +164,10 @@ const fetchMembers = async () => {
       `${import.meta.env.VITE_API_URL}/api/trip-shares/${props.tripId}`
     );
     members.value = res.data.map((item) => ({
-      token: item.token, // 加上 token 供後續修改/刪除用
+      token: item.token,
       permission: item.permission,
-      name: item.sharedWithUserId,
-      // avatarUrl: "/default-avatar.png", // 頭像須從user資料取得
+      name: item.name || "未知使用者",
+      avatarUrl: item.avatarUrl, // 頭像須從user資料取得
     }));
   } catch (err) {
     alert("取得共編成員失敗。");
