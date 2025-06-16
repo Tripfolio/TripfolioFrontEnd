@@ -76,66 +76,6 @@
 
   <div ref="mapRef" class="w-screen h-screen m-0 p-0"></div>
 
-  <!-- <div
-    v-if="placeDetails.length"
-    class="absolute bottom-2 left-1/2 -translate-x-1/2 z-[3] w-[92%] max-w-screen-xl"
-  >
-    <div
-      class="relative bg-white/80 backdrop-blur-lg rounded-2xl shadow-xl px-6 py-4"
-    >
-      <button
-        @click="scrollLeft"
-        class="absolute left-0 top-1/2 -translate-y-1/2 z-20 bg-white/90 hover:bg-white shadow px-3 py-2 rounded-full"
-      >
-        ‹
-      </button>
-
-      <div
-        ref="cardContainer"
-        class="flex gap-4 overflow-x-auto scroll-smooth px-4 pr-6 scrollbar-hidden snap-x snap-mandatory"
-      >
-        <div
-          v-for="(place, index) in placeDetails"
-          :key="index"
-          @click="selectedPlace = place"
-          class="w-[70vw] sm:w-[250px] flex-shrink-0 bg-white rounded-xl shadow p-3 hover:shadow-md transition duration-200 cursor-pointer snap-start"
-        >
-          <img
-            :src="place.photos?.[0]?.getUrl({ maxWidth: 800 }) || defaultImage"
-            @error="(e) => (e.target.src = defaultImage)"
-            alt="地點圖片"
-            class="w-full aspect-[3/2] object-cover rounded-md mb-2"
-          />
-          <h2 class="text-sm font-semibold truncate" :title="place.name">
-            {{ place.name }}
-          </h2>
-          <p
-            v-if="place.rating"
-            class="text-xs text-yellow-600 mt-1 whitespace-nowrap overflow-hidden text-ellipsis"
-          >
-            ⭐ {{ place.rating }} / {{ place.user_ratings_total }} 則評價
-          </p>
-        </div>
-        <div v-if="hasMoreResults" class="flex items-center justify-center">
-          <button
-            class="bg-gray-400 text-white py-2 px-4 rounded-full text-sm hover:bg-gray-700 whitespace-nowrap"
-            @click="loadNextPage"
-          >
-            更多
-          </button>
-        </div>
-      </div>
-
-      <button
-        @click="scrollRight"
-        class="absolute right-0 top-1/2 -translate-y-1/2 z-20 bg-white/90 hover:bg-white shadow px-3 py-2 rounded-full"
-      >
-        ›
-      </button>
-    </div>
-  </div> -->
-
-  <!--地點詳細資訊 -->
   <div
     v-if="selectedPlace"
     class="fixed inset-0 bg-black/50 flex items-center justify-center z-[4]"
@@ -163,7 +103,7 @@
         >
           ‹
         </button>
-        <!-- 圖片 -->
+      
         <img
           :src="
             selectedPlace.photos && selectedPlace.photos.length
@@ -204,7 +144,7 @@
     >
       {{ item.label }}
     </button>
-    <!-- 🔽 新增自訂分類選單 -->
+
     <div class="relative">
       <button
         @click="showCustomCategory = !showCustomCategory"
@@ -236,7 +176,6 @@
         </button>
       </div>
     </div>
-    <!-- 🔽 新增自訂分類選單 -->
   </aside>
 
   <div
@@ -267,6 +206,7 @@ import { useMapSearch, SearchType } from "../composable/useMapSearch";
 import Itinerary from "../components/Itinerary.vue";
 import { loadGoogleMaps } from "../composable/loadGoogleMaps";
 import { useRoute, useRouter } from "vue-router";
+import { cities } from "../composable/city";
 
 const route = useRoute();
 const router = useRouter();
@@ -294,59 +234,31 @@ const defaultImage = "https://picsum.photos/1000?image";
 
 const selectedPlace = ref(null);
 const selectedPlacePhotoIndex = ref(0);
-const selectedCityName = ref("none"); // 預設為「當前」
+const selectedCityName = ref("none"); 
 
 const selectedMarkers = [];
 
 let markers = [];
 let service = null;
-let directionsService; // 路線服務
-let directionsRenderer; // 路線顯示器
-let markerCluster = null; //marker的集合
+let directionsService; 
+let directionsRenderer; 
+let markerCluster = null; 
 
-const cities = [
-  { name: "台北市", lat: 25.033964, lng: 121.564472 },
-  { name: "新北市", lat: 25.016982, lng: 121.462786 },
-  { name: "基隆市", lat: 25.131122, lng: 121.739622 },
-  { name: "桃園市", lat: 24.993628, lng: 121.300979 },
-  { name: "新竹市", lat: 24.80395, lng: 120.964675 },
-  { name: "新竹縣", lat: 24.838722, lng: 121.002295 },
-  { name: "苗栗縣", lat: 24.560159, lng: 120.821426 },
-  { name: "台中市", lat: 24.147736, lng: 120.673648 },
-  { name: "彰化縣", lat: 24.068523, lng: 120.562447 },
-  { name: "南投縣", lat: 23.958842, lng: 120.971863 },
-  { name: "雲林縣", lat: 23.709203, lng: 120.542994 },
-  { name: "嘉義市", lat: 23.480075, lng: 120.449111 },
-  { name: "嘉義縣", lat: 23.451842, lng: 120.255461 },
-  { name: "台南市", lat: 22.999728, lng: 120.227028 },
-  { name: "高雄市", lat: 22.627278, lng: 120.301435 },
-  { name: "屏東縣", lat: 22.551975, lng: 120.548759 },
-  { name: "宜蘭縣", lat: 24.702107, lng: 121.73775 },
-  { name: "花蓮縣", lat: 23.987158, lng: 121.601571 },
-  { name: "台東縣", lat: 22.764364, lng: 121.113207 },
-  { name: "澎湖縣", lat: 23.57104, lng: 119.579369 },
-  { name: "金門縣", lat: 24.436679, lng: 118.317088 },
-  { name: "連江縣", lat: 26.16058, lng: 119.950946 },
-];
+const travelMode = ref("DRIVING"); 
+const result = ref(null);
 
-const travelMode = ref("DRIVING"); // 交通方式 (select dropdown)
-const result = ref(null); // 路線結果（距離與時間）(calculateRoute)
-
-//整個篩選區塊的容器，用來判斷點擊事件是不是發生在外部。
 const menuRef = ref(null);
 
-const showCustomCategory = ref(false); //是否顯示選單
-const maxCategoryCount = 5; //側邊骰選選單的最大長度
+const showCustomCategory = ref(false); 
+const maxCategoryCount = 5;
 
 const categories = ref([
   { type: "restaurant", label: "🍽️" },
   { type: "lodging", label: "🏨" },
   { type: "residence", label: "🏠" },
   { type: "tourist_attraction", label: "📍" },
-  // { type: "other_options", label: "+" },
 ]);
 
-//待添加種類
 const placeCategories = ref([
   { type: "cafe", label: "咖啡廳" },
   { type: "museum", label: "博物館" },
@@ -410,7 +322,6 @@ watch(
         location: center,
       });
     } else {
-      // 這裡改成 TEXT
       performSearch({
         type: SearchType.TEXT,
         query: queryText,
@@ -418,7 +329,6 @@ watch(
       });
     }
   }
-  // 不要 immediate: true
 );
 
 function searchByCategory(type) {
@@ -426,7 +336,6 @@ function searchByCategory(type) {
   const center = map.value.getCenter();
   searchQuery.value = "";
 
-  // 這裡也改成 TEXT
   performSearch({
     type: SearchType.TEXT,
     query: type,
@@ -448,11 +357,11 @@ function initMap() {
     center: { lat: 25.033964, lng: 121.564472 },
     zoom: 18,
     mapTypeControl: false,
-    zoomControl: true,
+    zoomControl: false,
     cameraControl: false,
     scaleControl: false,
     fullscreenControl: false,
-    errorControl: true,
+    errorControl: false,
     streetViewControl: false,
     streetViewControlOptions: {
       position: google.maps.ControlPosition.LEFT_TOP,
@@ -559,7 +468,7 @@ function handleResults(results, status, pagination) {
 
   if (results[0]?.geometry?.location) {
     map.value.setCenter(results[0].geometry.location);
-    map.value.setZoom(15); // 可根據需求調整縮放級別
+    map.value.setZoom(15);
   }
 
   markers.forEach((marker) => marker.setMap(null));
@@ -772,9 +681,7 @@ function handleClickOutside(event) {
 }
 
 function getPlaceIconUrl(types) {
-  // 只要類別與檔名一致，直接組合路徑
   for (const type of types) {
-    // 你可以用 fetch 或其他方式檢查檔案是否存在
     return `src/assets/icons/mapIcons/${type}.svg`;
   }
   return "src/assets/icons/mapIcons/default.svg";
@@ -799,7 +706,6 @@ onMounted(async () => {
   });
     await locateUser();
 
-    // 初始化方向服務
     directionsService = new google.maps.DirectionsService();
     directionsRenderer = new google.maps.DirectionsRenderer({
       suppressMarkers: true,
@@ -813,12 +719,12 @@ onMounted(async () => {
       clearMap,
       handleResults,
     }).performSearch;
-searchQuery.value = route.query.searchQuery || ""
+    searchQuery.value = route.query.searchQuery || ""
     const queryText = route.query.searchQuery;
     const queryCity = route.query.city;
 
-    if (queryText && queryCity && queryCity !== "none") {
-  const city = cities.find((c) => c.name === queryCity);
+  if (queryText && queryCity && queryCity !== "none") {
+   const city = cities.find((c) => c.name === queryCity);
   if (city) {
     const center = new google.maps.LatLng(city.lat, city.lng);
     map.value.setCenter(center);
@@ -863,7 +769,6 @@ searchQuery.value = route.query.searchQuery || ""
 
         service.getDetails(detailRequest, (detailResult, detailStatus) => {
           if (detailStatus === google.maps.places.PlacesServiceStatus.OK) {
-            // 第三個點時，重置
             if (selectedMarkers.length === 2) {
               selectedMarkers.forEach((m) => m.setMap(null));
               selectedMarkers.length = 0;

@@ -1,5 +1,4 @@
 <template>
-  <!-- <div ref="mapRef" class="hidden"></div> -->
   <div class="min-h-screen homepage-bg">
     <div class="min-h-screen px-4 py-6">
       <div class="w-[80vw] mx-auto">
@@ -51,7 +50,6 @@
       </div>
       <div class="w-[60vw] mx-auto -mt-16 z-10">
         <section class="bg-gray-800 text-white rounded-4xl py-3 px-6 shadow-md">
-          <!-- search -->
           <div
             class="flex flex-col md:flex-row md:items-center space-y-4 md:space-y-0 md:space-x-4"
           >
@@ -115,7 +113,6 @@
               </button>
             </div>
           </div>
-          <!-- type -->
           <div class="mt-4 flex flex-wrap gap-2">
             <button
               v-for="item in categories"
@@ -199,18 +196,13 @@
 <script setup>
 import { ref, onMounted, watch, onUnmounted } from "vue";
 import { RouterLink, useRouter, useRoute } from "vue-router";
-// import { MarkerClusterer } from "@googlemaps/markerclusterer";
-// import { useMapSearch } from "../composable/useMapSearch";
-// import { loadGoogleMaps } from "../composable/loadGoogleMaps";
 import { cities } from "../composable/city";
 
 const route = useRoute();
 const router = useRouter();
 
-// const mapRef = ref(null);
 const searchQuery = ref("");
 const searchInput = ref(null);
-// const map = ref(null);
 
 const placeDetails = ref([]);
 const nextPageFunc = ref(null);
@@ -219,13 +211,6 @@ const hasMoreResults = ref(false);
 const selectedPlace = ref(null);
 const selectedPlacePhotoIndex = ref(0);
 const selectedCityName = ref("none");
-
-// const selectedMarkers = [];
-
-// let markers = [];
-// let service = null;
-// let directionsRenderer;
-// let markerCluster = null;
 
 const menuRef = ref(null);
 const showCustomCategory = ref(false);
@@ -236,7 +221,6 @@ const categories = ref([
   { type: "lodging", label: "🏨 lodging" },
   { type: "residence", label: "🏠 residence" },
   { type: "tourist_attraction", label: "📍 tourist_attraction" },
-  // { type: "other_options", label: "+" },
 ]);
 
 const placeCategories = ref([
@@ -255,30 +239,12 @@ const placeCategories = ref([
   { type: "night_club", label: "夜店" },
 ]);
 
-// watch(selectedPlace, (newVal) => {
-//   if (newVal) {
-//     selectedPlacePhotoIndex.value = 0;
-//   }
-// });
-
-// function clearMap() {
-//   selectedMarkers.forEach((m) => m.setMap(null));
-//   selectedMarkers.length = 0;
-//   markers.forEach((marker) => marker.setMap(null));
-//   markers = [];
-//   placeDetails.value = [];
-//   nextPageFunc.value = null;
-//   hasMoreResults.value = false;
-//   selectedPlace.value = null;
-// }
-
 function searchPlace() {
   if (!searchQuery.value) return;
   router.push({
     path: "/map",
     query: {
       searchQuery: searchQuery.value,
-      // city: route.query.city || "none",
     },
   });
 }
@@ -296,91 +262,6 @@ function searchByCategory(type) {
     },
   });
 }
-
-// function handleResults(results, status, pagination) {
-//   if (status !== google.maps.places.PlacesServiceStatus.OK || !results.length) {
-//     alert("找不到地點！");
-//     return;
-//   }
-
-//   markers.forEach((marker) => marker.setMap(null));
-//   markers = [];
-//   if (markerCluster) {
-//     markerCluster.clearMarkers();
-//     markerCluster = null;
-//   }
-
-//   results.forEach((place) => {
-//     if (!place.geometry || !place.geometry.location) return;
-
-//     map.value.setCenter(place.geometry.location);
-//     const iconUrl = getPlaceIconUrl(place.types);
-
-//     const marker = new google.maps.Marker({
-//       map: map.value,
-//       position: place.geometry.location,
-//       title: place.name,
-//       icon: {
-//         url: iconUrl,
-//       },
-//     });
-
-//     markers.push(marker);
-
-//     // const detailRequest = {
-//     //   placeId: place.place_id,
-//     //   fields: [
-//     //     "name",
-//     //     "formatted_address",
-//     //     "geometry",
-//     //     "rating",
-//     //     "user_ratings_total",
-//     //     "photos",
-//     //   ],
-//     // };
-
-//     // service.getDetails(detailRequest, (detailResult, detailStatus) => {
-//     //   if (detailStatus === google.maps.places.PlacesServiceStatus.OK) {
-//     //     placeDetails.value.push(detailResult);
-
-//     //     marker.addListener("click", () => {
-//     //       selectedPlace.value = detailResult;
-//     //     });
-//     //   }
-//     // });
-//   });
-
-//   // markerCluster = new MarkerClusterer({
-//   //   map: map.value,
-//   //   markers: markers,
-//   //   renderer: {
-//   //     render({ count, position }) {
-//   //       return new google.maps.Marker({
-//   //         position,
-//   //         label: {
-//   //           text: String(count),
-//   //           color: "white",
-//   //           fontSize: "20px",
-//   //           fontWeight: "bold",
-//   //         },
-//   //       });
-//   //     },
-//   //   },
-//   // });
-
-//   if (pagination && pagination.hasNextPage) {
-//     nextPageFunc.value = () => pagination.nextPage();
-//     hasMoreResults.value = true;
-//   } else {
-//     hasMoreResults.value = false;
-//   }
-// }
-
-// function loadNextPage() {
-//   if (nextPageFunc.value) {
-//     nextPageFunc.value();
-//   }
-// }
 
 function onCityChange(event) {
   const cityName = event.target.value;
@@ -425,47 +306,8 @@ function handleClickOutside(event) {
   }
 }
 
-// function getPlaceIconUrl(types) {
-//   for (const type of types) {
-//     return `src/assets/icons/mapIcons/${type}.svg`;
-//   }
-//   return "src/assets/icons/mapIcons/default.svg";
-// }
-
-// let performSearch = () => {};
-
 onMounted(async () => {
-  // try {
-    // await loadGoogleMaps();
-
-    // map.value = new google.maps.Map(mapRef.value, {
-    //   center: { lat: 25.033964, lng: 121.564472 },
-    //   zoom: 15,
-    //   disableDefaultUI: true,
-    // });
-
-    // directionsRenderer = new google.maps.DirectionsRenderer({
-    //   suppressMarkers: true,
-    // });
-    // directionsRenderer.setMap(map.value);
-
-    // service = new google.maps.places.PlacesService(map.value);
-
-    // performSearch = useMapSearch({
-    //   map: map.value,
-    //   // service,
-    //   clearMap,
-    //   handleResults,
-    // }).performSearch;
-
     document.addEventListener("click", handleClickOutside);
-    // setTimeout(() => {
-    //   searchPlace();
-    // }, 300);
-  // } catch (err) {
-  //   alert("Google Maps 載入失敗");
-  //   alert(err);
-  // }
 });
 
 onUnmounted(() => {
