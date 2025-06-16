@@ -196,46 +196,30 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from "vue";
 import { RouterLink, useRouter, useRoute } from "vue-router";
-import { cities } from "../composable/city";
+import { cities } from "../constants/city";
+import { rawCategories, rawPlaceCategories } from "../constants/category";
+import { useCategoryMenu } from "../composable/useCategoryMenu";
+
+const {
+  categories,
+  placeCategories,
+  showCustomCategory,
+  menuRef,
+  addCategory,
+  removeCategory,
+  handleClickOutside,
+} = useCategoryMenu(rawCategories, rawPlaceCategories, maxCategoryCount);
 
 const route = useRoute();
 const router = useRouter();
 
 const searchQuery = ref("");
 const searchInput = ref(null);
-
 const placeDetails = ref([]);
 const hasMoreResults = ref(false);
-
 const selectedPlace = ref(null);
 const selectedCityName = ref("none");
-
-const menuRef = ref(null);
-const showCustomCategory = ref(false);
 const maxCategoryCount = 5;
-
-const categories = ref([
-  { type: "restaurant", label: "🍽️ restaurant" },
-  { type: "lodging", label: "🏨 lodging" },
-  { type: "residence", label: "🏠 residence" },
-  { type: "tourist_attraction", label: "📍 tourist_attraction" },
-]);
-
-const placeCategories = ref([
-  { type: "cafe", label: "咖啡廳" },
-  { type: "museum", label: "博物館" },
-  { type: "park", label: "公園" },
-  { type: "zoo", label: "動物園" },
-  { type: "amusement_park", label: "遊樂園" },
-  { type: "aquarium", label: "水族館" },
-  { type: "art_gallery", label: "藝廊" },
-  { type: "bar", label: "酒吧" },
-  { type: "book_store", label: "書店" },
-  { type: "gym", label: "健身房" },
-  { type: "shopping_mall", label: "購物中心" },
-  { type: "supermarket", label: "超市" },
-  { type: "night_club", label: "夜店" },
-]);
 
 function searchPlace() {
   if (!searchQuery.value) return;
@@ -275,37 +259,8 @@ function onCityChange(event) {
   });
 }
 
-function addCategory(item) {
-  const exists = categories.value.some((cat) => cat.type === item.type);
-  if (exists) return;
-  if (categories.value.length >= maxCategoryCount) {
-    alert("已達上限，最多只能選擇 5 種類別");
-    return;
-  }
-
-  categories.value.push(item);
-  placeCategories.value = placeCategories.value.filter(
-    (cat) => cat.type !== item.type
-  );
-}
-
-function removeCategory(item) {
-  categories.value = categories.value.filter((cat) => cat.type !== item.type);
-
-  const exists = placeCategories.value.some((cat) => cat.type === item.type);
-  if (!exists) {
-    placeCategories.value.push(item);
-  }
-}
-
-function handleClickOutside(event) {
-  if (menuRef.value && !menuRef.value.contains(event.target)) {
-    showCustomCategory.value = false;
-  }
-}
-
 onMounted(async () => {
-    document.addEventListener("click", handleClickOutside);
+  document.addEventListener("click", handleClickOutside);
 });
 
 onUnmounted(() => {
