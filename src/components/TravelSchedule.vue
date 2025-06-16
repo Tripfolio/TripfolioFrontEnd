@@ -14,7 +14,7 @@
 
             <div v-if="showCropper" class="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50">
                 <div class="bg-white p-4 rounded-lg max-w-md w-full">
-                    <cropper ref="cropperRef" :src="cropImage" :stencil-props="{ aspect: 2 }" :autoZoom = "true" :resizeImage="true" class="w-full h-64" />
+                    <cropper ref="cropperRef" :src="cropImage" :stencil-props="{ aspect: 2 }" :autoZoom="true" :resizeImage="true" class="w-full h-64" />
                     <div class="flex justify-end gap-2 mt-4">
                         <button @click="showCropper = false" class="bg-gray-300 px-4 py-2 rounded">取消</button>
                         <button type="button" @click="applyCrop" class="bg-blue-500 text-white px-4 py-2 rounded">裁切</button>                   
@@ -55,11 +55,11 @@
 <script setup>
 import{ ref, watch } from 'vue';
 import axios from 'axios'; 
-import { Cropper } from 'vue-advanced-cropper'
+import { Cropper } from 'vue-advanced-cropper';
 import 'vue-advanced-cropper/dist/style.css';
 
+/* global defineEmits */
 const emit = defineEmits(['close'])
-
 
 //狀態
 const file = ref(null)
@@ -100,7 +100,7 @@ const applyCrop = () => {
     const canvas = cropperRef.value?.getResult()?.canvas
     if(canvas){
         canvas.toBlob((blob) => {
-            file.value = new File([blob],`crooper-image.png`, { type: 'image/png'})
+            file.value = new File([blob],`cropper-image.png`, { type: 'image/png'})
             coverPreviewUrl.value = URL.createObjectURL(file.value)
             showCropper.value = false
         }, 'image/png' )
@@ -140,7 +140,7 @@ const handleClose = () => {
 //點取消清空表單
 const scheduleCancel = () => {
     file.value = null
-    coverPriviewUrl.value = ''
+    coverPreviewUrl.value = ''
     title.value = ''
     startDate.value = ''
     endDate.value = ''
@@ -167,29 +167,20 @@ const scheduleSubmit = async() => {
         formData.append('description', description.value);
 
     try {
-        const response = await axios.post('http://localhost:3000/api/travelSchedule', formData, {
+        const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/travelSchedule`, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
                 Authorization: `Bearer ${token}`,
             },
         });
 
-        console.log('建立成功', response.data);
         alert('已儲存');
         isDirty.value = false;
         emit('close');
     } catch (err) {
-        console.log('建立失敗', err);
         alert('儲存失敗，請稍後再試');
     }
 };
 
 
 </script>
-
-
-
-<style>
-
-
-</style>
