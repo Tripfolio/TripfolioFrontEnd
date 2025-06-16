@@ -126,11 +126,12 @@ import { Cropper } from "vue-advanced-cropper";
 import "vue-advanced-cropper/dist/style.css";
 import dayjs from "dayjs";
 
+
 //確認會員登入 抓id 上線前'1'要刪除
-const memberId = localStorage.getItem("memberId") || "1";
-if (!memberId) {
+const userId = localStorage.getItem("userId") || "1";
+if (!userId) {
   alert("請先登入會員");
-  throw new Error("memberId 不存在");
+  throw new Error("userId 不存在");
 }
 
 const profileData = ref({
@@ -145,7 +146,7 @@ const profileData = ref({
 onMounted(async () => {
   try {
     const res = await axios.get(
-      `${import.meta.env.VITE_API_URL}/api/members/${memberId}`,
+      `${import.meta.env.VITE_API_URL}/api/profile/${userId}`
     );
     const data = res.data;
 
@@ -159,6 +160,7 @@ onMounted(async () => {
       avatar: data.avatar || "",
     };
   } catch (error) {
+    // eslint-disable-next-line no-empty
   }
 });
 
@@ -187,17 +189,17 @@ const saveAvatar = async () => {
   canvas.toBlob(async (blob) => {
     const formData = new FormData();
     formData.append("avatar", blob, avatarFile.value.name);
-    formData.append("memberId", memberId);
+    formData.append("userId", userId);
 
     try {
       await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/members/upload-avatar`,
+        `${import.meta.env.VITE_API_URL}/api/profile/upload-avatar`,
         formData,
       );
       alert("大頭貼上傳成功");
 
       const profileRes = await axios.get(
-        `${import.meta.env.VITE_API_URL}/api/members/${memberId}`,
+        `${import.meta.env.VITE_API_URL}/api/profile/${userId}`,
       );
       profileData.value = profileRes.data;
       previewUrl.value = "";
@@ -227,7 +229,7 @@ watch(
 const saveProfile = async () => {
   try {
     const res = await axios.put(
-      `${import.meta.env.VITE_API_URL}/api/members/${memberId}`,
+      `${import.meta.env.VITE_API_URL}/api/profile/${userId}`,
       profileData.value,
     );
     alert("儲存成功");
@@ -292,7 +294,7 @@ const changePassword = async () => {
 
   try {
     await axios.put(
-      `${import.meta.env.VITE_API_URL}/api/users/${memberId}/password`,
+      `${import.meta.env.VITE_API_URL}/api/users/${userId}/password`,
       {
         oldPassword: passwordData.value.oldPassword,
         newPassword: passwordData.value.newPassword,
