@@ -9,12 +9,12 @@ export const SearchType = {
 
 export function useMapSearch({ map, service, clearMap, handleResults }) {
   function performSearch({
-    type,
+    type = SearchType.CITY_DEFAULT,
     query = "",
-    cityName = "",
-    location,
+    cityName = "",    
+    location = null,  
     radius = 3000,
-  }) {
+  } = {}) {
     const resolvedMap = unref(map);
     const resolvedService = unref(service);
 

@@ -4,6 +4,13 @@
     :selectedPlace="selectedPlace"
     :default-image="defaultImage"
   />
+  
+  <button
+    @click="locateUser"
+    class="absolute z-50 top-5 left-5 bg-blue-500 text-white px-4 py-2 rounded shadow hover:bg-blue-600"
+  >
+    取得我的位置
+  </button>
 
   <div
     class="absolute top-2.5 left-1/2 -translate-x-1/2 z-[2] flex items-center gap-2.5 bg-gray-400/95 px-2 py-1 rounded-full"
@@ -51,8 +58,8 @@
       </svg>
       <input
         type="text"
-        :value="route.query.searchQuery || ''"
-        @input="onSearchInput"
+         v-model="searchQuery"
+
         placeholder="輸入地點"
         class="w-full rounded-full border-none text-white px-7 py-1.5 box-border text-base placeholder-white focus:outline-none"
         ref="searchInput"
@@ -481,7 +488,6 @@ function clearMap() {
   hasMoreResults.value = false;
   selectedPlace.value = null;
 }
-
 function searchPlace() {
   if (!searchQuery.value || !map.value) return;
 
@@ -500,6 +506,9 @@ function searchPlace() {
       location: map.value.getCenter(),
     });
   }
+  router.replace({
+    query: {},
+  });
 }
 
 function moveToCity(event) {
@@ -535,7 +544,10 @@ function moveToCity(event) {
   map.value.setCenter(center);
   map.value.setZoom(13);
 
-  performSearch({ type: SearchType.CITY_DEFAULT, cityName, location: center });
+  performSearch({ 
+    type: SearchType.CITY_DEFAULT, 
+    cityName, 
+    location: center });
 }
 
 
@@ -545,8 +557,9 @@ function handleResults(results, status, pagination) {
     return;
   }
 
-  if (results[0] && results[0].geometry && results[0].geometry.location) {
+  if (results[0]?.geometry?.location) {
     map.value.setCenter(results[0].geometry.location);
+    map.value.setZoom(15); // 可根據需求調整縮放級別
   }
 
   markers.forEach((marker) => marker.setMap(null));
@@ -679,38 +692,55 @@ function onCityChange(event) {
   moveToCity(event);
 }
 
-// function locateUser(map) {
-//   navigator.geolocation.getCurrentPosition(
-//     (position) => {
-//       const userLocation = {
-//         lat: position.coords.latitude,
-//         lng: position.coords.longitude,
-//       };
+function locateUser() {
+  
+  if (!map.value) {
+    alert("地圖尚未初始化完成，請稍後再試。");
+    return;
+  }
 
-//       new google.maps.Marker({
-//         position: userLocation,
-//         map: map.value,
-//         title: "你的位置",
-//         icon: {
-//           path: google.maps.SymbolPath.CIRCLE,
-//           scale: 15,
-//           fillColor: "#4285F4",
-//           fillOpacity: 0.9,
-//           strokeColor: "#fff",
-//           strokeWeight: 2,
-//         },
-//       });
+  if (!navigator.geolocation) {
+    alert("你的瀏覽器不支援地理定位功能。");
+    return;
+  }
+  navigator.geolocation.getCurrentPosition(
+    (position) => {
+      const userLocation = {
+        lat: position.coords.latitude,
+        lng: position.coords.longitude,
+      };
 
-//       map.value.setCenter(userLocation);
-//       map.value.setZoom(15);
-//       isLocated.value = true;
-//     },
-//     (error) => {
-//       isLocated.value = true;
-//       alert("無法取得你的定位資訊", error);
-//     }
-//   );
-// }
+      new google.maps.Marker({
+        position: userLocation,
+        map: map.value,
+        title: "你的位置",
+        icon: {
+          path: google.maps.SymbolPath.CIRCLE,
+          scale: 15,
+          fillColor: "#4285F4",
+          fillOpacity: 0.9,
+          strokeColor: "#fff",
+          strokeWeight: 2,
+        },
+      });
+
+      map.value.setCenter(userLocation);
+      map.value.setZoom(15);
+      isLocated.value = true;
+      if (searchQuery.value) {
+        performSearch({
+          type: SearchType.TEXT,
+          query: searchQuery.value,
+          location: userLocation,
+        });
+      }
+    },
+    (error) => {
+      isLocated.value = true;
+      alert("無法取得你的定位資訊", error);
+    }
+  );
+}
 
 function addCategory(item) {
   const exists = categories.value.some((cat) => cat.type === item.type);
@@ -757,7 +787,17 @@ onMounted(async () => {
   try {
     await loadGoogleMaps();
     initMap();
-    // await locateUser(map);
+    
+
+    if (!mapRef.value) {
+      console.error("mapRef 尚未掛載");
+      return;
+    }
+    map.value = new google.maps.Map(mapRef.value, {
+    center: { lat: 25.038, lng: 121.5645 },
+    zoom: 12,
+  });
+    await locateUser();
 
     // 初始化方向服務
     directionsService = new google.maps.DirectionsService();
@@ -773,7 +813,7 @@ onMounted(async () => {
       clearMap,
       handleResults,
     }).performSearch;
-
+searchQuery.value = route.query.searchQuery || ""
     const queryText = route.query.searchQuery;
     const queryCity = route.query.city;
 
@@ -863,6 +903,7 @@ onMounted(async () => {
       handleClickOutside
     );
   } catch (err) {
+    console.error("地圖初始化失敗", err);
     alert("Google Maps 載入失敗");
   }
 });
