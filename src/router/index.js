@@ -42,6 +42,11 @@ const routes = [
     component: MemberProfile,
   },
   {
+    path: "/profilePreview",
+    name: "profilePreview",
+    component: ProfilePreview,
+  },
+  {
     path: "/emailSettings",
     name: "emailSettings",
     component: EmailSettings,
