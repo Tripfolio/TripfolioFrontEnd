@@ -9,37 +9,38 @@ import router from './router';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import {
-    faXmark,
-    faPenToSquare,
-    faAngleLeft,
-    faAngleRight,
-    faPlus,
-    faArrowLeft,
-    faCamera,
-    faEye,
-    faEyeSlash,
-    faExclamationTriangle,
-    faEllipsisH,
+  faXmark,
+  faPenToSquare,
+  faAngleLeft,
+  faAngleRight,
+  faPlus,
+  faArrowLeft,
+  faCamera,
+  faEye,
+  faEyeSlash,
+  faExclamationTriangle,
+  faEllipsisH,
+  faPaste
 } from '@fortawesome/free-solid-svg-icons';
 
 library.add(
-    faXmark,
-    faPenToSquare,
-    faAngleLeft,
-    faAngleRight,
-    faPlus,
-    faArrowLeft,
-    faCamera,
-    faEye,
-    faEyeSlash,
-    faExclamationTriangle,
-    faEllipsisH
+  faXmark,
+  faPenToSquare,
+  faAngleLeft,
+  faAngleRight,
+  faPlus,
+  faArrowLeft,
+  faCamera,
+  faEye,
+  faEyeSlash,
+  faExclamationTriangle,
+  faEllipsisH,
+  faPaste
 );
 
 const app = createApp(App);
 
-app.use(createPinia()); 
-
+app.use(createPinia());
 app.use(router);
 app.component('FontAwesomeIcon', FontAwesomeIcon);
 app.mount('#app');
