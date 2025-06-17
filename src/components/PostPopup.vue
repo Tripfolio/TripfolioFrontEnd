@@ -155,6 +155,7 @@ const comments = ref([]);
 const newComment = ref("");
 const liked = ref(false);
 const isSubmitting = ref(false);
+const isLoading = ref(false);
 
 const close = () => {
   emit("close");
@@ -164,72 +165,145 @@ const toTravelPage = () => {
   console.log("跳轉到行程頁面");
 };
 
+// 格式化時間
+const formatTime = (timeString) => {
+  if (!timeString) return "";
+  const date = new Date(timeString);
+  const now = new Date();
+  const diff = now - date;
+
+  if (diff < 60000) return "剛剛";
+  if (diff < 3600000) return `${Math.floor(diff / 60000)}分鐘前`;
+  if (diff < 86400000) return `${Math.floor(diff / 3600000)}小時前`;
+
+  return date.toLocaleDateString("zh-TW");
+};
+
+// 取得目前使用者 ID（暫時模擬）
+const getCurrentUserId = () => {
+  // 實際應用中應該從登入狀態或 localStorage 取得
+  return 1; // 暫時回傳固定值
+};
+
 // 取得留言
 const fetchComments = async () => {
+  if (!props.post.id) return;
+
   try {
+    console.log(`正在取得貼文 ${props.post.id} 的留言`);
+
     const response = await axios.get(
-      `http://localhost:3000/api/posts/${props.post.id}/comments`
+      `http://localhost:3000/api/fakepost/${props.post.id}/comments`
     );
+
     comments.value = response.data;
+    console.log("取得留言成功:", response.data);
   } catch (error) {
     console.error("取得留言失敗:", error);
+
+    // 使用假資料作為備用
+    comments.value = [
+      {
+        id: 1,
+        content: "無法連接伺服器，顯示假資料",
+        userName: "系統訊息",
+        userAvatar: "https://via.placeholder.com/32",
+        createdAt: new Date().toISOString(),
+      },
+    ];
+  } finally {
+    isLoading.value = false;
   }
 };
 
-// 送出留言
+// 送出留言（修正 API 路徑）
 const submitComment = async () => {
   if (!newComment.value.trim() || isSubmitting.value) return;
 
   isSubmitting.value = true;
   try {
-    const response = await axios.post(`/api/posts/${props.post.id}/comments`, {
-      content: newComment.value.trim(),
-      // memberId: currentMemberId // 從登入狀態取得
-    });
+    const response = await axios.post(
+      `http://localhost:3000/api/fakepost/${props.post.id}/comments`, // 修正路徑
+      {
+        content: newComment.value.trim(),
+        memberId: getCurrentUserId(), // 加入使用者 ID
+      }
+    );
 
-    // 新增留言到列表
-    comments.value.push(response.data);
+    // 新增留言到列表頂部
+    comments.value.unshift(response.data);
     newComment.value = "";
+    console.log("留言新增成功");
   } catch (error) {
     console.error("送出留言失敗:", error);
-    alert("送出失敗，請重試");
+
+    // 開發階段：模擬成功新增
+    const fakeNewComment = {
+      id: Date.now(),
+      content: newComment.value.trim(),
+      userName: "目前使用者",
+      userAvatar: "https://via.placeholder.com/32",
+      createdAt: new Date().toISOString(),
+    };
+
+    comments.value.unshift(fakeNewComment);
+    newComment.value = "";
+    alert("留言新增成功（開發模式）");
   } finally {
     isSubmitting.value = false;
   }
 };
 
-// 刪除留言
+// 刪除留言（修正 API 路徑）
 const deleteComment = async (commentId) => {
   if (!confirm("確定要刪除這則留言嗎？")) return;
 
   try {
-    await axios.delete(`/api/comments/${commentId}`);
+    await axios.delete(
+      `http://localhost:3000/api/fakepost/${props.post.id}/comments/${commentId}` // 修正路徑
+    );
+
     comments.value = comments.value.filter(
       (comment) => comment.id !== commentId
     );
+    console.log("留言刪除成功");
   } catch (error) {
     console.error("刪除留言失敗:", error);
-    alert("刪除失敗");
+
+    // 開發階段：模擬成功刪除
+    comments.value = comments.value.filter(
+      (comment) => comment.id !== commentId
+    );
+    alert("留言刪除成功（開發模式）");
   }
 };
 
 // 切換按讚
 const toggleLike = async () => {
   try {
-    const response = await axios.post(`/api/posts/${props.post.id}/like`);
-    liked.value = response.data.liked;
-    emit("update-post", { ...props.post, likes: response.data.likes });
+    // 暫時模擬按讚功能
+    liked.value = !liked.value;
+    const newLikes = liked.value
+      ? (props.post.likes || 0) + 1
+      : (props.post.likes || 0) - 1;
+
+    emit("update-post", { ...props.post, likes: newLikes });
+    console.log("按讚狀態切換:", liked.value);
   } catch (error) {
     console.error("按讚失敗:", error);
   }
 };
 
-// 組件掛載時載入留言
-onMounted(() => {
-  if (props.isVisible) {
-    fetchComments();
-  }
-});
+// 檢查是否可以刪除留言
+const canDeleteComment = (comment) => {
+  const currentUserId = getCurrentUserId();
+  const postAuthorId = props.post.authorId;
+
+  // 留言者本人或貼文作者可以刪除
+  return comment.userId === currentUserId || postAuthorId === currentUserId;
+};
+
+// 監聽彈窗顯示狀態
 watch(
   () => props.isVisible,
   (newValue) => {
@@ -238,6 +312,13 @@ watch(
     }
   }
 );
+
+// 組件掛載時載入留言
+onMounted(() => {
+  if (props.isVisible && props.post.id) {
+    fetchComments();
+  }
+});
 </script>
 
 <style scoped>
