@@ -4,6 +4,7 @@ import SignUp from "@/views/SignUp.vue";
 import LoginPage from "@/views/LoginPage.vue";
 import GoogleMapView from "@/views/GoogleMapView.vue";
 import MemberProfile from "@/views/MemberProfile.vue";
+import ProfilePreview from "@/views/ProfilePreview.vue";
 import GoogleCalendar from "@/views/GoogleCalendar.vue";
 import EmailSettings from "@/views/EmailSettings.vue";
 import Travel from "@/views/Travel.vue";
