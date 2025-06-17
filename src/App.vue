@@ -13,6 +13,7 @@ import { RouterLink, RouterView } from "vue-router";
       <RouterLink to="/schedule">個人行程</RouterLink>
       <RouterLink to="/login">登入頁面</RouterLink>
       <RouterLink to="/community">社群貼文</RouterLink>
+      <RouterLink to="/fakePost">假貼文</RouterLink>
     </div>
 
     <div class="relative">

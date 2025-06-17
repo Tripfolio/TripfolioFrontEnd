@@ -9,6 +9,7 @@ import EmailSettings from "@/views/EmailSettings.vue";
 import Travel from "@/views/Travel.vue";
 import Post from "@/components/PostForm.vue";
 import Community from "@/views/CommunityList.vue";
+import fakePost from "../views/fakePost.vue";
 
 const routes = [
   {
@@ -60,6 +61,11 @@ const routes = [
     path: "/community",
     name: "community",
     component: Community,
+  },
+  {
+    path: "/fakePost",
+    name: "fakePost",
+    component: fakePost,
   },
 ];
 

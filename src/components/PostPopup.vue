@@ -1,12 +1,20 @@
 <template>
   <div class="popup-overlay" @click.self="close">
     <div class="popup-content flex relative">
+      <!-- 關閉按鈕 -->
+      <button
+        @click="close"
+        class="absolute top-4 right-4 z-10 bg-white rounded-full w-8 h-8 flex items-center justify-center shadow-lg hover:bg-gray-100"
+      >
+        ✕
+      </button>
+
       <!-- 左側圖片 -->
       <div
         class="post-image bg-[#0ff376] flex items-center justify-center w-[55%]"
       >
         <img
-          :src="post.imageUrl"
+          :src="post.imageUrl || 'https://via.placeholder.com/400x600'"
           alt="貼文照片"
           class="w-full h-full object-cover"
         />
@@ -18,18 +26,25 @@
         <div
           class="post-header bg-amber-300 h-20 border-b border-yellow-900 flex justify-between items-center px-4"
         >
-          <div class="flex items-center">
+          <div class="flex items-center flex-1">
             <img
-              :src="post.authorAvatar"
-              class="avatar w-10 h-10 rounded-full"
+              :src="post.authorAvatar || 'https://via.placeholder.com/40'"
+              class="avatar w-10 h-10 rounded-full mr-3"
             />
-            <span class="author px-3">{{ post.authorName }}</span>
+            <div>
+              <div class="font-semibold">
+                {{ post.authorName || "匿名使用者" }}
+              </div>
+              <div class="text-sm text-gray-600">
+                {{ post.scheduleTitle || "未命名行程" }}
+              </div>
+            </div>
           </div>
           <button
-            class="cursor-pointer bg-blue-500 px-3 py-1 rounded"
+            class="cursor-pointer bg-blue-500 hover:bg-blue-600 px-3 py-1 rounded transition-colors"
             @click="toTravelPage"
           >
-            <p class="text-white">行程參考</p>
+            <p class="text-white text-sm">行程參考</p>
           </button>
         </div>
 
@@ -37,18 +52,28 @@
         <div class="flex-1 flex flex-col overflow-hidden">
           <!-- 貼文內容 -->
           <div class="post-body p-4 border-b">
-            <p class="break-words whitespace-pre-wrap">{{ post.content }}</p>
+            <p class="break-words whitespace-pre-wrap">
+              {{ post.content || "沒有內容" }}
+            </p>
           </div>
 
           <!-- 留言列表 -->
           <div class="comments-section flex-1 overflow-y-auto p-4">
+            <div v-if="isLoading" class="text-center py-4">載入中...</div>
             <div
+              v-else-if="comments.length === 0"
+              class="text-center py-4 text-gray-500"
+            >
+              還沒有留言，成為第一個留言的人吧！
+            </div>
+            <div
+              v-else
               v-for="comment in comments"
               :key="comment.id"
               class="comment mb-3 flex items-start gap-2"
             >
               <img
-                :src="comment.userAvatar"
+                :src="comment.userAvatar || 'https://via.placeholder.com/32'"
                 class="avatar-small w-8 h-8 rounded-full"
               />
               <div class="flex-1">
@@ -56,10 +81,13 @@
                   comment.userName
                 }}</span>
                 <span class="comment-content ml-2">{{ comment.content }}</span>
+                <div class="text-xs text-gray-500 mt-1">
+                  {{ formatTime(comment.createdAt) }}
+                </div>
               </div>
               <button
                 @click="deleteComment(comment.id)"
-                class="delete-btn text-red-500 text-sm"
+                class="delete-btn text-red-500 text-sm hover:text-red-700"
               >
                 刪除
               </button>
@@ -75,16 +103,20 @@
               placeholder="留言..."
               class="flex-1 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
               @keyup.enter="submitComment"
+              :disabled="isSubmitting"
             />
             <button
               @click="submitComment"
-              :disabled="!newComment.trim()"
-              class="btn-submit bg-blue-500 text-white px-4 py-2 rounded disabled:opacity-50"
+              :disabled="!newComment.trim() || isSubmitting"
+              class="btn-submit bg-blue-500 text-white px-4 py-2 rounded disabled:opacity-50 hover:bg-blue-600 transition-colors"
             >
-              送出
+              {{ isSubmitting ? "送出中..." : "送出" }}
             </button>
-            <button @click="toggleLike" class="like-btn text-2xl">
-              {{ liked ? "❤️" : "🤍" }} {{ post.likes }}
+            <button
+              @click="toggleLike"
+              class="like-btn text-2xl hover:scale-110 transition-transform"
+            >
+              {{ liked ? "❤️" : "🤍" }} {{ post.likes || 0 }}
             </button>
           </div>
         </div>
@@ -94,7 +126,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
 import axios from "axios";
 
 // Props
@@ -136,7 +168,7 @@ const toTravelPage = () => {
 const fetchComments = async () => {
   try {
     const response = await axios.get(
-      "http://localhost:3000//api/community/comments"
+      `http://localhost:3000/api/posts/${props.post.id}/comments`
     );
     comments.value = response.data;
   } catch (error) {
@@ -198,6 +230,14 @@ onMounted(() => {
     fetchComments();
   }
 });
+watch(
+  () => props.isVisible,
+  (newValue) => {
+    if (newValue && props.post.id) {
+      fetchComments();
+    }
+  }
+);
 </script>
 
 <style scoped>

@@ -4,7 +4,12 @@
     <h1 class="text-2xl font-bold">社群貼文</h1>
 
     <div v-if="posts.length === 0">目前沒有任何貼文。</div>
-    <PostPopup />
+    <PostPopup
+      :post="selectedPost"
+      :isVisible="showModal"
+      @close="closeModal"
+      @update-post="updatePost"
+    />
     <div
       v-for="post in posts"
       :key="post.postId"
@@ -75,8 +80,39 @@ import axios from "axios";
 import dayjs from "dayjs";
 import PostPopup from "../components/PostPopup.vue";
 
-const posts = ref([]);
+// const posts = ref([]);
 const token = localStorage.getItem("token");
+
+const posts = ref([
+  {
+    id: 1,
+    title: "台北一日遊攻略",
+    content: "分享我的台北一日遊行程，包含必去景點和美食推薦...",
+    author: {
+      id: 101,
+      name: "旅遊達人小王",
+      avatar: "https://via.placeholder.com/50",
+    },
+    createdAt: "2025-06-15T10:30:00Z",
+    likes: 25,
+    commentsCount: 8,
+    tags: ["台北", "一日遊", "美食"],
+  },
+  {
+    id: 2,
+    title: "高雄美食推薦",
+    content: "來高雄必吃的在地美食，從早餐到宵夜一次滿足...",
+    author: {
+      id: 102,
+      name: "美食探險家",
+      avatar: "https://via.placeholder.com/50",
+    },
+    createdAt: "2025-06-16T14:20:00Z",
+    likes: 18,
+    commentsCount: 5,
+    tags: ["高雄", "美食", "推薦"],
+  },
+]);
 
 const fetchPosts = async () => {
   try {
