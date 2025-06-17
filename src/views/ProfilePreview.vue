@@ -1,7 +1,7 @@
 <template>
   <div class="bg-white min-h-screen p-4 sm:p-8 flex flex-col items-center">
     
-    <nav class="w-full max-w-5xl mx-auto bg-[#A2A2A2] text-white rounded-full p-3 mb-8 main-convex-effect">
+    <nav class="w-full max-w-5xl mx-auto bg-[#A2A2A2] text-white rounded-full p-3 mb-8 nav-convex-effect">
       <div class="flex items-center justify-between">
         <button class="w-10 h-10 flex items-center justify-center bg-gray-600 rounded-full hover:bg-gray-500 transition-colors">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -233,15 +233,20 @@ const user = ref({
   name: 'yourName',
   bio: '這裡放自介',
 });
-
-
 </script>
+
 <style scoped>
 	.main-convex-effect {
 		/* background-color: #A2A2A2; */
-		box-shadow: -8px -8px 16px rgba(255, 255, 255, 0.2),
-		8px 8px 16px rgba(0, 0, 0, 0.3), /* 右下外凸 */
-		-4px 0px 8px rgba(0, 0, 0, 0.1); 
-		transition: all 0.2s ease-in-out;
+		box-shadow:
+    /* 整體外凸陰影 */
+    -8px -8px 16px rgba(255, 255, 255, 0.2),  /* 左上 */
+    8px 8px 16px rgba(0, 0, 0, 0.3),           /* 右下 */
+    -4px 0px 8px rgba(0, 0, 0, 0.1),           /* 左側 */
+    /* Neumorphism 紋理 */
+    inset 2px 2px 5px rgba(0, 0, 0, 0.1),     
+    inset -2px -2px 5px rgba(255, 255, 255, 0.1); 
+
+    transition: all 0.2s ease-in-out;
 	}
 </style>

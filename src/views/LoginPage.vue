@@ -1,7 +1,7 @@
 <template>
   <div class="bg-white min-h-screen p-4 sm:p-8 flex flex-col items-center">
 
-    <nav class="w-full max-w-5xl mx-auto bg-[#A2A2A2] text-white rounded-full shadow-lg p-3 mb-8">
+    <nav class="w-full max-w-5xl mx-auto bg-[#A2A2A2] text-white rounded-full shadow-lg p-3 mb-8 nav-convex-effect">
       <div class="flex items-center justify-between">
         <button class="w-10 h-10 flex items-center justify-center bg-gray-600 rounded-full hover:bg-gray-500 transition-colors">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -196,12 +196,49 @@
 </script>
 	
 <style scoped>
+
+  .nav-convex-effect {
+		background-color: #A2A2A2;
+    box-shadow:
+      /* 整體外凸陰影 (浮起效果) */
+      -6px -6px 12px rgba(255, 255, 255, 0.2),  /* 左上角亮部 */
+      6px 6px 12px rgba(0, 0, 0, 0.3),           /* 右下角暗部 */
+      -3px 0px 6px rgba(0, 0, 0, 0.1),           /* 左側輕微陰影 */
+  
+      /* 表面陰影紋理 (Neumorphism 紋理) - 數值可以比 main 稍微小一點，更精緻 */
+      inset 1.5px 1.5px 4px rgba(0, 0, 0, 0.1),     /* 表面深色內陰影 */
+      inset -1.5px -1.5px 4px rgba(255, 255, 255, 0.1); /* 表面淺色內陰影 */
+  
+    transition: all 0.2s ease-in-out; /* 添加過渡效果 */
+  }
+  
+  
+  /* .nav-convex-effect:hover { 
+    box-shadow:
+      /* hover 時整體外凸陰影微調 */
+      -4px -4px 8px rgba(255, 255, 255, 0.15),
+      4px 4px 8px rgba(0, 0, 0, 0.25),
+      -1.5px 0px 4px rgba(0, 0, 0, 0.08),
+  
+      /* hover 時表面陰影紋理微調 
+      inset 1px 1px 3px rgba(0, 0, 0, 0.08),
+      inset -1px -1px 3px rgba(255, 255, 255, 0.08);
+  
+    transform: translateY(1px); 
+  } */
+
 	.main-convex-effect {
 		/* background-color: #A2A2A2; */
-		box-shadow: -8px -8px 16px rgba(255, 255, 255, 0.2),
-		8px 8px 16px rgba(0, 0, 0, 0.3), /* 右下外凸 */
-		-4px 0px 8px rgba(0, 0, 0, 0.1); 
-		transition: all 0.2s ease-in-out;
+		box-shadow:
+    /* 整體外凸陰影 */
+    -8px -8px 16px rgba(255, 255, 255, 0.2),  /* 左上 */
+    8px 8px 16px rgba(0, 0, 0, 0.3),           /* 右下 */
+    -4px 0px 8px rgba(0, 0, 0, 0.1),           /* 左側 */
+    /* Neumorphism 紋理 */
+    inset 2px 2px 5px rgba(0, 0, 0, 0.1),     
+    inset -2px -2px 5px rgba(255, 255, 255, 0.1); 
+
+    transition: all 0.2s ease-in-out;
 	}
 
 	.main-convex-effect:hover {
