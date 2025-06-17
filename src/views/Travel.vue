@@ -62,6 +62,7 @@ const fetchSchedules = async () => {
     })
     schedules.value = res.data.schedules
   } catch (err) {
+  // eslint-disable-next-line no-empty
   }
 };
 
