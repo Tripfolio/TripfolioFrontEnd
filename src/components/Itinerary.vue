@@ -12,96 +12,112 @@
       @end="updateOrder"
     >
       <template #item="{ element: p, index }">
-        <li
-          class="mb-4 border-b bg-gray-500 list-none flex justify-between rounded-2xl w-l relative items-stretch"
-        >
-          <!-- 右半邊 -->
-          <div class="w-1/2 p-3">
-            <p
-              class="number bg-red-600 w-6 text-center rounded-2xl text-amber-50"
-            >
-              {{ index + 1 }}
-            </p>
-            <h3 class="block text-white text-l mb-1.5">{{ p.name }}</h3>
-            <!-- 時間選單與按鈕 -->
-            <div class="flex flex-col items-start text-white text-xs">
+        <div>
+          <li
+            class="mb-4 border-b bg-gray-500 list-none flex justify-between rounded-2xl w-l relative items-stretch"
+          >
+            <!-- 右半邊 -->
+            <div class="w-1/2 p-3">
               <p
-                v-if="!p.editingTime"
-                class="cursor-pointer pb-2"
-                @click="startEditing(p)"
+                class="number bg-red-600 w-6 text-center rounded-2xl text-amber-50"
               >
-                {{ formatTime(p.arrivalHour, p.arrivalMinute) }}抵達
+                {{ index + 1 }}
               </p>
+              <h3 class="block text-white text-l mb-1.5">{{ p.name }}</h3>
+              <!-- 時間選單與按鈕 -->
+              <div class="flex flex-col items-start text-white text-xs">
+                <p
+                  v-if="!p.editingTime"
+                  class="cursor-pointer pb-2"
+                  @click="startEditing(p)"
+                >
+                  {{ formatTime(p.arrivalHour, p.arrivalMinute) }}抵達
+                </p>
 
-              <div v-else class="flex flex-col gap-1">
-                <div class="flex gap-1 items-center">
-                  <!-- 小時 -->
-                  <select
-                    v-model="p.arrivalHourTemp"
-                    class="appearance-none outline-0"
-                  >
-                    <option v-for="h in 24" :key="h" :value="h - 1">
-                      {{ (h - 1).toString().padStart(2, "0") }}
-                    </option>
-                  </select>
-                  :
-                  <!-- 分鐘 -->
-                  <select
-                    v-model="p.arrivalMinuteTemp"
-                    class="appearance-none outline-0"
-                  >
-                    <option v-for="m in [0, 15, 30, 45]" :key="m" :value="m">
-                      {{ m.toString().padStart(2, "0") }}
-                    </option>
-                  </select>
-                  抵達
-                </div>
+                <div v-else class="flex flex-col gap-1">
+                  <div class="flex gap-1 items-center">
+                    <!-- 小時 -->
+                    <select
+                      v-model="p.arrivalHourTemp"
+                      class="appearance-none outline-0"
+                    >
+                      <option v-for="h in 24" :key="h" :value="h - 1">
+                        {{ (h - 1).toString().padStart(2, "0") }}
+                      </option>
+                    </select>
+                    :
+                    <!-- 分鐘 -->
+                    <select
+                      v-model="p.arrivalMinuteTemp"
+                      class="appearance-none outline-0"
+                    >
+                      <option v-for="m in [0, 15, 30, 45]" :key="m" :value="m">
+                        {{ m.toString().padStart(2, "0") }}
+                      </option>
+                    </select>
+                    抵達
+                  </div>
 
-                <div class="flex gap-2 mt-1">
-                  <button @click="confirmTime(p)" class="text-green-300">
-                    ✔ 更改
-                  </button>
-                  <button @click="cancelEditing(p)" class="text-red-300">
-                    ✘ 取消
-                  </button>
+                  <div class="flex gap-2 mt-1">
+                    <button @click="confirmTime(p)" class="text-green-300">
+                      ✔ 更改
+                    </button>
+                    <button @click="cancelEditing(p)" class="text-red-300">
+                      ✘ 取消
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-          <!-- 右半邊end -->
-          <img
-            :src="p.photo"
-            class="w-1/2 rounded-tr-lg rounded-br-lg object-cover"
-          />
+            <!-- 右半邊end -->
+            <img
+              :src="p.photo"
+              class="w-1/2 rounded-tr-lg rounded-br-lg object-cover"
+            />
 
-          <br />
-          <!-- 選單按鈕 -->
-          <div class="relative">
-            <button
-              @click.stop="toggleMenu(index)"
-              class="button-list absolute right-0"
-            >
-              <font-awesome-icon
-                icon="ellipsis-h"
-                class="p-1 text-white bg-cyan-800 rounded-full cursor-pointer absolute right-2 top-2"
-              />
-            </button>
-            <ul
-              v-if="openMenuIndex === index"
-              class="absolute right-0 mt-12 bg-white shadow rounded"
-            >
-              <li>
-                <button
-                  @click="removePlace(p)"
-                  class="w-full text-left px-4 py-2 hover:bg-gray-100"
-                >
-                  🗑️ remove
-                </button>
-              </li>
-            </ul>
-          </div>
-          <!-- 選單按鈕end -->
-        </li>
+            <br />
+            <!-- 選單按鈕 -->
+            <div class="relative">
+              <button
+                @click.stop="toggleMenu(index)"
+                class="button-list absolute right-0"
+              >
+                <font-awesome-icon
+                  icon="ellipsis-h"
+                  class="p-1 text-white bg-cyan-800 rounded-full cursor-pointer absolute right-2 top-2"
+                />
+              </button>
+              <ul
+                v-if="openMenuIndex === index"
+                class="absolute right-0 mt-12 bg-white shadow rounded"
+              >
+                <li>
+                  <button
+                    @click="removePlace(p)"
+                    class="w-full text-left px-4 py-2 hover:bg-gray-100"
+                  >
+                    🗑️ remove
+                  </button>
+                </li>
+              </ul>
+            </div>
+            <!-- 選單按鈕end -->
+          </li>
+          <li
+            v-if="index < itineraryPlaces.length - 1 &&
+                  isValidCoordinate(p.lat, p.lng) &&
+                  isValidCoordinate(itineraryPlaces[index + 1].lat, itineraryPlaces[index + 1].lng)"
+            class="list-none"
+          >
+            <TrafficBetween
+              :origin="{ lat: Number(p.lat), lng: Number(p.lng) }"
+              :destination="{
+                lat: Number(itineraryPlaces[index + 1].lat),
+                lng: Number(itineraryPlaces[index + 1].lng)
+              }"
+            />
+          </li>
+        </div>
       </template>
     </draggable>
   </div>
@@ -111,6 +127,7 @@
 import { toRefs, ref, onMounted, onBeforeUnmount } from "vue";
 import axios from "axios";
 import draggable from "vuedraggable";
+import TrafficBetween from "./TrafficBetween.vue";
 
 const props = defineProps({
   selectedPlace: Object,
@@ -135,9 +152,13 @@ async function loadItinerary() {
         itineraryId: 1,
       },
     });
-    itineraryPlaces.value = res.data.places.sort(
-      (a, b) => a.arrivalHour - b.arrivalHour
-    );
+    itineraryPlaces.value = res.data.places
+    .map((p) => ({
+        ...p,
+        lat: Number(p.lat),
+        lng: Number(p.lng),
+      }))
+    .sort((a, b) => a.arrivalHour - b.arrivalHour);
   } catch (error) {
     alert("載入行程失敗:");
   }
@@ -237,13 +258,13 @@ async function addPlace() {
     alert("請先選擇一個地點");
     return;
   }
-  const { name, formatted_address, photos } = selectedPlace.value;
-
-  const exists = itineraryPlaces.value.some((p) => p.name === name);
-  if (exists) {
-    alert("這個景點已經加入行程！");
-    return;
-  }
+  const { name, formatted_address, photos, geometry } = selectedPlace.value;
+  const lat = geometry?.location?.lat?.();
+  const lng = geometry?.location?.lng?.();
+  if (!lat || !lng || isNaN(lat) || isNaN(lng)) {
+  alert("⚠️ 無效的經緯度");
+  return;
+}
 
   const photo = photos?.length
     ? photos[0].getUrl({ maxWidth: 1000 })
@@ -257,6 +278,8 @@ async function addPlace() {
       name,
       address: formatted_address || "",
       photo,
+      lat,
+      lng,
     });
 
     if (rep.data.success) {
@@ -267,6 +290,8 @@ async function addPlace() {
         arrivalHour: defaultHour,
         arrivalMinute: defaultMinute,
         placeOrder: itineraryPlaces.value.length + 1,
+        lat,
+        lng,
       });
       alert("成功加入行程！");
     } else {
@@ -279,14 +304,12 @@ async function addPlace() {
 
 async function removePlace(place) {
   try {
-    const url = `${API_URL}/api/itinerary/place?itineraryId=1&name=${encodeURIComponent(
-      place.name
-    )}`;
+    const url = `${API_URL}/api/itinerary/place?id=${place.id}`;
     const response = await axios.delete(url);
 
     if (response.data.success) {
       itineraryPlaces.value = itineraryPlaces.value.filter(
-        (p) => p.name !== place.name
+        (p) => p.id !== place.id
       );
       alert("成功刪除景點");
     } else {
@@ -295,6 +318,10 @@ async function removePlace(place) {
   } catch (error) {
     alert("發生錯誤：" + error.message);
   }
+}
+
+function isValidCoordinate(lat, lng) {
+  return Number.isFinite(lat) && Number.isFinite(lng);
 }
 
 defineExpose({ addPlace });
