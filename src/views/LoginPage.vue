@@ -201,15 +201,15 @@
 		background-color: #A2A2A2;
     box-shadow:
       /* 整體外凸陰影 (浮起效果) */
-      -6px -6px 12px rgba(255, 255, 255, 0.2),  /* 左上角亮部 */
-      6px 6px 12px rgba(0, 0, 0, 0.3),           /* 右下角暗部 */
-      -3px 0px 6px rgba(0, 0, 0, 0.1),           /* 左側輕微陰影 */
+      -6px -6px 12px rgba(255, 255, 255, 0.2),  /* 左上 */
+      6px 6px 12px rgba(0, 0, 0, 0.3),           /* 右下 */
+      -3px 0px 6px rgba(0, 0, 0, 0.1),           /* 左側 */
   
-      /* 表面陰影紋理 (Neumorphism 紋理) - 數值可以比 main 稍微小一點，更精緻 */
-      inset 1.5px 1.5px 4px rgba(0, 0, 0, 0.1),     /* 表面深色內陰影 */
-      inset -1.5px -1.5px 4px rgba(255, 255, 255, 0.1); /* 表面淺色內陰影 */
+      /* Neumorphism 紋理 */
+      inset 1.5px 1.5px 4px rgba(0, 0, 0, 0.1),     
+      inset -1.5px -1.5px 4px rgba(255, 255, 255, 0.1); 
   
-    transition: all 0.2s ease-in-out; /* 添加過渡效果 */
+    transition: all 0.2s ease-in-out; 
   }
   
   

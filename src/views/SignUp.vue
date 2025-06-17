@@ -172,6 +172,36 @@ const signUp = async () => {
 </script>
 
 <style scoped>
+	.nav-convex-effect {
+		background-color: #A2A2A2;
+    box-shadow:
+      /* 整體外凸陰影 (浮起效果) */
+      -6px -6px 12px rgba(255, 255, 255, 0.2),  /* 左上 */
+      6px 6px 12px rgba(0, 0, 0, 0.3),           /* 右下 */
+      -3px 0px 6px rgba(0, 0, 0, 0.1),           /* 左側 */
+  
+      /* Neumorphism 紋理 */
+      inset 1.5px 1.5px 4px rgba(0, 0, 0, 0.1),     
+      inset -1.5px -1.5px 4px rgba(255, 255, 255, 0.1); 
+  
+    transition: all 0.2s ease-in-out; 
+  }
+  
+  
+  /* .nav-convex-effect:hover { 
+    box-shadow:
+      /* hover 時整體外凸陰影微調 */
+      -4px -4px 8px rgba(255, 255, 255, 0.15),
+      4px 4px 8px rgba(0, 0, 0, 0.25),
+      -1.5px 0px 4px rgba(0, 0, 0, 0.08),
+  
+      /* hover 時表面陰影紋理微調 
+      inset 1px 1px 3px rgba(0, 0, 0, 0.08),
+      inset -1px -1px 3px rgba(255, 255, 255, 0.08);
+  
+    transform: translateY(1px); 
+  } */
+
 	.main-convex-effect {
 		/* background-color: #A2A2A2; */
 		box-shadow:
