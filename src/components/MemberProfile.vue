@@ -119,7 +119,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup>  // 拆功能，參考map -> itininerary
 import { ref, watch, onMounted, defineProps, defineEmits } from "vue";
 import axios from "axios";
 import { Cropper } from "vue-advanced-cropper";
