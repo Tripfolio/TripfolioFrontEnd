@@ -1,207 +1,105 @@
 <template>
   <div class="bg-white min-h-screen p-4 sm:p-8 flex flex-col items-center">
-    <nav
-      class="w-full max-w-5xl mx-auto bg-[#A2A2A2] text-white rounded-full shadow-lg p-3 mb-8"
-    >
+    
+    <nav class="w-full max-w-5xl mx-auto bg-[#A2A2A2] text-white rounded-full shadow-lg p-3 mb-8">
       <div class="flex items-center justify-between">
-        <button
-          class="w-10 h-10 flex items-center justify-center bg-gray-600 rounded-full hover:bg-gray-500 transition-colors"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-6 w-6"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-            />
+        <button class="w-10 h-10 flex items-center justify-center bg-gray-600 rounded-full hover:bg-gray-500 transition-colors">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
           </svg>
         </button>
 
-        <div
-          class="flex flex-wrap justify-center md:flex items-center gap-2 sm:gap-4 md:gap-6"
-        >
-          <router-link
-            v-for="link in navLinks"
-            :key="link.name"
-            :to="link.path"
-            class="flex items-center gap-1 sm:gap-2 text-gray-800 hover:text-white transition-colors text-xs sm:text-sm md:text-base"
-          >
+        <div class="flex flex-wrap justify-center md:flex items-center gap-2 sm:gap-4 md:gap-6">
+          <router-link v-for="link in navLinks" :key="link.name" :to="link.path" class="flex items-center gap-1 sm:gap-2 text-gray-800 hover:text-white transition-colors text-xs sm:text-sm md:text-base">
             <span class="font-medium">{{ link.name }}</span>
           </router-link>
         </div>
 
         <button>
-          <img
-            class="w-10 h-10 rounded-full object-cover border-2 border-transparent hover:border-blue-500 transition-colors"
-            src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=500&q=80"
-            alt="User Avatar"
-          />
+          <img class="w-10 h-10 rounded-full object-cover border-2 border-transparent hover:border-blue-500 transition-colors" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=500&q=80" alt="使用者頭像">
         </button>
       </div>
     </nav>
+    
+    <main class="w-full max-w-4xl bg-[#686868] text-white rounded-2xl shadow-lg overflow-hidden">
 
-    <main
-      class="w-full max-w-4xl bg-[#686868] text-white rounded-2xl shadow-lg p-6 sm:p-8"
-    >
-      <header>
-        <div
-          class="bg-[#A2A2A2] text-white rounded-t-2xl shadow-md p-4 flex justify-between items-center">
-          <h2 class="text-2xl font-bold">會員中心</h2>
-          <div class="w-8 h-8 rounded-full bg-gray-500 flex items-center justify-center text-gray-300">
-					</div>
-        </div>
-      </header>
-
-      <div class="flex flex-col sm:flex-row items-center gap-6 mb-6">
-        <!-- Example image: User avatar -->
-        <img
-          class="w-24 h-24 rounded-full border-4 border-gray-500 object-cover"
-          src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=500&q=80"
-          alt="使用者頭像"
-        />
-        <div
-          class="flex-grow flex flex-col sm:flex-row items-center gap-6 text-center sm:text-left"
-        >
-          <div>
-            <h1 class="text-3xl font-bold">{{ user.name }}</h1>
-            <div
-              class="flex gap-4 mt-2 text-gray-400 justify-center sm:justify-start"
-            >
-              <a href="#" class="hover:text-white">編輯</a>
-              <a href="#" class="hover:text-white">登出</a>
-            </div>
-          </div>
-          <div class="hidden sm:block w-px h-16 bg-gray-500"></div>
-          <p class="text-gray-300">{{ user.bio }}</p>
+      <div class="bg-[#A2A2A2] text-white shadow-md p-4 flex justify-between items-center">
+        <h2 class="text-2xl font-bold">會員中心</h2>
+        <div class="w-8 h-8 rounded-full bg-gray-500 flex items-center justify-center text-gray-300">
+          
         </div>
       </div>
 
-      <hr class="border-gray-500 mb-6" />
+      <div class="p-6 sm:p-8">
+        <div class="flex flex-col sm:flex-row items-center gap-6 mb-6">
+          <img class="w-24 h-24 rounded-full border-4 border-gray-500 object-cover" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=500&q=80" alt="使用者頭像">
+          <div class="flex-grow flex flex-col sm:flex-row items-center gap-6 text-center sm:text-left">
+            <div>
+              <h1 class="text-3xl font-bold">{{ user.name }}</h1>
+              <div class="flex gap-4 mt-2 text-gray-400 justify-center sm:justify-start">
+                <a href="#" class="hover:text-white">編輯</a>
+                <a href="#" class="hover:text-white">登出</a>
+              </div>
+            </div>
+            <div class="hidden sm:block w-px h-16 bg-gray-500"></div>
+            <p class="text-gray-300">{{ user.bio }}</p>
+          </div>
+        </div>
+        
+        <hr class="border-gray-500 mb-6" />
 
-      <div class="flex justify-between items-center mb-8">
-        <div class="flex gap-6">
-          <button
-            v-for="tab in tabs"
-            :key="tab.key"
-            @click="activeTab = tab.key"
-            :class="[
-              'pb-2 text-lg font-semibold transition-colors duration-300',
-              activeTab === tab.key
-                ? 'text-white border-b-2 border-blue-500'
-                : 'text-gray-400 hover:text-white',
-            ]"
-          >
-            {{ tab.label }}
+        <div class="flex justify-between items-center mb-8">
+          <div class="flex gap-6">
+            <button v-for="tab in tabs" :key="tab.key" @click="activeTab = tab.key" :class="['pb-2 text-lg font-semibold transition-colors duration-300', activeTab === tab.key ? 'text-white border-b-2 border-blue-500' : 'text-gray-400 hover:text-white']">
+              {{ tab.label }}
+            </button>
+          </div>
+          <button class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg transition-colors">
+            開通 AI
           </button>
         </div>
-        <button
-          class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg transition-colors"
-        >
-          開通 AI
-        </button>
-      </div>
-
-      <div>
-        <!-- My created itineraries -->
-        <div
-          v-if="activeTab === 'travels'"
-          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-        >
-          <div
-            v-for="travel in travels"
-            :key="travel.id"
-            @click="goToTravel(travel.id)"
-            class="bg-gray-600 rounded-xl overflow-hidden cursor-pointer group"
-          >
-            <div class="relative">
-              <!-- Example image: Travel cover image -->
-              <img
-                :src="travel.coverUrl"
-                class="w-full h-48 object-cover"
-                alt="行程預覽圖"
-              />
-              <div
-                class="absolute inset-0 bg-black bg-opacity-20 flex flex-col justify-end p-4 opacity-0 group-hover:opacity-100 transition-opacity"
-              >
-                <div class="flex justify-end gap-2">
-                  <button
-                    class="w-8 h-8 rounded-full bg-gray-800 bg-opacity-70 flex items-center justify-center hover:bg-opacity-100"
-                  >
-                    ⋯
-                  </button>
-                  <button
-                    class="w-8 h-8 rounded-full bg-gray-800 bg-opacity-70 flex items-center justify-center hover:bg-opacity-100"
-                  >
-                    🔗
-                  </button>
+        
+        <div class="mt-6"> 
+          <div v-if="activeTab === 'travels'" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div v-for="travel in travels" :key="travel.id" @click="goToTravel(travel.id)" class="bg-gray-600 rounded-xl overflow-hidden cursor-pointer group">
+              <div class="relative">
+                <img :src="travel.coverUrl" class="w-full h-48 object-cover" alt="行程預覽圖"/>
+                <div class="absolute inset-0 bg-black bg-opacity-20 flex flex-col justify-end p-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <div class="flex justify-end gap-2">
+                    <button class="w-8 h-8 rounded-full bg-gray-800 bg-opacity-70 flex items-center justify-center hover:bg-opacity-100">⋯</button>
+                    <button class="w-8 h-8 rounded-full bg-gray-800 bg-opacity-70 flex items-center justify-center hover:bg-opacity-100">🔗</button>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div class="p-4">
-              <div class="font-semibold text-lg">{{ travel.title }}</div>
-              <div class="text-sm text-gray-400">
-                {{ travel.startDate }} ~ {{ travel.endDate }}
+              <div class="p-4">
+                <div class="font-semibold text-lg">{{ travel.title }}</div>
+                <div class="text-sm text-gray-400">{{ travel.startDate }} ~ {{ travel.endDate }}</div>
               </div>
             </div>
           </div>
-        </div>
-        <!-- My created posts -->
-        <div
-          v-else-if="activeTab === 'my_posts'"
-          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-        >
-          <div
-            v-for="post in posts"
-            :key="post.id"
-            @click="goToPost(post.id)"
-            class="bg-gray-600 rounded-xl overflow-hidden cursor-pointer group"
-          >
-            <!-- Example image: Post cover image -->
-            <img
-              :src="post.postImage"
-              class="w-full h-48 object-cover"
-              alt="貼文預覽圖"
-            />
-            <div class="p-4">
-              <div class="font-semibold text-lg">{{ post.title }}</div>
-              <div class="text-sm text-gray-400">作者: {{ post.author }}</div>
+          <div v-else-if="activeTab === 'my_posts'" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div v-for="post in posts" :key="post.id" @click="goToPost(post.id)" class="bg-gray-600 rounded-xl overflow-hidden cursor-pointer group">
+              <img :src="post.postImage" class="w-full h-48 object-cover" alt="貼文預覽圖" />
+              <div class="p-4">
+                <div class="font-semibold text-lg">{{ post.title }}</div>
+                <div class="text-sm text-gray-400">作者: {{ post.author }}</div>
+              </div>
             </div>
           </div>
-        </div>
-        <!-- My collected posts -->
-        <div
-          v-else-if="activeTab === 'collected_posts'"
-          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-        >
-          <div
-            v-for="post in collectedPosts"
-            :key="post.id"
-            @click="goToPost(post.id)"
-            class="bg-gray-600 rounded-xl overflow-hidden cursor-pointer group"
-          >
-            <!-- Example image: Collected post cover image -->
-            <img
-              :src="post.postImage"
-              class="w-full h-48 object-cover"
-              alt="貼文預覽圖"
-            />
-            <div class="p-4">
-              <div class="font-semibold text-lg">{{ post.title }}</div>
-              <div class="text-sm text-gray-400">作者: {{ post.author }}</div>
+          <div v-else-if="activeTab === 'collected_posts'" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div v-for="post in collectedPosts" :key="post.id" @click="goToPost(post.id)" class="bg-gray-600 rounded-xl overflow-hidden cursor-pointer group">
+              <img :src="post.postImage" class="w-full h-48 object-cover" alt="貼文預覽圖" />
+              <div class="p-4">
+                <div class="font-semibold text-lg">{{ post.title }}</div>
+                <div class="text-sm text-gray-400">作者: {{ post.author }}</div>
+              </div>
             </div>
           </div>
-        </div>
-        <!-- Notification settings -->
-        <div v-else-if="activeTab === 'notifications'">
-          <div class="bg-gray-600 rounded-xl p-8 text-center">
-            <h3 class="text-xl font-semibold mb-4">通知設定</h3>
-            <p class="text-gray-400">這裡將會放置您的通知設定選項。</p>
+          <div v-else-if="activeTab === 'notifications'">
+            <div class="bg-gray-600 rounded-xl p-8 text-center">
+              <h3 class="text-xl font-semibold mb-4">通知設定</h3>
+              <p class="text-gray-400">這裡將會放置您的通知設定選項。</p>
+            </div>
           </div>
         </div>
       </div>
