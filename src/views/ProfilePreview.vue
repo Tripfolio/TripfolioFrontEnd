@@ -1,3 +1,4 @@
+<!-- eslint-disable no-mixed-spaces-and-tabs -->
 <template>
   <div class="bg-white min-h-screen p-4 sm:p-8 flex flex-col items-center">
     
@@ -16,7 +17,7 @@
         </div>
 
         <button>
-          <img class="w-10 h-10 rounded-full object-cover border-2 border-transparent hover:border-blue-500 transition-colors" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=500&q=80" alt="使用者頭像">
+          <img class="w-10 h-10 rounded-full object-cover border-2 border-transparent hover:border-blue-500 transition-colors" src="https://images.unsplash.com/photo-1529570058547-733204bf87e5?q=80&w=1362&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="使用者頭像">
         </button>
       </div>
     </nav>
@@ -32,7 +33,7 @@
 
       <div class="p-6 sm:p-8">
         <div class="flex flex-col sm:flex-row items-center gap-6 mb-6">
-          <img class="w-24 h-24 rounded-full border-4 border-gray-500 object-cover" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=500&q=80" alt="使用者頭像">
+          <img class="w-24 h-24 rounded-full border-4 border-gray-500 object-cover" src="https://images.unsplash.com/photo-1529570058547-733204bf87e5?q=80&w=1362&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="使用者頭像">
           <div class="flex-grow flex flex-col sm:flex-row items-center gap-6 text-center sm:text-left">
             <div>
               <h1 class="text-3xl font-bold">{{ user.name }}</h1>
@@ -108,190 +109,131 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from "vue";
-import { useRouter, useRoute } from "vue-router";
-import axios from "axios";
+import { ref, onMounted, watch } from 'vue';
+import { useRouter,useRoute } from 'vue-router';
+import axios from 'axios';
 
-const router = useRouter();
-const route = useRoute();
+const router = useRouter()
+const route = useRoute()
 
-// START of teammate's code
-const travels = ref([]);
-const posts = ref([]);
-const collectedPosts = ref([]);
-const activeTab = ref("travels");
+const travels = ref([])
+const posts = ref([])
+const collectedPosts = ref([])
+const activeTab = ref('travels')
 const tabs = [
-  { key: "travels", label: "我建立的行程" },
-  { key: "my_posts", label: "我建立的貼文" }, // Adjusted to 'my_posts' for distinction
-  { key: "collected_posts", label: "我收藏的貼文" }, // Adjusted to 'collected_posts' for distinction
-  { key: "notifications", label: "通知設定" }, // Retained from original
-];
+    { key: 'travels', label: '我建立的行程' },
+    { key: 'posts', label: '我建立的貼文' }, // Adjusted to 'my_posts' for distinction
+    { key: 'collected', label: '我收藏的貼文' }, // Adjusted to 'collected_posts' for distinction
+    { key: 'notifications', label: '通知設定' }, // Retained from original
+]
 
-// Check member login, fetch ID
-const memberId = localStorage.getItem("memberId") || "1";
+//確認會員登入 抓id
+const memberId = localStorage.getItem('memberId') || '1'
 if (!memberId) {
-  // Teammate originally used alert, changed to console.error for Canvas environment compatibility
-  console.error("請先登入會員");
-  // throw new Error('memberId 不存在') // Uncomment if you wish to block execution
+  alert('請先登入會員')
+  throw new Error('memberId 不存在')
 }
 
 const fetchData = async () => {
-  // VITE_API_URL environment variable must be defined in .env.local or vite.config.js
-  // e.g.: VITE_API_URL=http://localhost:3000
-  const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3000"; // Replace with actual API base URL
+    try {
+        //抓自己發過的行程
+        const travelRes = await axios.get(`${import.meta.env.VITE_API_URL}/api/schedules/member/${memberId}`)
+        travels.value = travelRes.data.map(item => ({
+            id: item.id,
+            title: item.title,
+            startDate: item.startDate?.slice(0, 10),
+            endDate: item.endDate?.slice(0, 10),
+            coverUrl: item.coverURL
+        }));
+    } catch (err) {
+        alert('Failed to fetch travel data, please check API path and service. (Can be ignored, will be replaced with real data after database merge)', err);
+        // Test data for itineraries, enable if API fails
+        travels.value = [
+            { id: 1, title: '沖繩海島慢活之旅', startDate: '2025-07-10', endDate: '2025-07-15', coverUrl: 'https://images.unsplash.com/photo-1540998145393-8c43715265d2?w=500&q=80' },
+            { id: 2, title: '京都楓葉古寺巡禮', startDate: '2025-11-20', endDate: '2025-11-25', coverUrl: 'https://images.unsplash.com/photo-1545569341-9eb8b30979d9?w=500&q=80' },
+            { id: 3, title: '探索冰島極光', startDate: '2026-01-05', endDate: '2026-01-12', coverUrl: 'https://images.unsplash.com/photo-153643135-645438519473?w=500&q=80' },
+        ];
+    }
 
-  try {
-    // Fetch user's created itineraries
-    const travelRes = await axios.get(
-      `${API_BASE_URL}/api/schedules/member/${memberId}`,
-    );
-    travels.value = travelRes.data.map((item) => ({
-      id: item.id,
-      title: item.title,
-      startDate: item.startDate?.slice(0, 10),
-      endDate: item.endDate?.slice(0, 10),
-      coverUrl: item.coverURL,
-    }));
-  } catch (err) {
-    console.warn(
-      "Failed to fetch travel data, please check API path and service. (Can be ignored, will be replaced with real data after database merge)",
-      err,
-    );
-    // Test data for itineraries, enable if API fails
-    travels.value = [
-      {
-        id: 1,
-        title: "沖繩海島慢活之旅",
-        startDate: "2025-07-10",
-        endDate: "2025-07-15",
-        coverUrl:
-          "https://images.unsplash.com/photo-1540998145393-8c43715265d2?w=500&q=80",
-      },
-      {
-        id: 2,
-        title: "京都楓葉古寺巡禮",
-        startDate: "2025-11-20",
-        endDate: "2025-11-25",
-        coverUrl:
-          "https://images.unsplash.com/photo-1545569341-9eb8b30979d9?w=500&q=80",
-      },
-      {
-        id: 3,
-        title: "探索冰島極光",
-        startDate: "2026-01-05",
-        endDate: "2026-01-12",
-        coverUrl:
-          "https://images.unsplash.com/photo-153643135-645438519473?w=500&q=80",
-      },
-    ];
-  }
+    //     抓自己發過的貼文(先用假資料合併後再改掉註解)
+    	// try {
+        // const postRes = await axios.get(`${API_BASE_URL}/api/members/${memberId}/posts`)
+        // posts.value = postRes.data.map(item => ({
+        //     id: item.id,
+        //     title: item.title,
+        //     postImage: item.post_image // Or adjust based on actual API response field
+        // }));
+    		//} catch (err) {
+        //		console.warn('Failed to fetch user-created posts (can be ignored, will be replaced with real data after database merge)', err)
+    		//	}
 
-  // Fetch user's created posts (using dummy data for now, will connect to DB later)
-  try {
-    // const postRes = await axios.get(`${API_BASE_URL}/api/members/${memberId}/posts`)
-    // posts.value = postRes.data.map(item => ({
-    //     id: item.id,
-    //     title: item.title,
-    //     postImage: item.post_image // Or adjust based on actual API response field
-    // }));
-  } catch (err) {
-    console.warn(
-      "Failed to fetch user-created posts (can be ignored, will be replaced with real data after database merge)",
-      err,
-    );
-  }
+    		//try {
+			  //     抓自己收藏過的貼文(先用假資料合併後再改掉註解)
+        // const collectRes = await axios.get(`${API_BASE_URL}/api/members/${memberId}/collections`)
+        // collectedPosts.value = collectRes.data.map(item => ({
+        //     id: item.id,
+        //     title: item.title,
+        //     postImage: item.post_image // Or adjust based on actual API response field
+        // }));
+				//    } catch (err) {
+				//        console.warn('Failed to fetch collected posts (can be ignored, will be replaced with real data after database merge)', err)
+				//    }
+				};
 
-  // Fetch user's collected posts (using dummy data for now, will connect to DB later)
-  try {
-    // const collectRes = await axios.get(`${API_BASE_URL}/api/members/${memberId}/collections`)
-    // collectedPosts.value = collectRes.data.map(item => ({
-    //     id: item.id,
-    //     title: item.title,
-    //     postImage: item.post_image // Or adjust based on actual API response field
-    // }));
-  } catch (err) {
-    console.warn(
-      "Failed to fetch collected posts (can be ignored, will be replaced with real data after database merge)",
-      err,
-    );
-  }
-};
+//初次載入抓一次
+onMounted(fetchData)
 
-// Fetch data on initial load
-onMounted(fetchData);
+//每次切換回來這頁也要抓一次（確保資料有更新）
+watch(() => route.fullPath, fetchData)
 
-// Fetch data every time this page is switched back to (ensure data is updated)
-watch(() => route.fullPath, fetchData);
+const goToTravel = id => router.push(`/travel/${id}`)
+const goToPost = id => router.push(`/community/post/${id}`) 
 
-const goToTravel = (id) => router.push(`/travel/${id}`);
-// Corrected 'comunity' spelling to 'community'
-const goToPost = (id) => router.push(`/community/post/${id}`);
 
-// Test dummy data for posts, will connect to DB later
-// Retained teammate's dummy data, note this serves as fallback if API calls fail
+//測試用的貼文假資料，合併後改連資料庫
 posts.value = [
-  {
-    id: 1,
-    title: "台北兩日遊",
-    postImage: "https://via.placeholder.com/400x200?text=Trip",
-    author: "旅行家A", // Added author field to match template
-  },
-  {
-    id: 2,
-    title: "高雄兩日遊",
-    postImage: "https://via.placeholder.com/400x200?text=Trip",
-    author: "美食家B", // Added author field to match template
-  },
+    {
+        id: 1,
+        title: '台北兩日遊',
+        postImage: 'https://via.placeholder.com/400x200?text=Trip',
+        author: '旅行家A'
+    },
+    {
+        id: 2,
+        title: '高雄兩日遊',
+        postImage: 'https://via.placeholder.com/400x200?text=Trip',
+        author: '美食家B' 
+    },  
 ];
 
 collectedPosts.value = [
-  {
-    id: 1,
-    title: "台中兩日遊",
-    postImage: "https://via.placeholder.com/400x200?text=Trip",
-    author: "探險家C", // Added author field to match template
-  },
-  {
-    id: 2, // Changed ID to 2 to avoid duplication with above
-    title: "花蓮兩日遊",
-    postImage: "https://via.placeholder.com/400x200?text=Trip",
-    author: "攝影師D", // Added author field to match template
-  },
+    {
+        id: 1,
+        title: '台中兩日遊',
+        postImage: 'https://via.placeholder.com/400x200?text=Trip',
+        author: '探險家C' 
+    },
+    {
+        id: 2, 
+        title: '花蓮兩日遊',
+        postImage: 'https://via.placeholder.com/400x200?text=Trip',
+        author: '攝影師D' 
+    },
 ];
-// END of teammate's code
 
-// Original Navbar link data - integrated with teammate's script and used in template
-const navLinks = ref([
-  { name: "行程安排", href: "/schedules" }, // Example: Replace with actual route path
-  { name: "探索", href: "/explore" }, // Example: Replace with actual route path
-  { name: "評論", href: "/reviews" }, // Example: Replace with actual route path
-  { name: "關於我們", href: "/about" }, // Example: Replace with actual route path
-]);
 
-// Original user data - defined independently, no conflict with teammate's script
+
+const navLinks = [
+  { name: '行程安排', path: '/schedule' },
+  { name: '探索', path: '/explore' },
+  { name: '評論', path: '/reviews' },
+  { name: '關於我們', path: '/about' },
+	];
+
 const user = ref({
-  name: "yourName",
-  bio: "這裡放自介，一段關於您的簡短介紹，讓大家更認識您。",
+  name: 'yourName',
+  bio: '這裡放自介，一段關於您的簡短介紹，讓大家更認識您。',
 });
 
-// Dynamic modification of Navbar links
-// Regarding the linking of `navLinks` hyperlinks, if your Vue project uses `vue-router`,
-// the most recommended approach is to use the `<router-link>` component and bind the `to` prop.
-// For example:
-// <router-link :to="link.path" class="text-xs sm:text-sm md:text-base">{{ link.name }}</router-link>
-//
-// The advantages of doing this are:
-// 1. It does not trigger a browser reload, achieving a smooth Single Page Application (SPA) experience.
-// 2. It automatically handles active link styles.
-//
-// This requires you to replace `href` with `path` in your `navLinks` data and correspond it to the paths defined in your `router/index.js` or `router.ts`.
-// For example:
-// const navLinks = ref([
-//   { name: '行程安排', path: '/schedules' },
-//   { name: '探索', path: '/explore' },
-//   // ... other links
-// ]);
-//
-// If your teammate's script uses plain `<a>` tags instead of `router-link`, then linking can only be achieved by modifying `href`.
-// Currently, `navLinks`' `href` has been updated to example route paths.
+
 </script>
