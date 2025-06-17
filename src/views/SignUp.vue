@@ -23,15 +23,17 @@
         <button>
           <img
             class="w-10 h-10 rounded-full object-cover border-2 border-transparent hover:border-blue-500 transition-colors"
-            src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=500&q=80"
+            src="https://images.unsplash.com/photo-1685316494198-a71c8344aa9a?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
             alt="使用者頭像"
           >
         </button>
       </div>
     </nav>
 
-    <main class="w-full max-w-sm bg-[#A2A2A2] text-white rounded-2xl shadow-lg overflow-hidden p-6 sm:p-8">
-      <div class="text-center mb-6">
+<main class="w-full max-w-sm text-white rounded-2xl overflow-hidden p-6 sm:p-8
+		bg-[#A2A2A2] main-convex-effect">
+
+		<div class="text-center mb-6">
         <h2 class="text-2xl font-semibold">註冊帳號</h2>
       </div>
 
@@ -84,6 +86,7 @@
           <div class="flex-grow border-t border-gray-500"></div>
         </div>
 
+				<!-- 匯入第三方登入功能請修改~ -->
         <button
           type="button"
           class="flex items-center justify-center p-3 bg-gray-700 text-white rounded-lg font-bold hover:bg-gray-800 transition-colors duration-200"
@@ -167,3 +170,43 @@ const signUp = async () => {
 	}
 }
 </script>
+
+<style scoped>
+	.main-convex-effect {
+		/* background-color: #A2A2A2; */
+		box-shadow: -8px -8px 16px rgba(255, 255, 255, 0.2),
+		8px 8px 16px rgba(0, 0, 0, 0.3), /* 右下外凸 */
+		-4px 0px 8px rgba(0, 0, 0, 0.1); 
+		transition: all 0.2s ease-in-out;
+	}
+
+	.main-convex-effect:hover {
+		box-shadow: -12px -12px 24px rgba(255, 255, 255, 0.3),
+		12px 12px 24px rgba(0, 0, 0, 0.4);
+	}
+
+	.main-convex-effect input {
+  background-color: #909090;
+  border: none; 
+  box-shadow:
+    inset 3px 3px 6px rgba(0, 0, 0, 0.2),
+    inset -3px -3px 6px rgba(255, 255, 255, 0.1);
+}
+
+/* 按鈕的 Neumorphism 風格調整 (外凸效果) */
+.main-convex-effect button:not(.bg-gray-700) {
+  box-shadow:
+    4px 4px 8px rgba(0, 0, 0, 0.2),          
+    -4px -4px 8px rgba(255, 255, 255, 0.15);
+  border: none;
+  transition: all 0.2s ease-in-out;
+}
+
+/* 按鈕按下時的效果 (內凹效果) */
+.main-convex-effect button:not(.bg-gray-700):active {
+  box-shadow:
+    inset 2px 2px 5px rgba(0, 0, 0, 0.3),
+    inset -2px -2px 5px rgba(255, 255, 255, 0.05);
+  transform: translateY(2px);
+}
+</style>

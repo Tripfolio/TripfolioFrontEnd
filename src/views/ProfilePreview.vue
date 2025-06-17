@@ -1,8 +1,7 @@
-<!-- eslint-disable no-mixed-spaces-and-tabs -->
 <template>
   <div class="bg-white min-h-screen p-4 sm:p-8 flex flex-col items-center">
     
-    <nav class="w-full max-w-5xl mx-auto bg-[#A2A2A2] text-white rounded-full shadow-lg p-3 mb-8">
+    <nav class="w-full max-w-5xl mx-auto bg-[#A2A2A2] text-white rounded-full p-3 mb-8 main-convex-effect">
       <div class="flex items-center justify-between">
         <button class="w-10 h-10 flex items-center justify-center bg-gray-600 rounded-full hover:bg-gray-500 transition-colors">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -147,11 +146,11 @@ const fetchData = async () => {
         }));
     } catch (err) {
         alert('Failed to fetch travel data, please check API path and service. (Can be ignored, will be replaced with real data after database merge)', err);
-        // Test data for itineraries, enable if API fails
+        // 連接後端請註解，關閉假資料
         travels.value = [
-            { id: 1, title: '沖繩海島慢活之旅', startDate: '2025-07-10', endDate: '2025-07-15', coverUrl: 'https://images.unsplash.com/photo-1540998145393-8c43715265d2?w=500&q=80' },
+            { id: 1, title: '沖繩海島慢活之旅', startDate: '2025-07-10', endDate: '2025-07-15', coverUrl: 'https://images.unsplash.com/photo-1662381523885-914182622e12?q=80&w=735&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' },
             { id: 2, title: '京都楓葉古寺巡禮', startDate: '2025-11-20', endDate: '2025-11-25', coverUrl: 'https://images.unsplash.com/photo-1545569341-9eb8b30979d9?w=500&q=80' },
-            { id: 3, title: '探索冰島極光', startDate: '2026-01-05', endDate: '2026-01-12', coverUrl: 'https://images.unsplash.com/photo-153643135-645438519473?w=500&q=80' },
+            { id: 3, title: '探索冰島極光', startDate: '2026-01-05', endDate: '2026-01-12', coverUrl: 'https://plus.unsplash.com/premium_photo-1661926694528-a833cc729d54?q=80&w=1472&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' },
         ];
     }
 
@@ -232,8 +231,17 @@ const navLinks = [
 
 const user = ref({
   name: 'yourName',
-  bio: '這裡放自介，一段關於您的簡短介紹，讓大家更認識您。',
+  bio: '這裡放自介',
 });
 
 
 </script>
+<style scoped>
+	.main-convex-effect {
+		/* background-color: #A2A2A2; */
+		box-shadow: -8px -8px 16px rgba(255, 255, 255, 0.2),
+		8px 8px 16px rgba(0, 0, 0, 0.3), /* 右下外凸 */
+		-4px 0px 8px rgba(0, 0, 0, 0.1); 
+		transition: all 0.2s ease-in-out;
+	}
+</style>
