@@ -76,7 +76,7 @@ const cropperRef = ref(null)
 
 //預覽封面圖片
 const coverPreviewUrl = ref('')
-const defaultCover = 'https://via.placeholder.com/800x400?text=行程封面'
+const defaultCover = 'https://fakeimg.pl/800x400/?text=行程封面&font=noto'
 
 //DOM元素參考
 const fileInput = ref(null)

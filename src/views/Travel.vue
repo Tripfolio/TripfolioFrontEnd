@@ -14,7 +14,7 @@
       <!-- 行程卡片列表 -->
       <div v-if="schedules.length > 0" class="space-y-4">
         <div v-for="(item, index) in schedules" :key="index" @click="goToEdit(item.id)" class="bg-white rounded-xl shadow p-4 relative cursor-pointer hover:ring-2 hover:ring-blue-300 transition">
-          <img :src="item.coverURL" class="w-full h-60 object-cover rounded-xl mb-3" alt="行程封面照">
+          <img :src="item.coverURL || 'https://placehold.co/600x300?text=封面圖'" class="w-full h-60 object-cover rounded-xl mb-3" alt="行程封面照"/>
           <h2 class="text-xl font-bold mb-1">{{ item.title }}</h2>
           <p class="text-gray-600 text-sm">{{ item.startDate }} - {{ item.endDate }}</p> 
           <p class="text-gray-500 text-sm mt-2">{{ item.description }}</p>
@@ -51,25 +51,30 @@ const schedules = ref([]);
 
 //取得所有行程列表
 const fetchSchedules = async () => {
-  const token = localStorage.getItem('token')
+  const token = localStorage.getItem('token');
   if(!token) return
 
   try {
-    const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/travelSchedule`, {
+    const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/travelSchedule/user`, {
       headers: {
         Authorization: `Bearer ${token}`
       }
-    })
+    });
     schedules.value = res.data.schedules
   } catch (err) {
-  // eslint-disable-next-line no-empty
+    // eslint-disable-next-line no-empty
   }
 };
+
+//首次載入取得行程
+onMounted(() => {
+  fetchSchedules()
+});
 
 
 //建立行程時檢查是否登入
 const handleOpenForm = () => {
-    const token = localStorage.getItem('token')
+    const token = localStorage.getItem('token');
     if(!token) {
         alert('請先登入會員')
         return
@@ -85,11 +90,6 @@ const handleCloseForm = () => {
 };
 
 
-//首次載入取得行程
-onMounted(() => {
-  fetchSchedules()
-});
-
 
 //點卡片跳轉至編輯頁
 const goToEdit = (id) => {
@@ -102,10 +102,10 @@ const deleteSchedule = async(id) => {
   const confirmDelete = confirm("確定刪除這個行程嗎?")
   if(!confirmDelete) return
 
-  const token = localStorage.getItem('token')
+  const token = localStorage.getItem('token');
 
   try{
-    await axios.delete(`http://localhost:3000/api/travelSchedule/${id}`, {
+    await axios.delete(`${import.meta.env.VITE_API_URL}/api/travelSchedule/${id}`, {
       headers: {
         Authorization: `Bearer ${token}`
       }
