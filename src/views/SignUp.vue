@@ -49,14 +49,17 @@
     >
       註冊
     </button>
+  </form>
+  <div class="flex w-[300px] mx-auto mt-2">
     <button
+      type='button'
       @click="handleGoogleLogin"
       class="google-btn flex items-center justify-center border-1 p1"
     >
-      <img src="https://www.google.com/favicon.ico" alt="Google" />
-      <span>Sign in with Google</span>
+    <img src="https://www.google.com/favicon.ico" alt="Google" />
+    <span>Sign in with Google</span>
     </button>
-  </form>
+  </div>
 </template>
 
 <script setup>
