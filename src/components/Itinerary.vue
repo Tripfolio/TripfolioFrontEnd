@@ -103,20 +103,14 @@
             </div>
             <!-- 選單按鈕end -->
           </li>
-          <li
-            v-if="index < itineraryPlaces.length - 1 &&
-                  isValidCoordinate(p.lat, p.lng) &&
-                  isValidCoordinate(itineraryPlaces[index + 1].lat, itineraryPlaces[index + 1].lng)"
-            class="list-none"
-          >
-            <TrafficBetween
-              :origin="{ lat: Number(p.lat), lng: Number(p.lng) }"
-              :destination="{
-                lat: Number(itineraryPlaces[index + 1].lat),
-                lng: Number(itineraryPlaces[index + 1].lng)
-              }"
-            />
-          </li>
+          <TrafficBetween
+            :itinerary-id="itineraryId"
+            :from-place-id="p.id"
+            :to-place-id="itineraryPlaces[index + 1]?.id"
+            :origin="{ lat: Number(p.lat),   lng: Number(p.lng) }"
+            :destination="itineraryPlaces[index + 1] ? { lat: Number(itineraryPlaces[index + 1].lat), lng: Number(itineraryPlaces[index + 1].lng) } : null"
+            v-if="itineraryPlaces[index + 1]"
+          />
         </div>
       </template>
     </draggable>
@@ -135,12 +129,19 @@ const props = defineProps({
 });
 const { selectedPlace, defaultImage } = toRefs(props);
 const itineraryPlaces = ref([]);
+const trafficList = ref([]);
+const itineraryId = 1
+const oldOrder = ref([]); // 儲存原始順序
 const API_URL = import.meta.env.VITE_API_URL;
-onMounted(() => {
-  loadItinerary();
+
+onMounted(async () => {
+  await loadItinerary();
+  oldOrder.value = itineraryPlaces.value.map(p => p.id);
+  await fetchTrafficData();
 
   window.addEventListener("click", onClickOutside);
 });
+
 onBeforeUnmount(() => {
   window.removeEventListener("click", onClickOutside);
 });
@@ -148,9 +149,7 @@ onBeforeUnmount(() => {
 async function loadItinerary() {
   try {
     const res = await axios.get(`${API_URL}/api/itinerary/places`, {
-      params: {
-        itineraryId: 1,
-      },
+      params: {itineraryId},
     });
     itineraryPlaces.value = res.data.places
     .map((p) => ({
@@ -161,6 +160,21 @@ async function loadItinerary() {
     .sort((a, b) => a.arrivalHour - b.arrivalHour);
   } catch (error) {
     alert("載入行程失敗:");
+  }
+}
+
+async function fetchTrafficData () {
+  try {
+    const { data } = await axios.get(`${API_URL}/api/traffic/get-all-traffic`, {
+      params: { itineraryId }
+    });
+    if (data.success) {
+      trafficList.value = data.data; 
+    } else {
+      console.warn("載入交通資料失敗：", data.message);
+    }
+  } catch (err) {
+    console.error("fetchTrafficData error:", err);
   }
 }
 
@@ -233,24 +247,63 @@ async function confirmTime(p) {
 
 //更新順序
 async function updateOrder() {
-  const newOrder = itineraryPlaces.value.map((place, index) => ({
+  const newOrder = itineraryPlaces.value.map(p => p.id);
+
+  const changedPairs = getChangedTrafficPairs(oldOrder.value, newOrder);
+
+  // 刪除受影響的交通資料
+  for (const [fromId, toId] of changedPairs) {
+    try {
+      await axios.delete(`${API_URL}/api/traffic/delete-traffic`, {
+        params: { itineraryId, fromPlaceId: fromId, toPlaceId: toId }
+      });
+
+      // 從 trafficList 中移除該段（更新 UI）
+      trafficList.value = trafficList.value.filter(t =>
+        !(t.fromPlaceId === fromId && t.toPlaceId === toId)
+      );
+    } catch (err) {
+      console.warn(`刪除 ${fromId}→${toId} 交通資料失敗：`, err);
+    }
+  }
+
+  const reorderPayload = itineraryPlaces.value.map((place, index) => ({
     id: place.id,
     placeOrder: index + 1,
   }));
 
-  console.log("要傳到後端的資料：", newOrder);
-
   try {
-    const response = await axios.put(
-      `${API_URL}/api/itinerary/places/reorder`,
-      {
-        places: newOrder,
-      }
-    );
-    console.log("順序已更新", response.data);
+    await axios.put(`${API_URL}/api/itinerary/places/reorder`, {
+      places: reorderPayload,
+    });
+    console.log("順序已更新");
   } catch (err) {
     console.error("無法更新順序：", err.response?.data || err.message);
   }
+
+  oldOrder.value = [...newOrder]; // 更新舊順序
+}
+
+function getChangedTrafficPairs(oldList, newList) {
+  const oldPairs = new Set();
+  for (let i = 0; i < oldList.length - 1; i++) {
+    oldPairs.add(`${oldList[i]}-${oldList[i + 1]}`);
+  }
+
+  const newPairs = new Set();
+  for (let i = 0; i < newList.length - 1; i++) {
+    newPairs.add(`${newList[i]}-${newList[i + 1]}`);
+  }
+
+  const changed = [];
+  for (const pair of oldPairs) {
+    if (!newPairs.has(pair)) {
+      const [from, to] = pair.split("-").map(Number);
+      changed.push([from, to]);
+    }
+  }
+
+  return changed;
 }
 
 async function addPlace() {
@@ -318,10 +371,6 @@ async function removePlace(place) {
   } catch (error) {
     alert("發生錯誤：" + error.message);
   }
-}
-
-function isValidCoordinate(lat, lng) {
-  return Number.isFinite(lat) && Number.isFinite(lng);
 }
 
 defineExpose({ addPlace });
