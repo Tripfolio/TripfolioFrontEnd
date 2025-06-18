@@ -25,13 +25,13 @@
     </div>
 
     <!-- 貼文詳情彈窗 -->
-    <PostPopup
+    <!-- <PostPopup
       v-if="showModal"
       :post="selectedPost"
       :isVisible="showModal"
       @close="closeModal"
       @update-post="updatePost"
-    />
+    /> -->
   </div>
 </template>
 
@@ -40,30 +40,30 @@ import { ref } from "vue";
 import PostPopup from "../components/PostPopup.vue";
 
 // 使用假資料
-const posts = ref([
-  {
-    id: 1,
-    scheduleTitle: "台北三日遊行程",
-    content:
-      "這是一個包含台北熱門景點的三日遊行程，適合初次來訪的旅客。第一天：台北101、象山步道；第二天：故宮博物院、士林夜市；第三天：九份老街、十分瀑布。",
-    authorName: "旅遊達人小王",
-    authorAvatar: "https://via.placeholder.com/40",
-    imageUrl: "https://via.placeholder.com/400x600",
-    likes: 15,
-    createdAt: "2025-06-15T10:30:00Z",
-  },
-  {
-    id: 2,
-    scheduleTitle: "高雄美食之旅",
-    content:
-      "高雄必吃美食攻略！從早餐的燒餅油條到宵夜的鹽酥雞，帶你品嚐道地的高雄味。推薦六合夜市、瑞豐夜市和美麗島站周邊的隱藏美食。",
-    authorName: "美食獵人小李",
-    authorAvatar: "https://via.placeholder.com/40",
-    imageUrl: "https://via.placeholder.com/400x600",
-    likes: 23,
-    createdAt: "2025-06-16T14:20:00Z",
-  },
-]);
+// const posts = ref([
+//   {
+//     id: 1,
+//     scheduleTitle: "台北三日遊行程",
+//     content:
+//       "這是一個包含台北熱門景點的三日遊行程，適合初次來訪的旅客。第一天：台北101、象山步道；第二天：故宮博物院、士林夜市；第三天：九份老街、十分瀑布。",
+//     authorName: "旅遊達人小王",
+//     authorAvatar: "https://picsum.photos/400/300?random=7",
+//     imageUrl: "https://picsum.photos/400/300?random=4",
+//     likes: 15,
+//     createdAt: "2025-06-15T10:30:00Z",
+//   },
+//   {
+//     id: 2,
+//     scheduleTitle: "高雄美食之旅",
+//     content:
+//       "高雄必吃美食攻略！從早餐的燒餅油條到宵夜的鹽酥雞，帶你品嚐道地的高雄味。推薦六合夜市、瑞豐夜市和美麗島站周邊的隱藏美食。",
+//     authorName: "美食獵人小李",
+//     authorAvatar: "https://picsum.photos/400/300?random=6",
+//     imageUrl: "https://picsum.photos/400/300?random=5",
+//     likes: 23,
+//     createdAt: "2025-06-16T14:20:00Z",
+//   },
+// ]);
 
 const selectedPost = ref(null);
 const showModal = ref(false);

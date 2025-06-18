@@ -14,7 +14,7 @@
         class="post-image bg-[#0ff376] flex items-center justify-center w-[55%]"
       >
         <img
-          :src="post.imageUrl || 'https://via.placeholder.com/400x600'"
+          :src="post.coverURL"
           alt="貼文照片"
           class="w-full h-full object-cover"
         />
@@ -28,7 +28,9 @@
         >
           <div class="flex items-center flex-1">
             <img
-              :src="post.authorAvatar || 'https://via.placeholder.com/40'"
+              :src="
+                post.authorAvatar || 'https://picsum.photos/400/300?random=4'
+              "
               class="avatar w-10 h-10 rounded-full mr-3"
             />
             <div>
@@ -58,7 +60,7 @@
           </div>
 
           <!-- 留言列表 -->
-          <div class="comments-section flex-1 overflow-y-auto p-4">
+          <!-- <div class="comments-section flex-1 overflow-y-auto p-4">
             <div v-if="isLoading" class="text-center py-4">載入中...</div>
             <div
               v-else-if="comments.length === 0"
@@ -92,13 +94,14 @@
                 刪除
               </button>
             </div>
-          </div>
-
+          </div> -->
+          <!-- <FavoriteButton /> -->
+          <CommentSection :post="post" class="overflow-scroll" />
           <!-- 底部輸入區 -->
           <div
             class="comment-input-area border-t bg-white p-3 flex items-center gap-2"
           >
-            <input
+            <!-- <input
               v-model="newComment"
               placeholder="留言..."
               class="flex-1 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -117,7 +120,7 @@
               class="like-btn text-2xl hover:scale-110 transition-transform"
             >
               {{ liked ? "❤️" : "🤍" }} {{ post.likes || 0 }}
-            </button>
+            </button> -->
           </div>
         </div>
       </div>
@@ -128,7 +131,8 @@
 <script setup>
 import { ref, onMounted, watch } from "vue";
 import axios from "axios";
-
+import CommentSection from "../components/CommentSection.vue";
+import FavoriteButton from "../components/FavoriteButton.vue";
 // Props
 const props = defineProps({
   post: {
@@ -139,6 +143,7 @@ const props = defineProps({
       authorAvatar: "",
       content: "",
       likes: 0,
+      postId,
     }),
   },
   isVisible: {
@@ -183,99 +188,6 @@ const formatTime = (timeString) => {
 const getCurrentUserId = () => {
   // 實際應用中應該從登入狀態或 localStorage 取得
   return 1; // 暫時回傳固定值
-};
-
-// 取得留言
-const fetchComments = async () => {
-  if (!props.post.id) return;
-
-  try {
-    console.log(`正在取得貼文 ${props.post.id} 的留言`);
-
-    const response = await axios.get(
-      `http://localhost:3000/api/fakepost/${props.post.id}/comments`
-    );
-
-    comments.value = response.data;
-    console.log("取得留言成功:", response.data);
-  } catch (error) {
-    console.error("取得留言失敗:", error);
-
-    // 使用假資料作為備用
-    comments.value = [
-      {
-        id: 1,
-        content: "無法連接伺服器，顯示假資料",
-        userName: "系統訊息",
-        userAvatar: "https://via.placeholder.com/32",
-        createdAt: new Date().toISOString(),
-      },
-    ];
-  } finally {
-    isLoading.value = false;
-  }
-};
-
-// 送出留言（修正 API 路徑）
-const submitComment = async () => {
-  if (!newComment.value.trim() || isSubmitting.value) return;
-
-  isSubmitting.value = true;
-  try {
-    const response = await axios.post(
-      `http://localhost:3000/api/fakepost/${props.post.id}/comments`, // 修正路徑
-      {
-        content: newComment.value.trim(),
-        memberId: getCurrentUserId(), // 加入使用者 ID
-      }
-    );
-
-    // 新增留言到列表頂部
-    comments.value.unshift(response.data);
-    newComment.value = "";
-    console.log("留言新增成功");
-  } catch (error) {
-    console.error("送出留言失敗:", error);
-
-    // 開發階段：模擬成功新增
-    const fakeNewComment = {
-      id: Date.now(),
-      content: newComment.value.trim(),
-      userName: "目前使用者",
-      userAvatar: "https://via.placeholder.com/32",
-      createdAt: new Date().toISOString(),
-    };
-
-    comments.value.unshift(fakeNewComment);
-    newComment.value = "";
-    alert("留言新增成功（開發模式）");
-  } finally {
-    isSubmitting.value = false;
-  }
-};
-
-// 刪除留言（修正 API 路徑）
-const deleteComment = async (commentId) => {
-  if (!confirm("確定要刪除這則留言嗎？")) return;
-
-  try {
-    await axios.delete(
-      `http://localhost:3000/api/fakepost/${props.post.id}/comments/${commentId}` // 修正路徑
-    );
-
-    comments.value = comments.value.filter(
-      (comment) => comment.id !== commentId
-    );
-    console.log("留言刪除成功");
-  } catch (error) {
-    console.error("刪除留言失敗:", error);
-
-    // 開發階段：模擬成功刪除
-    comments.value = comments.value.filter(
-      (comment) => comment.id !== commentId
-    );
-    alert("留言刪除成功（開發模式）");
-  }
 };
 
 // 切換按讚

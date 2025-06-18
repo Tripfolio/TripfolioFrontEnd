@@ -1,0 +1,94 @@
+<template>
+  <button
+    @click="toggleFavorite"
+    :disabled="isLoading"
+    class="favorite-btn"
+    :class="{ favorited: isFavorited }"
+  >
+    {{ isFavorited ? "❤️" : "🤍" }}
+    <span v-if="isLoading">...</span>
+  </button>
+</template>
+
+<script setup>
+import { ref, onMounted } from "vue";
+import axios from "axios";
+
+const props = defineProps({
+  postId: {
+    type: Number,
+    required: true,
+  },
+  memberId: {
+    type: Number,
+    required: true,
+  },
+});
+
+const isFavorited = ref(false);
+const isLoading = ref(false);
+
+// 檢查收藏狀態
+const checkFavoriteStatus = async () => {
+  try {
+    const response = await axios.get(
+      `http://localhost:3000/api/favorites/check/${props.postId}/${props.memberId}`
+    );
+    isFavorited.value = response.data.isFavorited;
+  } catch (error) {
+    console.error("檢查收藏狀態失敗:", error);
+  }
+};
+
+// 切換收藏狀態
+const toggleFavorite = async () => {
+  isLoading.value = true;
+  try {
+    if (isFavorited.value) {
+      // 取消收藏
+      await axios.delete(
+        `http://localhost:3000/api/favorites/${props.postId}`,
+        {
+          data: { memberId: props.memberId },
+        }
+      );
+      isFavorited.value = false;
+    } else {
+      // 新增收藏
+      await axios.post("http://localhost:3000/api/favorites", {
+        postId: props.postId,
+        memberId: props.memberId,
+      });
+      isFavorited.value = true;
+    }
+  } catch (error) {
+    console.error("切換收藏狀態失敗:", error);
+    alert("操作失敗，請稍後再試");
+  } finally {
+    isLoading.value = false;
+  }
+};
+
+onMounted(() => {
+  checkFavoriteStatus();
+});
+</script>
+
+<style scoped>
+.favorite-btn {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.favorite-btn:hover {
+  transform: scale(1.1);
+}
+
+.favorite-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+</style>
