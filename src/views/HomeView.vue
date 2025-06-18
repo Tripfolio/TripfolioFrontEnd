@@ -1,10 +1,9 @@
 <script setup></script>
 
 <template>
-    <main>
-      <div class="home">
-      </div>
-    </main>
+  <main>
+    <div class="home"></div>
+  </main>
 </template>
 
 <style scoped></style>

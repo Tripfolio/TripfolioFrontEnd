@@ -7,7 +7,7 @@ import MemberProfile from "@/views/MemberProfile.vue";
 import GoogleCalendar from "@/views/GoogleCalendar.vue";
 import EmailSettings from "@/views/EmailSettings.vue";
 import Travel from "@/views/Travel.vue";
-import SocialHome from "@/views/SocialHome.vue";
+import SocialHomePage from "@/views/SocialHomePage.vue";
 
 const routes = [
   {
@@ -53,7 +53,7 @@ const routes = [
   {
     path: "/social",
     name: "social",
-    component: SocialHome,
+    component: SocialHomePage,
   },
 ];
 

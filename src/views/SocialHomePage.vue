@@ -65,7 +65,9 @@ const fetchPosts = async () => {
 
   isLoading.value = true;
   try {
-    const res = await axios.get(`/api/posts?page=${page.value}&limit=${limit}`);
+    const res = await axios.get(
+      `/api/allposts?page=${page.value}&limit=${limit}`,
+    );
     const fetched = res.data.posts || [];
     if (fetched.length < limit) {
       hasMore.value = false;
@@ -95,7 +97,7 @@ const initObserver = () => {
     {
       root: null,
       threshold: 1.0,
-    }
+    },
   );
 
   if (scrollTrigger.value) {
