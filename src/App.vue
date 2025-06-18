@@ -1,10 +1,8 @@
 <script setup>
-
   import { RouterView } from "vue-router";
 </script>
 
 <template>
-<<<<<<< HEAD
   <div class="w-full h-screen flex flex-col relative">
     <div v-if="$route.path === '/'">
       <RouterLink to="/map">景點地圖</RouterLink>
@@ -17,15 +15,8 @@
       <RouterLink to="/community">社群貼文</RouterLink>
       <RouterLink to="/trips">行程建立</RouterLink>
     </div>
-
     <div class="relative">
       <RouterView />
     </div>
   </div>
 </template>
-=======
-  <div class="relative">
-    <RouterView />
-  </div>
-</template>
->>>>>>> dd37f449801795a8bb03ecacae40dfcb3635f8fe
