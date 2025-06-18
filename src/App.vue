@@ -4,7 +4,6 @@
 </script>
 
 <template>
-<<<<<<< HEAD
   <div class="w-full h-screen flex flex-col relative">
     <div v-if="$route.path === '/'">
       <RouterLink to="/map">景點地圖</RouterLink>
@@ -23,9 +22,3 @@
     </div>
   </div>
 </template>
-=======
-  <div class="relative">
-    <RouterView />
-  </div>
-</template>
->>>>>>> dd37f449801795a8bb03ecacae40dfcb3635f8fe

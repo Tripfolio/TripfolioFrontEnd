@@ -1,15 +1,3 @@
-<<<<<<< HEAD
-<script setup></script>
-
-<template>
-    <main>
-      <div class="home">
-      </div>
-    </main>
-</template>
-
-<style scoped></style>
-=======
 <template>
   <div class="min-h-screen homepage-bg">
     <div class="min-h-screen px-4 py-6">
@@ -290,4 +278,3 @@ onUnmounted(() => {
   background-color: white;
 }
 </style>
->>>>>>> dd37f449801795a8bb03ecacae40dfcb3635f8fe

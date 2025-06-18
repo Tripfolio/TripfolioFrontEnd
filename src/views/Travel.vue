@@ -36,7 +36,7 @@
     </div>
 
     <!-- 付款提醒Modal -->
-     <div v-if="showPayModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
+     <div v-if="showPayModal" class="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50">
       <div class="bg-white rounded-2xl shadow-xl max-w-md w-full p-6 text-center">
         <h2 class="text-xl font-bold mb-2">升級成付費會員</h2>
         <p class="text-gray-600 mb-6">免費會員僅可建立一筆行程，若要建立更多行程，請升級為付費會員。</p>
@@ -56,6 +56,7 @@ import { ref, onMounted, } from 'vue';
 import { useRouter } from 'vue-router'
 import TravelSchedule from '@/components/TravelSchedule.vue';
 import axios from 'axios';
+
 
 const router = useRouter();
 const showForm = ref(false);
