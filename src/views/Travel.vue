@@ -67,7 +67,7 @@ const showPayModal = ref(false);
 //取得所有行程列表
 const fetchSchedules = async () => {
   const token = localStorage.getItem('token');
-  if(!token) return;
+  if(!token) return
 
   try {
     const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/travelSchedule/user`, {
@@ -81,11 +81,16 @@ const fetchSchedules = async () => {
   }
 };
 
+//首次載入取得行程
+onMounted(() => {
+  fetchSchedules()
+});
+
 
 //取得會員是否為付費會員
 const fetchIsPremium = async () => {
   const token = localStorage.getItem('token');
-  if(!token) return;
+  if(!token) return
 
   try {
     const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/profile`, {
