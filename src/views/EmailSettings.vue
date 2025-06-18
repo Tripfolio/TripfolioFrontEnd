@@ -29,38 +29,31 @@ const preferences = ref({
   onRegister: true,
   onLogin: true,
   onLoginfail: true,
-  onVerify: true,
   onComment: true,
-  onLike: true,
   onBookmark: true,
-  onShare: true,
-  onCustomerReply: true,
 });
 
 const labels = {
   onRegister: "註冊成功",
   onLogin: "登入成功",
   onLoginfail: "帳號登入異常",
-  onVerify: "信箱驗證提醒",
   onComment: "貼文被留言",
-  onLike: "貼文被按讚",
   onBookmark: "貼文被收藏",
-  onShare: "貼文被分享",
-  onCustomerReply: "客服回覆",
 };
 
 const loading = ref(true);
+const TOKEN_NAME = "user_token";
 
 const fetchPreferences = async () => {
   try {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem(TOKEN_NAME);
     const { data } = await axios.get(
-      "http://localhost:3000/api/email-preferences",
+      `${import.meta.env.VITE_API_URL}/api/email-preferences/get`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      }
+      },
     );
     preferences.value = data;
   } catch (err) {
@@ -72,15 +65,15 @@ const fetchPreferences = async () => {
 
 const savePreferences = async () => {
   try {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem(TOKEN_NAME);
     await axios.put(
-      "http://localhost:3000/api/email-preferences",
+      `${import.meta.env.VITE_API_URL}/api/email-preferences/update`,
       { preferences: preferences.value },
       {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      }
+      },
     );
     alert("偏好設定已更新！");
   } catch (err) {
