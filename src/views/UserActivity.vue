@@ -60,17 +60,20 @@ const tabs = [
     { key: 'collected', label: '我收藏的貼文' },
 ]
 
-//確認會員登入 抓id
-const memberId = localStorage.getItem('memberId') || '1'
-if (!memberId) {
-  alert('請先登入會員')
-  throw new Error('memberId 不存在')
-}
+//確認會員token
 
 const fetchData = async () => {
+    const token = localStorage.getItem('token') || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJ0ZXN0QGV4YW1wbGUuY29tIiwiaWF0IjoxNzUwMjE1ODY0fQ.jw5vw_Y6187vaYBvBpUe-LZcTbIO-cexfgaZsNUPzZ4'
+    if(!token) {
+        alert('請先登入會員')
+        throw new Error('token 不存在')
+    }
+
     try {
         //抓自己發過的行程
-        const travelRes = await axios.get(`${import.meta.env.VITE_API_URL}/api/schedules/member/${memberId}`)
+        const travelRes = await axios.get(`${import.meta.env.VITE_API_URL}/api/schedules/me`,{
+            headers: { Authorization: `Bearer ${token}`}
+        })
         travels.value = travelRes.data.map(item => ({
             id: item.id,
             title: item.title,
@@ -79,19 +82,22 @@ const fetchData = async () => {
             coverUrl: item.coverURL
         }));
     } catch (err) {
+    console.warn('取得行程失敗', err)
     }
 
-    //     抓自己發過的貼文(先用假資料合併後再改掉註解)
-    // try {
-    //     const postRes = await axios.get(`${import.meta.env.VITE_API_URL}/api/members/${memberId}/posts`)
-    //     posts.value = postRes.data.map(item => ({
-    //         id: item.id,
-    //         title: item.title,
-    //         postImage: item.post_image
-    //     }));
-    // } catch (err) {
-    //     console.warn('抓貼文失效，可忽略，等合併資料庫再開啟', err)
-    // }
+    try {
+        //抓自己發過的貼文
+        const postRes = await axios.get(`${import.meta.env.VITE_API_URL}/api/community-posts/me`,{
+            headers: {Authorization: `Bearer ${token}`} 
+        })
+        posts.value = postRes.data.post.map(item => ({
+            id: item.postid,
+            title: item.scheduleTitle,
+            coverImage: item.coverURL
+        }));
+    } catch (err) {
+        console.warn('取得貼文失敗', err)
+    }
 
     // try {
     //     抓自己收藏過的貼文(先用假資料合併後再改掉註解)
@@ -106,31 +112,15 @@ const fetchData = async () => {
     // }
 };
 
-//初次載入抓一次
+//初始化與返回頁面重新載入
 onMounted(fetchData)
-
-//每次切換回來這頁也要抓一次（確保資料有更新）
 watch(() => route.fullPath, fetchData)
 
 const goToTravel = id => router.push(`/travel/${id}`)
-const goToPost = id => router.push(`comunity/post/${id}`)
+const goToPost = id => router.push(`community/post/${id}`)
 
 
 //測試用的貼文假資料，合併後改連資料庫
-posts.value = [
-  {
-    id: 1,
-    title: '台北兩日遊',
-    postImage: 'https://via.placeholder.com/400x200?text=Trip'
-  },
-
-  {
-    id: 2,
-    title: '高雄兩日遊',
-    postImage: 'https://via.placeholder.com/400x200?text=Trip'
-  },  
-];
-
 collectedPosts.value = [
   {
     id: 1,

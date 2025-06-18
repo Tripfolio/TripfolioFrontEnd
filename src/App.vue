@@ -1,5 +1,6 @@
 <script setup>
-  import { RouterLink, RouterView } from "vue-router";
+
+  import { RouterView } from "vue-router";
 </script>
 
 <template>
@@ -15,12 +16,8 @@
         <RouterLink to="/login">登入頁面</RouterLink>
         <RouterLink to="/activity">動態追蹤</RouterLink>
   </div>
-
+</div>
   <div class="relative">
     <RouterView />
   </div>
-</div>
-
 </template>
-
-<style></style>
