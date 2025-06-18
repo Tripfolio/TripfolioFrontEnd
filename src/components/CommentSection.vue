@@ -203,7 +203,7 @@ const deleteComment = async (commentId) => {
     console.log(`正在刪除留言 ${commentId}`);
 
     await axios.delete(
-      `http://localhost:3000/api/posts/${props.post.id}/comments/${commentId}`
+      `http://localhost:3000/api/post/${props.post.id}/comments/${commentId}`
     );
 
     // 從本地陣列中移除已刪除的留言
