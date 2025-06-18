@@ -76,7 +76,7 @@ const cropperRef = ref(null)
 
 //預覽封面圖片
 const coverPreviewUrl = ref('')
-const defaultCover = 'https://via.placeholder.com/800x400?text=行程封面'
+const defaultCover = 'https://fakeimg.pl/800x400/?text=行程封面&font=noto'
 
 //DOM元素參考
 const fileInput = ref(null)
@@ -167,7 +167,7 @@ const scheduleSubmit = async() => {
         formData.append('description', description.value);
 
     try {
-        const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/travelSchedule`, formData, {
+        await axios.post(`${import.meta.env.VITE_API_URL}/api/travelSchedule`, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
                 Authorization: `Bearer ${token}`,

@@ -14,7 +14,7 @@
       <!-- 行程卡片列表 -->
       <div v-if="schedules.length > 0" class="space-y-4">
         <div v-for="(item, index) in schedules" :key="index" @click="goToEdit(item.id)" class="bg-white rounded-xl shadow p-4 relative cursor-pointer hover:ring-2 hover:ring-blue-300 transition">
-          <img :src="item.coverURL" class="w-full h-60 object-cover rounded-xl mb-3" alt="行程封面照">
+          <img :src="item.coverURL || 'https://placehold.co/600x300?text=封面圖'" class="w-full h-60 object-cover rounded-xl mb-3" alt="行程封面照"/>
           <h2 class="text-xl font-bold mb-1">{{ item.title }}</h2>
           <p class="text-gray-600 text-sm">{{ item.startDate }} - {{ item.endDate }}</p> 
           <p class="text-gray-500 text-sm mt-2">{{ item.description }}</p>
@@ -34,13 +34,25 @@
         <button @click="handleCloseForm"></button>
       </div>
     </div>
+
+    <!-- 付款提醒Modal -->
+     <div v-if="showPayModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
+      <div class="bg-white rounded-2xl shadow-xl max-w-md w-full p-6 text-center">
+        <h2 class="text-xl font-bold mb-2">升級成付費會員</h2>
+        <p class="text-gray-600 mb-6">免費會員僅可建立一筆行程，若要建立更多行程，請升級為付費會員。</p>
+        <div class="flex justify-center gap-4">
+          <button @click="goToPay" class="bg-green-500 hover:bg-green-400 text-white px-4 py-2 rounded">前往付款</button>
+          <button @click="showPayModal = false" class="px-4 py-2 border rounded text-gray-600 hover:bg-gray-100">取消</button>
+        </div>
+      </div>
+     </div>
   </div>
 </template>
 
 
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, } from 'vue';
 import { useRouter } from 'vue-router'
 import TravelSchedule from '@/components/TravelSchedule.vue';
 import axios from 'axios';
@@ -48,46 +60,81 @@ import axios from 'axios';
 const router = useRouter();
 const showForm = ref(false);
 const schedules = ref([]);
+const isPremium = ref(false);
+const showPayModal = ref(false);
 
 //取得所有行程列表
 const fetchSchedules = async () => {
-  const token = localStorage.getItem('token')
-  if(!token) return
+  const token = localStorage.getItem('token');
+  if(!token) return;
 
   try {
-    const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/travelSchedule`, {
+    const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/travelSchedule/user`, {
       headers: {
         Authorization: `Bearer ${token}`
       }
-    })
+    });
     schedules.value = res.data.schedules
   } catch (err) {
+    // eslint-disable-next-line no-empty
   }
 };
 
 
+//取得會員是否為付費會員
+const fetchIsPremium = async () => {
+  const token = localStorage.getItem('token');
+  if(!token) return;
+
+  try {
+    const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/profile`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    isPremium.value = res.data.isPremium;
+  } catch (err) {
+    // eslint-disable-next-line no-empty
+  }
+};
+
+//首次載入取得行程
+onMounted(() => {
+  fetchSchedules();
+  fetchIsPremium();
+});
+
+
 //建立行程時檢查是否登入
 const handleOpenForm = () => {
-    const token = localStorage.getItem('token')
+  const token = localStorage.getItem('token');
     if(!token) {
-        alert('請先登入會員')
-        return
+      alert('請先登入會員')
+      return
     }
-    showForm.value = true
+    
+    const count = schedules.value.length;
+
+    if(isPremium.value || count < 1) {
+      showForm.value = true;
+    } else {
+      showPayModal.value = true;
+    }
 };
+
+const goToPay = () => {
+  showPayModal.value = false;
+  router.push('/payment');
+}
 
 
 //表單關閉後刷新行程列表
 const handleCloseForm = () => {
   showForm.value = false
-  fetchSchedules()
+  fetchSchedules();
+  fetchIsPremium();
 };
 
-
-//首次載入取得行程
-onMounted(() => {
-  fetchSchedules()
-});
 
 
 //點卡片跳轉至編輯頁
@@ -97,14 +144,14 @@ const goToEdit = (id) => {
 
 
 //刪除行程
-const deleteSchedule = async(id) => {
+const deleteSchedule = async (id) => {
   const confirmDelete = confirm("確定刪除這個行程嗎?")
   if(!confirmDelete) return
 
-  const token = localStorage.getItem('token')
+  const token = localStorage.getItem('token');
 
   try{
-    await axios.delete(`http://localhost:3000/api/travelSchedule/${id}`, {
+    await axios.delete(`${import.meta.env.VITE_API_URL}/api/travelSchedule/${id}`, {
       headers: {
         Authorization: `Bearer ${token}`
       }
