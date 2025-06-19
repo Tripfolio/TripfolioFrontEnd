@@ -67,14 +67,14 @@
         </button>
       </div>
     </div>
+    <PostPopup
+      v-if="showModal"
+      :post="selectedPost"
+      :isVisible="showModal"
+      @close="closeModal"
+      @update-post="updatePost"
+    />
   </div>
-  <PostPopup
-    v-if="showModal"
-    :post="selectedPost"
-    :isVisible="showModal"
-    @close="closeModal"
-    @update-post="updatePost"
-  />
 </template>
 
 <script setup>

@@ -95,33 +95,13 @@
               </button>
             </div>
           </div> -->
-          <!-- <FavoriteButton /> -->
           <CommentSection :post="post" class="overflow-scroll" />
+          <FavoriteButton
+            :postId="post.postId"
+            :memberId="getCurrentUserId()"
+          />
+
           <!-- 底部輸入區 -->
-          <div
-            class="comment-input-area border-t bg-white p-3 flex items-center gap-2"
-          >
-            <!-- <input
-              v-model="newComment"
-              placeholder="留言..."
-              class="flex-1 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              @keyup.enter="submitComment"
-              :disabled="isSubmitting"
-            />
-            <button
-              @click="submitComment"
-              :disabled="!newComment.trim() || isSubmitting"
-              class="btn-submit bg-blue-500 text-white px-4 py-2 rounded disabled:opacity-50 hover:bg-blue-600 transition-colors"
-            >
-              {{ isSubmitting ? "送出中..." : "送出" }}
-            </button>
-            <button
-              @click="toggleLike"
-              class="like-btn text-2xl hover:scale-110 transition-transform"
-            >
-              {{ liked ? "❤️" : "🤍" }} {{ post.likes || 0 }}
-            </button> -->
-          </div>
         </div>
       </div>
     </div>
@@ -133,7 +113,7 @@ import { ref, onMounted, watch } from "vue";
 import axios from "axios";
 import CommentSection from "../components/CommentSection.vue";
 import FavoriteButton from "../components/FavoriteButton.vue";
-// Props
+
 const props = defineProps({
   post: {
     type: Object,
@@ -143,7 +123,8 @@ const props = defineProps({
       authorAvatar: "",
       content: "",
       likes: 0,
-      postId,
+      // postId: null,
+      // memberId: null,
     }),
   },
   isVisible: {
@@ -151,11 +132,10 @@ const props = defineProps({
     default: false,
   },
 });
+console.log(props.post);
 
-// Emits
 const emit = defineEmits(["close", "update-post"]);
 
-// 響應式資料
 const comments = ref([]);
 const newComment = ref("");
 const liked = ref(false);
@@ -186,14 +166,12 @@ const formatTime = (timeString) => {
 
 // 取得目前使用者 ID（暫時模擬）
 const getCurrentUserId = () => {
-  // 實際應用中應該從登入狀態或 localStorage 取得
-  return 1; // 暫時回傳固定值
+  return 1;
 };
 
 // 切換按讚
 const toggleLike = async () => {
   try {
-    // 暫時模擬按讚功能
     liked.value = !liked.value;
     const newLikes = liked.value
       ? (props.post.likes || 0) + 1

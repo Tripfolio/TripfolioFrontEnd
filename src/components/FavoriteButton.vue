@@ -2,7 +2,7 @@
   <button
     @click="toggleFavorite"
     :disabled="isLoading"
-    class="favorite-btn"
+    class="favorite-btn bg-red-700"
     :class="{ favorited: isFavorited }"
   >
     {{ isFavorited ? "❤️" : "🤍" }}
@@ -35,6 +35,8 @@ const checkFavoriteStatus = async () => {
       `http://localhost:3000/api/favorites/check/${props.postId}/${props.memberId}`
     );
     isFavorited.value = response.data.isFavorited;
+
+    console.log("應該檢查成功了吧");
   } catch (error) {
     console.error("檢查收藏狀態失敗:", error);
   }
@@ -43,6 +45,7 @@ const checkFavoriteStatus = async () => {
 // 切換收藏狀態
 const toggleFavorite = async () => {
   isLoading.value = true;
+
   try {
     if (isFavorited.value) {
       // 取消收藏
@@ -60,6 +63,7 @@ const toggleFavorite = async () => {
         memberId: props.memberId,
       });
       isFavorited.value = true;
+      console.log("假收藏");
     }
   } catch (error) {
     console.error("切換收藏狀態失敗:", error);
