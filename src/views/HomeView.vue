@@ -1,14 +1,3 @@
-<<<<<<< HEAD
-<script setup></script>
-
-<template>
-  <main>
-    <div class="home"></div>
-  </main>
-</template>
-
-<style scoped></style>
-=======
 <template>
   <div class="min-h-screen homepage-bg">
     <div class="min-h-screen px-4 py-6">
@@ -45,16 +34,12 @@
           <section class="mt-10 p-6">
             <p class="mb-2">其他連結 我先放這</p>
             <div class="flex flex-wrap gap-4">
-              <RouterLink to="/emailSettings" class="underline"
-                >Email 通知</RouterLink
-              >
-              <RouterLink to="/profile" class="underline"
-                >會員資料修改</RouterLink
-              >
-              <RouterLink to="/calendar" class="underline"
-                >連結 Google Calendar</RouterLink
-              >
+              <RouterLink to="/emailSettings" class="underline">Email 通知</RouterLink>
+              <RouterLink to="/profile" class="underline">會員資料修改</RouterLink>
+              <RouterLink to="/calendar" class="underline">連結 Google Calendar</RouterLink>
               <RouterLink to="/schedule" class="underline">個人行程</RouterLink>
+              <RouterLink to="/community">社群貼文</RouterLink>
+              <RouterLink to="/trips">行程建立</RouterLink>
             </div>
           </section>
         </section>
@@ -296,4 +281,3 @@ onUnmounted(() => {
   background-color: white;
 }
 </style>
->>>>>>> dd37f449801795a8bb03ecacae40dfcb3635f8fe
