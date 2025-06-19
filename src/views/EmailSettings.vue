@@ -67,7 +67,7 @@ const fetchPreferences = async () => {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      }
+      },
     );
     preferences.value = data;
   } catch (err) {
@@ -93,7 +93,7 @@ const savePreferences = async () => {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      }
+      },
     );
     alert("偏好設定已更新！");
   } catch (err) {
