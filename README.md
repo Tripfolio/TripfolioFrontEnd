@@ -1,6 +1,6 @@
 # 🌍 Tripfolio Frontend
 
-📌
+📌 這是一個旅遊網站，包含會員管理、行程規劃與分享、地圖資訊與社群功能。
 <br>
 📌 搭配後端專案請參考 → [link](https://github.com/Tripfolio/TripfolioBackEnd)
 
