@@ -16,6 +16,11 @@
 
 	<form class="flex flex-col gap-[10px] w-[300px] mx-auto mt-2" @submit.prevent="signUp">
 		<input
+			v-model="name"
+			placeholder="該怎麼稱呼您"
+			class="p-[8px] text-[14px] border border-[#aaa] rounded"
+		/>
+		<input
 			v-model="email"
 			type="email"
 			placeholder="請輸入電子郵件"
@@ -27,17 +32,21 @@
 			placeholder="請輸入密碼"
 			class="p-[8px] text-[14px] border border-[#aaa] rounded"
 		/>
-		<input
-			v-model="phone"
-			placeholder="請輸入手機號碼"
-			class="p-[8px] text-[14px] border border-[#aaa] rounded"
-		/>
+
 		<button
 			type="submit"
-			class="p-[10px] bg-[#6a5acd] text-white border-0 rounded cursor-pointer hover:bg-[#483d8b]"
+			class="p-[10px] bg-[#2894FF] text-white border-0 rounded cursor-pointer hover:bg-[#46A3FF]"
 		>
 			註冊
 		</button>
+
+		<RouterLink to="/login">
+			<button
+				class= "w-[100px] text-black py-2 rounded transition hover:text-[#0d4a87]"
+			>
+				有會員走這裡
+			</button>
+		</RouterLink>
 	</form>
 </template>
 
@@ -45,14 +54,11 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import axios from 'axios'
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons'
-import { library } from '@fortawesome/fontawesome-svg-core'
-library.add(faExclamationTriangle)
 
+const name = ref('')
 const email = ref('')
 const password = ref('')
-const phone = ref('')
+
 
 const router = useRouter()
 
@@ -62,10 +68,12 @@ const errorMessages = ref([])
 const showSuccess = ref(false)
 const successMessage = ref('')
 
+const API_BASE_URL = `${import.meta.env.VITE_API_URL}/api/signup/`;
+
 const clearText = () => {
 	email.value = ''
 	password.value = ''
-	phone.value = ''
+	name.value = ''
 }
 
 const signUp = async () => {
@@ -75,28 +83,29 @@ const signUp = async () => {
 	successMessage.value = ''
 
 	try {
-		const response = await axios.post("http://localhost:3000/api/signup", {
+		const response = await axios.post(API_BASE_URL, {
 			email: email.value,
 			password: password.value,
-			phone: phone.value
+			name: name.value
 		})
 
 		clearText()
 		showSuccess.value = true
-		successMessage.value = response.data.message || '註冊成功，請重新登入'
+		successMessage.value = response.data.message
 
 		setTimeout(() => {
 			showSuccess.value = false
-			router.push('/')
+			router.push('/login')
 		}, 2000)
 
 	} catch (err) {
-		showError.value = true
-		if (err.response && err.response.data && Array.isArray(err.response.data.errors)) {
-			errorMessages.value = err.response.data.errors
-		} else {
-			errorMessages.value = ['註冊失敗，請稍後重試']
-		}
+    showError.value = true;
+    if (Array.isArray(err.response?.data?.errors)) {
+        errorMessages.value = err.response.data.errors;
+    } else {
+        errorMessages.value = ['註冊失敗，請稍後重試'];
+    }
 	}
 }
+
 </script>
