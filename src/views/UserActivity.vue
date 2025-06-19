@@ -10,7 +10,7 @@
         <div class="grid grid-cols-2 gap-4">
             <template v-if="activeTab === 'travels'">
                 <div v-for="travel in travels" :key="travel.id" @click="goToTravel(travel.id)" class="bg-gray-100 rounded-lg shadow hover:shadow-lg cursor-pointer">
-                    <img :src="travel.coverUrl" class="w-full h-60 object-cover rounded-t-lg" alt="行程預覽圖"/>
+                    <img :src="travel.coverURL" @error="e => e.target.src = 'https://via.placeholder.com/400x200?text=No+Image'" class="w-full h-60 object-cover rounded-t-lg" alt="行程預覽圖"/>
                     <div class="p-2">
                         <div class="font-semibold">{{ travel.title }}</div>
                         <div class="text-sm text-gray-500">{{ travel.startDate }} ~ {{ travel.endDate }}</div>
@@ -71,15 +71,19 @@ const fetchData = async () => {
 
     try {
         //抓自己發過的行程
-        const travelRes = await axios.get(`${import.meta.env.VITE_API_URL}/api/schedules/me`,{
+        const travelRes = await axios.get(`${import.meta.env.VITE_API_URL}/api/travelSchedule/user`,{
             headers: { Authorization: `Bearer ${token}`}
         })
-        travels.value = travelRes.data.map(item => ({
+        const schedules = travelRes.data.schedules;
+          if (!Array.isArray(schedules)) {
+        return;
+        }
+        travels.value = schedules.map(item => ({
             id: item.id,
             title: item.title,
             startDate: item.startDate?.slice(0, 10),
             endDate: item.endDate?.slice(0, 10),
-            coverUrl: item.coverURL
+            coverURL: item.coverURL
         }));
     } catch (err) {
     console.warn('取得行程失敗', err)
@@ -87,11 +91,11 @@ const fetchData = async () => {
 
     try {
         //抓自己發過的貼文
-        const postRes = await axios.get(`${import.meta.env.VITE_API_URL}/api/community-posts/me`,{
+        const postRes = await axios.get(`${import.meta.env.VITE_API_URL}/api/community-post/me`,{
             headers: {Authorization: `Bearer ${token}`} 
         })
-        posts.value = postRes.data.post.map(item => ({
-            id: item.postid,
+        posts.value = postRes.data.posts.map(item => ({
+            id: item.postId,
             title: item.scheduleTitle,
             coverImage: item.coverURL
         }));
@@ -110,6 +114,8 @@ const fetchData = async () => {
     // } catch (err) {
     //     console.warn('抓貼文失效，可忽略，等合併資料庫再開啟', err)
     // }
+    console.log('🧪 travels:', travels.value)
+    console.log('🧪 posts:', posts.value)
 };
 
 //初始化與返回頁面重新載入
