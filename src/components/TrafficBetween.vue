@@ -21,14 +21,22 @@ import axios from 'axios'
 const API_URL = import.meta.env.VITE_API_URL
 
 const props = defineProps({
-  itineraryId:   { type: Number, required: true }, 
-  fromPlaceId:   { type: Number, required: true },
-  toPlaceId:     { type: Number, required: true },
-  origin:        { type: Object, required: true }, // { lat, lng }
-  destination:   { type: Object, required: true }  // { lat, lng }
+  itineraryId: Number,
+  fromPlaceId: Number,
+  toPlaceId:   Number,
+  origin:      Object,
+  destination: Object,
+  trafficData: Object,
 })
+const currentTraffic = ref(props.trafficData ?? null);
 
-const selectedMode = ref('NONE')     
+watch(() => props.trafficData, (val) => {
+  if (val) currentTraffic.value = val;
+});
+
+console.log('TrafficBetween props:', props.trafficData)
+
+const selectedMode = ref('NONE') // 預設選擇開車   
 const durationText = ref('')         
 const distanceText = ref('')        
 const rawDuration  = ref(0)             

@@ -104,12 +104,16 @@
             <!-- 選單按鈕end -->
           </li>
           <TrafficBetween
-            :itinerary-id="itineraryId"
-            :from-place-id="p.id"
-            :to-place-id="itineraryPlaces[index + 1]?.id"
-            :origin="{ lat: Number(p.lat),   lng: Number(p.lng) }"
-            :destination="itineraryPlaces[index + 1] ? { lat: Number(itineraryPlaces[index + 1].lat), lng: Number(itineraryPlaces[index + 1].lng) } : null"
             v-if="itineraryPlaces[index + 1]"
+            :itineraryId="itineraryId"
+            :fromPlaceId="p.id"
+            :toPlaceId="itineraryPlaces[index + 1].id"
+            :origin="{ lat: p.lat, lng: p.lng }"
+            :destination="{
+              lat: itineraryPlaces[index + 1].lat,
+              lng: itineraryPlaces[index + 1].lng,
+            }"
+            :traffic-data="trafficMap.get(`${p.id}-${itineraryPlaces[index + 1].id}`) || null"
           />
         </div>
       </template>
@@ -123,6 +127,7 @@ import axios from "axios";
 import draggable from "vuedraggable";
 import TrafficBetween from "./TrafficBetween.vue";
 
+const trafficMap = ref(new Map());
 const props = defineProps({
   selectedPlace: Object,
   defaultImage: String,
@@ -136,7 +141,6 @@ const API_URL = import.meta.env.VITE_API_URL;
 onMounted(async () => {
   await loadItinerary();
   await fetchTrafficData();
-
   window.addEventListener("click", onClickOutside);
 });
 
@@ -167,7 +171,12 @@ async function fetchTrafficData () {
       params: { itineraryId }
     });
     if (data.success) {
-      trafficList.value = data.data; 
+      const map = new Map();
+      data.data.forEach(t => {
+        map.set(`${t.fromPlaceId}-${t.toPlaceId}`, t);
+      });
+      trafficMap.value = map;
+      
     } else {
       console.warn("載入交通資料失敗：", data.message);
     }
