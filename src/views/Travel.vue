@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
@@ -77,6 +78,8 @@ const deleteSchedule = async (id) => {
 };
 </script>
 
+=======
+>>>>>>> f0721ad040c28eea78cf938a903532ab7422da5c
 <template>
   <div class="flex h-screen">
     <!-- 左側：可放地圖或其他內容 -->
@@ -97,6 +100,7 @@ const deleteSchedule = async (id) => {
 
       <!-- 行程卡片列表 -->
       <div v-if="schedules.length > 0" class="space-y-4">
+<<<<<<< HEAD
         <div
           v-for="(item, index) in schedules"
           :key="index"
@@ -108,6 +112,10 @@ const deleteSchedule = async (id) => {
             class="w-full h-60 object-cover rounded-xl mb-3"
             alt="行程封面照"
           />
+=======
+        <div v-for="(item, index) in schedules" :key="index" @click="goToEdit(item.id)" class="bg-white rounded-xl shadow p-4 relative cursor-pointer hover:ring-2 hover:ring-blue-300 transition">
+          <img :src="item.coverURL || 'https://placehold.co/600x300?text=封面圖'" class="w-full h-60 object-cover rounded-xl mb-3" alt="行程封面照"/>
+>>>>>>> f0721ad040c28eea78cf938a903532ab7422da5c
           <h2 class="text-xl font-bold mb-1">{{ item.title }}</h2>
           <p class="text-gray-600 text-sm">
             {{ item.startDate }} - {{ item.endDate }}
@@ -140,3 +148,89 @@ const deleteSchedule = async (id) => {
     </div>
   </div>
 </template>
+<<<<<<< HEAD
+=======
+
+
+
+<script setup>
+import { ref, onMounted } from 'vue';
+import { useRouter } from 'vue-router'
+import TravelSchedule from '@/components/TravelSchedule.vue';
+import axios from 'axios';
+
+const router = useRouter();
+const showForm = ref(false);
+const schedules = ref([]);
+
+//取得所有行程列表
+const fetchSchedules = async () => {
+  const token = localStorage.getItem('token');
+  if(!token) return
+
+  try {
+    const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/travelSchedule/user`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+    schedules.value = res.data.schedules
+  } catch (err) {
+    // eslint-disable-next-line no-empty
+  }
+};
+
+//首次載入取得行程
+onMounted(() => {
+  fetchSchedules()
+});
+
+
+//建立行程時檢查是否登入
+const handleOpenForm = () => {
+    const token = localStorage.getItem('token');
+    if(!token) {
+        alert('請先登入會員')
+        return
+    }
+    showForm.value = true
+};
+
+
+//表單關閉後刷新行程列表
+const handleCloseForm = () => {
+  showForm.value = false
+  fetchSchedules()
+};
+
+
+
+//點卡片跳轉至編輯頁
+const goToEdit = (id) => {
+  router.push(`/schedule/${id}`)
+};
+
+
+//刪除行程
+const deleteSchedule = async(id) => {
+  const confirmDelete = confirm("確定刪除這個行程嗎?")
+  if(!confirmDelete) return
+
+  const token = localStorage.getItem('token');
+
+  try{
+    await axios.delete(`${import.meta.env.VITE_API_URL}/api/travelSchedule/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+
+    schedules.value = schedules.value.filter(s => s.id!== id)
+    alert("刪除成功")
+  } catch (err) {
+    alert("刪除失敗，請稍後再試")
+  }
+};
+
+</script>
+>>>>>>> f0721ad040c28eea78cf938a903532ab7422da5c

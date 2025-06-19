@@ -37,36 +37,15 @@
         />
       </div>
 
-      <div
-        v-if="showCropper"
-        class="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50"
-      >
-        <div class="bg-white p-4 rounded-lg max-w-md w-full">
-          <cropper
-            ref="cropperRef"
-            :src="cropImage"
-            :stencil-props="{ aspect: 2 }"
-            :autoZoom="true"
-            :resizeImage="true"
-            class="w-full h-64"
-          />
-          <div class="flex justify-end gap-2 mt-4">
-            <button
-              @click="showCropper = false"
-              class="bg-gray-300 px-4 py-2 rounded"
-            >
-              取消
-            </button>
-            <button
-              type="button"
-              @click="applyCrop"
-              class="bg-blue-500 text-white px-4 py-2 rounded"
-            >
-              裁切
-            </button>
-          </div>
-        </div>
-      </div>
+            <div v-if="showCropper" class="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50">
+                <div class="bg-white p-4 rounded-lg max-w-md w-full">
+                    <cropper ref="cropperRef" :src="cropImage" :stencil-props="{ aspect: 2 }" :autoZoom="true" :resizeImage="true" class="w-full h-64" />
+                    <div class="flex justify-end gap-2 mt-4">
+                        <button @click="showCropper = false" class="bg-gray-300 px-4 py-2 rounded">取消</button>
+                        <button type="button" @click="applyCrop" class="bg-blue-500 text-white px-4 py-2 rounded">裁切</button>                   
+                    </div>
+                </div>
+            </div>
 
       <div>
         <label class="block mb-1"
@@ -128,12 +107,13 @@
 </template>
 
 <script setup>
-import { ref, watch } from "vue";
-import axios from "axios";
-import { Cropper } from "vue-advanced-cropper";
-import "vue-advanced-cropper/dist/style.css";
+import{ ref, watch } from 'vue';
+import axios from 'axios'; 
+import { Cropper } from 'vue-advanced-cropper';
+import 'vue-advanced-cropper/dist/style.css';
 
-const emit = defineEmits(["close"]);
+/* global defineEmits */
+const emit = defineEmits(['close'])
 
 //狀態
 const file = ref(null);
@@ -148,8 +128,10 @@ const cropImage = ref(null);
 const cropperRef = ref(null);
 
 //預覽封面圖片
-const coverPreviewUrl = ref("");
-const defaultCover = "https://via.placeholder.com/800x400?text=行程封面";
+
+const coverPreviewUrl = ref('')
+const defaultCover = 'https://fakeimg.pl/800x400/?text=行程封面&font=noto'
+
 
 //DOM元素參考
 const fileInput = ref(null);
@@ -170,14 +152,16 @@ const handleFile = (event) => {
 
 //處理裁切的圖
 const applyCrop = () => {
-  const canvas = cropperRef.value?.getResult()?.canvas;
-  if (canvas) {
-    canvas.toBlob((blob) => {
-      file.value = new File([blob], `crooper-image.png`, { type: "image/png" });
-      coverPreviewUrl.value = URL.createObjectURL(file.value);
-      showCropper.value = false;
-    }, "image/png");
-  }
+
+    const canvas = cropperRef.value?.getResult()?.canvas
+    if(canvas){
+        canvas.toBlob((blob) => {
+            file.value = new File([blob],`cropper-image.png`, { type: 'image/png'})
+            coverPreviewUrl.value = URL.createObjectURL(file.value)
+            showCropper.value = false
+        }, 'image/png' )
+    }
+
 };
 
 //自動計算行程天數
@@ -208,14 +192,16 @@ const handleClose = () => {
 
 //點取消清空表單
 const scheduleCancel = () => {
-  file.value = null;
-  coverPriviewUrl.value = "";
-  title.value = "";
-  startDate.value = "";
-  endDate.value = "";
-  days.value = 0;
-  description.value = "";
-  isDirty.value = false;
+
+    file.value = null
+    coverPreviewUrl.value = ''
+    title.value = ''
+    startDate.value = ''
+    endDate.value = ''
+    days.value = 0
+    description.value = ''
+    isDirty.value = false
+
 };
 
 //點儲存打包成formData送到後端
@@ -234,27 +220,23 @@ const scheduleSubmit = async () => {
   formData.append("endDate", endDate.value);
   formData.append("description", description.value);
 
-  try {
-    const response = await axios.post(
-      "http://localhost:3000/api/travelSchedule",
-      formData,
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
 
-    console.log("建立成功", response.data);
-    alert("已儲存");
-    isDirty.value = false;
-    emit("close");
-  } catch (err) {
-    console.log("建立失敗", err.message);
-    alert("儲存失敗，請稍後再試");
-  }
+    try {
+        await axios.post(`${import.meta.env.VITE_API_URL}/api/travelSchedule`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                Authorization: `Bearer ${token}`,
+            },
+        });
+
+        alert('已儲存');
+        isDirty.value = false;
+        emit('close');
+    } catch (err) {
+        alert('儲存失敗，請稍後再試');
+    }
 };
+
+
 </script>
 
-<style></style>

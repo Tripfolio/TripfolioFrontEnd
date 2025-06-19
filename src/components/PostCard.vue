@@ -18,10 +18,14 @@
 
 <script setup>
 import { useRouter } from "vue-router";
+
+
 const props = defineProps({
   post: Object,
 });
+
 const router = useRouter();
+
 const goToPost = () => {
   router.push(`/post/${props.post.id}`); // 之後需改成實際路由
 };
