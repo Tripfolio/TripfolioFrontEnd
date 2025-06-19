@@ -131,12 +131,10 @@ const { selectedPlace, defaultImage } = toRefs(props);
 const itineraryPlaces = ref([]);
 const trafficList = ref([]);
 const itineraryId = 1
-const oldOrder = ref([]); // 儲存原始順序
 const API_URL = import.meta.env.VITE_API_URL;
 
 onMounted(async () => {
   await loadItinerary();
-  oldOrder.value = itineraryPlaces.value.map(p => p.id);
   await fetchTrafficData();
 
   window.addEventListener("click", onClickOutside);
@@ -247,63 +245,25 @@ async function confirmTime(p) {
 
 //更新順序
 async function updateOrder() {
-  const newOrder = itineraryPlaces.value.map(p => p.id);
 
-  const changedPairs = getChangedTrafficPairs(oldOrder.value, newOrder);
-
-  // 刪除受影響的交通資料
-  for (const [fromId, toId] of changedPairs) {
-    try {
-      await axios.delete(`${API_URL}/api/traffic/delete-traffic`, {
-        params: { itineraryId, fromPlaceId: fromId, toPlaceId: toId }
-      });
-
-      // 從 trafficList 中移除該段（更新 UI）
-      trafficList.value = trafficList.value.filter(t =>
-        !(t.fromPlaceId === fromId && t.toPlaceId === toId)
-      );
-    } catch (err) {
-      console.warn(`刪除 ${fromId}→${toId} 交通資料失敗：`, err);
-    }
-  }
-
-  const reorderPayload = itineraryPlaces.value.map((place, index) => ({
+  const newOrder = itineraryPlaces.value.map((place, index) => ({
     id: place.id,
     placeOrder: index + 1,
   }));
 
+  console.log("要傳到後端的資料：", newOrder);
+
   try {
-    await axios.put(`${API_URL}/api/itinerary/places/reorder`, {
-      places: reorderPayload,
-    });
-    console.log("順序已更新");
+    const response = await axios.put(
+      `${API_URL}/api/itinerary/places/reorder`,
+      {
+        places: newOrder,
+      }
+    );
+    console.log("順序已更新", response.data);
   } catch (err) {
     console.error("無法更新順序：", err.response?.data || err.message);
   }
-
-  oldOrder.value = [...newOrder]; // 更新舊順序
-}
-
-function getChangedTrafficPairs(oldList, newList) {
-  const oldPairs = new Set();
-  for (let i = 0; i < oldList.length - 1; i++) {
-    oldPairs.add(`${oldList[i]}-${oldList[i + 1]}`);
-  }
-
-  const newPairs = new Set();
-  for (let i = 0; i < newList.length - 1; i++) {
-    newPairs.add(`${newList[i]}-${newList[i + 1]}`);
-  }
-
-  const changed = [];
-  for (const pair of oldPairs) {
-    if (!newPairs.has(pair)) {
-      const [from, to] = pair.split("-").map(Number);
-      changed.push([from, to]);
-    }
-  }
-
-  return changed;
 }
 
 async function addPlace() {
