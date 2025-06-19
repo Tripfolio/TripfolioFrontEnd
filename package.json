@@ -20,6 +20,7 @@
     "jwt-decode": "^4.0.0",
     "pinia": "^3.0.1",
     "uuid": "^11.1.0",
+    "qrcode.vue": "^3.6.0",
     "v-click-outside": "^3.2.0",
     "vue": "^3.5.13",
     "vue-advanced-cropper": "^2.8.9",
@@ -44,8 +45,17 @@
     "vite": "^6.2.4",
     "vite-plugin-vue-devtools": "^7.7.2"
   },
-  "description": "This template should help get you started developing with Vue 3 in Vite.",
+  "description": "這是一個旅遊網站，包含會員管理、行程規劃與分享、地圖資訊與社群功能。",
   "main": "vite.config.js",
   "author": "",
+  "contributors": [
+    "陳品均 <work880517@gmail.com> (https://github.com/LeoChen517)",
+    "張哲豪 <kiwiisfish@gmail.com> (https://github.com/kiwiisfish)",
+    "蘇怡瑄 <wannadonna34@gmail.com> (https://github.com/mmaysu)",
+    "林芳綺 <g204208@gmail.com> (https://github.com/yanamint",
+    "周子筠 <Yumisunky@gmail.com> (https://github.com/yumi-chou)",
+    "許家瑜 <ninaaahsu@gmail.com> (https://github.com/Ninahsuuuuu)",
+    "劉暄 <pearl81931@gmail.com> (https://github.com/pearl-liu-1203)"
+  ],
   "license": "ISC"
 }
