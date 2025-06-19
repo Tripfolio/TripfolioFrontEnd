@@ -42,13 +42,11 @@ const checkFavoriteStatus = async () => {
   }
 };
 
-// 切換收藏狀態
 const toggleFavorite = async () => {
   isLoading.value = true;
 
   try {
     if (isFavorited.value) {
-      // 取消收藏
       await axios.delete(
         `http://localhost:3000/api/favorites/${props.postId}`,
         {
@@ -58,7 +56,7 @@ const toggleFavorite = async () => {
       isFavorited.value = false;
       console.log("已取消收藏");
     } else {
-      // 新增收藏
+      // 新增
       await axios.post("http://localhost:3000/api/favorites", {
         postId: props.postId,
         memberId: props.memberId,

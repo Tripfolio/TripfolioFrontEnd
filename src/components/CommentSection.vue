@@ -75,30 +75,6 @@ const isSubmitting = ref(false);
 const isLoading = ref(false);
 const isDeletingComment = ref(null); // 追蹤正在刪除的留言 ID
 
-// 假的留言資料（開發用）
-// const fakeComments = [
-//   {
-//     id: 1,
-//     content: "很棒的分享！我也想去台北玩",
-//     author: {
-//       id: 201,
-//       name: "旅遊愛好者",
-//       avatar: "https://picsum.photos/40/40?random=1",
-//     },
-//     createdAt: "2025-06-15T11:00:00Z",
-//   },
-//   {
-//     id: 2,
-//     content: "請問有推薦的住宿嗎？",
-//     author: {
-//       id: 202,
-//       name: "背包客小李",
-//       avatar: "https://picsum.photos/40/40?random=2",
-//     },
-//     createdAt: "2025-06-15T12:30:00Z",
-//   },
-// ];
-
 // 取得目前使用者 ID
 const getCurrentUserId = () => {
   // 實際應用中應該從登入狀態或 localStorage 取得
@@ -118,14 +94,12 @@ const formatTime = (timeString) => {
   return date.toLocaleDateString("zh-TW");
 };
 
-// 提交留言
 const submitComment = async () => {
   if (!newComment.value.trim()) return;
 
   isSubmitting.value = true;
 
   try {
-    // 修正 API 路徑，統一使用 post
     const response = await axios.post(
       `http://localhost:3000/api/post/${props.post.postId}/comments`,
       {
@@ -140,35 +114,17 @@ const submitComment = async () => {
     console.log("留言發表成功", response.data);
   } catch (error) {
     console.error("留言發表失敗:", error);
-
-    // 開發階段：使用假資料模擬成功
-    // const fakeNewComment = {
-    //   id: Date.now(),
-    //   content: newComment.value.trim(),
-    //   author: {
-    //     id: 999,
-    //     name: "目前使用者",
-    //     avatar: "https://picsum.photos/40/40?random=3",
-    //   },
-    //   createdAt: new Date().toISOString(),
-    // };
-
-    // comments.value.unshift(fakeNewComment);
-    // newComment.value = "";
-    // alert("留言發表成功（開發模式）");
   } finally {
     isSubmitting.value = false;
   }
 };
 
-// 載入留言
 const loadComments = async () => {
   if (!props.post.postId) {
     console.warn("沒有貼文 ID");
     return;
   }
 
-  // isLoading.value = true;
   try {
     console.log(`正在載入貼文 ${props.post.postId} 的留言`);
 
@@ -184,14 +140,12 @@ const loadComments = async () => {
   }
 };
 
-// 檢查是否可以刪除留言
 const canDeleteComment = (comment) => {
   const currentUserId = getCurrentUserId();
-  // 只有留言者本人可以刪除自己的留言
+  // 只有本人可以刪除
   return comment.memberId === currentUserId;
 };
 
-// 刪除留言函數
 const deleteComment = async (commentId) => {
   if (!confirm("確定要刪除這則留言嗎？")) {
     return;
@@ -203,7 +157,7 @@ const deleteComment = async (commentId) => {
     console.log(`正在刪除留言 ${commentId}`);
 
     await axios.delete(
-      `http://localhost:3000/api/posts/${props.post.id}/comments/${commentId}`
+      `http://localhost:3000/api/post/${props.post.id}/comments/${commentId}`
     );
 
     // 從本地陣列中移除已刪除的留言
@@ -212,8 +166,6 @@ const deleteComment = async (commentId) => {
     );
 
     console.log("留言刪除成功");
-    // 可選：顯示成功訊息
-    // alert('留言已刪除');
   } catch (error) {
     console.error("刪除留言失敗:", error);
 
@@ -228,8 +180,6 @@ const deleteComment = async (commentId) => {
     } else {
       alert("刪除失敗，請稍後再試");
     }
-  } finally {
-    isDeletingComment.value = null;
   }
 };
 

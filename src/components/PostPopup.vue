@@ -59,49 +59,11 @@
             </p>
           </div>
 
-          <!-- 留言列表 -->
-          <!-- <div class="comments-section flex-1 overflow-y-auto p-4">
-            <div v-if="isLoading" class="text-center py-4">載入中...</div>
-            <div
-              v-else-if="comments.length === 0"
-              class="text-center py-4 text-gray-500"
-            >
-              還沒有留言，成為第一個留言的人吧！
-            </div>
-            <div
-              v-else
-              v-for="comment in comments"
-              :key="comment.id"
-              class="comment mb-3 flex items-start gap-2"
-            >
-              <img
-                :src="comment.userAvatar || 'https://via.placeholder.com/32'"
-                class="avatar-small w-8 h-8 rounded-full"
-              />
-              <div class="flex-1">
-                <span class="comment-user font-semibold">{{
-                  comment.userName
-                }}</span>
-                <span class="comment-content ml-2">{{ comment.content }}</span>
-                <div class="text-xs text-gray-500 mt-1">
-                  {{ formatTime(comment.createdAt) }}
-                </div>
-              </div>
-              <button
-                @click="deleteComment(comment.id)"
-                class="delete-btn text-red-500 text-sm hover:text-red-700"
-              >
-                刪除
-              </button>
-            </div>
-          </div> -->
           <CommentSection :post="post" class="overflow-scroll" />
           <FavoriteButton
             :postId="post.postId"
             :memberId="getCurrentUserId()"
           />
-
-          <!-- 底部輸入區 -->
         </div>
       </div>
     </div>
@@ -122,9 +84,6 @@ const props = defineProps({
       authorName: "",
       authorAvatar: "",
       content: "",
-      likes: 0,
-      // postId: null,
-      // memberId: null,
     }),
   },
   isVisible: {
