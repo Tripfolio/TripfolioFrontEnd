@@ -1,5 +1,5 @@
 <template>
-    <div class="relative">
-      <RouterView />
-    </div>
+  <div class="relative">
+    <RouterView />
+  </div>
 </template>
