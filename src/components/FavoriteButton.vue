@@ -56,6 +56,7 @@ const toggleFavorite = async () => {
         }
       );
       isFavorited.value = false;
+      console.log("已取消收藏");
     } else {
       // 新增收藏
       await axios.post("http://localhost:3000/api/favorites", {
@@ -63,7 +64,6 @@ const toggleFavorite = async () => {
         memberId: props.memberId,
       });
       isFavorited.value = true;
-      console.log("假收藏");
     }
   } catch (error) {
     console.error("切換收藏狀態失敗:", error);
