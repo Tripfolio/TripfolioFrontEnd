@@ -63,7 +63,7 @@ const tabs = [
 //確認會員token
 
 const fetchData = async () => {
-    const token = localStorage.getItem('token') || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJ0ZXN0QGV4YW1wbGUuY29tIiwiaWF0IjoxNzUwMjE1ODY0fQ.jw5vw_Y6187vaYBvBpUe-LZcTbIO-cexfgaZsNUPzZ4'
+    const token = localStorage.getItem('token')
     if(!token) {
         alert('請先登入會員')
         throw new Error('token 不存在')
