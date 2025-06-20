@@ -62,7 +62,7 @@
           <CommentSection :post="post" class="overflow-scroll" />
           <FavoriteButton
             :postId="post.postId"
-            :memberId="getCurrentUserId()"
+            :memberId="post.memberId"
           />
         </div>
       </div>
@@ -91,7 +91,7 @@ const props = defineProps({
     default: false,
   },
 });
-console.log(props.post);
+// console.log(props.post);
 
 const emit = defineEmits(["close", "update-post"]);
 
@@ -125,7 +125,19 @@ const formatTime = (timeString) => {
 
 // 取得目前使用者 ID（暫時模擬）
 const getCurrentUserId = () => {
-  return 1;
+  const token = localStorage.getItem('user_token');
+  if (token) {
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      // console.log('payload:', payload);
+      // 根據實際 payload key 調整
+      return payload.userId || payload.id || payload.memberId || null;
+    } catch (error) {
+      console.error('解析 token 失敗:', error);
+      return null;
+    }
+  }
+  return null;
 };
 
 // 切換按讚
@@ -143,7 +155,7 @@ const toggleLike = async () => {
   }
 };
 
-// 檢查是否可以刪除留言
+
 const canDeleteComment = (comment) => {
   const currentUserId = getCurrentUserId();
   const postAuthorId = props.post.authorId;
@@ -152,7 +164,7 @@ const canDeleteComment = (comment) => {
   return comment.userId === currentUserId || postAuthorId === currentUserId;
 };
 
-// 監聽彈窗顯示狀態
+
 watch(
   () => props.isVisible,
   (newValue) => {

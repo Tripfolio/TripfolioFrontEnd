@@ -95,9 +95,9 @@ const fetchPosts = async () => {
     );
     posts.value = res.data.posts.map((post) => ({
       ...post,
-      isEditing: false,
-      previewImage: null,
-      imageFile: null,
+      // isEditing: false,
+      // previewImage: null,
+      // imageFile: null,
     }));
     console.log(posts.value);
   } catch {

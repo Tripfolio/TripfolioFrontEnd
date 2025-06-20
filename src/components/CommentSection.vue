@@ -77,21 +77,19 @@ const isDeletingComment = ref(null); // 追蹤正在刪除的留言 ID
 
 // 取得目前使用者 ID
 const getCurrentUserId = () => {
-  // 實際應用中應該從登入狀態或 localStorage 取得
-  return 1;
-};
-// 格式化時間
-const formatTime = (timeString) => {
-  if (!timeString) return "";
-  const date = new Date(timeString);
-  const now = new Date();
-  const diff = now - date;
-
-  if (diff < 60000) return "剛剛";
-  if (diff < 3600000) return `${Math.floor(diff / 60000)}分鐘前`;
-  if (diff < 86400000) return `${Math.floor(diff / 3600000)}小時前`;
-
-  return date.toLocaleDateString("zh-TW");
+  const token = localStorage.getItem('token');
+  if (token) {
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      // console.log('payload:', payload);
+      // 根據實際 payload key 調整
+      return payload.userId || payload.id || payload.memberId || null;
+    } catch (error) {
+      console.error('解析 token 失敗:', error);
+      return null;
+    }
+  }
+  return null;
 };
 
 const submitComment = async () => {
@@ -117,6 +115,20 @@ const submitComment = async () => {
   } finally {
     isSubmitting.value = false;
   }
+};
+
+// 格式化時間
+const formatTime = (timeString) => {
+  if (!timeString) return "";
+  const date = new Date(timeString);
+  const now = new Date();
+  const diff = now - date;
+
+  if (diff < 60000) return "剛剛";
+  if (diff < 3600000) return `${Math.floor(diff / 60000)}分鐘前`;
+  if (diff < 86400000) return `${Math.floor(diff / 3600000)}小時前`;
+
+  return date.toLocaleDateString("zh-TW");
 };
 
 const loadComments = async () => {
