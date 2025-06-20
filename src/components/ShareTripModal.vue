@@ -69,7 +69,7 @@
           >
             <div class="flex items-center space-x-3">
               <img
-                :src="member.avatarUrl"
+                :src="member.avatar"
                 alt="avatar"
                 class="w-8 h-8 rounded-full object-cover"
               />
@@ -167,7 +167,7 @@ const fetchMembers = async () => {
       token: item.token,
       permission: item.permission,
       name: item.name || "未知使用者",
-      avatarUrl: item.avatarUrl, // 頭像須從user資料取得
+      avatarUrl: item.avatar, // 頭像須從user資料取得
     }));
   } catch (err) {
     alert("取得共編成員失敗。");

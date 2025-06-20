@@ -115,8 +115,12 @@ import draggable from "vuedraggable";
 const props = defineProps({
   selectedPlace: Object,
   defaultImage: String,
+  tripId: {
+    type: Number,
+    required: true
+  }
 });
-const { selectedPlace, defaultImage } = toRefs(props);
+const { selectedPlace, defaultImage, tripId } = toRefs(props);
 const itineraryPlaces = ref([]);
 const API_URL = import.meta.env.VITE_API_URL;
 onMounted(() => {
@@ -132,7 +136,7 @@ async function loadItinerary() {
   try {
     const res = await axios.get(`${API_URL}/api/itinerary/places`, {
       params: {
-        itineraryId: 1,
+        itineraryId: tripId.value,
       },
     });
     itineraryPlaces.value = res.data.places.sort(

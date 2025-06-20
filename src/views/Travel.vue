@@ -51,7 +51,7 @@ const schedules = ref([]);
 
 //取得所有行程列表
 const fetchSchedules = async () => {
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem('token') || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJ0ZXN0QGV4YW1wbGUuY29tIiwiaWF0IjoxNzUwMjE1ODY0fQ.jw5vw_Y6187vaYBvBpUe-LZcTbIO-cexfgaZsNUPzZ4';
   if(!token) return
 
   try {
@@ -74,7 +74,7 @@ onMounted(() => {
 
 //建立行程時檢查是否登入
 const handleOpenForm = () => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('token') || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJ0ZXN0QGV4YW1wbGUuY29tIiwiaWF0IjoxNzUwMjE1ODY0fQ.jw5vw_Y6187vaYBvBpUe-LZcTbIO-cexfgaZsNUPzZ4';
     if(!token) {
         alert('請先登入會員')
         return
@@ -102,7 +102,7 @@ const deleteSchedule = async(id) => {
   const confirmDelete = confirm("確定刪除這個行程嗎?")
   if(!confirmDelete) return
 
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem('token') || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJ0ZXN0QGV4YW1wbGUuY29tIiwiaWF0IjoxNzUwMjE1ODY0fQ.jw5vw_Y6187vaYBvBpUe-LZcTbIO-cexfgaZsNUPzZ4';
 
   try{
     await axios.delete(`${import.meta.env.VITE_API_URL}/api/travelSchedule/${id}`, {

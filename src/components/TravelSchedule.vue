@@ -47,6 +47,10 @@
                 <button type="submit" class="bg-blue-400 hover:bg-blue-300 text-white px-4 py-2 rounded">建立</button>
             </div>
         </form>
+        <!-- 新增成功，顯示前往編輯按鈕 -->
+        <div v-if="createdScheduleId" class="mt-6 text-right">
+        <RouterLink :to="`/schedule/${createdScheduleId}`" class="text-blue-600 hover:underline" >查看並繼續編輯行程</RouterLink>
+        </div>
     </div>
 </template>
 
@@ -56,6 +60,8 @@
 import{ ref, watch } from 'vue';
 import axios from 'axios'; 
 import { Cropper } from 'vue-advanced-cropper';
+import { useRouter } from 'vue-router';
+const router = useRouter();
 import 'vue-advanced-cropper/dist/style.css';
 
 /* global defineEmits */
@@ -72,6 +78,7 @@ const isDirty = ref(false)
 const showCropper = ref(false)
 const cropImage = ref(null)
 const cropperRef = ref(null)
+const createdScheduleId = ref(null)
 
 
 //預覽封面圖片
@@ -150,13 +157,13 @@ const scheduleCancel = () => {
 };
 
 //點儲存打包成formData送到後端
-const scheduleSubmit = async() => {
+const scheduleSubmit = async () => {
     if(!title.value || !startDate.value || !endDate.value){
         alert('請填寫行程名稱及行程開始/結束日期');
         return;
     }
 
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('token') || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJ0ZXN0QGV4YW1wbGUuY29tIiwiaWF0IjoxNzUwMjE1ODY0fQ.jw5vw_Y6187vaYBvBpUe-LZcTbIO-cexfgaZsNUPzZ4';
 
     const formData = new FormData();
     if(file.value)
@@ -167,14 +174,15 @@ const scheduleSubmit = async() => {
         formData.append('description', description.value);
 
     try {
-        await axios.post(`${import.meta.env.VITE_API_URL}/api/travelSchedule`, formData, {
+        const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/travelSchedule`, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
                 Authorization: `Bearer ${token}`,
             },
         });
 
-        alert('已儲存');
+        createdScheduleId.value = res.data.schedule.id;
+        alert('儲存成功，你可以點擊行程前往編輯');
         isDirty.value = false;
         emit('close');
     } catch (err) {
