@@ -1,61 +1,58 @@
 <template>
-  <div class="p-6 space-y-6">
-    <RouterLink to="/community/post" class="text-blue-500">新增貼文</RouterLink>
-    <h1 class="text-2xl font-bold">社群貼文</h1>
-
-    <div v-if="posts.length === 0">目前沒有任何貼文。</div>
-
-    <div
-      v-for="post in posts"
-      :key="post.postId"
-      class="border p-4 rounded-lg shadow space-y-2"
-    >
-      <div>
-        <p class="font-bold text-lg">標題：{{ post.scheduleTitle }}</p>
-
-        <textarea
-          v-if="post.isEditing"
-          v-model="post.content"
-          class="w-full border rounded p-2"
-          rows="4"
-        />
-        <p v-else>{{ post.content }}</p>
-
-        <p class="text-gray-500">{{ dayjs(post.createdAt).format("YYYY-MM-DD HH:mm") }}</p>
+  <div class="min-h-screen bg-gray-100">
+    <header class="bg-white shadow-md py-3 px-6 flex items-center justify-between">
+      <div class="flex items-center space-x-4">
+        <RouterLink to="/community/posts" class="text-xl font-bold text-gray-800">社群/貼文</RouterLink>
       </div>
-
-      <div v-if="post.isEditing">
-        <input type="file" accept="image/*" @change="onImageChange($event, post)" />
+      <nav class="flex items-center space-x-6">
+        <a href="#" class="text-gray-600 hover:text-gray-900 flex items-center space-x-1">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+          </a>
+        <a href="#" class="text-gray-600 hover:text-gray-900">探索</a>
+        <a href="#" class="text-gray-600 hover:text-gray-900">社群</a>
+        <a href="#" class="text-gray-600 hover:text-gray-900">關於我們</a>
+        <div class="relative group">
+          <button class="flex items-center text-gray-600 hover:text-gray-900 focus:outline-none">
+            地區
+            <svg class="ml-1 w-4 h-4 transform group-hover:rotate-180 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+          </button>
+          </div>
+        <a href="#" class="text-gray-600 hover:text-gray-900">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+          </a>
+      </nav>
+      <div class="flex items-center">
+        <a href="#" class="text-gray-600 hover:text-gray-900">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+          </a>
       </div>
+    </header>
 
-      <img
-        v-if="post.previewImage || post.coverURL"
-        :src="post.previewImage || post.coverURL"
-        alt="封面"
-        class="w-full max-w-md rounded mb-4"
-      />
+    <main class="p-6 flex flex-col items-center">
+        <h1 class="text-2xl font-bold text-gray-800 mb-6 mt-4">建立貼文</h1>
 
-      <div class="flex space-x-4">
-        <button
-          v-if="post.isEditing"
-          @click="saveEdit(post)"
-          class="text-green-500 hover:underline"
-        >儲存</button>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 w-full max-w-5xl">
+            <div
+                v-for="trip in trips"
+                :key="trip.id"
+                class="bg-white rounded-lg shadow-md p-6 h-48 flex flex-col justify-center items-center cursor-pointer hover:shadow-lg transition-shadow duration-200"
+            >
+                <p class="font-bold text-xl text-gray-900 mb-2">{{ trip.name }}</p>
+                <p class="text-gray-600">{{ trip.date }}</p>
+            </div>
 
-        <button
-          v-else
-          @click="post.isEditing = true"
-          class="text-blue-500 hover:underline"
-        >編輯</button>
+            </div>
 
-        <button
-          @click="deletePost(post.postId)"
-          class="text-red-500 hover:underline"
-        >刪除</button>
-      </div>
-    </div>
+        <RouterLink
+            to="/community/post"
+            class="fixed bottom-6 right-6 w-14 h-14 rounded-full bg-green-500 text-white flex items-center justify-center text-3xl shadow-lg hover:bg-green-600 transition-colors duration-200"
+        >
+            +
+        </RouterLink>
+    </main>
   </div>
 </template>
+
 
 <script setup>
 import { ref, onMounted } from "vue";
