@@ -10,7 +10,6 @@ import Travel from "@/views/Travel.vue";
 import SocialHomePage from "@/views/SocialHomePage.vue";
 import TripPlannerView from "@/views/TripPlannerView.vue";
 import GetInvite from "@/views/GetInvite.vue";
-import Travel from "@/views/Travel.vue";
 import Post from "@/components/PostForm.vue";
 import Community from "@/views/CommunityList.vue";
 import SocialHome from "../views/SocialHome.vue";

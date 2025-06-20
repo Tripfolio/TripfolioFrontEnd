@@ -256,13 +256,7 @@
 
 <script setup>
 import { ref, onMounted, watch, onUnmounted } from "vue";
-<<<<<<< HEAD
-// import { MapIcons } from "@/assets/MapIcons";
-
-import { MarkerClusterer } from "@googlemaps/markerclusterer"; //marker的集合
-=======
 import { MarkerClusterer } from "@googlemaps/markerclusterer";
->>>>>>> f0721ad040c28eea78cf938a903532ab7422da5c
 import Itinerary from "../components/Itinerary.vue";
 import { useRoute, useRouter } from "vue-router";
 import { cities } from "../constants/city";

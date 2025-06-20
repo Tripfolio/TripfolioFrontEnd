@@ -157,7 +157,7 @@ watch(
   () => props.isVisible,
   (newValue) => {
     if (newValue && props.post.id) {
-      fetchComments();
+      // fetchComments();
     }
   }
 );
@@ -165,7 +165,7 @@ watch(
 // 組件掛載時載入留言
 onMounted(() => {
   if (props.isVisible && props.post.id) {
-    fetchComments();
+    // fetchComments();
   }
 });
 </script>
