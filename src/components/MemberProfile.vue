@@ -126,11 +126,12 @@ import { Cropper } from "vue-advanced-cropper";
 import "vue-advanced-cropper/dist/style.css";
 import dayjs from "dayjs";
 
-//確認會員登入 抓id 上線前'1'要刪除
-const memberId = localStorage.getItem("memberId") || "1";
-if (!memberId) {
+
+//確認會員token
+const token = localStorage.getItem("token");
+if (!token) {
   alert("請先登入會員");
-  throw new Error("memberId 不存在");
+  throw new Error("token 不存在");
 }
 
 const profileData = ref({
@@ -145,8 +146,11 @@ const profileData = ref({
 onMounted(async () => {
   try {
     const res = await axios.get(
-      `${import.meta.env.VITE_API_URL}/api/members/${memberId}`,
-    );
+      `${import.meta.env.VITE_API_URL}/api/profile`,{
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
     const data = res.data;
 
     //生日時區
@@ -159,6 +163,7 @@ onMounted(async () => {
       avatar: data.avatar || "",
     };
   } catch (error) {
+    // eslint-disable-next-line no-empty
   }
 });
 
@@ -187,18 +192,23 @@ const saveAvatar = async () => {
   canvas.toBlob(async (blob) => {
     const formData = new FormData();
     formData.append("avatar", blob, avatarFile.value.name);
-    formData.append("memberId", memberId);
 
     try {
       await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/members/upload-avatar`,
-        formData,
-      );
+        `${import.meta.env.VITE_API_URL}/api/profile/upload-avatar`,
+        formData,{
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
       alert("大頭貼上傳成功");
 
       const profileRes = await axios.get(
-        `${import.meta.env.VITE_API_URL}/api/members/${memberId}`,
-      );
+        `${import.meta.env.VITE_API_URL}/api/profile`,{
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
       profileData.value = profileRes.data;
       previewUrl.value = "";
       showCropper.value = false;
@@ -227,9 +237,12 @@ watch(
 const saveProfile = async () => {
   try {
     const res = await axios.put(
-      `${import.meta.env.VITE_API_URL}/api/members/${memberId}`,
-      profileData.value,
-    );
+      `${import.meta.env.VITE_API_URL}/api/profile`,
+      profileData.value, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        }
+      });
     alert("儲存成功");
     profileData.value = res.data;
   } catch (err) {
@@ -292,11 +305,14 @@ const changePassword = async () => {
 
   try {
     await axios.put(
-      `${import.meta.env.VITE_API_URL}/api/users/${memberId}/password`,
+      `${import.meta.env.VITE_API_URL}/api/profile/users/password`,
       {
         oldPassword: passwordData.value.oldPassword,
         newPassword: passwordData.value.newPassword,
       },
+      {
+        headers: { Authorization: `Bearer ${token}` }
+      }
     );
     alert("密碼修改成功");
 
