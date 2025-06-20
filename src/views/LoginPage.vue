@@ -45,7 +45,7 @@ import axios from 'axios';
 import {jwtDecode} from "jwt-decode";
 
 const router = useRouter();
-const TOKEN_NAME = 'user_token'
+const TOKEN_NAME = 'token'
 const email = ref('')
 const password = ref('')
 const isLoggedIn = ref(false)
