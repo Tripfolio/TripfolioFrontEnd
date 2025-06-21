@@ -58,6 +58,15 @@ watch(
   { immediate: true }
 )            
 
+watch(
+  () => [props.fromPlaceId, props.toPlaceId],
+  () => {
+    selectedMode.value = 'NONE'
+    durationText.value = ''
+    distanceText.value = ''
+  }
+)
+
 async function getTravelInfo () {
   if (selectedMode.value === 'NONE') {   
     durationText.value = ''

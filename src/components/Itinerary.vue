@@ -105,6 +105,7 @@
           </li>
         <div>
           <TrafficBetween
+            :key="`${p.id}-${itineraryPlaces[index + 1]?.id}`"
             v-if="itineraryPlaces[index + 1]"
             :itineraryId="itineraryId"
             :fromPlaceId="p.id"
@@ -115,6 +116,7 @@
               lng: itineraryPlaces[index + 1].lng,
             }"
             :traffic-data="trafficMap.get(`${p.id}-${itineraryPlaces[index + 1].id}`) || null"
+            
           />
         </div>
         </div>
@@ -160,7 +162,7 @@ async function loadItinerary() {
         lat: Number(p.lat),
         lng: Number(p.lng),
       }))
-    .sort((a, b) => a.arrivalHour - b.arrivalHour);
+    .sort((a, b) => a.placeOrder - b.placeOrder);
   } catch (error) {
     alert("載入行程失敗:");
   }
@@ -254,7 +256,6 @@ async function confirmTime(p) {
 
 //更新順序
 async function updateOrder() {
-
   const newOrder = itineraryPlaces.value.map((place, index) => ({
     id: place.id,
     placeOrder: index + 1,
@@ -268,8 +269,25 @@ async function updateOrder() {
       }
     );
     console.log("順序已更新", response.data);
+
+    // 清理 trafficMap，只保留現有順序的連線
+    const validKeys = new Set();
+    for (let i = 0; i < itineraryPlaces.value.length - 1; i++) {
+      const fromId = itineraryPlaces.value[i].id;
+      const toId = itineraryPlaces.value[i + 1].id;
+      validKeys.add(`${fromId}-${toId}`);
+    }
+    const newMap = new Map();
+    for (const key of trafficMap.value.keys()) {
+      if (validKeys.has(key)) {
+        newMap.set(key, trafficMap.value.get(key));
+      }
+    }
+    trafficMap.value = newMap;
+
   } catch (err) {
     console.error("無法更新順序：", err.response?.data || err.message);
+    return;
   }
 }
 
@@ -302,18 +320,8 @@ async function addPlace() {
       lat,
       lng,
     });
-
     if (rep.data.success) {
-      itineraryPlaces.value.push({
-        name,
-        address: formatted_address || "",
-        photo,
-        arrivalHour: defaultHour,
-        arrivalMinute: defaultMinute,
-        placeOrder: itineraryPlaces.value.length + 1,
-        lat,
-        lng,
-      });
+      await loadItinerary(); // 重新載入行程資料
       alert("成功加入行程！");
     } else {
       alert("加入失敗：" + rep.data.message);
@@ -332,6 +340,16 @@ async function removePlace(place) {
       itineraryPlaces.value = itineraryPlaces.value.filter(
         (p) => p.id !== place.id
       );
+
+      // 移除相關的 trafficMap 資料
+      const newMap = new Map(trafficMap.value);
+      for (const key of newMap.keys()) {
+        if (key.startsWith(`${place.id}-`) || key.endsWith(`-${place.id}`)) {
+          newMap.delete(key);
+        }
+      }
+      trafficMap.value = newMap;
+
       alert("成功刪除景點");
     } else {
       alert("刪除失敗：" + response.data.message);
