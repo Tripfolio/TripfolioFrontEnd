@@ -12,7 +12,7 @@ import TripPlannerView from "@/views/TripPlannerView.vue";
 import GetInvite from "@/views/GetInvite.vue";
 import Post from "@/components/PostForm.vue";
 import Community from "@/views/CommunityList.vue";
-import SocialHome from "../views/SocialHome.vue";
+
 
 const routes = [
   {
@@ -81,7 +81,7 @@ const routes = [
   {
     path: "/social",
     name: "social",
-    component: SocialHome,
+    component: SocialHomePage,
   },
 ];
 

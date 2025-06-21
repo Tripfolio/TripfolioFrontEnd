@@ -81,7 +81,6 @@ const getCurrentUserId = () => {
   if (token) {
     try {
       const payload = JSON.parse(atob(token.split('.')[1]));
-      // console.log('payload:', payload);
       // 根據實際 payload key 調整
       return payload.userId || payload.id || payload.memberId || null;
     } catch (error) {
@@ -99,10 +98,10 @@ const submitComment = async () => {
 
   try {
     const response = await axios.post(
-      `http://localhost:3000/api/post/${props.post.postId}/comments`,
+      `${import.meta.env.VITE_API_URL}/api/post/${props.post.postId}/comments`,
       {
         content: newComment.value.trim(),
-        memberId: getCurrentUserId(), //就是1
+        memberId: getCurrentUserId(), 
       }
     );
 
@@ -117,7 +116,7 @@ const submitComment = async () => {
   }
 };
 
-// 格式化時間
+
 const formatTime = (timeString) => {
   if (!timeString) return "";
   const date = new Date(timeString);
@@ -141,7 +140,7 @@ const loadComments = async () => {
     console.log(`正在載入貼文 ${props.post.postId} 的留言`);
 
     const response = await axios.get(
-      `http://localhost:3000/api/post/${props.post.postId}/comments`
+      `${import.meta.env.VITE_API_URL}/api/post/${props.post.postId}/comments`
     );
     comments.value = response.data;
     console.log("載入留言成功:", response.data);
@@ -169,7 +168,12 @@ const deleteComment = async (commentId) => {
     console.log(`正在刪除留言 ${commentId}`);
 
     await axios.delete(
-      `http://localhost:3000/api/post/${props.post.id}/comments/${commentId}`
+      `${import.meta.env.VITE_API_URL}/api/post/${props.post.postId}/comments/${commentId}`,
+      {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem('token')}`
+    }
+  }
     );
 
     // 從本地陣列中移除已刪除的留言

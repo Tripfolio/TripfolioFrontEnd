@@ -62,7 +62,7 @@
           <CommentSection :post="post" class="overflow-scroll" />
           <FavoriteButton
             :postId="post.postId"
-            :memberId="post.memberId"
+            :memberId="post.authorName"
           />
         </div>
       </div>
@@ -91,7 +91,7 @@ const props = defineProps({
     default: false,
   },
 });
-// console.log(props.post);
+
 
 const emit = defineEmits(["close", "update-post"]);
 
@@ -100,6 +100,8 @@ const newComment = ref("");
 const liked = ref(false);
 const isSubmitting = ref(false);
 const isLoading = ref(false);
+
+
 
 const close = () => {
   emit("close");
@@ -123,22 +125,6 @@ const formatTime = (timeString) => {
   return date.toLocaleDateString("zh-TW");
 };
 
-// 取得目前使用者 ID（暫時模擬）
-const getCurrentUserId = () => {
-  const token = localStorage.getItem('user_token');
-  if (token) {
-    try {
-      const payload = JSON.parse(atob(token.split('.')[1]));
-      // console.log('payload:', payload);
-      // 根據實際 payload key 調整
-      return payload.userId || payload.id || payload.memberId || null;
-    } catch (error) {
-      console.error('解析 token 失敗:', error);
-      return null;
-    }
-  }
-  return null;
-};
 
 // 切換按讚
 const toggleLike = async () => {
@@ -155,31 +141,6 @@ const toggleLike = async () => {
   }
 };
 
-
-const canDeleteComment = (comment) => {
-  const currentUserId = getCurrentUserId();
-  const postAuthorId = props.post.authorId;
-
-  // 留言者本人或貼文作者可以刪除
-  return comment.userId === currentUserId || postAuthorId === currentUserId;
-};
-
-
-watch(
-  () => props.isVisible,
-  (newValue) => {
-    if (newValue && props.post.id) {
-      // fetchComments();
-    }
-  }
-);
-
-// 組件掛載時載入留言
-onMounted(() => {
-  if (props.isVisible && props.post.id) {
-    // fetchComments();
-  }
-});
 </script>
 
 <style scoped>

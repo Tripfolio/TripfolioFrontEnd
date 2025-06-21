@@ -20,7 +20,7 @@ const props = defineProps({
     required: true,
   },
   memberId: {
-    type: Number,
+    type: String,
     required: true,
   },
 });
@@ -32,7 +32,7 @@ const isLoading = ref(false);
 const checkFavoriteStatus = async () => {
   try {
     const response = await axios.get(
-      `http://localhost:3000/api/favorites/check/${props.postId}/${props.memberId}`
+      `${import.meta.env.VITE_API_URL}/api/favorites/check/${props.postId}/${props.memberId}`
     );
     isFavorited.value = response.data.isFavorited;
 
@@ -48,7 +48,7 @@ const toggleFavorite = async () => {
   try {
     if (isFavorited.value) {
       await axios.delete(
-        `http://localhost:3000/api/favorites/${props.postId}`,
+        `${import.meta.env.VITE_API_URL}/api/favorites/${props.postId}`,
         {
           data: { memberId: props.memberId },
         }
@@ -57,7 +57,7 @@ const toggleFavorite = async () => {
       console.log("已取消收藏");
     } else {
       // 新增
-      await axios.post("http://localhost:3000/api/favorites", {
+      await axios.post(`${import.meta.env.VITE_API_URL}/api/favorites`, {
         postId: props.postId,
         memberId: props.memberId,
       });
