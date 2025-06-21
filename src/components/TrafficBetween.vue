@@ -1,18 +1,25 @@
 <template>
-  <div class="flex flex-col items-center my-2">
-    <select v-model="selectedMode" @change="getTravelInfo" class="mb-1 px-2 py-1 rounded border">
-      <option value="NONE">— 選交通方式 —</option>
-      <option value="DRIVING">🚗 開車</option>
-      <option value="WALKING">🚶‍♂️ 步行</option>
-      <option value="TRANSIT">🚇 大眾運輸</option>
-    </select>
-    <div>
-    <span v-if="selectedMode !== 'NONE'">
-      {{ durationText }}（{{ distanceText }}）</span>
-      <span v-else></span>
-    </div>
-  </div>
+<div class="flex items-center justify-between w-50 gap-1  mb-3">
+  <!-- 🔽 下拉選單 -->
+  <select
+    v-model="selectedMode"
+    @change="getTravelInfo"
+    class="w-36 px-3 py-1 border-2 border-gray-500 rounded-full text-base"
+  >
+    <option value="NONE">— 選交通方式 —</option>
+    <option value="DRIVING">🚗 開車</option>
+    <option value="WALKING">🚶‍♂️ 步行</option>
+    <option value="TRANSIT">🚇 大眾運輸</option>
+  </select>
+
+<div class="flex items-center gap-1 text-base whitespace-nowrap">
+  <span>{{ durationText }}</span>
+  <span>{{ distanceText }}</span>
+</div>
+</div>
+
 </template>
+
 
 <script setup>
 import { ref, watch } from 'vue'
