@@ -103,6 +103,7 @@
             </div>
             <!-- 選單按鈕end -->
           </li>
+        <div>
           <TrafficBetween
             v-if="itineraryPlaces[index + 1]"
             :itineraryId="itineraryId"
@@ -115,6 +116,7 @@
             }"
             :traffic-data="trafficMap.get(`${p.id}-${itineraryPlaces[index + 1].id}`) || null"
           />
+        </div>
         </div>
       </template>
     </draggable>
@@ -134,7 +136,6 @@ const props = defineProps({
 });
 const { selectedPlace, defaultImage } = toRefs(props);
 const itineraryPlaces = ref([]);
-const trafficList = ref([]);
 const itineraryId = 1
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -176,7 +177,6 @@ async function fetchTrafficData () {
         map.set(`${t.fromPlaceId}-${t.toPlaceId}`, t);
       });
       trafficMap.value = map;
-      
     } else {
       console.warn("載入交通資料失敗：", data.message);
     }
@@ -260,8 +260,6 @@ async function updateOrder() {
     placeOrder: index + 1,
   }));
 
-  console.log("要傳到後端的資料：", newOrder);
-
   try {
     const response = await axios.put(
       `${API_URL}/api/itinerary/places/reorder`,
@@ -280,6 +278,7 @@ async function addPlace() {
     alert("請先選擇一個地點");
     return;
   }
+
   const { name, formatted_address, photos, geometry } = selectedPlace.value;
   const lat = geometry?.location?.lat?.();
   const lng = geometry?.location?.lng?.();

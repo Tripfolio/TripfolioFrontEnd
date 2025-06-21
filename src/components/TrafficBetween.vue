@@ -15,7 +15,7 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted } from 'vue'
+import { ref, watch } from 'vue'
 import axios from 'axios'
 
 const API_URL = import.meta.env.VITE_API_URL
@@ -28,19 +28,35 @@ const props = defineProps({
   destination: Object,
   trafficData: Object,
 })
-const currentTraffic = ref(props.trafficData ?? null);
 
-watch(() => props.trafficData, (val) => {
-  if (val) currentTraffic.value = val;
-});
-
-console.log('TrafficBetween props:', props.trafficData)
-
-const selectedMode = ref('NONE') // 預設選擇開車   
+const selectedMode = ref('NONE') 
 const durationText = ref('')         
 const distanceText = ref('')        
 const rawDuration  = ref(0)             
-const rawDistance  = ref(0)               
+const rawDistance  = ref(0)   
+
+watch(
+  () => props.trafficData,
+  (val) => {
+    if (val && val.transportMode) {
+      selectedMode.value = val.transportMode
+      if (val.duration && val.distance) {
+        rawDuration.value = val.duration
+        rawDistance.value = val.distance
+        durationText.value = Math.round(val.duration / 60) + ' 分'
+        distanceText.value = (val.distance / 1000).toFixed(1) + ' km'
+      } else {
+        durationText.value = ''
+        distanceText.value = ''
+      }
+    } else {
+      selectedMode.value = 'NONE'
+      durationText.value = ''
+      distanceText.value = ''
+    }
+  },
+  { immediate: true }
+)            
 
 async function getTravelInfo () {
   if (selectedMode.value === 'NONE') {   
