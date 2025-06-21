@@ -91,7 +91,7 @@ const selectedPost = ref(null);
 const fetchPosts = async () => {
   try {
     const res = await axios.get(
-      `${import.meta.env.VITE_API_URL}/api/community-posts`
+      `${import.meta.env.VITE_API_URL}/api/community/community-posts`
     );
     posts.value = res.data.posts.map((post) => ({
       ...post,
@@ -110,7 +110,7 @@ const deletePost = async (postId) => {
 
   try {
     await axios.delete(
-      `${import.meta.env.VITE_API_URL}/api/community-posts/${postId}`,
+      `${import.meta.env.VITE_API_URL}/api/community/community-posts/${postId}`,
       {
         headers: { Authorization: `Bearer ${token}` },
       }
@@ -141,7 +141,7 @@ const saveEdit = async (post) => {
     }
 
     await axios.put(
-      `${import.meta.env.VITE_API_URL}/api/community-posts/${post.postId}`,
+      `${import.meta.env.VITE_API_URL}/api/community/community-posts/${post.postId}`,
       formData,
       {
         headers: {
