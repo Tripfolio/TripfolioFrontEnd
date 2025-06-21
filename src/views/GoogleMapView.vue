@@ -1,7 +1,10 @@
 <template>
   <Itinerary
+    v-if="trip && trip.days && trip.days[currentDayIndex]"
     ref="itineraryRef"
-    :selectedPlace="selectedPlace"
+    :trip-id="trip.id"
+    :selected-place="selectedPlace"
+    :selected-date="trip.days[currentDayIndex]"
     :default-image="defaultImage"
   />
 
@@ -263,6 +266,7 @@ import { cities } from "../constants/city";
 import { rawCategories, rawPlaceCategories } from "../constants/category";
 import { useCategoryMenu } from "../composable/useCategoryMenu";
 import { useMapSearch, SearchType } from "../composable/useMapSearch";
+import { inject} from 'vue';
 
 const route = useRoute();
 const router = useRouter();
@@ -285,6 +289,9 @@ const selectedPlacePhotoIndex = ref(0);
 const selectedCityName = ref(route.query.city || "none");
 
 const selectedMarkers = [];
+
+const trip = inject('trip');
+const currentDayIndex = inject('currentDayIndex');
 
 let markers = [];
 let service = null;

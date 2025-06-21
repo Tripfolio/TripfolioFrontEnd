@@ -1,20 +1,24 @@
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
 import axios from 'axios';
+import dayjs from 'dayjs';
+import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
+dayjs.extend(isSameOrBefore);
 
 const API_BASE_URL = `${import.meta.env.VITE_API_URL}/api/travelSchedule`;
 
-function generateDaysArray(trip) {
-  if (!trip || !trip.startDate || !trip.endDate) {
-    return [];
-  }
-  const start = new Date(trip.startDate);
-  const end = new Date(trip.endDate);
+export function generateDaysArray(trip) {
+  if (!trip || !trip.startDate || !trip.endDate) return [];
+
+  const start = dayjs(trip.startDate);
+  const end = dayjs(trip.endDate);
   const days = [];
-  let current = new Date(start);
-  while (current <= end) {
-    days.push(new Date(current).toISOString().split('T')[0]);
-    current.setDate(current.getDate() + 1);
+  
+  for (let d = start; d.isSameOrBefore(end); d = d.add(1, 'day')) {
+    days.push({
+      date: d.format('YYYY-MM-DD'),
+      spots: []
+    });
   }
   return days;
 }
@@ -35,7 +39,7 @@ export const useTripStore = defineStore('trip', () => {
     error.value = null;
     const token = localStorage.getItem('token') || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJ0ZXN0QGV4YW1wbGUuY29tIiwiaWF0IjoxNzUwMjE1ODY0fQ.jw5vw_Y6187vaYBvBpUe-LZcTbIO-cexfgaZsNUPzZ4';
     try {
-      const response = await axios.get(API_BASE_URL, {
+      const response = await axios.get(`${API_BASE_URL}/user`, {
         headers: { Authorization: `Bearer ${token}` }
       });
 

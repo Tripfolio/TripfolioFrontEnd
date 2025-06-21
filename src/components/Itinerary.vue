@@ -118,8 +118,13 @@ const props = defineProps({
   tripId: {
     type: Number,
     required: true
+  },
+  selectedDate: {
+    type: String,
+    required: true
   }
 });
+
 const { selectedPlace, defaultImage, tripId } = toRefs(props);
 const itineraryPlaces = ref([]);
 const API_URL = import.meta.env.VITE_API_URL;
@@ -134,9 +139,12 @@ onBeforeUnmount(() => {
 
 async function loadItinerary() {
   try {
+    if (!tripId.value) return;
+    
+    const id = Number(tripId.value)
     const res = await axios.get(`${API_URL}/api/itinerary/places`, {
       params: {
-        itineraryId: tripId.value,
+        itineraryId: id,
       },
     });
     itineraryPlaces.value = res.data.places.sort(
@@ -257,7 +265,8 @@ async function addPlace() {
     const defaultHour = 0;
     const defaultMinute = 0;
     const rep = await axios.post(`${API_URL}/api/itinerary/add-place`, {
-      itineraryId: 1,
+      itineraryId: tripId.value,
+      date: props.selectedDate,
       name,
       address: formatted_address || "",
       photo,
@@ -283,7 +292,7 @@ async function addPlace() {
 
 async function removePlace(place) {
   try {
-    const url = `${API_URL}/api/itinerary/place?itineraryId=1&name=${encodeURIComponent(
+    const url = `${API_URL}/api/itinerary/place?itineraryId=${tripId.value}&name=${encodeURIComponent(
       place.name
     )}`;
     const response = await axios.delete(url);
@@ -302,6 +311,8 @@ async function removePlace(place) {
 }
 
 defineExpose({ addPlace });
+
+
 </script>
 
 <style scoped></style>
