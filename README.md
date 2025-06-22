@@ -37,4 +37,4 @@
 | 林芳綺 | [yanamint](https://github.com/yanamint)             | 串接 google calender |            | 註冊         |           |
 | 周子筠 | [yumi-chou](https://github.com/yumi-chou)           | 通勤方式與時間功能   | 依地區篩選 |
 | 許家瑜 | [Ninahsuuuuu](https://github.com/Ninahsuuuuu)       | 行程總覽建立         |            | 資料變更     | 會員瀏覽  |
-| 劉暄   | [pearl-liu-1203](https://github.com/pearl-liu-1203) | 行程頁面編輯         |            | 登入         |
+| 劉暄   | [pearl-liu-1203](https://github.com/pearl-liu-1203) | 行程頁面編輯、LINE Pay |            | 登入         |
