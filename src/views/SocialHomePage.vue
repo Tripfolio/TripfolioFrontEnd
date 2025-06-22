@@ -66,7 +66,7 @@ const fetchPosts = async () => {
   isLoading.value = true;
   try {
     const res = await axios.get(
-      `/api/allposts?page=${page.value}&limit=${limit}`,
+      `${import.meta.env.VITE_API_URL}/api/allposts?page=${page.value}&limit=${limit}`,
     );
     const fetched = res.data.posts || [];
     if (fetched.length < limit) {

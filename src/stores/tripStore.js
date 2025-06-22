@@ -1,6 +1,6 @@
-import { defineStore } from 'pinia';
-import { ref, computed } from 'vue';
-import axios from 'axios';
+import { defineStore } from "pinia";
+import { ref, computed } from "vue";
+import axios from "axios";
 
 const API_BASE_URL = `${import.meta.env.VITE_API_URL}/api/travelSchedule`;
 
@@ -13,13 +13,13 @@ function generateDaysArray(trip) {
   const days = [];
   let current = new Date(start);
   while (current <= end) {
-    days.push(new Date(current).toISOString().split('T')[0]);
+    days.push(new Date(current).toISOString().split("T")[0]);
     current.setDate(current.getDate() + 1);
   }
   return days;
 }
 
-export const useTripStore = defineStore('trip', () => {
+export const useTripStore = defineStore("trip", () => {
   const trips = ref([]);
   const selectedTrip = ref(null);
   const isLoading = ref(false);
@@ -33,27 +33,28 @@ export const useTripStore = defineStore('trip', () => {
   async function fetchTrips() {
     isLoading.value = true;
     error.value = null;
-    const token = getHardcodedToken();
+    const token = localStorage.getItem("token");
     try {
       const response = await axios.get(API_BASE_URL, {
-        headers: { Authorization: `Bearer ${token}` }
+        headers: { Authorization: `Bearer ${token}` },
       });
 
-      const scheduleData = response.data && Array.isArray(response.data.schedules)
-        ? response.data.schedules
-        : [];
+      const scheduleData =
+        response.data && Array.isArray(response.data.schedules)
+          ? response.data.schedules
+          : [];
 
       if (Array.isArray(scheduleData)) {
-        trips.value = scheduleData.map(trip => ({
+        trips.value = scheduleData.map((trip) => ({
           ...trip,
-          days: generateDaysArray(trip)
+          days: generateDaysArray(trip),
         }));
       } else {
         trips.value = [];
-        error.value = '獲取行程資料格式不正確。';
+        error.value = "獲取行程資料格式不正確。";
       }
     } catch (err) {
-      error.value = err.message || '獲取行程失敗';
+      error.value = err.message || "獲取行程失敗";
     } finally {
       isLoading.value = false;
     }
@@ -62,17 +63,17 @@ export const useTripStore = defineStore('trip', () => {
   async function fetchTripById(id) {
     isLoading.value = true;
     error.value = null;
-    const token = getHardcodedToken();
+    const token = localStorage.getItem("token");
     try {
       const response = await axios.get(`${API_BASE_URL}/${id}`, {
-        headers: { Authorization: `Bearer ${token}` }
+        headers: { Authorization: `Bearer ${token}` },
       });
       selectedTrip.value = {
         ...response.data,
-        days: generateDaysArray(response.data)
+        days: generateDaysArray(response.data),
       };
     } catch (err) {
-      error.value = err.message || '獲取單一行程失敗';
+      error.value = err.message || "獲取單一行程失敗";
     } finally {
       isLoading.value = false;
     }
@@ -82,57 +83,61 @@ export const useTripStore = defineStore('trip', () => {
     if (!selectedTrip.value || selectedTrip.value.id !== tripId) {
       return;
     }
-    const token = getHardcodedToken();
+    const token = localStorage.getItem("token");
     try {
       const formData = new FormData();
       for (const key in updatedData) {
-        if (key === 'cover' && updatedData[key] instanceof Blob) {
-          formData.append(key, updatedData[key], 'cover.jpeg');
+        if (key === "cover" && updatedData[key] instanceof Blob) {
+          formData.append(key, updatedData[key], "cover.jpeg");
         } else if (updatedData[key] !== undefined) {
           formData.append(key, updatedData[key]);
         }
       }
 
-      const response = await axios.patch(`${API_BASE_URL}/${tripId}`, formData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
+      const response = await axios.patch(
+        `${API_BASE_URL}/${tripId}`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         },
-      });
+      );
       const updatedTripFromServer = response.data;
 
       if (selectedTrip.value && selectedTrip.value.id === tripId) {
         Object.assign(selectedTrip.value, updatedTripFromServer);
         selectedTrip.value.days = generateDaysArray(selectedTrip.value);
       }
-      const index = trips.value.findIndex(t => t.id === tripId);
+      const index = trips.value.findIndex((t) => t.id === tripId);
       if (index !== -1) {
         Object.assign(trips.value[index], updatedTripFromServer);
         trips.value[index].days = generateDaysArray(trips.value[index]);
       }
 
-      alert('行程更新成功！');
+      alert("行程更新成功！");
     } catch (error) {
-      alert('更新行程失敗，請稍後再試。');
+      alert("更新行程失敗，請稍後再試。");
     }
   }
 
   async function deleteTrip(tripId) {
     isLoading.value = true;
     error.value = null;
-    const token = getHardcodedToken();
+    const token = localStorage.getItem("token");
     try {
       await axios.delete(`${API_BASE_URL}/${tripId}`, {
-        headers: { Authorization: `Bearer ${token}` }
+        headers: { Authorization: `Bearer ${token}` },
       });
-      trips.value = trips.value.filter(trip => trip.id !== tripId);
+      trips.value = trips.value.filter((trip) => trip.id !== tripId);
       if (selectedTrip.value && selectedTrip.value.id === tripId) {
         selectedTrip.value = null;
         selectedTripId.value = null;
       }
-      alert('行程刪除成功！');
+      alert("行程刪除成功！");
     } catch (err) {
-      error.value = err.message || '刪除行程失敗';
-      alert('刪除行程失敗，請稍後再試。');
+      error.value = err.message || "刪除行程失敗";
+      alert("刪除行程失敗，請稍後再試。");
     } finally {
       isLoading.value = false;
     }
@@ -141,12 +146,12 @@ export const useTripStore = defineStore('trip', () => {
   async function addDay(tripId) {
     const trip = selectedTrip.value;
     if (trip && trip.id === tripId) {
-      const token = getHardcodedToken();
+      const token = localStorage.getItem("token");
       try {
         const response = await axios.post(
           `${API_BASE_URL}/${tripId}/addDay`,
           {},
-          { headers: { Authorization: `Bearer ${token}` } }
+          { headers: { Authorization: `Bearer ${token}` } },
         );
 
         const updatedTripFromServer = response.data;
@@ -156,15 +161,15 @@ export const useTripStore = defineStore('trip', () => {
           selectedTrip.value.days = generateDaysArray(selectedTrip.value);
         }
 
-        const index = trips.value.findIndex(t => t.id === tripId);
+        const index = trips.value.findIndex((t) => t.id === tripId);
         if (index !== -1) {
           Object.assign(trips.value[index], updatedTripFromServer);
           trips.value[index].days = generateDaysArray(trips.value[index]);
         }
-        alert('成功新增一天！');
+        alert("成功新增一天！");
         return updatedTripFromServer;
       } catch (error) {
-        alert('新增天數失敗，請稍後再試。');
+        alert("新增天數失敗，請稍後再試。");
         throw error;
       }
     }

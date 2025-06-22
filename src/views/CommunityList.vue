@@ -21,11 +21,17 @@
         />
         <p v-else>{{ post.content }}</p>
 
-        <p class="text-gray-500">{{ dayjs(post.createdAt).format("YYYY-MM-DD HH:mm") }}</p>
+        <p class="text-gray-500">
+          {{ dayjs(post.createdAt).format("YYYY-MM-DD HH:mm") }}
+        </p>
       </div>
 
       <div v-if="post.isEditing">
-        <input type="file" accept="image/*" @change="onImageChange($event, post)" />
+        <input
+          type="file"
+          accept="image/*"
+          @change="onImageChange($event, post)"
+        />
       </div>
 
       <img
@@ -40,18 +46,24 @@
           v-if="post.isEditing"
           @click="saveEdit(post)"
           class="text-green-500 hover:underline"
-        >儲存</button>
+        >
+          儲存
+        </button>
 
         <button
           v-else
           @click="post.isEditing = true"
           class="text-blue-500 hover:underline"
-        >編輯</button>
+        >
+          編輯
+        </button>
 
         <button
           @click="deletePost(post.postId)"
           class="text-red-500 hover:underline"
-        >刪除</button>
+        >
+          刪除
+        </button>
       </div>
     </div>
   </div>
@@ -67,8 +79,10 @@ const token = localStorage.getItem("token");
 
 const fetchPosts = async () => {
   try {
-    const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/community-posts`);
-    posts.value = res.data.posts.map(post => ({
+    const res = await axios.get(
+      `${import.meta.env.VITE_API_URL}/api/community`,
+    );
+    posts.value = res.data.posts.map((post) => ({
       ...post,
       isEditing: false,
       previewImage: null,
@@ -83,9 +97,12 @@ const deletePost = async (postId) => {
   if (!confirm("確定要刪？")) return;
 
   try {
-    await axios.delete(`${import.meta.env.VITE_API_URL}/api/community-posts/${postId}`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    await axios.delete(
+      `${import.meta.env.VITE_API_URL}/api/community-posts/${postId}`,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      },
+    );
     await fetchPosts();
   } catch {
     alert("刪除失敗");
@@ -119,7 +136,7 @@ const saveEdit = async (post) => {
           Authorization: `Bearer ${token}`,
           "Content-Type": "multipart/form-data",
         },
-      }
+      },
     );
 
     post.isEditing = false;
