@@ -136,7 +136,7 @@ const navLinks = [
 const clearText = () => {
 	email.value = ''
 	password.value = ''
-	phone.value = ''
+	name.value = ''
 }
 
 const signUp = async () => {
@@ -146,28 +146,28 @@ const signUp = async () => {
 	successMessage.value = ''
 
 	try {
-		const response = await axios.post("http://localhost:3000/api/signup", {
+		const response = await axios.post(API_BASE_URL, {
 			email: email.value,
 			password: password.value,
-			phone: phone.value
+			name: name.value
 		})
 
 		clearText()
 		showSuccess.value = true
-		successMessage.value = response.data.message || '註冊成功，請重新登入'
+		successMessage.value = response.data.message
 
 		setTimeout(() => {
 			showSuccess.value = false
-			router.push('/')
+			router.push('/login')
 		}, 2000)
 
 	} catch (err) {
-		showError.value = true
-		if (err.response && err.response.data && Array.isArray(err.response.data.errors)) {
-			errorMessages.value = err.response.data.errors
-		} else {
-			errorMessages.value = ['註冊失敗，請稍後重試']
-		}
+    showError.value = true;
+    if (Array.isArray(err.response?.data?.errors)) {
+        errorMessages.value = err.response.data.errors;
+    } else {
+        errorMessages.value = ['註冊失敗，請稍後重試'];
+    }
 	}
 }
 </script>
