@@ -112,7 +112,6 @@ import axios from 'axios'
 const name = ref('')
 const email = ref('')
 const password = ref('')
-const name = ref('')
 
 const router = useRouter()
 
