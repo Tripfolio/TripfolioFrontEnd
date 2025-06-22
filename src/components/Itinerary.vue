@@ -1,5 +1,6 @@
 <template>
-  <div
+  <div style="display: none"></div>
+  <!-- <div
     class="fixed bottom-4 right-4 w-72 bg-white shadow-lg rounded-lg p-4 z-50 max-h-[90vh] overflow-y-auto"
   >
     <h3 class="text-lg font-bold mb-4">已加入的景點</h3>
@@ -104,13 +105,12 @@
         </li>
       </template>
     </draggable>
-  </div>
+  </div> -->
 </template>
 
 <script setup>
 import { toRefs, ref, onMounted, onBeforeUnmount, watch } from "vue";
 import axios from "axios";
-import draggable from "vuedraggable";
 
 
 const props = defineProps({
@@ -136,9 +136,9 @@ const { defaultImage, tripId, selectedDate } = toRefs(props);
 const selectedPlace = props.selectedPlace;
 const itineraryPlaces = ref([]);
 const API_URL = import.meta.env.VITE_API_URL;
+
 onMounted(() => {
   loadItinerary();
-
   window.addEventListener("click", onClickOutside);
 });
 onBeforeUnmount(() => {
@@ -317,7 +317,16 @@ async function removePlace(place) {
   }
 }
 
-defineExpose({ addPlace });
+defineExpose({
+  addPlace,
+  itineraryPlaces,
+  startEditing,
+  cancelEditing,
+  confirmTime,
+  updateOrder,
+  removePlace,
+  formatTime, 
+});
 
 
 </script>
