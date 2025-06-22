@@ -115,7 +115,7 @@ library.add(faExclamationTriangle)
 
 const email = ref('')
 const password = ref('')
-const phone = ref('')
+const name = ref('')
 
 const router = useRouter()
 
