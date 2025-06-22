@@ -114,6 +114,7 @@
 	const isLoggedIn = ref(false)
 	const showError = ref(false)
 	const errorMessage = ref('')
+  const API_BASE_URL = `${import.meta.env.VITE_API_URL}/api/login/`;
 
 	const navLinks = [
   { name: '行程安排', path: '/schedule' },
@@ -124,75 +125,79 @@
 	];
 	
 	const clearText = () => {
-		email.value = ''
-		password.value = ''
-	}
-	
-	const login = async () => {
-		if (email.value === '' || password.value === '') {
-		showError.value = true
-		errorMessage.value = '請輸入 Email 和密碼'
-		return
-	}
-		const userData = {
-		email: email.value,
-		password: password.value
-	}
-	
-		try {
-			const res = await axios.post('http://localhost:3000/api/login'
+  email.value = ''
+  password.value = ''
+}
+
+const login = async () => {
+  if (email.value === '' || password.value === '') {
+    showError.value = true
+    errorMessage.value = '請輸入 Email 和密碼'
+    return
+  }
+  const userData = {
+    email: email.value,
+    password: password.value
+  }
+
+  try {
+    const res = await axios.post(API_BASE_URL
 , userData)
-		const token = res.data.token
-		localStorage.setItem(TOKEN_NAME, token)
-		axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
-		
-		const decoed = jwtDecode(token)
-		localStorage.setItem('memberId', decoed.id)
+    const token = res.data.token
+    localStorage.setItem(TOKEN_NAME, token)
+    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
 
+    isLoggedIn.value = true
+    showError.value = false
+    clearText()
+  } catch (err) {
+    showError.value = true
+    errorMessage.value = err.response?.data?.message || '登入失敗，請檢查郵件與密碼'
+  }
+}
+  
+const logout = async () => {
+  const token = localStorage.getItem(TOKEN_NAME)
+  if (!token) return
 
-		isLoggedIn.value = true
-		showError.value = false
-		clearText()
-		} catch (err) {
-			showError.value = true
-			errorMessage.value = err.response?.data?.message || '登入失敗，請檢查郵件與密碼'
-		}
-	}
-	
-	const logout = async () => {
-		const token = localStorage.getItem(TOKEN_NAME)
-		if (!token) return
-	
+    localStorage.removeItem(TOKEN_NAME)
+    localStorage.removeItem('memberId')
+    isLoggedIn.value = false
+    clearText()
+}
+  
+onMounted(() => {
+  const token = localStorage.getItem(TOKEN_NAME)
+  showError.value = false;
+  errorMessage.value = '';
 
-		localStorage.removeItem(TOKEN_NAME)
-		localStorage.removeItem('memberId')
-		isLoggedIn.value = false
-		clearText()
-		
-	}
-	
-	onMounted(() => {
-		const token = localStorage.getItem(TOKEN_NAME)
-		if (!token) return
+  if (!token) {
+    isLoggedIn.value = false;
+    return;
+  }
 
-		try {
-			const payload = JSON.parse(atob(token.split('.')[1]))
-			const exp = payload.exp
-			const now = Math.floor(Date.now() / 1000)
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1]))
+    const exp = payload.exp
+    const now = Math.floor(Date.now() / 1000)
 
-			if (exp > now) {
-				isLoggedIn.value = true
-				axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
-			} else {
-				localStorage.removeItem(TOKEN_NAME)
-				isLoggedIn.value = false
-			}
-			} catch (err) {
-				console.error("❌ Token 驗證失敗", err)
-				localStorage.removeItem(TOKEN_NAME)
-				isLoggedIn.value = false
-			}
-		})
+    if (exp > now) {
+      isLoggedIn.value = true
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
+    } else {
+      localStorage.removeItem(TOKEN_NAME)
+      isLoggedIn.value = false
+      showError.value = false;
+      errorMessage.value = '';
+    }
+  } catch (err) {
+    console.error("Token 驗證失敗", err)
+    localStorage.removeItem(TOKEN_NAME)
+    isLoggedIn.value = false
+    showError.value = false;
+    errorMessage.value = '';
+  }
+})
 
 </script>
 	
