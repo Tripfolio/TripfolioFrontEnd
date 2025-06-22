@@ -12,6 +12,7 @@ import SocialHomePage from "@/views/SocialHomePage.vue";
 import GetInvite from "@/views/GetInvite.vue";
 import Post from "@/components/PostForm.vue";
 import Community from "@/views/CommunityList.vue";
+import scheduleDetail from "@/views/scheduleDetail.vue";
 import Payment from "@/views/Payment.vue";
 
 
@@ -82,11 +83,16 @@ const routes = [
     component: Community,
   },
   {
+    path: "/schedule/:id",
+    name: "scheduledetail",
+    component: scheduleDetail,
+  },
+  {
     path: "/social",
     name: "social",
     component: SocialHomePage,
   },
-    {
+  {
     path: "/payment",
     name: "payment",
     component: Payment,

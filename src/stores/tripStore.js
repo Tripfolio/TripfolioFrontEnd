@@ -1,20 +1,24 @@
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
 import axios from 'axios';
+import dayjs from 'dayjs';
+import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
+dayjs.extend(isSameOrBefore);
 
 const API_BASE_URL = `${import.meta.env.VITE_API_URL}/api/travelSchedule`;
 
-function generateDaysArray(trip) {
-  if (!trip || !trip.startDate || !trip.endDate) {
-    return [];
-  }
-  const start = new Date(trip.startDate);
-  const end = new Date(trip.endDate);
+export function generateDaysArray(trip) {
+  if (!trip || !trip.startDate || !trip.endDate) return [];
+
+  const start = dayjs(trip.startDate);
+  const end = dayjs(trip.endDate);
   const days = [];
-  let current = new Date(start);
-  while (current <= end) {
-    days.push(new Date(current).toISOString().split('T')[0]);
-    current.setDate(current.getDate() + 1);
+  
+  for (let d = start; d.isSameOrBefore(end); d = d.add(1, 'day')) {
+    days.push({
+      date: d.format('YYYY-MM-DD'),
+      spots: []
+    });
   }
   return days;
 }
@@ -33,9 +37,9 @@ export const useTripStore = defineStore('trip', () => {
   async function fetchTrips() {
     isLoading.value = true;
     error.value = null;
-    const token = localStorage.getItem('token')
+    const token = localStorage.getItem('token');
     try {
-      const response = await axios.get(API_BASE_URL, {
+      const response = await axios.get(`${API_BASE_URL}/user`, {
         headers: { Authorization: `Bearer ${token}` }
       });
 
@@ -62,7 +66,7 @@ export const useTripStore = defineStore('trip', () => {
   async function fetchTripById(id) {
     isLoading.value = true;
     error.value = null;
-    const token = localStorage.getItem('token')
+    const token = localStorage.getItem('token');
     try {
       const response = await axios.get(`${API_BASE_URL}/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
@@ -82,7 +86,7 @@ export const useTripStore = defineStore('trip', () => {
     if (!selectedTrip.value || selectedTrip.value.id !== tripId) {
       return;
     }
-    const token = localStorage.getItem('token')
+    const token = localStorage.getItem('token');
     try {
       const formData = new FormData();
       for (const key in updatedData) {
@@ -119,7 +123,7 @@ export const useTripStore = defineStore('trip', () => {
   async function deleteTrip(tripId) {
     isLoading.value = true;
     error.value = null;
-    const token = localStorage.getItem('token')
+    const token = localStorage.getItem('token');
     try {
       await axios.delete(`${API_BASE_URL}/${tripId}`, {
         headers: { Authorization: `Bearer ${token}` }
@@ -141,7 +145,7 @@ export const useTripStore = defineStore('trip', () => {
   async function addDay(tripId) {
     const trip = selectedTrip.value;
     if (trip && trip.id === tripId) {
-      const token = localStorage.getItem('token')
+      const token = localStorage.getItem('token');
       try {
         const response = await axios.post(
           `${API_BASE_URL}/${tripId}/addDay`,

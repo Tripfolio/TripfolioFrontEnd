@@ -97,6 +97,10 @@
                 </button>
             </div>
         </form>
+        <!-- 新增成功，顯示前往編輯按鈕 -->
+        <div v-if="createdScheduleId" class="mt-6 text-right">
+        <RouterLink :to="`/schedule/${createdScheduleId}`" class="text-blue-600 hover:underline" >查看並繼續編輯行程</RouterLink>
+        </div>
     </div>
 </template>
 
@@ -104,6 +108,8 @@
 import{ ref, watch } from 'vue';
 import axios from 'axios'; 
 import { Cropper } from 'vue-advanced-cropper';
+import { useRouter } from 'vue-router';
+const router = useRouter();
 import 'vue-advanced-cropper/dist/style.css';
 
 /* global defineEmits */
@@ -120,6 +126,7 @@ const isDirty = ref(false)
 const showCropper = ref(false)
 const cropImage = ref(null)
 const cropperRef = ref(null)
+const createdScheduleId = ref(null)
 const isLoading = ref(false);
 
 
@@ -219,14 +226,15 @@ const scheduleSubmit = async () => {
 
     try {
         isLoading.value = true;
-        await axios.post(`${import.meta.env.VITE_API_URL}/api/travelSchedule`, formData, {
+        const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/travelSchedule`, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
                 Authorization: `Bearer ${token}`,
             },
         });
 
-        alert('已儲存');
+        createdScheduleId.value = res.data.schedule.id;
+        alert('儲存成功，你可以點擊行程前往編輯');
         isDirty.value = false;
         emit('close');
     } catch (err) {
