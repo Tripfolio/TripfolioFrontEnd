@@ -49,9 +49,9 @@ const routes = [
   //   component: MemberProfile,
   // },
   {
-    path: "/profilePreview",
+    path: "/profile", // 如果profile復原這頁請修改路徑
     name: "profilePreview",
-    component: ProfilePreview,
+    component: ProfilePreview, // 會員中心
   },
   {
     path: "/emailSettings",

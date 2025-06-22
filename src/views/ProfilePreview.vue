@@ -121,9 +121,9 @@ const collectedPosts = ref([])
 const activeTab = ref('travels')
 const tabs = [
     { key: 'travels', label: '我建立的行程' },
-    { key: 'posts', label: '我建立的貼文' }, // Adjusted to 'my_posts' for distinction
-    { key: 'collected', label: '我收藏的貼文' }, // Adjusted to 'collected_posts' for distinction
-    { key: 'notifications', label: '通知設定' }, // Retained from original
+    { key: 'posts', label: '我建立的貼文' }, 
+    { key: 'collected', label: '我收藏的貼文' }, 
+    { key: 'notifications', label: '通知設定' }, 
 ]
 
 //確認會員登入 抓id
