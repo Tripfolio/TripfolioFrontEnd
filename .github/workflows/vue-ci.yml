@@ -45,7 +45,7 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           reporter: github-pr-check
           level: error
-          eslint_flags: '--ext .js,.vue'
+          eslint_flags: "--ext .js,.vue"
 
       - name: Build project
         if: success()
