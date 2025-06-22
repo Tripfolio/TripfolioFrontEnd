@@ -113,8 +113,7 @@ onMounted(() => {
 
 //建立行程時檢查是否登入
 const handleOpenForm = () => {
-  const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsImVtYWlsIjoiYXBwbGVAeWFob28uY29tIiwiaWF0IjoxNzUwNDI2OTMyLCJleHAiOjE3NTMwMTg5MzJ9.UbUfD7sdkqQcEW-dgFTjn7euKOJc3Oc79SYxk2n0-bM'
-  //localStorage.getItem('token');
+  const token = localStorage.getItem('token');
     if(!token) {
       alert('請先登入會員')
       return
