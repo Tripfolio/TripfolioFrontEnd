@@ -233,25 +233,6 @@
     </div>
   </aside>
 
-  <div
-    class="absolute bottom-10 left-5 bg-white/90 px-3 py-2 rounded-md shadow-md flex gap-2.5 items-center z-[1]"
-  >
-    <div v-if="result">
-      <p>兩點距離：{{ result.distance }}，預估時間：{{ result.duration }}</p>
-    </div>
-    <label class="flex items-center gap-2">
-      <span>選擇交通方式：</span>
-      <select
-        v-model="travelMode"
-        @change="recalculateRoute"
-        class="px-2 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-      >
-        <option value="DRIVING">🚗 開車</option>
-        <option value="WALKING">🚶‍♀️ 步行</option>
-        <option value="TRANSIT">🚇 大眾運輸</option>
-      </select>
-    </label>
-  </div>
 </template>
 
 <script setup>
@@ -294,7 +275,7 @@ let markerCluster = null;
 let performSearch = () => {};
 let mapClickListener = null;
 
-const travelMode = ref("DRIVING");
+
 const result = ref(null);
 const maxCategoryCount = 5;
 const cardContainer = ref(null);
@@ -576,35 +557,6 @@ function handleResults(results, status, pagination) {
 function loadNextPage() {
   if (nextPageFunc.value) {
     nextPageFunc.value();
-  }
-}
-
-function calculateRoute(origin, destination) {
-  directionsService.route(
-    {
-      origin,
-      destination,
-      travelMode: travelMode.value,
-    },
-    (response, status) => {
-      if (status === "OK") {
-        directionsRenderer.setDirections(response);
-
-        const leg = response.routes[0].legs[0];
-        result.value = {
-          distance: leg.distance.text,
-          duration: leg.duration.text,
-        };
-      } else {
-        alert("路線規劃失敗：" + status);
-      }
-    }
-  );
-}
-
-function recalculateRoute() {
-  if (markers.length === 2) {
-    calculateRoute(markers[0].getPosition(), markers[1].getPosition());
   }
 }
 
