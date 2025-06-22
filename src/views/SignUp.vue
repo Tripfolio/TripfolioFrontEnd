@@ -70,7 +70,7 @@
         />
         <input
           v-model="phone"
-          placeholder="請輸入手機號碼 (選填)"
+          placeholder="請輸入使用者名稱 (選填)"
           class="p-3 bg-gray-500 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-white placeholder-gray-300"
         />
         <button
