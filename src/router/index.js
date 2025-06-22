@@ -14,6 +14,7 @@ import Post from "@/components/PostForm.vue";
 import Community from "@/views/CommunityList.vue";
 import Payment from "@/views/Payment.vue";
 
+
 const routes = [
   {
     path: "/",
@@ -79,6 +80,11 @@ const routes = [
     path: "/community",
     name: "community",
     component: Community,
+  },
+  {
+    path: "/social",
+    name: "social",
+    component: SocialHomePage,
   },
     {
     path: "/payment",

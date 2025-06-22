@@ -9,6 +9,7 @@
       v-for="post in posts"
       :key="post.postId"
       class="border p-4 rounded-lg shadow space-y-2"
+      @click="openPostDetail(post)"
     >
       <div>
         <p class="font-bold text-lg">標題：{{ post.scheduleTitle }}</p>
@@ -21,11 +22,17 @@
         />
         <p v-else>{{ post.content }}</p>
 
-        <p class="text-gray-500">{{ dayjs(post.createdAt).format("YYYY-MM-DD HH:mm") }}</p>
+        <p class="text-gray-500">
+          {{ dayjs(post.createdAt).format("YYYY-MM-DD HH:mm") }}
+        </p>
       </div>
 
       <div v-if="post.isEditing">
-        <input type="file" accept="image/*" @change="onImageChange($event, post)" />
+        <input
+          type="file"
+          accept="image/*"
+          @change="onImageChange($event, post)"
+        />
       </div>
 
       <img
@@ -40,20 +47,33 @@
           v-if="post.isEditing"
           @click="saveEdit(post)"
           class="text-green-500 hover:underline"
-        >儲存</button>
+        >
+          儲存
+        </button>
 
         <button
           v-else
           @click="post.isEditing = true"
           class="text-blue-500 hover:underline"
-        >編輯</button>
+        >
+          編輯
+        </button>
 
         <button
           @click="deletePost(post.postId)"
           class="text-red-500 hover:underline"
-        >刪除</button>
+        >
+          刪除
+        </button>
       </div>
     </div>
+    <PostPopup
+      v-if="showModal"
+      :post="selectedPost"
+      :isVisible="showModal"
+      @close="closeModal"
+      @update-post="updatePost"
+    />
   </div>
 </template>
 
@@ -61,19 +81,25 @@
 import { ref, onMounted } from "vue";
 import axios from "axios";
 import dayjs from "dayjs";
+import PostPopup from "../components/PostPopup.vue";
 
 const posts = ref([]);
 const token = localStorage.getItem("token");
+const showModal = ref(false);
+const selectedPost = ref(null);
 
 const fetchPosts = async () => {
   try {
-    const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/community-posts`);
-    posts.value = res.data.posts.map(post => ({
+    const res = await axios.get(
+      `${import.meta.env.VITE_API_URL}/api/community`
+    );
+    posts.value = res.data.posts.map((post) => ({
       ...post,
       isEditing: false,
       previewImage: null,
       imageFile: null,
     }));
+    console.log(posts.value);
   } catch {
     alert("取得貼文失敗");
   }
@@ -83,9 +109,12 @@ const deletePost = async (postId) => {
   if (!confirm("確定要刪？")) return;
 
   try {
-    await axios.delete(`${import.meta.env.VITE_API_URL}/api/community-posts/${postId}`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    await axios.delete(
+      `${import.meta.env.VITE_API_URL}/api/community/community-posts/${postId}`,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
     await fetchPosts();
   } catch {
     alert("刪除失敗");
@@ -112,7 +141,7 @@ const saveEdit = async (post) => {
     }
 
     await axios.put(
-      `${import.meta.env.VITE_API_URL}/api/community-posts/${post.postId}`,
+      `${import.meta.env.VITE_API_URL}/api/community/community-posts/${post.postId}`,
       formData,
       {
         headers: {
@@ -130,6 +159,23 @@ const saveEdit = async (post) => {
   } catch {
     alert("更新失敗！");
   }
+};
+
+const updatePost = (updatedPost) => {
+  const index = posts.value.findIndex((p) => p.id === updatedPost.id);
+  if (index !== -1) {
+    posts.value[index] = updatedPost;
+  }
+};
+
+const closeModal = () => {
+  showModal.value = false;
+  selectedPost.value = null;
+};
+
+const openPostDetail = (post) => {
+  selectedPost.value = post;
+  showModal.value = true;
 };
 
 onMounted(fetchPosts);
