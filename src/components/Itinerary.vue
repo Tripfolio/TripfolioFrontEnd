@@ -309,9 +309,10 @@ async function addPlace() {
     ? photos[0].getUrl({ maxWidth: 1000 })
     : defaultImage.value;
 
+  const placeOrder =
+    Math.max(0, ...itineraryPlaces.value.map(p => p.placeOrder ?? 0)) + 1;
+
   try {
-    const defaultHour = 0;
-    const defaultMinute = 0;
     const rep = await axios.post(`${API_URL}/api/itinerary/add-place`, {
       itineraryId: 1,
       name,
@@ -319,6 +320,7 @@ async function addPlace() {
       photo,
       lat,
       lng,
+      placeOrder,
     });
     if (rep.data.success) {
       await loadItinerary(); // 重新載入行程資料
