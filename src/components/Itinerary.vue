@@ -15,7 +15,7 @@
         <li
           class="mb-4 border-b bg-gray-500 list-none flex justify-between rounded-2xl w-l relative items-stretch"
         >
-          <!-- 右半邊 -->
+          
           <div class="w-1/2 p-3">
             <p
               class="number bg-red-600 w-6 text-center rounded-2xl text-amber-50"
@@ -23,7 +23,7 @@
               {{ index + 1 }}
             </p>
             <h3 class="block text-white text-l mb-1.5">{{ p.name }}</h3>
-            <!-- 時間選單與按鈕 -->
+           
             <div class="flex flex-col items-start text-white text-xs">
               <p
                 v-if="!p.editingTime"
@@ -35,7 +35,7 @@
 
               <div v-else class="flex flex-col gap-1">
                 <div class="flex gap-1 items-center">
-                  <!-- 小時 -->
+                  
                   <select
                     v-model="p.arrivalHourTemp"
                     class="appearance-none outline-0"
@@ -45,7 +45,7 @@
                     </option>
                   </select>
                   :
-                  <!-- 分鐘 -->
+                  
                   <select
                     v-model="p.arrivalMinuteTemp"
                     class="appearance-none outline-0"
@@ -68,14 +68,14 @@
               </div>
             </div>
           </div>
-          <!-- 右半邊end -->
+          
           <img
             :src="p.photo"
             class="w-1/2 rounded-tr-lg rounded-br-lg object-cover"
           />
 
           <br />
-          <!-- 選單按鈕 -->
+          
           <div class="relative">
             <button
               @click.stop="toggleMenu(index)"
@@ -100,7 +100,7 @@
               </li>
             </ul>
           </div>
-          <!-- 選單按鈕end -->
+          
         </li>
       </template>
     </draggable>
@@ -108,24 +108,32 @@
 </template>
 
 <script setup>
-import { toRefs, ref, onMounted, onBeforeUnmount } from "vue";
+import { toRefs, ref, onMounted, onBeforeUnmount, watch } from "vue";
 import axios from "axios";
 import draggable from "vuedraggable";
 
+
 const props = defineProps({
-  selectedPlace: Object,
-  defaultImage: String,
   tripId: {
-    type: Number,
-    required: true
+    type: [String, Number],
+    required: true,
   },
   selectedDate: {
     type: String,
-    required: true
-  }
+    required: true,
+  },
+  defaultImage: {
+    type: String,
+    default: 'https://placehold.co/600x400?text=No+Image',
+  },
+  selectedPlace: {
+    type: Object,
+    default: null,
+  },
 });
 
-const { selectedPlace, defaultImage, tripId } = toRefs(props);
+const { defaultImage, tripId, selectedDate } = toRefs(props);
+const selectedPlace = props.selectedPlace;
 const itineraryPlaces = ref([]);
 const API_URL = import.meta.env.VITE_API_URL;
 onMounted(() => {
@@ -139,21 +147,26 @@ onBeforeUnmount(() => {
 
 async function loadItinerary() {
   try {
-    if (!tripId.value) return;
+    if (!tripId.value || !selectedDate.value) return;
     
     const id = Number(tripId.value)
     const res = await axios.get(`${API_URL}/api/itinerary/places`, {
       params: {
         itineraryId: id,
+        date: selectedDate.value,
       },
     });
-    itineraryPlaces.value = res.data.places.sort(
-      (a, b) => a.arrivalHour - b.arrivalHour
-    );
+    itineraryPlaces.value = res.data.places
+      .filter(p => p.date === selectedDate.value)
+      .sort((a, b) => a.arrivalHour - b.arrivalHour);
   } catch (error) {
     alert("載入行程失敗:");
   }
 }
+
+watch(selectedDate, () => {
+  loadItinerary();
+});
 
 //景點選單順序
 const openMenuIndex = ref(null);
@@ -244,12 +257,14 @@ async function updateOrder() {
   }
 }
 
-async function addPlace() {
-  if (!selectedPlace.value) {
+async function addPlace(place,date) {
+  const id = tripId.value;
+  if (!place || !date) {
+
     alert("請先選擇一個地點");
     return;
   }
-  const { name, formatted_address, photos } = selectedPlace.value;
+  const { name, formatted_address, photos } = place;
 
   const exists = itineraryPlaces.value.some((p) => p.name === name);
   if (exists) {
@@ -262,31 +277,23 @@ async function addPlace() {
     : defaultImage.value;
 
   try {
-    const defaultHour = 0;
-    const defaultMinute = 0;
     const rep = await axios.post(`${API_URL}/api/itinerary/add-place`, {
-      itineraryId: tripId.value,
-      date: props.selectedDate,
+      itineraryId: Number(id),
+      date: String(date),
       name,
-      address: formatted_address || "",
+      address: typeof formatted_address === 'object' ? formatted_address?.formatted_address || '' : formatted_address || '',
       photo,
     });
 
-    if (rep.data.success) {
-      itineraryPlaces.value.push({
-        name,
-        address: formatted_address || "",
-        photo,
-        arrivalHour: defaultHour,
-        arrivalMinute: defaultMinute,
-        placeOrder: itineraryPlaces.value.length + 1,
-      });
+    if (rep.data.success && rep.data.place) {
+      itineraryPlaces.value.push(rep.data.place);
       alert("成功加入行程！");
     } else {
       alert("加入失敗：" + rep.data.message);
     }
   } catch (error) {
-    alert("發生錯誤：" + error.message);
+    const msg = error?.response?.data?.message || error?.message || "未知錯誤";
+    alert("加入失敗：" + msg);
   }
 }
 

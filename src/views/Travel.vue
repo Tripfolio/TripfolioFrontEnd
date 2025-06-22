@@ -2,19 +2,22 @@
   <div class="relative">
     <div class="flex h-screen">
       <!-- 左側：可放地圖或其他內容 -->
-      <div class="w-2/3 bg-gray-50 p-4">
-        <GoogleMapView 
-          ref="mapRef"
-          :selected-place="selectedPlace"
-          :default-image="defaultImage"
-          :current-day-index="currentDayIndex"
-          :trip="selectedTrip"
-          @select-place="handlePlaceSelect"
+      <div class="w-4/6 bg-gray-50 p-4 h-full relative overflow-hidden">
+        <div class="w-full h-full relative rounded-xl overflow-hidden">
+          <GoogleMapView 
+            ref="mapRef"
+            :selected-place="selectedPlace"
+            :default-image="defaultImage"
+            :current-day-index="currentDayIndex"
+            :trip="selectedTrip"
+            @select-place="handlePlaceSelect"
+            @call-itinerary="callItinerary"
           />
+        </div>
       </div>
 
       <!-- 右側：行程列表區 -->
-      <div class="w-1/3 h-full overflow-y-auto bg-white p-4 border-l">
+      <div class="w-2/6 h-full overflow-y-auto bg-white p-4 border-l">
         <div class="flex justify-end mb-4">
           <button @click="handleOpenForm" class="bg-blue-500 hover:bg-blue-400 text-white px-4 py-2 rounded-lg shadow">建立行程</button>
         </div>
@@ -37,7 +40,14 @@
       </div>
 
       <!-- 編輯行程 -->
-      <ScheduleDetail v-else :trip-id="editingTripId" @back="handleCloseDetail" />
+      <ScheduleDetail 
+        v-else 
+        :trip-id="editingTripId" 
+        :current-day-index="currentDayIndex"
+        :selected-date="selectedTrip?.days?.[currentDayIndex]"
+        ref="itineraryRef"
+        @back="handleCloseDetail" 
+        />
       </div>
     </div>
     <!-- 彈出建立行程表單 -->
@@ -62,7 +72,6 @@
 </template>
 
 
-
 <script setup>
 import { ref, onMounted, computed } from 'vue';
 import { useRouter } from 'vue-router'
@@ -82,11 +91,13 @@ const showPayModal = ref(false);
 const selectedPlace = ref(null);
 const defaultImage = "https://picsum.photos/1000?image";
 const currentDayIndex = ref(0);
+const itineraryRef = ref(null)
 
 const selectedTrip = computed(() => {
   return tripStore.trips.find((t) => t.id ===editingTripId.value);
 });
 
+const mapRef = ref(null);
 
 //取得會員是否為付費會員
 const fetchIsPremium = async () => {
@@ -166,6 +177,23 @@ const deleteSchedule = async (id) => {
   }
 };
 
+function handlePlaceSelect(place) {
+  selectedPlace.value = place;
+}
 
+function callItinerary() {
+  const place = selectedPlace.value;
+  const date = selectedTrip.value?.days?.[currentDayIndex.value];
+  if (!place || !date) {
+    alert("缺少地點或日期，無法加入行程");
+    return;
+  }
+
+  if (itineraryRef.value?.addPlace) {
+    itineraryRef.value.addPlace(place, date);
+  } else {
+    alert("行程尚未載入，無法加入景點");
+  }
+}
 
 </script>

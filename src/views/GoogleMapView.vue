@@ -1,10 +1,9 @@
 <template>
   <Itinerary
-    v-if="trip && trip.days && trip.days[currentDayIndex]"
     ref="itineraryRef"
-    :trip-id="trip.id"
+    :trip-id="trip?.id"
     :selected-place="selectedPlace"
-    :selected-date="trip.days[currentDayIndex]"
+    :selected-date="selectedDate"
     :default-image="defaultImage"
   />
 
@@ -258,7 +257,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch, onUnmounted } from "vue";
+import { ref, onMounted, watch, onUnmounted, computed, toRefs } from "vue";
 import { MarkerClusterer } from "@googlemaps/markerclusterer";
 import Itinerary from "../components/Itinerary.vue";
 import { useRoute, useRouter } from "vue-router";
@@ -266,7 +265,18 @@ import { cities } from "../constants/city";
 import { rawCategories, rawPlaceCategories } from "../constants/category";
 import { useCategoryMenu } from "../composable/useCategoryMenu";
 import { useMapSearch, SearchType } from "../composable/useMapSearch";
-import { inject} from 'vue';
+
+
+const props = defineProps({
+  trip: Object,
+  currentDayIndex: Number,
+});
+
+const { trip, currentDayIndex } = toRefs(props);
+
+const selectedDate = computed(() => {
+  return trip.value?.days?.[currentDayIndex.value] || null;
+});
 
 const route = useRoute();
 const router = useRouter();
@@ -289,9 +299,6 @@ const selectedPlacePhotoIndex = ref(0);
 const selectedCityName = ref(route.query.city || "none");
 
 const selectedMarkers = [];
-
-const trip = inject('trip');
-const currentDayIndex = inject('currentDayIndex');
 
 let markers = [];
 let service = null;
@@ -322,11 +329,12 @@ function scrollRight() {
 //import
 function callItinerary() {
   if (itineraryRef.value && typeof itineraryRef.value.addPlace === "function") {
-    itineraryRef.value.addPlace();
+    itineraryRef.value.addPlace(selectedPlace.value, selectedDate.value);
   } else {
     alert("itineraryRef 尚未掛載，無法呼叫 addPlace");
   }
 }
+
 
 const {
   categories,

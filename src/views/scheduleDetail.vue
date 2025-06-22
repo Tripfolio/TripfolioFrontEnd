@@ -41,6 +41,7 @@
                 v-if="tripLoaded && trip?.id && currentDayIndex !== null" 
                 :trip-id="trip.id" 
                 :selected-date="trip.days[currentDayIndex]"
+                :default-image="'/images/default.jpg'"
                 ref="itineraryRef"
             />
         </div>
@@ -59,6 +60,10 @@ import { generateDaysArray } from '../stores/tripStore';
 const props = defineProps({
   tripId: {
     type: [String, Number],
+    required: true,
+  },
+  selectedDate: {
+    type: String,
     required: true,
   },
 });
@@ -177,5 +182,6 @@ watch(trip, (newTrip) => {
     currentDayIndex.value = 0;
   }
 }, { deep: true });
+
 
 </script>
