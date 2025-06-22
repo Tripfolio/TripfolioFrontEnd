@@ -102,7 +102,7 @@ async function submitPost() {
 
   try {
     await axios.post(
-      `${import.meta.env.VITE_API_URL}/api/community-posts`,
+      `${import.meta.env.VITE_API_URL}/api/community/community-posts`,
       formData,
       {
         headers: {

@@ -108,11 +108,8 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import axios from 'axios'
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons'
-import { library } from '@fortawesome/fontawesome-svg-core'
-library.add(faExclamationTriangle)
 
+const name = ref('')
 const email = ref('')
 const password = ref('')
 const name = ref('')
@@ -170,6 +167,7 @@ const signUp = async () => {
     }
 	}
 }
+
 </script>
 
 <style scoped>
