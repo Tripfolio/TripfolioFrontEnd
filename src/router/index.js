@@ -5,10 +5,16 @@ import LoginPage from "@/views/LoginPage.vue";
 import GoogleMapView from "@/views/GoogleMapView.vue";
 import MemberProfile from "@/views/MemberProfile.vue";
 import GoogleCalendar from "@/views/GoogleCalendar.vue";
+import TripPlannerView from "@/views/TripPlannerView.vue";
 import EmailSettings from "@/views/EmailSettings.vue";
 import Travel from "@/views/Travel.vue";
+import SocialHomePage from "@/views/SocialHomePage.vue";
+import GetInvite from "@/views/GetInvite.vue";
 import Post from "@/components/PostForm.vue";
 import Community from "@/views/CommunityList.vue";
+import scheduleDetail from "@/views/scheduleDetail.vue";
+import Payment from "@/views/Payment.vue";
+
 
 const routes = [
   {
@@ -47,9 +53,24 @@ const routes = [
     component: EmailSettings,
   },
   {
+    path: "/trips",
+    name: "trips",
+    component: TripPlannerView,
+  },
+  {
+    path: "/GetInvite",
+    name: "GetInvite",
+    component: GetInvite,
+  },
+  {
     path: "/schedule",
     name: "schedule",
     component: Travel,
+  },
+  {
+    path: "/social",
+    name: "social",
+    component: SocialHomePage,
   },
   {
     path: "/community/post",
@@ -60,6 +81,21 @@ const routes = [
     path: "/community",
     name: "community",
     component: Community,
+  },
+  {
+    path: "/schedule/:id",
+    name: "scheduledetail",
+    component: scheduleDetail,
+  },
+  {
+    path: "/social",
+    name: "social",
+    component: SocialHomePage,
+  },
+  {
+    path: "/payment",
+    name: "payment",
+    component: Payment,
   },
 ];
 

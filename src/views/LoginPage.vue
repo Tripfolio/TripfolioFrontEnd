@@ -38,21 +38,23 @@
         />
       </div>
 
-      <div class="flex justify-center gap-[20px] mt-[10px] w-[300px]">
+      <div class="flex justify-start gap-[20px] mt-[10px] w-[300px]">
         <button
           type="submit"
           class="w-[100px] bg-blue-200 text-black py-2 rounded transition"
         >
           登入
         </button>
-        <button
-          type="button"
-          class="w-[100px] bg-gray-200 text-black py-2 rounded transition"
-        >
-          註冊
-        </button>
       </div>
     </form>
+
+    <RouterLink to="/signup">
+      <button
+        class="w-[100px] text-black py-2 rounded transition hover:text-[#0d4a87]"
+      >
+        我要註冊
+      </button>
+    </RouterLink>
 
     <div v-if="isLoggedIn" class="mt-6">
       <p class="text-blue-600 font-semibold mb-4">您已登入</p>
@@ -68,14 +70,18 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
+import { useRouter } from "vue-router";
 import axios from "axios";
+import { jwtDecode } from "jwt-decode";
 
-const TOKEN_NAME = "user_token";
+const router = useRouter();
+const TOKEN_NAME = "token";
 const email = ref("");
 const password = ref("");
 const isLoggedIn = ref(false);
 const showError = ref(false);
 const errorMessage = ref("");
+const API_BASE_URL = `${import.meta.env.VITE_API_URL}/api/login/`;
 
 const clearText = () => {
   email.value = "";
@@ -94,7 +100,7 @@ const login = async () => {
   };
 
   try {
-    const res = await axios.post("http://localhost:3000/api/login", userData);
+    const res = await axios.post(API_BASE_URL, userData);
     const token = res.data.token;
     localStorage.setItem(TOKEN_NAME, token);
     axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
@@ -121,7 +127,13 @@ const logout = async () => {
 
 onMounted(() => {
   const token = localStorage.getItem(TOKEN_NAME);
-  if (!token) return;
+  showError.value = false;
+  errorMessage.value = "";
+
+  if (!token) {
+    isLoggedIn.value = false;
+    return;
+  }
 
   try {
     const payload = JSON.parse(atob(token.split(".")[1]));
@@ -134,13 +146,15 @@ onMounted(() => {
     } else {
       localStorage.removeItem(TOKEN_NAME);
       isLoggedIn.value = false;
+      showError.value = false;
+      errorMessage.value = "";
     }
   } catch (err) {
-    console.error("❌ Token 驗證失敗", err);
+    console.error("Token 驗證失敗", err);
     localStorage.removeItem(TOKEN_NAME);
     isLoggedIn.value = false;
+    showError.value = false;
+    errorMessage.value = "";
   }
 });
 </script>
-
-<style scoped></style>
