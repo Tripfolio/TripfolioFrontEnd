@@ -1,6 +1,9 @@
 <template>
   <div class="p-10 max-w-md mx-auto text-center">
     <h1 class="text-2xl font-bold mb-4">選擇付款方式</h1>
+    <p class="text-lg font-semibold text-gray-700 mb-2">
+      付費會員，一次買斷只要：${{ paymentAmount }}
+    </p>
     <p v-if="dropinisReady" class="text-gray-600 mb-6">
       使用卡號 ( 4111 1111 1111 1111 ) 付款
     </p>
@@ -33,6 +36,7 @@ const router = useRouter();
 const dropinInstance = ref(null);
 const dropinisReady = ref(false);
 const isLoading = ref(false);
+const paymentAmount = ref("30.0");
 
 const initDropin = async () => {
   isLoading.value = true;
@@ -47,6 +51,7 @@ const initDropin = async () => {
   );
 
   const clientToken = res.data.token;
+  paymentAmount.value = res.data.amount || "30.0";
 
   dropin.create(
     {
@@ -83,7 +88,10 @@ const submitPayment = async () => {
     );
 
     if (result.data.success) {
-      alert("付款成功，您已升級為付費會員！");
+      const amountPaid = result.data.transaction.amount;
+      const txnId = result.data.transaction.id;
+
+      alert(`付款成功！金額：NT$${amountPaid}\n交易編號：${txnId}`);
       router.push("/schedule");
     } else {
       alert("付款失敗：" + result.data.message);
