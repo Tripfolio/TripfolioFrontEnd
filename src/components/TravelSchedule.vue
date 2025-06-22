@@ -169,7 +169,7 @@ const scheduleSubmit = async () => {
         return;
     }
 
-    const token = localStorage.getItem('token') || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJ0ZXN0QGV4YW1wbGUuY29tIiwiaWF0IjoxNzUwMjE1ODY0fQ.jw5vw_Y6187vaYBvBpUe-LZcTbIO-cexfgaZsNUPzZ4';
+    const token = localStorage.getItem('token');
 
     const formData = new FormData();
     if(file.value)

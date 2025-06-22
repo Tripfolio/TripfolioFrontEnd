@@ -77,7 +77,7 @@ const currentDayIndex = ref(0);
 const coverTimestamp = ref(Date.now());
 const itineraryRef = ref(null);
 
-const token = localStorage.getItem('token') || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJ0ZXN0QGV4YW1wbGUuY29tIiwiaWF0IjoxNzUwMjE1ODY0fQ.jw5vw_Y6187vaYBvBpUe-LZcTbIO-cexfgaZsNUPzZ4';
+const token = localStorage.getItem('token');
 
 const goBack = () => {
     emit('back');
