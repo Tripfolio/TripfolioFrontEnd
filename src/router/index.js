@@ -13,6 +13,8 @@ import GetInvite from "@/views/GetInvite.vue";
 import Post from "@/components/PostForm.vue";
 import Community from "@/views/CommunityList.vue";
 import Payment from "@/views/Payment.vue";
+import PaymentSuccess from '@/views/PaymentSuccess.vue';
+import PaymentFail from '@/views/PaymentFail.vue';
 
 const routes = [
   {
@@ -80,10 +82,21 @@ const routes = [
     name: "community",
     component: Community,
   },
-    {
+  {
     path: "/payment",
     name: "payment",
     component: Payment,
+  },
+
+  {
+    path: '/payment-success',
+    name: 'PaymentSuccess',
+    component: PaymentSuccess,
+  },
+  {
+    path: '/payment-fail',
+    name: 'PaymentFail',
+    component: PaymentFail,
   },
 ];
 

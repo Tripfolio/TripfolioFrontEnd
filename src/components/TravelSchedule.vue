@@ -161,8 +161,8 @@ const scheduleSubmit = async() => {
         alert('請填寫行程名稱及行程開始/結束日期');
         return;
     }
-
     const token = localStorage.getItem('token');
+
 
     const formData = new FormData();
     if(file.value)

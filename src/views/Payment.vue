@@ -1,34 +1,42 @@
-<!--模擬金流-->
 <template>
-    <div class="p-10 max-w-md mx-auto text-center">
-        <h1 class="text-2xl font-bold mb-4">模擬付款頁</h1>
-        <p class="text-gray-600 mb-6">這是假付款頁，點下去會升級為付款會員</p>
-        <button @click="handleFakePay" class="bg-green-500 hover:bg-green-400 text-white px-6 py-3 rounded shadow">模擬付款完成</button>
+  <div class="min-h-screen flex items-center justify-center bg-gray-100">
+    <div class="bg-white p-8 rounded shadow text-center">
+      <h1 class="text-2xl font-bold mb-4">升級為付費會員</h1>
+      <p class="mb-6 text-gray-600">僅需支付 NT$50 元，即可建立更多行程</p>
+      <button
+        @click="handlePayment"
+        class="bg-green-500 hover:bg-green-400 text-white px-6 py-2 rounded text-lg"
+      >
+        前往 LINE Pay 付款
+      </button>
     </div>
+  </div>
 </template>
 
 <script setup>
-import axios from 'axios';
-import { useRouter } from 'vue-router';
+import axios from "axios";
 
-const router = useRouter();
+const handlePayment = async () => {
+  const token = localStorage.getItem("token");
+  if (!token) {
+    alert("請先登入");
+    return;
+  }
 
-const handleFakePay = async () => {
-    const token = localStorage.getItem('token');
+  try {
+    const res = await axios.post(
+      `${import.meta.env.VITE_API_URL}/api/payment/confirm`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
 
-    try {
-        await axios.post(`${import.meta.env.VITE_API_URL}/api/payment/confirm`, {}, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        });
-
-        alert('付款完成，您已升級為付費會員！');
-        router.push('/travel');
-    } catch (err) {
-        console.error('付款錯誤', err);
-        alert('付款失敗，請稍後再試');
-    }
+    window.location.href = res.data.url;
+  } catch (err) {
+    alert("付款初始化失敗，請稍後再試");
+  }
 };
-
 </script>

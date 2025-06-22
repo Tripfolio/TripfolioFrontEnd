@@ -33,7 +33,7 @@ export const useTripStore = defineStore('trip', () => {
   async function fetchTrips() {
     isLoading.value = true;
     error.value = null;
-    const token = getHardcodedToken();
+    const token = localStorage.getItem('token');
     try {
       const response = await axios.get(API_BASE_URL, {
         headers: { Authorization: `Bearer ${token}` }
