@@ -1,6 +1,5 @@
 <template>
 <div class="flex items-center justify-between w-50 gap-1  mb-3">
-  <!-- 🔽 下拉選單 -->
   <select
     v-model="selectedMode"
     @change="getTravelInfo"
@@ -12,12 +11,11 @@
     <option value="TRANSIT">🚇 大眾運輸</option>
   </select>
 
-<div class="flex items-center gap-1 text-base whitespace-nowrap">
-  <span>{{ durationText }}</span>
-  <span>{{ distanceText }}</span>
+  <div class="flex items-center gap-1 text-base whitespace-nowrap">
+    <span>{{ durationText }}</span>
+    <span>{{ distanceText }}</span>
+  </div>
 </div>
-</div>
-
 </template>
 
 
