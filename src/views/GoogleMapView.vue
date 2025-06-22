@@ -1,7 +1,9 @@
 <template>
   <Itinerary
     ref="itineraryRef"
-    :selectedPlace="selectedPlace"
+    :trip-id="trip?.id"
+    :selected-place="selectedPlace"
+    :selected-date="selectedDate"
     :default-image="defaultImage"
   />
 
@@ -255,7 +257,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch, onUnmounted } from "vue";
+import { ref, onMounted, watch, onUnmounted, computed, toRefs } from "vue";
 import { MarkerClusterer } from "@googlemaps/markerclusterer";
 import Itinerary from "../components/Itinerary.vue";
 import { useRoute, useRouter } from "vue-router";
@@ -263,6 +265,18 @@ import { cities } from "../constants/city";
 import { rawCategories, rawPlaceCategories } from "../constants/category";
 import { useCategoryMenu } from "../composable/useCategoryMenu";
 import { useMapSearch, SearchType } from "../composable/useMapSearch";
+
+
+const props = defineProps({
+  trip: Object,
+  currentDayIndex: Number,
+});
+
+const { trip, currentDayIndex } = toRefs(props);
+
+const selectedDate = computed(() => {
+  return trip.value?.days?.[currentDayIndex.value] || null;
+});
 
 const route = useRoute();
 const router = useRouter();
@@ -315,11 +329,12 @@ function scrollRight() {
 //import
 function callItinerary() {
   if (itineraryRef.value && typeof itineraryRef.value.addPlace === "function") {
-    itineraryRef.value.addPlace();
+    itineraryRef.value.addPlace(selectedPlace.value, selectedDate.value);
   } else {
     alert("itineraryRef 尚未掛載，無法呼叫 addPlace");
   }
 }
+
 
 const {
   categories,
