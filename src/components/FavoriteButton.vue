@@ -6,12 +6,12 @@
     :class="{ favorited: isFavorited }"
   >
     {{ isFavorited ? "❤️" : "🤍" }}
-    <span v-if="isLoading">...</span>
+    <!-- <span v-if="isLoading">...</span> -->
   </button>
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted,watch } from "vue";
 import axios from "axios";
 
 const props = defineProps({
@@ -20,7 +20,7 @@ const props = defineProps({
     required: true,
   },
   memberId: {
-    type: String,
+    type: Number,
     required: true,
   },
 });
@@ -28,7 +28,7 @@ const props = defineProps({
 const isFavorited = ref(false);
 const isLoading = ref(false);
 
-// 檢查收藏狀態
+
 const checkFavoriteStatus = async () => {
   try {
     const response = await axios.get(
@@ -36,7 +36,7 @@ const checkFavoriteStatus = async () => {
     );
     isFavorited.value = response.data.isFavorited;
 
-    console.log("應該檢查成功了吧");
+    console.log("後端查看通過");
   } catch (error) {
     console.error("檢查收藏狀態失敗:", error);
   }
@@ -65,15 +65,25 @@ const toggleFavorite = async () => {
     }
   } catch (error) {
     console.error("切換收藏狀態失敗:", error);
-    alert("操作失敗，請稍後再試");
   } finally {
-    isLoading.value = false;
+    isLoading.value = false; // 關鍵修正
   }
 };
 
 onMounted(() => {
+  console.log('目前 props.memberId:', props.memberId);
   checkFavoriteStatus();
 });
+
+watch(
+  () => props.memberId,
+  (newVal, oldVal) => {
+    if (newVal !== oldVal && newVal) {
+      console.log('目前 props.memberId:', props.memberId);
+      checkFavoriteStatus();
+    }
+  }
+);
 </script>
 
 <style scoped>

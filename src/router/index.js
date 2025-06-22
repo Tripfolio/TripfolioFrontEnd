@@ -81,7 +81,6 @@ const routes = [
     name: "community",
     component: Community,
   },
-
   {
     path: "/social",
     name: "social",

@@ -59,10 +59,12 @@
             </p>
           </div>
 
-          <CommentSection :post="post" class="overflow-scroll" />
+          <CommentSection :post="post" class="overflow-scroll w-full" />
+
           <FavoriteButton
             :postId="post.postId"
-            :memberId="post.authorName"
+            :memberId="getCurrentUserId()"
+            class=" absolute bottom-5 right-10"
           />
         </div>
       </div>
@@ -75,6 +77,8 @@ import { ref, onMounted, watch } from "vue";
 import axios from "axios";
 import CommentSection from "../components/CommentSection.vue";
 import FavoriteButton from "../components/FavoriteButton.vue";
+import AddComment from "../components/ AddComment.vue";
+
 
 const props = defineProps({
   post: {
@@ -127,19 +131,63 @@ const formatTime = (timeString) => {
 
 
 // 切換按讚
-const toggleLike = async () => {
-  try {
-    liked.value = !liked.value;
-    const newLikes = liked.value
-      ? (props.post.likes || 0) + 1
-      : (props.post.likes || 0) - 1;
+// const toggleLike = async () => {
+//   try {
+//     liked.value = !liked.value;
+//     const newLikes = liked.value
+//       ? (props.post.likes || 0) + 1
+//       : (props.post.likes || 0) - 1;
 
-    emit("update-post", { ...props.post, likes: newLikes });
-    console.log("按讚狀態切換:", liked.value);
-  } catch (error) {
-    console.error("按讚失敗:", error);
+//     emit("update-post", { ...props.post, likes: newLikes });
+//     console.log("按讚狀態切換:", liked.value);
+//   } catch (error) {
+//     console.error("按讚失敗:", error);
+//   }
+// };
+// const submitComment = async () => {
+//   if (!newComment.value.trim()) return;
+
+//   isSubmitting.value = true;
+
+//   try {
+//     const response = await axios.post(
+//       `${import.meta.env.VITE_API_URL}/api/post/${props.post.postId}/comments`,
+//       {
+//         content: newComment.value.trim(),
+//         memberId: getCurrentUserId(), 
+//       }
+//     );
+
+//     // 成功後更新留言列表（加到頂部）
+//     comments.value.unshift(response.data);
+//     newComment.value = "";
+//     console.log("留言發表成功", response.data);
+//   } catch (error) {
+//     console.error("留言發表失敗:", error);
+//   } finally {
+//     isSubmitting.value = false;
+//   }
+// };
+
+const getCurrentUserId = () => {
+  const token = localStorage.getItem('token');
+  if (token) {
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      return payload.id || payload.userId || payload.memberId || null;
+    } catch (error) {
+      return null;
+    }
   }
+  return null;
 };
+
+// watch(
+//   () => post.authorName,
+//   (newVal) => {
+//     console.log('FavoriteButton 監聽到 memberName 變化:', newVal);
+//   }
+// );
 
 </script>
 

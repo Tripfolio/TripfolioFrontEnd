@@ -91,7 +91,7 @@ const selectedPost = ref(null);
 const fetchPosts = async () => {
   try {
     const res = await axios.get(
-      `${import.meta.env.VITE_API_URL}/api/community/community-posts`
+      `${import.meta.env.VITE_API_URL}/api/community`
     );
     posts.value = res.data.posts.map((post) => ({
       ...post,
