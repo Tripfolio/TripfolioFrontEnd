@@ -724,7 +724,6 @@ onMounted(async () => {
     initMap();
 
     if (!mapRef.value) {
-      console.error("mapRef 尚未掛載");
       return;
     }
     map.value = new google.maps.Map(mapRef.value, {
@@ -845,7 +844,6 @@ onMounted(async () => {
       handleClickOutside
     );
   } catch (err) {
-    console.error("地圖初始化失敗", err);
     alert("Google Maps 載入失敗");
   }
 });

@@ -45,7 +45,7 @@ import axios from 'axios';
 import {jwtDecode} from "jwt-decode";
 
 const router = useRouter();
-const TOKEN_NAME = 'user_token'
+const TOKEN_NAME = 'token'
 const email = ref('')
 const password = ref('')
 const isLoggedIn = ref(false)
@@ -79,6 +79,7 @@ const login = async () => {
     isLoggedIn.value = true
     showError.value = false
     clearText()
+    router.push("/")
   } catch (err) {
     showError.value = true
     errorMessage.value = err.response?.data?.message || '登入失敗，請檢查郵件與密碼'
