@@ -15,6 +15,7 @@ import Community from "@/views/CommunityList.vue";
 import scheduleDetail from "@/views/scheduleDetail.vue";
 import Payment from "@/views/Payment.vue";
 
+
 const routes = [
   {
     path: "/",
@@ -85,6 +86,11 @@ const routes = [
     path: "/schedule/:id",
     name: "scheduledetail",
     component: scheduleDetail,
+  },
+  {
+    path: "/social",
+    name: "social",
+    component: SocialHomePage,
   },
   {
     path: "/payment",

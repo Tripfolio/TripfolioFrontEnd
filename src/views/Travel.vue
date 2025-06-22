@@ -31,7 +31,9 @@
             class="bg-white rounded-xl shadow p-4 relative cursor-pointer hover:ring-2 hover:ring-blue-300 transition">
           <img :src="item.coverURL || 'https://placehold.co/600x300?text=封面圖'" class="w-full h-60 object-cover rounded-xl mb-3" alt="行程封面照"/>
           <h2 class="text-xl font-bold mb-1">{{ item.title }}</h2>
-          <p class="text-gray-600 text-sm">{{ item.startDate }} - {{ item.endDate }}</p> 
+          <p class="text-gray-600 text-sm">
+            {{ item.startDate }} - {{ item.endDate }}
+          </p>
           <p class="text-gray-500 text-sm mt-2">{{ item.description }}</p>
           <button @click.stop="deleteSchedule(item.id)" title="刪除行程" class="absolute bottom-2 right-2 text-gray-400 hover:text-red-500 text-xl">刪除行程</button>
           </div>
@@ -102,7 +104,6 @@ const mapRef = ref(null);
 //取得會員是否為付費會員
 const fetchIsPremium = async () => {
   const token = localStorage.getItem('token');
-  if(!token) return
 
   try {
     const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/profile`, {
