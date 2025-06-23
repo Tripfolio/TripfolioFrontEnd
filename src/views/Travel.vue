@@ -103,7 +103,7 @@ const mapRef = ref(null);
 
 //取得會員是否為付費會員
 const fetchIsPremium = async () => {
-  const token = localStorage.getItem('token') || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJ0ZXN0QGV4YW1wbGUuY29tIiwiaWF0IjoxNzUwMjE1ODY0fQ.jw5vw_Y6187vaYBvBpUe-LZcTbIO-cexfgaZsNUPzZ4';
+  const token = localStorage.getItem('token');
 
   try {
     const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/profile`, {
@@ -124,7 +124,7 @@ onMounted(() => {
 
 //建立行程時檢查是否登入
 const handleOpenForm = () => {
-    const token = localStorage.getItem('token') || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJ0ZXN0QGV4YW1wbGUuY29tIiwiaWF0IjoxNzUwMjE1ODY0fQ.jw5vw_Y6187vaYBvBpUe-LZcTbIO-cexfgaZsNUPzZ4';
+    const token = localStorage.getItem('token');
     if(!token) {
       alert('請先登入會員')
       return
@@ -164,7 +164,7 @@ const deleteSchedule = async (id) => {
   const confirmed = confirm("確定刪除這個行程嗎?")
   if(!confirmed) return
 
-  const token = localStorage.getItem('token') || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJ0ZXN0QGV4YW1wbGUuY29tIiwiaWF0IjoxNzUwMjE1ODY0fQ.jw5vw_Y6187vaYBvBpUe-LZcTbIO-cexfgaZsNUPzZ4';
+  const token = localStorage.getItem('token');
 
   try{
     await axios.delete(`${import.meta.env.VITE_API_URL}/api/travelSchedule/${id}`, {
