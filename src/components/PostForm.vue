@@ -24,10 +24,6 @@ import axios from "axios";
 import { useRouter } from "vue-router";
 
 const router = useRouter();
-
-// 本地測畫面、功能用的
-// localStorage.setItem("token", import.meta.env.VITE_JWT_TOKEN);
-
 const schedules = ref([]);
 const selectedScheduleId = ref(null);
 const content = ref("");

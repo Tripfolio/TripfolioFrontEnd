@@ -4,7 +4,7 @@
       <!-- 左側：可放地圖或其他內容 -->
       <div class="w-4/6 bg-gray-50 p-4 h-full relative overflow-hidden">
         <div class="w-full h-full relative rounded-xl overflow-hidden">
-          <GoogleMapView 
+          <GoogleMapView
             ref="mapRef"
             :selected-place="selectedPlace"
             :default-image="defaultImage"
@@ -19,41 +19,63 @@
       <!-- 右側：行程列表區 -->
       <div class="w-2/6 h-full overflow-y-auto bg-white p-4 border-l">
         <div class="flex justify-end mb-4">
-          <button @click="handleOpenForm" class="bg-blue-500 hover:bg-blue-400 text-white px-4 py-2 rounded-lg shadow">建立行程</button>
+          <button
+            @click="handleOpenForm"
+            class="bg-blue-500 hover:bg-blue-400 text-white px-4 py-2 rounded-lg shadow"
+          >
+            建立行程
+          </button>
         </div>
 
-      <!-- 行程卡片列表 -->
-      <div v-if="!editingTripId">
-        <div v-if="tripStore.trips.length > 0" class="space-y-4">
-          <div 
-            v-for="item in tripStore.trips" 
-            :key="item.id" @click="editingTripId = item.id" 
-            class="bg-white rounded-xl shadow p-4 relative cursor-pointer hover:ring-2 hover:ring-blue-300 transition">
-          <img :src="item.coverURL || 'https://placehold.co/600x300?text=封面圖'" class="w-full h-60 object-cover rounded-xl mb-3" alt="行程封面照"/>
-          <h2 class="text-xl font-bold mb-1">{{ item.title }}</h2>
-          <p class="text-gray-600 text-sm">
-            {{ item.startDate }} - {{ item.endDate }}
-          </p>
-          <p class="text-gray-500 text-sm mt-2">{{ item.description }}</p>
-          <button @click.stop="deleteSchedule(item.id)" title="刪除行程" class="absolute bottom-2 right-2 text-gray-400 hover:text-red-500 text-xl">刪除行程</button>
+        <!-- 行程卡片列表 -->
+        <div v-if="!editingTripId">
+          <div v-if="tripStore.trips.length > 0" class="space-y-4">
+            <div
+              v-for="item in tripStore.trips"
+              :key="item.id"
+              @click="editingTripId = item.id"
+              class="bg-white rounded-xl shadow p-4 relative cursor-pointer hover:ring-2 hover:ring-blue-300 transition"
+            >
+              <img
+                :src="
+                  item.coverURL || 'https://placehold.co/600x300?text=封面圖'
+                "
+                class="w-full h-60 object-cover rounded-xl mb-3"
+                alt="行程封面照"
+              />
+              <h2 class="text-xl font-bold mb-1">{{ item.title }}</h2>
+              <p class="text-gray-600 text-sm">
+                {{ item.startDate }} - {{ item.endDate }}
+              </p>
+              <p class="text-gray-500 text-sm mt-2">{{ item.description }}</p>
+              <button
+                @click.stop="deleteSchedule(item.id)"
+                title="刪除行程"
+                class="absolute bottom-2 right-2 text-gray-400 hover:text-red-500 text-xl"
+              >
+                刪除行程
+              </button>
+            </div>
           </div>
+          <div v-else class="text-gray-400 text-center">尚未建立任何行程</div>
         </div>
-        <div v-else class="text-gray-400 text-center">尚未建立任何行程</div>
-      </div>
 
-      <!-- 編輯行程 -->
-      <ScheduleDetail 
-        v-else 
-        :trip-id="editingTripId" 
-        :current-day-index="currentDayIndex"
-        :selected-date="selectedTrip?.days?.[currentDayIndex]"
-        ref="itineraryRef"
-        @back="handleCloseDetail" 
+        <!-- 編輯行程 -->
+        <ScheduleDetail
+          v-else
+          :trip-id="editingTripId"
+          :current-day-index="currentDayIndex"
+          :selected-date="selectedTrip?.days?.[currentDayIndex]"
+          ref="itineraryRef"
+          @back="handleCloseDetail"
         />
       </div>
     </div>
     <!-- 彈出建立行程表單 -->
-    <div v-if="showForm" class="fixed inset-0 bg-white/50 backdrop-blur-sm flex items-center justify-center z-50">
+    <div
+      v-if="showForm"
+      class="fixed inset-0 bg-white/50 backdrop-blur-sm flex items-center justify-center z-50"
+    >
       <div class="bg-white w-full max-w-xl rounded-2xl p-6 shadow-lg relative">
         <TravelSchedule
           @close="handleCloseForm"
@@ -94,16 +116,14 @@
   </div>
 </template>
 
-
 <script setup>
-import { ref, onMounted, computed } from 'vue';
-import { useRouter } from 'vue-router'
-import TravelSchedule from '@/components/TravelSchedule.vue';
-import axios from 'axios';
-import GoogleMapView from '@/views/GoogleMapView.vue';
-import ScheduleDetail from '@/views/ScheduleDetail.vue';
-import { useTripStore } from '@/stores/tripStore';
-
+import { ref, onMounted, computed } from "vue";
+import { useRouter } from "vue-router";
+import TravelSchedule from "@/components/TravelSchedule.vue";
+import axios from "axios";
+import GoogleMapView from "@/views/GoogleMapView.vue";
+import ScheduleDetail from "@/views/scheduleDetail.vue";
+import { useTripStore } from "@/stores/tripStore";
 
 const router = useRouter();
 const editingTripId = ref(null);
@@ -114,14 +134,12 @@ const showPayModal = ref(false);
 const selectedPlace = ref(null);
 const defaultImage = "https://picsum.photos/1000?image";
 const currentDayIndex = ref(0);
-const itineraryRef = ref(null)
+const itineraryRef = ref(null);
 const mapRef = ref(null);
 
 const selectedTrip = computed(() => {
-  return tripStore.trips.find((t) => t.id ===editingTripId.value);
+  return tripStore.trips.find((t) => t.id === editingTripId.value);
 });
-
-
 
 //取得會員是否為付費會員
 const fetchIsPremium = async () => {
@@ -134,7 +152,7 @@ const fetchIsPremium = async () => {
     });
     isPremium.value = res.data.isPremium;
   } catch (err) {
-    console.log(err)
+    console.log(err);
   }
 };
 
@@ -154,7 +172,7 @@ const handleOpenForm = async () => {
 
   try {
     const res = await axios.get(
-      `${import.meta.env.VITE_API_URL}/api/profile/checkpremiun`,
+      `${import.meta.env.VITE_API_URL}/api/profile/checkpremium`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -177,10 +195,9 @@ const handleOpenForm = async () => {
   }
 };
 
-
 const handleScheduleCreated = () => {
   showForm.value = false;
-   tripStore.fetchTrips();
+  tripStore.fetchTrips();
   fetchIsPremium();
   router.push(`/schedule`);
 };
@@ -221,7 +238,7 @@ const deleteSchedule = async (id) => {
     );
 
     tripStore.trips = tripStore.trips.filter((s) => s.id !== id);
-    alert("刪除成功")
+    alert("刪除成功");
   } catch (err) {
     alert("刪除失敗，請稍後再試");
   }
@@ -245,5 +262,4 @@ function callItinerary() {
     alert("行程尚未載入，無法加入景點");
   }
 }
-
 </script>
