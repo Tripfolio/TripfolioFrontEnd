@@ -4,7 +4,7 @@
 
     <transition name="fade-landing">
       <div class="landing" v-if="show">
-        <div class="loading  text-3xl tracking-widest whitespace-no-wrap" >
+        <div class="loading  text-5xl tracking-widest whitespace-no-wrap" >
           <span style="--i: 0">T</span>
           <span style="--i: 1">R</span>
           <span style="--i: 2">I</span>
@@ -278,7 +278,7 @@ function onCityChange(event) {
 onMounted(async () => {
   document.addEventListener("click", handleClickOutside);
   setTimeout(() => {
-    show.value = false  // 5秒後關閉 Landing
+    show.value = false  
   }, 5000)
 });
 
@@ -308,8 +308,8 @@ onUnmounted(() => {
 .landing {
   position: fixed;
   inset: 0;
-  background: black;
-  color: white;
+  background: rgb(255, 255, 255);
+  color: rgb(154, 154, 154);
   display: flex;
   justify-content: center;
   align-items: center;
