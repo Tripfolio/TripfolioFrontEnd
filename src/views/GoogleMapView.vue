@@ -266,6 +266,7 @@ import { rawCategories, rawPlaceCategories } from "../constants/category";
 import { useCategoryMenu } from "../composable/useCategoryMenu";
 import { useMapSearch, SearchType } from "../composable/useMapSearch";
 
+const emit = defineEmits(["call-itinerary"]);
 
 const props = defineProps({
   trip: Object,
@@ -329,12 +330,21 @@ function scrollRight() {
 
 //import
 function callItinerary() {
-  if (itineraryRef.value && typeof itineraryRef.value.addPlace === "function") {
-    itineraryRef.value.addPlace(selectedPlace.value, selectedDate.value.date).then(() => {
-      props.dailyPlanRef?.refresh();
+  const place = selectedPlace.value;
+  const date = selectedDate.value?.date;
+
+  if (!place || !date) {
+    alert("缺少地點或日期，無法加入行程");
+    return;
+  }
+
+  if (itineraryRef.value?.addPlace) {
+    itineraryRef.value.addPlace(place, date).then((success) => {
+      if (success) {
+        props.dailyPlanRef?.refresh?.();
+        alert("成功加入行程！");
+      }
     });
-  } else {
-    alert("itineraryRef 尚未掛載，無法呼叫 addPlace");
   }
 }
 

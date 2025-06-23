@@ -5,18 +5,18 @@
       <Itinerary
         ref="itineraryRef"
         :trip-id="selectedTrip.id"
-        :selected-date="selectedTrip.days[dayIndex].date"
-        :selected-place="selectedPlace"
+        :selected-date="currentDay.date"
         class="hidden"
       />
 
       <draggable
-        :list="currentDay.spots"
+        :list="itinerarySpots"
         item-key="id"
         ghost-class="bg-yellow-100"
         animation="200"
         @end="updateOrder"
       >
+
         <template #item="{ element: p, index }">
           <li class="mb-4 border-b bg-gray-500 list-none flex justify-between rounded-2xl w-full relative items-stretch">
             <div class="w-1/2 p-3">
@@ -77,7 +77,7 @@
         </template>   
       </draggable>
 
-      <div v-if="currentDay.spots?.length === 0" class="text-gray-400 mb-2">
+      <div v-if="itinerarySpots.length === 0" class="text-gray-400 mb-2">
         尚未加入任何景點
       </div>
     </div>
@@ -88,41 +88,36 @@
   </template>
   
   <script setup>
-import { computed, ref, watch } from 'vue';
+import { ref, computed, toRefs} from 'vue';
 import draggable from 'vuedraggable';
 import Itinerary from './Itinerary.vue';
-
 
 const itineraryRef = ref(null);
 
 const props = defineProps({
   selectedTrip: Object,
   dayIndex: Number,
-  selectedPlace: Object,
 });
+const { selectedTrip, dayIndex } = toRefs(props);
 
 const openMenuIndex = ref(null);
 
 
 const refreshKey = ref(0)
 
-watch(() => itineraryRef.value?.itineraryPlaces?.length, () => {
-  refreshKey.value++
-})
-
-
 const currentDay = computed(() => {
-  refreshKey.value
-  const dateObj = props.selectedTrip?.days?.[props.dayIndex];
-  const date = dateObj?.date || '';
-  const spots = itineraryRef.value?.itineraryPlaces?.filter(p => p.date === date) || [];
-  return { date, spots };
+  return selectedTrip.value?.days?.[dayIndex.value] || null;
+});
+
+const itinerarySpots = computed(() => {
+  const date = currentDay.value?.date || '';
+  return itineraryRef.value?.itineraryPlaces?.filter(p => p.date === date) || [];
 });
 
 
-const toggleMenu = (index) => {
+function toggleMenu(index) {
   openMenuIndex.value = openMenuIndex.value === index ? null : index;
-};
+}
 
 function formatTime(hour, minute) {
   return `${String(hour ?? 0).padStart(2, '0')}:${String(minute ?? 0).padStart(2, '0')}`;
@@ -148,12 +143,10 @@ function updateOrder() {
   itineraryRef.value?.updateOrder();
 }
 
-defineExpose({
-  refresh
-})
-
 function refresh() {
-  refreshKey.value++
+  refreshKey.value++;
 }
+
+defineExpose({ refresh });
 
   </script>
