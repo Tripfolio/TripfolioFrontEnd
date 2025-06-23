@@ -5,25 +5,58 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
+    "build": "npx vite build && npx cpx \"public/_redirects\" dist/",
+    "preview": "vite preview",
+    "lint": "eslint . --ext .js,.vue"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^6.7.2",
+    "@fortawesome/free-solid-svg-icons": "^6.7.2",
+    "@fortawesome/vue-fontawesome": "^3.0.8",
+    "@googlemaps/markerclusterer": "^2.5.3",
     "@tailwindcss/vite": "^4.1.6",
     "axios": "^1.9.0",
+    "braintree-web-drop-in": "^1.45.0",
+    "dayjs": "^1.11.13",
+    "jwt-decode": "^4.0.0",
     "pinia": "^3.0.1",
-    "tailwindcss": "^4.1.6",
+    "qrcode.vue": "^3.6.0",
+    "uuid": "^11.1.0",
+    "v-click-outside": "^3.2.0",
     "vue": "^3.5.13",
-    "vue-router": "^4.5.0"
+    "vue-advanced-cropper": "^2.8.9",
+    "vue-router": "^4.5.0",
+    "vuedraggable": "^4.1.0"
   },
   "devDependencies": {
+    "@babel/eslint-parser": "^7.27.5",
+    "@babel/preset-env": "^7.27.2",
+    "@eslint/css": "^0.8.1",
+    "@eslint/js": "^9.28.0",
+    "@eslint/json": "^0.12.0",
     "@vitejs/plugin-vue": "^5.2.3",
+    "autoprefixer": "^10.4.21",
+    "eslint": "^8.57.1",
+    "eslint-plugin-vue": "^8.7.1",
+    "globals": "^16.2.0",
     "nodemon": "^3.1.10",
+    "postcss": "^8.5.4",
+    "prettier": "^3.5.3",
+    "tailwindcss": "^4.1.8",
     "vite": "^6.2.4",
     "vite-plugin-vue-devtools": "^7.7.2"
   },
-  "description": "This template should help get you started developing with Vue 3 in Vite.",
+  "description": "這是一個旅遊網站，包含會員管理、行程規劃與分享、地圖資訊與社群功能。",
   "main": "vite.config.js",
   "author": "",
+  "contributors": [
+    "陳品均 <work880517@gmail.com> (https://github.com/LeoChen517)",
+    "張哲豪 <kiwiisfish@gmail.com> (https://github.com/kiwiisfish)",
+    "蘇怡瑄 <wannadonna34@gmail.com> (https://github.com/mmaysu)",
+    "林芳綺 <g204208@gmail.com> (https://github.com/yanamint",
+    "周子筠 <Yumisunky@gmail.com> (https://github.com/yumi-chou)",
+    "許家瑜 <ninaaahsu@gmail.com> (https://github.com/Ninahsuuuuu)",
+    "劉暄 <pearl81931@gmail.com> (https://github.com/pearl-liu-1203)"
+  ],
   "license": "ISC"
 }
