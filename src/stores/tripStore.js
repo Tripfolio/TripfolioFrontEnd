@@ -193,4 +193,3 @@ export const useTripStore = defineStore('trip', () => {
     addDay,
     selectTrip,
   };
-});
