@@ -42,7 +42,7 @@
         </button>
 
         <button
-          type='button'
+          type="button"
           @click="handleGoogleLogin"
           class="w-full flex items-center justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out"
         >
@@ -67,9 +67,9 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import { useRouter } from 'vue-router';
+import { useRouter, RouterLink } from 'vue-router';
 import axios from 'axios';
-import { jwtDecode } from "jwt-decode";
+import { logoutUser, checkLoginStatus } from '../composable/authUtils';
 
 const router = useRouter();
 const TOKEN_NAME = 'user_token';
@@ -112,12 +112,10 @@ const login = async () => {
   }
 };
 
-const logout = async () => {
-  localStorage.removeItem(TOKEN_NAME);
-  localStorage.removeItem('memberId');
+const logout = () => {
+  logoutUser(router);
   isLoggedIn.value = false;
   clearText();
-  router.push('/login');
 };
 
 const handleGoogleLogin = () => {
@@ -125,48 +123,8 @@ const handleGoogleLogin = () => {
 };
 
 onMounted(() => {
-  const urlParams = new URLSearchParams(window.location.search);
-  const googleToken = urlParams.get('token');
-
-  if (googleToken) {
-    localStorage.setItem(TOKEN_NAME, googleToken);
-    axios.defaults.headers.common['Authorization'] = `Bearer ${googleToken}`;
-    isLoggedIn.value = true;
-    router.replace('/');
-    return;
-  }
-
-  const token = localStorage.getItem(TOKEN_NAME);
+  isLoggedIn.value = checkLoginStatus();
   showError.value = false;
   errorMessage.value = '';
-
-  if (!token) {
-    isLoggedIn.value = false;
-    return;
-  }
-
-  try {
-    const payload = jwtDecode(token);
-    const exp = payload.exp;
-    const now = Math.floor(Date.now() / 1000);
-
-    if (exp > now) {
-      isLoggedIn.value = true;
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-      if (router.currentRoute.value.path === '/login') {
-        router.replace('/');
-      }
-    } else {
-      localStorage.removeItem(TOKEN_NAME);
-      isLoggedIn.value = false;
-      showError.value = false;
-      errorMessage.value = '';
-    }
-  } catch (err) {
-    localStorage.removeItem(TOKEN_NAME);
-    isLoggedIn.value = false;
-    showError.value = false;
-    errorMessage.value = '';
-  }
 });
 </script>

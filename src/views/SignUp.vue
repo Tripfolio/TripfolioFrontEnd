@@ -55,9 +55,10 @@
         註冊
       </button>
     </form>
+
     <div class="flex max-w-sm mx-auto mt-4">
       <button
-        type='button'
+        type="button"
         @click="handleGoogleLogin"
         class="w-full flex items-center justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out"
       >
@@ -65,6 +66,7 @@
         <span>使用 Google 註冊/登入</span>
       </button>
     </div>
+
     <RouterLink to="/login" class="block">
       <button
         class="w-full py-2 px-4 text-sm font-medium text-blue-600 hover:text-blue-800 transition duration-150 ease-in-out"
@@ -77,9 +79,9 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import { useRouter } from 'vue-router';
+import { useRouter, RouterLink } from 'vue-router';
 import axios from 'axios';
-import { jwtDecode } from "jwt-decode";
+import { jwtDecode } from 'jwt-decode';
 
 const name = ref('');
 const email = ref('');
@@ -145,7 +147,6 @@ onMounted(() => {
   if (googleToken) {
     localStorage.setItem(TOKEN_NAME, googleToken);
     axios.defaults.headers.common['Authorization'] = `Bearer ${googleToken}`;
-
     router.replace('/');
   }
 });

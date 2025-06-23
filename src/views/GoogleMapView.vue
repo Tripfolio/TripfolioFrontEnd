@@ -1,8 +1,9 @@
 <template>
   <Itinerary
     ref="itineraryRef"
-    :selectedPlace="selectedPlace"
-    class="z-[4]"
+    :trip-id="trip?.id"
+    :selected-place="selectedPlace"
+    :selected-date="selectedDate"
     :default-image="defaultImage"
   />
 
@@ -11,6 +12,7 @@
   >
     <div class="relative w-fit">
       <select
+        v-model="selectedCityName"
         @change="onCityChange($event)"
         class="appearance-none bg-gray-500/80 text-white text-sm py-2 pl-4 pr-10 rounded-full focus:outline-none hover:bg-gray-400 transition duration-200 cursor-pointer shadow-inner"
       >
@@ -67,8 +69,6 @@
   </div>
 
   <div ref="mapRef" class="w-screen h-screen m-0 p-0"></div>
-
-  <!-- 景點卡片滑動列 -->
   <div
     v-if="placeDetails.length"
     class="absolute bottom-2 left-1/2 -translate-x-1/2 z-[3] w-[92%] max-w-screen-xl"
@@ -127,8 +127,6 @@
       </button>
     </div>
   </div>
-
-  <!--地點詳細資訊 -->
   <div
     v-if="selectedPlace"
     class="fixed inset-0 bg-black/50 flex items-center justify-center z-[4]"
@@ -156,7 +154,7 @@
         >
           ‹
         </button>
-        <!-- 圖片 -->
+
         <img
           :src="
             selectedPlace.photos && selectedPlace.photos.length
@@ -190,6 +188,12 @@
     ref="menuRef"
   >
     <button
+      @click="locateUser"
+      class="block w-full text-left bg-gray-500/80 hover:bg-gray-400 text-white px-4 py-2 rounded-full cursor-pointer shadow-inner"
+    >
+      ⚙︎
+    </button>
+    <button
       v-for="item in categories"
       :key="item.type"
       @click="searchByCategory(item.type)"
@@ -197,7 +201,7 @@
     >
       {{ item.label }}
     </button>
-    <!-- 🔽 新增自訂分類選單 -->
+
     <div class="relative">
       <button
         @click="showCustomCategory = !showCustomCategory"
@@ -229,7 +233,6 @@
         </button>
       </div>
     </div>
-    <!-- 🔽 新增自訂分類選單 -->
   </aside>
 
   <div
@@ -254,101 +257,63 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch, onUnmounted } from "vue";
-import { MarkerClusterer } from "@googlemaps/markerclusterer"; //marker的集合
+import { ref, onMounted, watch, onUnmounted, computed, toRefs } from "vue";
+import { MarkerClusterer } from "@googlemaps/markerclusterer";
 import Itinerary from "../components/Itinerary.vue";
+import { useRoute, useRouter } from "vue-router";
+import { cities } from "../constants/city";
+import { rawCategories, rawPlaceCategories } from "../constants/category";
+import { useCategoryMenu } from "../composable/useCategoryMenu";
+import { useMapSearch, SearchType } from "../composable/useMapSearch";
+
+
+const props = defineProps({
+  trip: Object,
+  currentDayIndex: Number,
+});
+
+const { trip, currentDayIndex } = toRefs(props);
+
+const selectedDate = computed(() => {
+  return trip.value?.days?.[currentDayIndex.value] || null;
+});
+
+const route = useRoute();
+const router = useRouter();
+const isLocated = ref(false);
 
 const itineraryRef = ref(null);
-function callItinerary() {
-  if (itineraryRef.value && typeof itineraryRef.value.addPlace === "function") {
-    itineraryRef.value.addPlace();
-  } else {
-    console.warn("itineraryRef 尚未掛載，無法呼叫 addPlace");
-  }
-}
 
-// 地圖與搜尋
 const mapRef = ref(null);
 const searchQuery = ref("");
 const searchInput = ref(null);
+const map = ref(null);
 
-// 地點資料
 const placeDetails = ref([]);
 const nextPageFunc = ref(null);
 const hasMoreResults = ref(false);
 const defaultImage = "https://picsum.photos/1000?image";
 
-// 選擇的地點與圖片
 const selectedPlace = ref(null);
 const selectedPlacePhotoIndex = ref(0);
-const selectedCityName = ref("none"); // 預設為「當前」
+const selectedCityName = ref(route.query.city || "none");
 
-const selectedMarkers = []; // 用於存儲選擇的標記 (點擊地圖)
-const cities = [
-  { name: "台北市", lat: 25.033964, lng: 121.564472 },
-  { name: "新北市", lat: 25.016982, lng: 121.462786 },
-  { name: "基隆市", lat: 25.131122, lng: 121.739622 },
-  { name: "桃園市", lat: 24.993628, lng: 121.300979 },
-  { name: "新竹市", lat: 24.80395, lng: 120.964675 },
-  { name: "新竹縣", lat: 24.838722, lng: 121.002295 },
-  { name: "苗栗縣", lat: 24.560159, lng: 120.821426 },
-  { name: "台中市", lat: 24.147736, lng: 120.673648 },
-  { name: "彰化縣", lat: 24.068523, lng: 120.562447 },
-  { name: "南投縣", lat: 23.958842, lng: 120.971863 },
-  { name: "雲林縣", lat: 23.709203, lng: 120.542994 },
-  { name: "嘉義市", lat: 23.480075, lng: 120.449111 },
-  { name: "嘉義縣", lat: 23.451842, lng: 120.255461 },
-  { name: "台南市", lat: 22.999728, lng: 120.227028 },
-  { name: "高雄市", lat: 22.627278, lng: 120.301435 },
-  { name: "屏東縣", lat: 22.551975, lng: 120.548759 },
-  { name: "宜蘭縣", lat: 24.702107, lng: 121.73775 },
-  { name: "花蓮縣", lat: 23.987158, lng: 121.601571 },
-  { name: "台東縣", lat: 22.764364, lng: 121.113207 },
-  { name: "澎湖縣", lat: 23.57104, lng: 119.579369 },
-  { name: "金門縣", lat: 24.436679, lng: 118.317088 },
-  { name: "連江縣", lat: 26.16058, lng: 119.950946 },
-]; // 城市列表
+const selectedMarkers = [];
 
-// 路線規劃
-const travelMode = ref("DRIVING"); // 交通方式 (select dropdown)
-const result = ref(null); // 路線結果（距離與時間）(calculateRoute)
+let markers = [];
+let service = null;
+let directionsService;
+let directionsRenderer;
+let markerCluster = null;
+let performSearch = () => {};
+let mapClickListener = null;
 
-//整個篩選區塊的容器，用來判斷點擊事件是不是發生在外部。
-const menuRef = ref(null);
-
-//側邊景點種類篩選
-const showCustomCategory = ref(false); //是否顯示選單
-const maxCategoryCount = 5; //側邊骰選選單的最大長度
-
-//篩選種類
-const categories = ref([
-  { type: "restaurant", label: "🍽️" },
-  { type: "lodging", label: "🏨" },
-  { type: "residence", label: "🏠" },
-  { type: "tourist_attraction", label: "📍" },
-  // { type: "other_options", label: "+" },
-]);
-
-//待添加種類
-const placeCategories = ref([
-  { type: "cafe", label: "咖啡廳" },
-  { type: "museum", label: "博物館" },
-  { type: "park", label: "公園" },
-  { type: "zoo", label: "動物園" },
-  { type: "amusement_park", label: "遊樂園" },
-  { type: "aquarium", label: "水族館" },
-  { type: "art_gallery", label: "藝廊" },
-  { type: "bar", label: "酒吧" },
-  { type: "book_store", label: "書店" },
-  { type: "gym", label: "健身房" },
-  { type: "shopping_mall", label: "購物中心" },
-  { type: "supermarket", label: "超市" },
-  { type: "night_club", label: "夜店" },
-]);
-
-//樣式
+const travelMode = ref("DRIVING");
+const result = ref(null);
+const maxCategoryCount = 5;
 const cardContainer = ref(null);
 
+//css
 function scrollLeft() {
   if (cardContainer.value) {
     cardContainer.value.scrollBy({ left: -300, behavior: "smooth" });
@@ -361,25 +326,38 @@ function scrollRight() {
   }
 }
 
-let map = null;
-let markers = [];
-let service = null;
-let directionsService; // 路線服務
-let directionsRenderer; // 路線顯示器
-let markerCluster = null; //marker的集合
-
-watch(selectedPlace, (newVal) => {
-  if (newVal) {
-    selectedPlacePhotoIndex.value = 0;
+//import
+function callItinerary() {
+  if (itineraryRef.value && typeof itineraryRef.value.addPlace === "function") {
+    itineraryRef.value.addPlace(selectedPlace.value, selectedDate.value);
+  } else {
+    alert("itineraryRef 尚未掛載，無法呼叫 addPlace");
   }
-});
+}
 
+
+const {
+  categories,
+  placeCategories,
+  showCustomCategory,
+  menuRef,
+  addCategory,
+  removeCategory,
+  handleClickOutside,
+} = useCategoryMenu(rawCategories, rawPlaceCategories, maxCategoryCount);
+
+//function
 function loadGoogleMaps() {
   return new Promise((resolve, reject) => {
+    if (window.google && window.google.maps) {
+      resolve();
+      return;
+    }
     const script = document.createElement("script");
     script.src = `https://maps.googleapis.com/maps/api/js?key=${
       import.meta.env.VITE_GOOGLE_MAPS_API_KEY
     }&libraries=places,geometry`;
+    script.async = true;
     script.defer = true;
     script.onload = resolve;
     script.onerror = reject;
@@ -387,16 +365,29 @@ function loadGoogleMaps() {
   });
 }
 
+function searchByCategory(type) {
+  if (!map.value || !type) return;
+  const center = map.value.getCenter();
+  searchQuery.value = type;
+
+  performSearch({
+    type: SearchType.TEXT,
+    query: type,
+    location: center,
+  });
+}
+
 function initMap() {
-  map = new google.maps.Map(mapRef.value, {
+  map.value = new google.maps.Map(mapRef.value, {
     center: { lat: 25.033964, lng: 121.564472 },
     zoom: 18,
     mapTypeControl: false,
-    zoomControl: true,
+    mapTypeControlOptions: null,
+    zoomControl: false,
     cameraControl: false,
     scaleControl: false,
     fullscreenControl: false,
-    errorControl: true,
+    errorControl: false,
     streetViewControl: false,
     streetViewControlOptions: {
       position: google.maps.ControlPosition.LEFT_TOP,
@@ -419,15 +410,8 @@ function initMap() {
       },
     ],
   });
-  service = new google.maps.places.PlacesService(map);
+  service = new google.maps.places.PlacesService(map.value);
 }
-
-const SearchType = {
-  TEXT: "TEXT",
-  NEARBY_KEYWORD: "NEARBY_KEYWORD",
-  NEARBY_TYPE: "NEARBY_TYPE",
-  CITY_DEFAULT: "CITY_DEFAULT",
-};
 
 function clearMap() {
   selectedMarkers.forEach((m) => m.setMap(null));
@@ -440,56 +424,11 @@ function clearMap() {
   selectedPlace.value = null;
 }
 
-function performSearch({
-  type,
-  query = "",
-  cityName = "",
-  location,
-  radius = 3000,
-}) {
-  clearMap();
-  if (!service) service = new google.maps.places.PlacesService(map);
-
-  const request = {};
-
-  console.log("搜尋參數:", { type, query, cityName, location, radius });
-
-  function handleSearchCallback(results, status, pagination) {
-    if (results?.[0]?.geometry?.location) {
-      map.setCenter(results[0].geometry.location);
-    }
-    handleResults(results, status, pagination);
-  }
-  if (type === SearchType.TEXT) {
-    request.query = `${query} ${cityName}`;
-    request.location = location;
-    service.textSearch(request, handleSearchCallback);
-  } else if (type === SearchType.NEARBY_KEYWORD) {
-    if (!query) {
-      console.warn("NEARBY_KEYWORD 缺少 query 參數，取消搜尋");
-      return;
-    }
-    request.query = query;
-    request.location = location;
-    request.radius = radius;
-    service.textSearch(request, handleSearchCallback);
-  } else if (type === SearchType.NEARBY_TYPE) {
-    request.location = location;
-    request.radius = radius;
-    request.type = query;
-    service.nearbySearch(request, handleSearchCallback);
-  } else if (type === SearchType.CITY_DEFAULT) {
-    request.query = `tourist attractions ${cityName}`;
-    request.location = location;
-    service.textSearch(request, handleSearchCallback);
-  }
-}
-
 function searchPlace() {
-  if (!searchQuery.value || !map) return;
-  const center = map.getCenter();
+  if (!searchQuery.value || !map.value) return;
 
   if (selectedCityName.value !== "none") {
+    const center = map.value.getCenter();
     performSearch({
       type: SearchType.TEXT,
       query: searchQuery.value,
@@ -498,11 +437,14 @@ function searchPlace() {
     });
   } else {
     performSearch({
-      type: SearchType.NEARBY_KEYWORD,
+      type: SearchType.TEXT,
       query: searchQuery.value,
-      location: center,
+      location: map.value.getCenter(),
     });
   }
+  router.replace({
+    query: {},
+  });
 }
 
 function moveToCity(event) {
@@ -517,8 +459,8 @@ function moveToCity(event) {
           position.coords.latitude,
           position.coords.longitude
         );
-        map.setCenter(center);
-        map.setZoom(15);
+        map.value.setCenter(center);
+        map.value.setZoom(15);
         performSearch({
           type: SearchType.NEARBY_TYPE,
           query: "tourist_attraction",
@@ -526,29 +468,21 @@ function moveToCity(event) {
         });
       },
       () => {
-        alert("無法取得你的定位！");
+        console.log("無法取得你的定位！");
       }
     );
   }
 
   const city = cities.find((c) => c.name === cityName);
-  if (!city || !map) return;
+  if (!city || !map.value) return;
 
   const center = new google.maps.LatLng(city.lat, city.lng);
-  map.setCenter(center);
-  map.setZoom(13);
-
-  performSearch({ type: SearchType.CITY_DEFAULT, cityName, location: center });
-}
-
-function searchByCategory(type) {
-  if (!map || !type) return;
-  const center = map.getCenter();
-  searchQuery.value = "";
+  map.value.setCenter(center);
+  map.value.setZoom(13);
 
   performSearch({
-    type: SearchType.NEARBY_TYPE,
-    query: type,
+    type: SearchType.CITY_DEFAULT,
+    cityName,
     location: center,
   });
 }
@@ -557,6 +491,11 @@ function handleResults(results, status, pagination) {
   if (status !== google.maps.places.PlacesServiceStatus.OK || !results.length) {
     alert("找不到地點！");
     return;
+  }
+
+  if (results[0]?.geometry?.location) {
+    map.value.setCenter(results[0].geometry.location);
+    map.value.setZoom(15);
   }
 
   markers.forEach((marker) => marker.setMap(null));
@@ -569,16 +508,15 @@ function handleResults(results, status, pagination) {
   results.forEach((place) => {
     if (!place.geometry || !place.geometry.location) return;
 
-    map.setCenter(place.geometry.location);
     const iconUrl = getPlaceIconUrl(place.types);
 
     const marker = new google.maps.Marker({
-      map,
+      map: map.value,
       position: place.geometry.location,
       title: place.name,
       icon: {
         url: iconUrl,
-      }, // 這裡套用分類 SVG
+      },
     });
 
     markers.push(marker);
@@ -625,13 +563,12 @@ function handleResults(results, status, pagination) {
   });
 
   markerCluster = new MarkerClusterer({
-    map: map,
+    map: map.value,
     markers: markers,
     renderer: {
       render({ count, position }) {
         return new google.maps.Marker({
           position,
-
           label: {
             text: String(count),
             color: "white",
@@ -657,7 +594,6 @@ function loadNextPage() {
   }
 }
 
-// 計算路線
 function calculateRoute(origin, destination) {
   directionsService.route(
     {
@@ -681,7 +617,6 @@ function calculateRoute(origin, destination) {
   );
 }
 
-//  重新計算路線
 function recalculateRoute() {
   if (markers.length === 2) {
     calculateRoute(markers[0].getPosition(), markers[1].getPosition());
@@ -693,7 +628,16 @@ function onCityChange(event) {
   moveToCity(event);
 }
 
-function locateUser(map) {
+function locateUser() {
+  if (!map.value) {
+    alert("地圖尚未初始化完成，請稍後再試。");
+    return;
+  }
+
+  if (!navigator.geolocation) {
+    alert("你的瀏覽器不支援地理定位功能。");
+    return;
+  }
   navigator.geolocation.getCurrentPosition(
     (position) => {
       const userLocation = {
@@ -701,9 +645,9 @@ function locateUser(map) {
         lng: position.coords.longitude,
       };
 
-      const userMarker = new google.maps.Marker({
+      new google.maps.Marker({
         position: userLocation,
-        map: map,
+        map: map.value,
         title: "你的位置",
         icon: {
           path: google.maps.SymbolPath.CIRCLE,
@@ -715,72 +659,143 @@ function locateUser(map) {
         },
       });
 
-      map.setCenter(userLocation);
-      map.setZoom(15);
+      map.value.setCenter(userLocation);
+      map.value.setZoom(15);
+      isLocated.value = true;
+      if (searchQuery.value) {
+        performSearch({
+          type: SearchType.TEXT,
+          query: searchQuery.value,
+          location: userLocation,
+        });
+      }
     },
     (error) => {
-      alert("無法取得你的定位資訊");
-      console.error(error);
+      isLocated.value = true;
+      alert("無法取得你的定位資訊", error);
     }
   );
 }
 
-function addCategory(item) {
-  const exists = categories.value.some((cat) => cat.type === item.type);
-  if (exists) return;
-  if (categories.value.length >= maxCategoryCount) {
-    alert("已達上限，最多只能選擇 5 種類別");
-    return;
-  }
-
-  categories.value.push(item);
-  placeCategories.value = placeCategories.value.filter(
-    (cat) => cat.type !== item.type
-  );
-}
-
-function removeCategory(item) {
-  categories.value = categories.value.filter((cat) => cat.type !== item.type);
-
-  const exists = placeCategories.value.some((cat) => cat.type === item.type);
-  if (!exists) {
-    placeCategories.value.push(item);
-  }
-}
-
-function handleClickOutside(event) {
-  if (menuRef.value && !menuRef.value.contains(event.target)) {
-    showCustomCategory.value = false;
-  }
-}
-
 function getPlaceIconUrl(types) {
-  // 只要類別與檔名一致，直接組合路徑
   for (const type of types) {
-    // 你可以用 fetch 或其他方式檢查檔案是否存在
     return `src/assets/icons/mapIcons/${type}.svg`;
   }
   return "src/assets/icons/mapIcons/default.svg";
 }
 
+watch(
+  () => route.query.city,
+  (newCity) => {
+    selectedCityName.value = newCity || "none";
+  }
+);
+
+watch(selectedPlace, (newVal) => {
+  if (newVal) {
+    selectedPlacePhotoIndex.value = 0;
+  }
+});
+
+watch(
+  () => route.query,
+  (newQuery) => {
+    if (!isLocated.value || !map.value) return;
+
+    const queryText = newQuery.searchQuery;
+    const queryCity = newQuery.city;
+
+    if (!queryText) return;
+
+    let center = null;
+
+    if (queryCity && queryCity !== "none") {
+      const city = cities.find((c) => c.name === queryCity);
+      if (!city) return;
+
+      center = new google.maps.LatLng(city.lat, city.lng);
+      map.value.setCenter(center);
+      map.value.setZoom(13);
+
+      performSearch({
+        type: SearchType.TEXT,
+        query: queryText,
+        cityName: queryCity,
+        location: center,
+      });
+    } else {
+      performSearch({
+        type: SearchType.TEXT,
+        query: queryText,
+        location: map.value.getCenter(),
+      });
+    }
+  }
+);
+
 onMounted(async () => {
   try {
     await loadGoogleMaps();
     initMap();
-    await locateUser(map);
 
-    // 初始化方向服務
+    if (!mapRef.value) {
+      console.error("mapRef 尚未掛載");
+      return;
+    }
+    map.value = new google.maps.Map(mapRef.value, {
+      center: { lat: 25.038, lng: 121.5645 },
+      zoom: 12,
+      mapTypeControl: false,
+      mapTypeControlOptions: null,
+      zoomControl: false,
+      cameraControl: false,
+      scaleControl: false,
+      fullscreenControl: false,
+      errorControl: false,
+      streetViewControl: false,
+      streetViewControlOptions: {
+        position: google.maps.ControlPosition.LEFT_TOP,
+      },
+    });
+
     directionsService = new google.maps.DirectionsService();
     directionsRenderer = new google.maps.DirectionsRenderer({
       suppressMarkers: true,
     });
-    directionsRenderer.setMap(map);
+    directionsRenderer.setMap(map.value);
 
-    // 初始化 PlacesService（for 點擊地圖查詢）
-    service = new google.maps.places.PlacesService(map);
+    service = new google.maps.places.PlacesService(map.value);
+    performSearch = useMapSearch({
+      map: map.value,
+      service,
+      clearMap,
+      handleResults,
+    }).performSearch;
+    searchQuery.value = route.query.searchQuery || "";
+    const queryText = route.query.searchQuery;
+    const queryCity = route.query.city;
 
-    // 地圖點擊事件
-    map.addListener("click", (event) => {
+    if (queryText && queryCity && queryCity !== "none") {
+      const city = cities.find((c) => c.name === queryCity);
+      if (city) {
+        const center = new google.maps.LatLng(city.lat, city.lng);
+        map.value.setCenter(center);
+        map.value.setZoom(13);
+        performSearch({
+          type: SearchType.TEXT,
+          query: queryText,
+          cityName: queryCity,
+          location: center,
+        });
+      }
+    } else if (queryText) {
+      performSearch({
+        type: SearchType.TEXT,
+        query: queryText,
+        location: map.value.getCenter(),
+      });
+    }
+    map.value.addListener("click", (event) => {
       markers.forEach((marker) => marker.setMap(null));
       markers = [];
       placeDetails.value = [];
@@ -806,7 +821,6 @@ onMounted(async () => {
 
         service.getDetails(detailRequest, (detailResult, detailStatus) => {
           if (detailStatus === google.maps.places.PlacesServiceStatus.OK) {
-            // 第三個點時，重置
             if (selectedMarkers.length === 2) {
               selectedMarkers.forEach((m) => m.setMap(null));
               selectedMarkers.length = 0;
@@ -817,7 +831,7 @@ onMounted(async () => {
 
             const marker = new google.maps.Marker({
               position: detailResult.geometry.location,
-              map,
+              map: map.value,
               title: detailResult.name,
             });
             selectedMarkers.push(marker);
@@ -832,23 +846,27 @@ onMounted(async () => {
               );
             }
           } else {
-            console.warn("取得詳細資料失敗", detailStatus);
+            alert("取得詳細資料失敗", detailStatus);
           }
         });
       } else {
-        console.log("點擊了非place地點");
+        alert("點擊了非place地點");
       }
     });
 
-    map.addListener("click", handleClickOutside);
+    mapClickListener = google.maps.event.addListener(
+      map.value,
+      "click",
+      handleClickOutside
+    );
   } catch (err) {
+    console.error("地圖初始化失敗", err);
     alert("Google Maps 載入失敗");
-    console.error(err);
   }
 });
 
 onUnmounted(() => {
-  map.removeListener("click", handleClickOutside);
+  google.maps.event.removeListener(mapClickListener);
 });
 </script>
 
