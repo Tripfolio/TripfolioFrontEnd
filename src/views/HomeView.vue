@@ -1,8 +1,23 @@
 <template>
+
   <div class="min-h-screen homepage-bg">
+
+    <transition name="fade-landing">
       <div class="landing" v-if="show">
-    <div class="logo">Tripfolio</div>
-  </div>
+        <div class="loading  text-3xl tracking-widest whitespace-no-wrap" >
+          <span style="--i: 0">T</span>
+          <span style="--i: 1">R</span>
+          <span style="--i: 2">I</span>
+          <span style="--i: 3">P</span>
+          <span style="--i: 4">F</span>
+          <span style="--i: 5">O</span>
+          <span style="--i: 6">L</span>
+          <span style="--i: 7">I</span>
+          <span style="--i: 8">O</span>
+        </div>
+      </div>
+    </transition>
+
   <div class="min-h-screen px-4 py-6">
       <div class="w-[80vw] mx-auto">
         <header
@@ -288,6 +303,8 @@ onUnmounted(() => {
     0px 0px;
   background-color: white;
 }
+
+
 .landing {
   position: fixed;
   inset: 0;
@@ -296,14 +313,43 @@ onUnmounted(() => {
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 2rem;
   animation: fadeout 5s forwards;
   z-index: 9999;
 }
+
+.fade-landing-enter-active,
+.fade-landing-leave-active {
+  transition: opacity 0.5s;
+}
+.fade-landing-enter-from,
+.fade-landing-leave-to {
+  opacity: 0;
+}
+.fade-landing-enter-to,
+.fade-landing-leave-from {
+  opacity: 1;
+}
+
 
 @keyframes fadeout {
   0% { opacity: 1; }
   80% { opacity: 1; }
   100% { opacity: 0; }
 }
+
+.loading span {
+  animation: blur 1.5s calc(var(--i) / 5 * 1s) alternate infinite;
+}
+
+@keyframes blur {
+  to {
+    filter: blur(0px);
+  }
+  from {
+    filter: blur(5px);
+  }
+}
+
+
+
 </style>
