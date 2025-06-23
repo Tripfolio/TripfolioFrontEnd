@@ -1,6 +1,113 @@
 <template>
   <div style="display: none"></div>
+  <!-- <div
+    class="fixed bottom-4 right-4 w-72 bg-white shadow-lg rounded-lg p-4 z-50 max-h-[90vh] overflow-y-auto"
+  >
+    <h3 class="text-lg font-bold mb-4">已加入的景點</h3>
+
+    <draggable
+      v-model="itineraryPlaces"
+      item-key="name"
+      ghost-class="bg-yellow-100"
+      animation="200"
+      @end="updateOrder"
+    >
+      <template #item="{ element: p, index }">
+        <li
+          class="mb-4 border-b bg-gray-500 list-none flex justify-between rounded-2xl w-l relative items-stretch"
+        >
+          
+          <div class="w-1/2 p-3">
+            <p
+              class="number bg-red-600 w-6 text-center rounded-2xl text-amber-50"
+            >
+              {{ index + 1 }}
+            </p>
+            <h3 class="block text-white text-l mb-1.5">{{ p.name }}</h3>
+           
+            <div class="flex flex-col items-start text-white text-xs">
+              <p
+                v-if="!p.editingTime"
+                class="cursor-pointer pb-2"
+                @click="startEditing(p)"
+              >
+                {{ formatTime(p.arrivalHour, p.arrivalMinute) }}抵達
+              </p>
+
+              <div v-else class="flex flex-col gap-1">
+                <div class="flex gap-1 items-center">
+                  
+                  <select
+                    v-model="p.arrivalHourTemp"
+                    class="appearance-none outline-0"
+                  >
+                    <option v-for="h in 24" :key="h" :value="h - 1">
+                      {{ (h - 1).toString().padStart(2, "0") }}
+                    </option>
+                  </select>
+                  :
+                  
+                  <select
+                    v-model="p.arrivalMinuteTemp"
+                    class="appearance-none outline-0"
+                  >
+                    <option v-for="m in [0, 15, 30, 45]" :key="m" :value="m">
+                      {{ m.toString().padStart(2, "0") }}
+                    </option>
+                  </select>
+                  抵達
+                </div>
+
+                <div class="flex gap-2 mt-1">
+                  <button @click="confirmTime(p)" class="text-green-300">
+                    ✔ 更改
+                  </button>
+                  <button @click="cancelEditing(p)" class="text-red-300">
+                    ✘ 取消
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <img
+            :src="p.photo"
+            class="w-1/2 rounded-tr-lg rounded-br-lg object-cover"
+          />
+
+          <br />
+          
+          <div class="relative">
+            <button
+              @click.stop="toggleMenu(index)"
+              class="button-list absolute right-0"
+            >
+              <font-awesome-icon
+                icon="ellipsis-h"
+                class="p-1 text-white bg-cyan-800 rounded-full cursor-pointer absolute right-2 top-2"
+              />
+            </button>
+            <ul
+              v-if="openMenuIndex === index"
+              class="absolute right-0 mt-12 bg-white shadow rounded"
+            >
+              <li>
+                <button
+                  @click="removePlace(p)"
+                  class="w-full text-left px-4 py-2 hover:bg-gray-100"
+                >
+                  🗑️ remove
+                </button>
+              </li>
+            </ul>
+          </div>
+          
+        </li>
+      </template>
+    </draggable>
+  </div> -->
 </template>
+
 
 <script setup>
 import { toRefs, ref, onMounted, onBeforeUnmount, watch } from "vue";
@@ -181,6 +288,7 @@ async function addPlace(place,date) {
 
     if (rep.data.success && rep.data.place) {
       itineraryPlaces.value.push(rep.data.place);
+      await loadItinerary(); 
       alert("成功加入行程！");
     } else {
       alert("加入失敗：" + rep.data.message);

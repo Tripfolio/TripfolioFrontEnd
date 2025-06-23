@@ -2,7 +2,6 @@
     <div v-if="selectedTrip && currentDay">
       <h2 class="text-xl font-bold mb-4">{{ currentDay.date }}</h2>
 
-      <!-- Itinerary.vue 放隱藏 ref -->
       <Itinerary
         ref="itineraryRef"
         :trip-id="selectedTrip.id"
@@ -147,6 +146,14 @@ function removePlace(p) {
 
 function updateOrder() {
   itineraryRef.value?.updateOrder();
+}
+
+defineExpose({
+  refresh
+})
+
+function refresh() {
+  refreshKey.value++
 }
 
   </script>

@@ -3,7 +3,7 @@
     ref="itineraryRef"
     :trip-id="trip?.id"
     :selected-place="selectedPlace"
-    :selected-date="selectedDate"
+    :selected-date="selectedDate?.date"
     :default-image="defaultImage"
   />
 
@@ -270,6 +270,7 @@ import { useMapSearch, SearchType } from "../composable/useMapSearch";
 const props = defineProps({
   trip: Object,
   currentDayIndex: Number,
+  dailyPlanRef: Object,
 });
 
 const { trip, currentDayIndex } = toRefs(props);
@@ -329,7 +330,9 @@ function scrollRight() {
 //import
 function callItinerary() {
   if (itineraryRef.value && typeof itineraryRef.value.addPlace === "function") {
-    itineraryRef.value.addPlace(selectedPlace.value, selectedDate.value);
+    itineraryRef.value.addPlace(selectedPlace.value, selectedDate.value.date).then(() => {
+      props.dailyPlanRef?.refresh();
+    });
   } else {
     alert("itineraryRef 尚未掛載，無法呼叫 addPlace");
   }

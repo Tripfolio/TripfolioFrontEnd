@@ -37,7 +37,7 @@ export const useTripStore = defineStore('trip', () => {
   async function fetchTrips() {
     isLoading.value = true;
     error.value = null;
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('token') || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJ0ZXN0QGV4YW1wbGUuY29tIiwiaWF0IjoxNzUwMjE1ODY0fQ.jw5vw_Y6187vaYBvBpUe-LZcTbIO-cexfgaZsNUPzZ4';
     try {
       const response = await axios.get(`${API_BASE_URL}/user`, {
         headers: { Authorization: `Bearer ${token}` }
@@ -66,7 +66,7 @@ export const useTripStore = defineStore('trip', () => {
   async function fetchTripById(id) {
     isLoading.value = true;
     error.value = null;
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('token') || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJ0ZXN0QGV4YW1wbGUuY29tIiwiaWF0IjoxNzUwMjE1ODY0fQ.jw5vw_Y6187vaYBvBpUe-LZcTbIO-cexfgaZsNUPzZ4';
     try {
       const response = await axios.get(`${API_BASE_URL}/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
@@ -86,7 +86,7 @@ export const useTripStore = defineStore('trip', () => {
     if (!selectedTrip.value || selectedTrip.value.id !== tripId) {
       return;
     }
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('token') || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJ0ZXN0QGV4YW1wbGUuY29tIiwiaWF0IjoxNzUwMjE1ODY0fQ.jw5vw_Y6187vaYBvBpUe-LZcTbIO-cexfgaZsNUPzZ4';
     try {
       const formData = new FormData();
       for (const key in updatedData) {
@@ -123,7 +123,7 @@ export const useTripStore = defineStore('trip', () => {
   async function deleteTrip(tripId) {
     isLoading.value = true;
     error.value = null;
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('token') || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJ0ZXN0QGV4YW1wbGUuY29tIiwiaWF0IjoxNzUwMjE1ODY0fQ.jw5vw_Y6187vaYBvBpUe-LZcTbIO-cexfgaZsNUPzZ4';
     try {
       await axios.delete(`${API_BASE_URL}/${tripId}`, {
         headers: { Authorization: `Bearer ${token}` }
@@ -145,7 +145,7 @@ export const useTripStore = defineStore('trip', () => {
   async function addDay(tripId) {
     const trip = selectedTrip.value;
     if (trip && trip.id === tripId) {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('token') || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJ0ZXN0QGV4YW1wbGUuY29tIiwiaWF0IjoxNzUwMjE1ODY0fQ.jw5vw_Y6187vaYBvBpUe-LZcTbIO-cexfgaZsNUPzZ4';
       try {
         const response = await axios.post(
           `${API_BASE_URL}/${tripId}/addDay`,
