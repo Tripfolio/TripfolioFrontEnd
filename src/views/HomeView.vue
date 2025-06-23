@@ -1,6 +1,9 @@
 <template>
   <div class="min-h-screen homepage-bg">
-    <div class="min-h-screen px-4 py-6">
+      <div class="landing" v-if="show">
+    <div class="logo">Tripfolio</div>
+  </div>
+  <div class="min-h-screen px-4 py-6">
       <div class="w-[80vw] mx-auto">
         <header
           class="flex items-center bg-gray-300 rounded-full px-6 py-2 shadow-md"
@@ -196,6 +199,8 @@ import { cities } from "../constants/city";
 import { rawCategories, rawPlaceCategories } from "../constants/category";
 import { useCategoryMenu } from "../composable/useCategoryMenu";
 
+const show = ref(true)
+
 const {
   categories,
   placeCategories,
@@ -257,6 +262,9 @@ function onCityChange(event) {
 
 onMounted(async () => {
   document.addEventListener("click", handleClickOutside);
+  setTimeout(() => {
+    show.value = false  // 5秒後關閉 Landing
+  }, 5000)
 });
 
 onUnmounted(() => {
@@ -279,5 +287,23 @@ onUnmounted(() => {
     0px 0px,
     0px 0px;
   background-color: white;
+}
+.landing {
+  position: fixed;
+  inset: 0;
+  background: black;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2rem;
+  animation: fadeout 5s forwards;
+  z-index: 9999;
+}
+
+@keyframes fadeout {
+  0% { opacity: 1; }
+  80% { opacity: 1; }
+  100% { opacity: 0; }
 }
 </style>
