@@ -1,32 +1,10 @@
 <template>
   <div class="bg-white min-h-screen p-4 sm:p-8 flex flex-col items-center">
-    
-    <nav class="w-full max-w-5xl mx-auto bg-[#A2A2A2] text-white rounded-full p-3 mb-8 nav-convex-effect">
-      <div class="flex items-center justify-between">
-        <button class="w-10 h-10 flex items-center justify-center bg-gray-600 rounded-full hover:bg-gray-500 transition-colors">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-          </svg>
-        </button>
-
-        <div class="flex flex-wrap justify-center md:flex items-center gap-2 sm:gap-4 md:gap-6">
-          <router-link v-for="link in navLinks" :key="link.name" :to="link.path" class="flex items-center gap-1 sm:gap-2 text-gray-800 hover:text-white transition-colors text-xs sm:text-sm md:text-base">
-            <span class="font-medium">{{ link.name }}</span>
-          </router-link>
-        </div>
-
-        <button>
-          <img class="w-10 h-10 rounded-full object-cover border-2 border-transparent hover:border-blue-500 transition-colors" src="https://images.unsplash.com/photo-1529570058547-733204bf87e5?q=80&w=1362&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="使用者頭像">
-        </button>
-      </div>
-    </nav>
-    
     <main class="w-full max-w-4xl bg-[#686868] text-white rounded-2xl shadow-lg overflow-hidden">
 
       <div class="bg-[#A2A2A2] text-white shadow-md p-4 flex justify-between items-center">
         <h2 class="text-2xl font-bold">會員中心</h2>
         <div class="w-8 h-8 rounded-full bg-gray-500 flex items-center justify-center text-gray-300">
-          
         </div>
       </div>
 
