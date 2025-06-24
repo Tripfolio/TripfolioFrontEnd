@@ -27,7 +27,7 @@
 const navLinks = [
 	{ name: '首頁', path: '/' },
   { name: '行程安排', path: '/schedule' },
-  { name: '探索', path: '/explore' },
+  { name: '探索', path: '/map' },
   { name: '社群', path: '/community' },
   { name: '評論', path: '/reviews' },
   { name: '關於我們', path: '/about' },
