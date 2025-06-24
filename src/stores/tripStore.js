@@ -7,6 +7,7 @@ dayjs.extend(isSameOrBefore);
 
 const API_BASE_URL = `${import.meta.env.VITE_API_URL}/api/travelSchedule`;
 
+//日期開始結束
 export function generateDaysArray(trip) {
   if (!trip || !trip.startDate || !trip.endDate) return [];
 
@@ -30,14 +31,16 @@ export const useTripStore = defineStore('trip', () => {
   const error = ref(null);
   const selectedTripId = ref(null);
 
+  //行程天數
   const tripDays = computed(() => {
     return selectedTrip.value ? generateDaysArray(selectedTrip.value) : [];
   });
 
+  //取得所有行程
   async function fetchTrips() {
     isLoading.value = true;
     error.value = null;
-    const token = localStorage.getItem('token')
+    const token = localStorage.getItem('token');
     try {
       const response = await axios.get(`${API_BASE_URL}/user`, {
         headers: { Authorization: `Bearer ${token}` }
@@ -63,10 +66,11 @@ export const useTripStore = defineStore('trip', () => {
     }
   }
 
+  //取得單一行程
   async function fetchTripById(id) {
     isLoading.value = true;
     error.value = null;
-    const token = localStorage.getItem('token')
+    const token = localStorage.getItem('token');
     try {
       const response = await axios.get(`${API_BASE_URL}/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
@@ -82,11 +86,12 @@ export const useTripStore = defineStore('trip', () => {
     }
   }
 
+  //更新行程
   async function updateTrip(tripId, updatedData) {
     if (!selectedTrip.value || selectedTrip.value.id !== tripId) {
       return;
     }
-    const token = localStorage.getItem('token')
+    const token = localStorage.getItem('token');
     try {
       const formData = new FormData();
       for (const key in updatedData) {
@@ -120,10 +125,11 @@ export const useTripStore = defineStore('trip', () => {
     }
   }
 
+//刪除行程
   async function deleteTrip(tripId) {
     isLoading.value = true;
     error.value = null;
-    const token = localStorage.getItem('token')
+    const token = localStorage.getItem('token');
     try {
       await axios.delete(`${API_BASE_URL}/${tripId}`, {
         headers: { Authorization: `Bearer ${token}` }
@@ -142,10 +148,11 @@ export const useTripStore = defineStore('trip', () => {
     }
   }
 
+  //新增天數
   async function addDay(tripId) {
     const trip = selectedTrip.value;
     if (trip && trip.id === tripId) {
-      const token = localStorage.getItem('token')
+      const token = localStorage.getItem('token');
       try {
         const response = await axios.post(
           `${API_BASE_URL}/${tripId}/addDay`,
@@ -174,6 +181,7 @@ export const useTripStore = defineStore('trip', () => {
     }
   }
 
+//選取行程
   async function selectTrip(id) {
     selectedTripId.value = id;
     await fetchTripById(id);

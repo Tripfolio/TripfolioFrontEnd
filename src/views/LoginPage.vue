@@ -70,6 +70,7 @@ import { ref, onMounted } from 'vue';
 import { useRouter, RouterLink } from 'vue-router';
 import axios from 'axios';
 import { logoutUser, checkLoginStatus } from '../composable/authUtils';
+import { jwtDecode } from 'jwt-decode';
 
 const router = useRouter();
 const TOKEN_NAME = 'user_token';
@@ -113,7 +114,8 @@ const login = async () => {
 };
 
 const logout = () => {
-  logoutUser(router);
+  logoutUser(router, TOKEN_NAME);
+  localStorage.removeItem('memberId');
   isLoggedIn.value = false;
   clearText();
 };
@@ -123,8 +125,9 @@ const handleGoogleLogin = () => {
 };
 
 onMounted(() => {
-  isLoggedIn.value = checkLoginStatus();
+  isLoggedIn.value = checkLoginStatus(TOKEN_NAME); 
   showError.value = false;
   errorMessage.value = '';
 });
+
 </script>

@@ -3,7 +3,7 @@
     ref="itineraryRef"
     :trip-id="trip?.id"
     :selected-place="selectedPlace"
-    :selected-date="selectedDate"
+    :selected-date="selectedDate?.date"
     :default-image="defaultImage"
   />
 
@@ -266,10 +266,12 @@ import { rawCategories, rawPlaceCategories } from "../constants/category";
 import { useCategoryMenu } from "../composable/useCategoryMenu";
 import { useMapSearch, SearchType } from "../composable/useMapSearch";
 
+const emit = defineEmits(["call-itinerary"]);
 
 const props = defineProps({
   trip: Object,
   currentDayIndex: Number,
+  dailyPlanRef: Object,
 });
 
 const { trip, currentDayIndex } = toRefs(props);
@@ -328,10 +330,21 @@ function scrollRight() {
 
 //import
 function callItinerary() {
-  if (itineraryRef.value && typeof itineraryRef.value.addPlace === "function") {
-    itineraryRef.value.addPlace(selectedPlace.value, selectedDate.value);
-  } else {
-    alert("itineraryRef 尚未掛載，無法呼叫 addPlace");
+  const place = selectedPlace.value;
+  const date = selectedDate.value?.date;
+
+  if (!place || !date) {
+    alert("缺少地點或日期，無法加入行程");
+    return;
+  }
+
+  if (itineraryRef.value?.addPlace) {
+    itineraryRef.value.addPlace(place, date).then((success) => {
+      if (success) {
+        props.dailyPlanRef?.refresh?.();
+        alert("成功加入行程！");
+      }
+    });
   }
 }
 
@@ -679,9 +692,9 @@ function locateUser() {
 
 function getPlaceIconUrl(types) {
   for (const type of types) {
-    return `src/assets/icons/mapIcons/${type}.svg`;
+    return `/icons/mapIcons/${type}.svg`;
   }
-  return "src/assets/icons/mapIcons/default.svg";
+  return "/icons/mapIcons/default.svg";
 }
 
 watch(
