@@ -1,10 +1,9 @@
 <template>
 
   <div class="min-h-screen homepage-bg">
-
     <transition name="fade-landing">
-      <div class="landing" v-if="show">
-        <div class="loading  text-5xl tracking-widest whitespace-no-wrap" >
+      <div class="landing fixed inset-0 bg-white text-gray-400 flex justify-center items-center" v-if="show">
+        <div class="loading text-5xl tracking-[0.3em] whitespace-no-wrap" >
           <span style="--i: 0">T</span>
           <span style="--i: 1">R</span>
           <span style="--i: 2">I</span>
@@ -17,11 +16,10 @@
         </div>
       </div>
     </transition>
-
-  <div class="min-h-screen px-4 py-6">
+  <div class="min-h-screen px-4 py-6 ">
       <div class="w-[80vw] mx-auto">
         <header
-          class="flex items-center bg-gray-300 rounded-full px-6 py-2 shadow-md"
+          class="flex custom-frosted items-center rounded-[32px] px-6 py-2"
         >
           <!-- 左 -->
           <div class="flex-none font-bold">logo</div>
@@ -63,7 +61,7 @@
         </section>
       </div>
       <div class="w-[60vw] mx-auto -mt-16 z-10">
-        <section class="bg-gray-800 text-white rounded-4xl py-3 px-6 shadow-md">
+        <section class="bg-gray-800/30 custom-frosted backdrop-blur-[30px] text-white rounded-4xl py-3 px-6 shadow-md">
           <div
             class="flex flex-col md:flex-row md:items-center space-y-4 md:space-y-0 md:space-x-4"
           >
@@ -288,6 +286,13 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
+body {
+  margin: 0;
+  overflow: hidden;
+  background: black;
+  font-family: "Inter", sans-serif;
+}
+
 .homepage-bg {
   background-image:
     radial-gradient(#999 1px, transparent 1px),
@@ -305,18 +310,6 @@ onUnmounted(() => {
 }
 
 
-.landing {
-  position: fixed;
-  inset: 0;
-  background: rgb(255, 255, 255);
-  color: rgb(154, 154, 154);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  animation: fadeout 5s forwards;
-  z-index: 9999;
-}
-
 .fade-landing-enter-active,
 .fade-landing-leave-active {
   transition: opacity 0.5s;
@@ -330,15 +323,19 @@ onUnmounted(() => {
   opacity: 1;
 }
 
+.landing {
+  animation: fadeout 6s forwards;
+  z-index: 9999;
+}
+
+.loading span {
+  animation: blur 1.5s calc(var(--i) / 5 * 1s) alternate infinite;
+}
 
 @keyframes fadeout {
   0% { opacity: 1; }
   80% { opacity: 1; }
   100% { opacity: 0; }
-}
-
-.loading span {
-  animation: blur 1.5s calc(var(--i) / 5 * 1s) alternate infinite;
 }
 
 @keyframes blur {
@@ -349,6 +346,15 @@ onUnmounted(() => {
     filter: blur(5px);
   }
 }
+
+.custom-frosted {
+  background: rgba(0, 0, 0, 0.2);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.25);
+  opacity: 0.8;
+  backdrop-filter: blur(100px);
+}
+
+
 
 
 
