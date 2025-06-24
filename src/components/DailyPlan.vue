@@ -7,7 +7,7 @@
         :trip-id="selectedTrip.id"
         :selected-date="currentDay.date"
         class="hidden"
-        @refresh="refresh"
+        @refresh="updateSpots"
         />
 
 
@@ -90,9 +90,12 @@
   </template>
   
   <script setup>
-import { ref, computed, toRefs, watchEffect} from 'vue';
+import { ref, computed, toRefs } from 'vue';
 import draggable from 'vuedraggable';
 import Itinerary from './Itinerary.vue';
+import axios from 'axios';
+
+const API_URL = import.meta.env.VITE_API_URL;
 
 const itineraryRef = ref(null);
 
@@ -105,18 +108,21 @@ const { selectedTrip, dayIndex } = toRefs(props);
 const openMenuIndex = ref(null);
 
 
-const refreshKey = ref(0)
-
 const currentDay = computed(() => {
   return selectedTrip.value?.days?.[dayIndex.value] || null;
 });
 
 const itinerarySpots = ref([]);
 
-watchEffect(() => {
+function updateSpots(allPlaces) {
   const date = currentDay.value?.date || '';
-  itinerarySpots.value = itineraryRef.value?.itineraryPlaces?.filter(p => p.date === date) || [];
-});
+  itinerarySpots.value = allPlaces.filter(p => p.date === date);
+}
+
+// watchEffect(() => {
+//   const date = currentDay.value?.date || '';
+//   itinerarySpots.value = itineraryRef.value?.itineraryPlaces?.filter(p => p.date === date) || [];
+// });
 
 
 
@@ -145,13 +151,19 @@ function removePlace(p) {
 }
 
 function updateOrder() {
-  itineraryRef.value?.updateOrder();
+  const newOrder = itinerarySpots.value.map((p, i) => ({
+    id: p.id,
+    placeOrder: i + 1,
+  }));
+  axios.put(`${API_URL}/api/itinerary/places/reorder`, { places: newOrder })
+    .then(() => {
+      // 更新成功你可以選擇 alert 或 console
+      console.log('排序更新成功');
+    })
+    .catch(() => {
+      alert('排序更新失敗');
+    });
 }
 
-function refresh() {
-  refreshKey.value++;
-}
-
-defineExpose({ refresh });
 
   </script>

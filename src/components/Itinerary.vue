@@ -46,7 +46,7 @@ async function loadItinerary() {
       .filter(p => p.date === selectedDate.value)
       .sort((a, b) => a.arrivalHour - b.arrivalHour);
 
-    emit('refresh');  // ← 這行通知父層
+    emit('refresh', itineraryPlaces.value);  // ← 這行通知父層
   } catch (error) {
     alert("載入行程失敗");
   }
