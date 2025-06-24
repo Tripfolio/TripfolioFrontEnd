@@ -1,6 +1,6 @@
 <template>
 
-  <div class="relative">
+  <div class="relative ">
     <div class="px-4 sm:px-8 py-4">
       <NavBar />
     </div>
