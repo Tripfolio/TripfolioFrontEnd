@@ -7,7 +7,9 @@
         :trip-id="selectedTrip.id"
         :selected-date="currentDay.date"
         class="hidden"
-      />
+        @refresh="refresh"
+        />
+
 
       <draggable
         :list="itinerarySpots"
@@ -88,7 +90,7 @@
   </template>
   
   <script setup>
-import { ref, computed, toRefs} from 'vue';
+import { ref, computed, toRefs, watchEffect} from 'vue';
 import draggable from 'vuedraggable';
 import Itinerary from './Itinerary.vue';
 
@@ -109,10 +111,13 @@ const currentDay = computed(() => {
   return selectedTrip.value?.days?.[dayIndex.value] || null;
 });
 
-const itinerarySpots = computed(() => {
+const itinerarySpots = ref([]);
+
+watchEffect(() => {
   const date = currentDay.value?.date || '';
-  return itineraryRef.value?.itineraryPlaces?.filter(p => p.date === date) || [];
+  itinerarySpots.value = itineraryRef.value?.itineraryPlaces?.filter(p => p.date === date) || [];
 });
+
 
 
 function toggleMenu(index) {
