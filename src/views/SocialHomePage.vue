@@ -4,7 +4,12 @@
 
     <!-- 貼文列表 -->
     <div class="space-y-4">
-      <PostCard v-for="post in posts" :key="post.id" :post="post" />
+      <PostCard
+        v-for="post in posts"
+        :key="post.postId"
+        :post="post"
+        @click="openPostDetail(post)"
+      />
     </div>
 
     <div ref="scrollTrigger" class="h-10"></div>
@@ -40,6 +45,13 @@
     >
       建立貼文
     </button>
+    <PostPopup
+      v-if="showModal"
+      :post="selectedPost"
+      :isVisible="showModal"
+      @close="closeModal"
+      @update-post="updatePost"
+    />
   </div>
 </template>
 
@@ -48,6 +60,7 @@ import { ref, onMounted, onBeforeUnmount } from "vue";
 import axios from "axios";
 import { useRouter } from "vue-router";
 import PostCard from "@/components/PostCard.vue";
+import PostPopup from "@/components/PostPopup.vue";
 
 const posts = ref([]);
 const page = ref(1);
@@ -56,6 +69,8 @@ const isLoading = ref(false);
 const hasMore = ref(true);
 const scrollTrigger = ref(null);
 const router = useRouter();
+const showModal = ref(false);
+const selectedPost = ref(null);
 
 let observer = null;
 
@@ -72,6 +87,7 @@ const fetchPosts = async () => {
     if (fetched.length < limit) {
       hasMore.value = false;
     }
+
     posts.value.push(...fetched);
     page.value++;
   } catch (err) {
@@ -103,6 +119,25 @@ const initObserver = () => {
   if (scrollTrigger.value) {
     observer.observe(scrollTrigger.value);
   }
+};
+
+const updatePost = (updatedPost) => {
+  const index = posts.value.findIndex((p) => p.postId === updatedPost.postId);
+  if (index !== -1) {
+    posts.value[index] = updatedPost;
+  }
+};
+const closeModal = () => {
+  showModal.value = false;
+  selectedPost.value = null;
+  page.value = 1;
+  posts.value = [];
+  hasMore.value = true;
+  fetchPosts();
+};
+const openPostDetail = (post) => {
+  selectedPost.value = post;
+  showModal.value = true;
 };
 
 onMounted(() => {
