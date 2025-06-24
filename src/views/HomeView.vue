@@ -3,7 +3,7 @@
   <div class="min-h-screen homepage-bg">
     <transition name="fade-landing">
       <div class="landing fixed inset-0 bg-white text-gray-400 flex justify-center items-center" v-if="show">
-        <div class="loading text-5xl tracking-[0.3em] whitespace-no-wrap" >
+        <div class="loading text-5xl tracking-[0.4em] whitespace-no-wrap" >
           <span style="--i: 0">T</span>
           <span style="--i: 1">R</span>
           <span style="--i: 2">I</span>
@@ -12,11 +12,11 @@
           <span style="--i: 5">O</span>
           <span style="--i: 6">L</span>
           <span style="--i: 7">I</span>
-          <span style="--i: 8">O</span>
+          <span style="--i: 8;; margin-right: -0.4em;">O</span>
         </div>
       </div>
     </transition>
-  <div class="min-h-screen px-4 py-6 ">
+    <div class="px-4 py-6 ">
       <div class="w-[80vw] mx-auto">
         <header
           class="flex custom-frosted items-center rounded-[32px] px-6 py-2"
@@ -44,23 +44,10 @@
             <RouterLink to="/login" class="underline">登入</RouterLink>
           </div>
         </header>
-        <section
-          class="mt-10 bg-gray-300 rounded-[3rem] h-[300px] md:h-[400px] shadow-inner"
-        >
-          <section class="mt-10 p-6">
-            <p class="mb-2">其他連結 我先放這</p>
-            <div class="flex flex-wrap gap-4">
-              <RouterLink to="/emailSettings" class="underline">Email 通知</RouterLink>
-              <RouterLink to="/profile" class="underline">會員資料修改</RouterLink>
-              <RouterLink to="/calendar" class="underline">連結 Google Calendar</RouterLink>
-              <RouterLink to="/schedule" class="underline">個人行程</RouterLink>
-              <RouterLink to="/community">社群貼文</RouterLink>
-              <RouterLink to="/trips">行程建立</RouterLink>
-            </div>
-          </section>
-        </section>
       </div>
-      <div class="w-[60vw] mx-auto -mt-16 z-10">
+      <div class="w-[100vw] mx-auto">
+        <HomeCarousel />
+        <div class="w-[60vw] mx-auto -mt-16 z-10">
         <section class="bg-gray-800/30 custom-frosted backdrop-blur-[30px] text-white rounded-4xl py-3 px-6 shadow-md">
           <div
             class="flex flex-col md:flex-row md:items-center space-y-4 md:space-y-0 md:space-x-4"
@@ -166,7 +153,13 @@
             </div>
           </div>
         </section>
+        </div>
       </div>
+    </div>
+    <div class="homepage-bg" data-aos="zoom-out">
+      <h2 class="text-4xl font-bold text-left">
+      Find your destination
+      </h2>
     </div>
     <div v-if="placeDetails.length" class="w-full mx-auto">
       <div class="backdrop-blur-lg rounded-2xl shadow-xl px-6 py-4 space-y-3">
@@ -211,6 +204,9 @@ import { RouterLink, useRouter, useRoute } from "vue-router";
 import { cities } from "../constants/city";
 import { rawCategories, rawPlaceCategories } from "../constants/category";
 import { useCategoryMenu } from "../composable/useCategoryMenu";
+import AOS from 'aos'
+import 'aos/dist/aos.css'
+import HomeCarousel from '../components/HomeCarousel.vue';
 
 const show = ref(true)
 
@@ -277,7 +273,8 @@ onMounted(async () => {
   document.addEventListener("click", handleClickOutside);
   setTimeout(() => {
     show.value = false  
-  }, 5000)
+  }, 5000);
+  AOS.init({ once: true });
 });
 
 onUnmounted(() => {
@@ -286,12 +283,6 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
-body {
-  margin: 0;
-  overflow: hidden;
-  background: black;
-  font-family: "Inter", sans-serif;
-}
 
 .homepage-bg {
   background-image:
