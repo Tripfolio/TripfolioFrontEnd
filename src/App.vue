@@ -1,8 +1,3 @@
-<script setup>
-
-  import { RouterView } from "vue-router";
-</script>
-
 <template>
 
 <div class="w-full h-screen flex flex-col relative">
@@ -18,6 +13,7 @@
   </div>
   <div class="relative">
     <RouterView />
+
   </div>
 </div> 
 </template>

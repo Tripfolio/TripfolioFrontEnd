@@ -1,7 +1,9 @@
 <template>
   <Itinerary
     ref="itineraryRef"
-    :selectedPlace="selectedPlace"
+    :trip-id="trip?.id"
+    :selected-place="selectedPlace"
+    :selected-date="selectedDate?.date"
     :default-image="defaultImage"
   />
 
@@ -255,7 +257,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch, onUnmounted } from "vue";
+import { ref, onMounted, watch, onUnmounted, computed, toRefs } from "vue";
 import { MarkerClusterer } from "@googlemaps/markerclusterer";
 import Itinerary from "../components/Itinerary.vue";
 import { useRoute, useRouter } from "vue-router";
@@ -263,6 +265,20 @@ import { cities } from "../constants/city";
 import { rawCategories, rawPlaceCategories } from "../constants/category";
 import { useCategoryMenu } from "../composable/useCategoryMenu";
 import { useMapSearch, SearchType } from "../composable/useMapSearch";
+
+const emit = defineEmits(["call-itinerary"]);
+
+const props = defineProps({
+  trip: Object,
+  currentDayIndex: Number,
+  dailyPlanRef: Object,
+});
+
+const { trip, currentDayIndex } = toRefs(props);
+
+const selectedDate = computed(() => {
+  return trip.value?.days?.[currentDayIndex.value] || null;
+});
 
 const route = useRoute();
 const router = useRouter();
@@ -314,12 +330,24 @@ function scrollRight() {
 
 //import
 function callItinerary() {
-  if (itineraryRef.value && typeof itineraryRef.value.addPlace === "function") {
-    itineraryRef.value.addPlace();
-  } else {
-    alert("itineraryRef 尚未掛載，無法呼叫 addPlace");
+  const place = selectedPlace.value;
+  const date = selectedDate.value?.date;
+
+  if (!place || !date) {
+    alert("缺少地點或日期，無法加入行程");
+    return;
+  }
+
+  if (itineraryRef.value?.addPlace) {
+    itineraryRef.value.addPlace(place, date).then((success) => {
+      if (success) {
+        props.dailyPlanRef?.refresh?.();
+        alert("成功加入行程！");
+      }
+    });
   }
 }
+
 
 const {
   categories,
@@ -724,7 +752,6 @@ onMounted(async () => {
     initMap();
 
     if (!mapRef.value) {
-      console.error("mapRef 尚未掛載");
       return;
     }
     map.value = new google.maps.Map(mapRef.value, {
@@ -742,7 +769,6 @@ onMounted(async () => {
         position: google.maps.ControlPosition.LEFT_TOP,
       },
     });
-    await locateUser();
 
     directionsService = new google.maps.DirectionsService();
     directionsRenderer = new google.maps.DirectionsRenderer({
@@ -846,7 +872,6 @@ onMounted(async () => {
       handleClickOutside
     );
   } catch (err) {
-    console.error("地圖初始化失敗", err);
     alert("Google Maps 載入失敗");
   }
 });

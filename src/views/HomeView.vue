@@ -34,16 +34,11 @@
           <section class="mt-10 p-6">
             <p class="mb-2">其他連結 我先放這</p>
             <div class="flex flex-wrap gap-4">
-              <RouterLink to="/emailSettings" class="underline"
-                >Email 通知</RouterLink
-              >
-              <RouterLink to="/profile" class="underline"
-                >會員資料修改</RouterLink
-              >
-              <RouterLink to="/calendar" class="underline"
-                >連結 Google Calendar</RouterLink
-              >
+              <RouterLink to="/emailSettings" class="underline">Email 通知</RouterLink>
+              <RouterLink to="/profile" class="underline">會員資料修改</RouterLink>
+              <RouterLink to="/calendar" class="underline">連結 Google Calendar</RouterLink>
               <RouterLink to="/schedule" class="underline">個人行程</RouterLink>
+              <RouterLink to="/community">社群貼文</RouterLink>
             </div>
           </section>
         </section>
@@ -270,11 +265,18 @@ onUnmounted(() => {
 
 <style scoped>
 .homepage-bg {
-  background-image: radial-gradient(#999 1px, transparent 1px),
+  background-image:
+    radial-gradient(#999 1px, transparent 1px),
     linear-gradient(to right, rgba(0, 0, 0, 0.08) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(0, 0, 0, 0.08) 1px, transparent 1px);
-  background-size: 40px 40px, 40px 40px, 40px 40px;
-  background-position: 20px 20px, 0px 0px, 0px 0px;
+  background-size:
+    40px 40px,
+    40px 40px,
+    40px 40px;
+  background-position:
+    20px 20px,
+    0px 0px,
+    0px 0px;
   background-color: white;
 }
 </style>

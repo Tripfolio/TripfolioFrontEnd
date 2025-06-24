@@ -8,8 +8,13 @@ import GoogleCalendar from "@/views/GoogleCalendar.vue";
 import EmailSettings from "@/views/EmailSettings.vue";
 import Travel from "@/views/Travel.vue";
 import UserActivity from "@/views/UserActivity.vue";
+import SocialHomePage from "@/views/SocialHomePage.vue";
+import GetInvite from "@/views/GetInvite.vue";
 import Post from "@/components/PostForm.vue";
 import Community from "@/views/CommunityList.vue";
+import scheduleDetail from "@/views/scheduleDetail.vue";
+import Payment from "@/views/Payment.vue";
+
 
 const routes = [
   {
@@ -48,6 +53,11 @@ const routes = [
     component: EmailSettings,
   },
   {
+    path: "/GetInvite",
+    name: "GetInvite",
+    component: GetInvite,
+  },
+  {
     path: "/schedule",
     name: "schedule",
     component: Travel,
@@ -66,6 +76,21 @@ const routes = [
     path: "/community",
     name: "community",
     component: Community,
+  },
+  {
+    path: "/schedule/:id",
+    name: "scheduledetail",
+    component: scheduleDetail,
+  },
+  {
+    path: "/social",
+    name: "social",
+    component: SocialHomePage,
+  },
+  {
+    path: "/payment",
+    name: "payment",
+    component: Payment,
   },
 ];
 
