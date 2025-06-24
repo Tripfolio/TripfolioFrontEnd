@@ -11,7 +11,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted,watch } from "vue";
+import { ref, onMounted, watch } from "vue";
 import axios from "axios";
 
 const props = defineProps({
@@ -28,11 +28,10 @@ const props = defineProps({
 const isFavorited = ref(false);
 const isLoading = ref(false);
 
-
 const checkFavoriteStatus = async () => {
   try {
     const response = await axios.get(
-      `${import.meta.env.VITE_API_URL}/api/favorites/check/${props.postId}/${props.memberId}`
+      `${import.meta.env.VITE_API_URL}/api/favorites/check/${props.postId}/${props.memberId}`,
     );
     isFavorited.value = response.data.isFavorited;
 
@@ -51,7 +50,7 @@ const toggleFavorite = async () => {
         `${import.meta.env.VITE_API_URL}/api/favorites/${props.postId}`,
         {
           data: { memberId: props.memberId },
-        }
+        },
       );
       isFavorited.value = false;
       console.log("已取消收藏");
@@ -71,7 +70,7 @@ const toggleFavorite = async () => {
 };
 
 onMounted(() => {
-  console.log('目前 props.memberId:', props.memberId);
+  console.log("目前 props.memberId:", props.memberId);
   checkFavoriteStatus();
 });
 
@@ -79,10 +78,10 @@ watch(
   () => props.memberId,
   (newVal, oldVal) => {
     if (newVal !== oldVal && newVal) {
-      console.log('目前 props.memberId:', props.memberId);
+      console.log("目前 props.memberId:", props.memberId);
       checkFavoriteStatus();
     }
-  }
+  },
 );
 </script>
 

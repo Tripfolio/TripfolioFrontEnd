@@ -1,11 +1,11 @@
 import { createRouter, createWebHistory } from "vue-router";
+
 import HomeView from "@/views/HomeView.vue";
 import SignUp from "@/views/SignUp.vue";
 import LoginPage from "@/views/LoginPage.vue";
 import GoogleMapView from "@/views/GoogleMapView.vue";
 import MemberProfile from "@/views/MemberProfile.vue";
 import GoogleCalendar from "@/views/GoogleCalendar.vue";
-import TripPlannerView from "@/views/TripPlannerView.vue";
 import EmailSettings from "@/views/EmailSettings.vue";
 import Travel from "@/views/Travel.vue";
 import SocialHomePage from "@/views/SocialHomePage.vue";
@@ -14,7 +14,6 @@ import Post from "@/components/PostForm.vue";
 import Community from "@/views/CommunityList.vue";
 import scheduleDetail from "@/views/scheduleDetail.vue";
 import Payment from "@/views/Payment.vue";
-
 
 const routes = [
   {
@@ -51,11 +50,6 @@ const routes = [
     path: "/emailSettings",
     name: "emailSettings",
     component: EmailSettings,
-  },
-  {
-    path: "/trips",
-    name: "trips",
-    component: TripPlannerView,
   },
   {
     path: "/GetInvite",

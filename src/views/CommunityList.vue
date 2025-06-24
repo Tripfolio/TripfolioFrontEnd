@@ -91,7 +91,7 @@ const selectedPost = ref(null);
 const fetchPosts = async () => {
   try {
     const res = await axios.get(
-      `${import.meta.env.VITE_API_URL}/api/community`
+      `${import.meta.env.VITE_API_URL}/api/community`,
     );
     posts.value = res.data.posts.map((post) => ({
       ...post,
@@ -113,7 +113,7 @@ const deletePost = async (postId) => {
       `${import.meta.env.VITE_API_URL}/api/community/community-posts/${postId}`,
       {
         headers: { Authorization: `Bearer ${token}` },
-      }
+      },
     );
     await fetchPosts();
   } catch {
@@ -148,7 +148,7 @@ const saveEdit = async (post) => {
           Authorization: `Bearer ${token}`,
           "Content-Type": "multipart/form-data",
         },
-      }
+      },
     );
 
     post.isEditing = false;
