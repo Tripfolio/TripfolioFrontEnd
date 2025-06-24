@@ -679,9 +679,9 @@ function locateUser() {
 
 function getPlaceIconUrl(types) {
   for (const type of types) {
-    return `src/assets/icons/mapIcons/${type}.svg`;
+    return `/icons/mapIcons/${type}.svg`;
   }
-  return "src/assets/icons/mapIcons/default.svg";
+  return "/icons/mapIcons/default.svg";
 }
 
 watch(
@@ -739,6 +739,7 @@ onMounted(async () => {
     initMap();
 
     if (!mapRef.value) {
+      console.error("mapRef 尚未掛載");
       return;
     }
     map.value = new google.maps.Map(mapRef.value, {
@@ -859,6 +860,7 @@ onMounted(async () => {
       handleClickOutside
     );
   } catch (err) {
+    console.error("地圖初始化失敗", err);
     alert("Google Maps 載入失敗");
   }
 });
