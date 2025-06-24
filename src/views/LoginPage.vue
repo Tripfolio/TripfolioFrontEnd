@@ -108,6 +108,7 @@ const login = async () => {
     isLoggedIn.value = true;
     showError.value = false;
     clearText();
+    router.push("/");
   } catch (err) {
     showError.value = true;
     errorMessage.value =

@@ -10,6 +10,7 @@
             :default-image="defaultImage"
             :current-day-index="currentDayIndex"
             :trip="selectedTrip"
+            :daily-plan-ref="dailyPlanRef"
             @select-place="handlePlaceSelect"
             @call-itinerary="callItinerary"
           />
@@ -43,13 +44,12 @@
 
       <!-- 編輯行程 -->
       <ScheduleDetail 
-        v-else 
-        :trip-id="editingTripId" 
-        :current-day-index="currentDayIndex"
-        :selected-date="selectedTrip?.days?.[currentDayIndex]"
-        ref="itineraryRef"
-        @back="handleCloseDetail" 
-        />
+          v-else 
+          :trip-id="editingTripId" 
+          :selected-date="selectedTrip?.days?.[currentDayIndex]?.date"
+          ref="itineraryRef"
+          @back="handleCloseDetail"
+      />
       </div>
     </div>
     <!-- 彈出建立行程表單 -->
@@ -94,12 +94,13 @@ const selectedPlace = ref(null);
 const defaultImage = "https://picsum.photos/1000?image";
 const currentDayIndex = ref(0);
 const itineraryRef = ref(null)
+const dailyPlanRef = ref(null);
+const mapRef = ref(null);
 
 const selectedTrip = computed(() => {
-  return tripStore.trips.find((t) => t.id ===editingTripId.value);
+  return tripStore.trips.find(t => t.id === editingTripId.value);
 });
 
-const mapRef = ref(null);
 
 //取得會員是否為付費會員
 const fetchIsPremium = async () => {
@@ -183,18 +184,7 @@ function handlePlaceSelect(place) {
 }
 
 function callItinerary() {
-  const place = selectedPlace.value;
-  const date = selectedTrip.value?.days?.[currentDayIndex.value];
-  if (!place || !date) {
-    alert("缺少地點或日期，無法加入行程");
-    return;
-  }
-
-  if (itineraryRef.value?.addPlace) {
-    itineraryRef.value.addPlace(place, date);
-  } else {
-    alert("行程尚未載入，無法加入景點");
-  }
+  mapRef.value?.callItinerary();
 }
 
 </script>
