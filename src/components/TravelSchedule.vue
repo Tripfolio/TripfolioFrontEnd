@@ -37,15 +37,36 @@
         />
       </div>
 
-            <div v-if="showCropper" class="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50">
-                <div class="bg-white p-4 rounded-lg max-w-md w-full">
-                    <cropper ref="cropperRef" :src="cropImage" :stencil-props="{ aspect: 2 }" :autoZoom="true" :resizeImage="true" class="w-full h-64" />
-                    <div class="flex justify-end gap-2 mt-4">
-                        <button @click="showCropper = false" class="bg-gray-300 px-4 py-2 rounded">取消</button>
-                        <button type="button" @click="applyCrop" class="bg-blue-500 text-white px-4 py-2 rounded">裁切</button>                   
-                    </div>
-                </div>
-            </div>
+      <div
+        v-if="showCropper"
+        class="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50"
+      >
+        <div class="bg-white p-4 rounded-lg max-w-md w-full">
+          <cropper
+            ref="cropperRef"
+            :src="cropImage"
+            :stencil-props="{ aspect: 2 }"
+            :autoZoom="true"
+            :resizeImage="true"
+            class="w-full h-64"
+          />
+          <div class="flex justify-end gap-2 mt-4">
+            <button
+              @click="showCropper = false"
+              class="bg-gray-300 px-4 py-2 rounded"
+            >
+              取消
+            </button>
+            <button
+              type="button"
+              @click="applyCrop"
+              class="bg-blue-500 text-white px-4 py-2 rounded"
+            >
+              裁切
+            </button>
+          </div>
+        </div>
+      </div>
 
       <div>
         <label class="block mb-1"
@@ -104,7 +125,7 @@
     </div>
 </template>
 
-<script setup>
+<script  setup>
 import{ ref, watch } from 'vue';
 import axios from 'axios'; 
 import { Cropper } from 'vue-advanced-cropper';
@@ -113,7 +134,7 @@ const router = useRouter();
 import 'vue-advanced-cropper/dist/style.css';
 
 /* global defineEmits */
-const emit = defineEmits(['close'])
+const emit = defineEmits(["close", "submitted"]);
 
 //狀態
 const file = ref(null)
@@ -129,11 +150,9 @@ const cropperRef = ref(null)
 const createdScheduleId = ref(null)
 const isLoading = ref(false);
 
-
 //預覽封面圖片
-
-const coverPreviewUrl = ref('')
-const defaultCover = 'https://fakeimg.pl/800x400/?text=行程封面&font=noto'
+const coverPreviewUrl = ref("");
+const defaultCover = "https://fakeimg.pl/800x400/?text=行程封面&font=noto";
 
 
 //DOM元素參考
@@ -215,33 +234,34 @@ const scheduleSubmit = async () => {
   }
 
   const token = localStorage.getItem("token");
-
-  const formData = new FormData();
+const formData = new FormData();
   if (file.value) formData.append("cover", file.value);
   formData.append("title", title.value);
   formData.append("startDate", startDate.value);
   formData.append("endDate", endDate.value);
   formData.append("description", description.value);
 
+  try {
+    isLoading.value = true;
+    const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/travelSchedule`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
-    try {
-        isLoading.value = true;
-        const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/travelSchedule`, formData, {
-            headers: {
-                'Content-Type': 'multipart/form-data',
-                Authorization: `Bearer ${token}`,
-            },
-        });
+    const newId = res.data.schedule.id;
+    createdScheduleId.value = newId;
 
-        createdScheduleId.value = res.data.schedule.id;
-        alert('儲存成功，你可以點擊行程前往編輯');
-        isDirty.value = false;
-        emit('close');
-    } catch (err) {
-        alert('儲存失敗，請稍後再試');
-    }
+    alert("儲存成功，你可以點擊下方按鈕前往編輯");
+    isDirty.value = false;
+
+    // 通知父元件做刷新
+    emit("submitted", newId);
+  } catch (err) {
+    alert("儲存失敗，請稍後再試");
+  } finally {
+    isLoading.value = false;
+  }
 };
-
-
 </script>
-
