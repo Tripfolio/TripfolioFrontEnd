@@ -80,7 +80,7 @@ import { useRouter } from 'vue-router'
 import TravelSchedule from '@/components/TravelSchedule.vue';
 import axios from 'axios';
 import GoogleMapView from '@/views/GoogleMapView.vue';
-import ScheduleDetail from '@/views/ScheduleDetail.vue';
+import ScheduleDetail from '@/views/scheduleDetail.vue';
 import { useTripStore } from '@/stores/tripStore';
 
 
