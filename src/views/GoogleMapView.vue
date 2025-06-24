@@ -692,9 +692,9 @@ function locateUser() {
 
 function getPlaceIconUrl(types) {
   for (const type of types) {
-    return `src/assets/icons/mapIcons/${type}.svg`;
+    return `/icons/mapIcons/${type}.svg`;
   }
-  return "src/assets/icons/mapIcons/default.svg";
+  return "/icons/mapIcons/default.svg";
 }
 
 watch(
