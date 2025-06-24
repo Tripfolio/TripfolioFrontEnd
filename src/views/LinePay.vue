@@ -2,7 +2,7 @@
   <div class="min-h-screen flex items-center justify-center bg-gray-100">
     <div class="bg-white p-8 rounded shadow text-center">
       <h1 class="text-2xl font-bold mb-4">升級為付費會員</h1>
-      <p class="mb-6 text-gray-600">僅需支付 NT$50 元，即可建立更多行程</p>
+      <p class="mb-6 text-gray-600">僅需支付 NT$30 元，即可建立更多行程</p>
 
       <div v-if="loading" class="text-green-500 font-medium">付款連結生成中，請稍候...</div>
       <div v-else-if="isPremium" class="text-blue-500 font-medium">您已經是付費會員！</div>
