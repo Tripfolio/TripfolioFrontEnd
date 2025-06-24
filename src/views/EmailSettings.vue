@@ -26,7 +26,6 @@ import { ref, onMounted } from "vue";
 import axios from "axios";
 
 const preferences = ref({
-  onRegister: true,
   onLogin: true,
   onLoginfail: true,
   onComment: true,
@@ -34,7 +33,6 @@ const preferences = ref({
 });
 
 const labels = {
-  onRegister: "註冊成功",
   onLogin: "登入成功",
   onLoginfail: "帳號登入異常",
   onComment: "貼文被留言",
