@@ -266,12 +266,13 @@ import { rawCategories, rawPlaceCategories } from "../constants/category";
 import { useCategoryMenu } from "../composable/useCategoryMenu";
 import { useMapSearch, SearchType } from "../composable/useMapSearch";
 
-const emit = defineEmits(["call-itinerary"]);
+const emit = defineEmits(["call-itinerary", "place-added"]);
 
 const props = defineProps({
   trip: Object,
   currentDayIndex: Number,
   dailyPlanRef: Object,
+  scheduleDetailRef: Object,
 });
 
 const { trip, currentDayIndex } = toRefs(props);
@@ -330,21 +331,24 @@ function scrollRight() {
 
 //import
 function callItinerary() {
-  const place = selectedPlace.value;
   const date = selectedDate.value?.date;
+  const place = selectedPlace.value;
 
   if (!place || !date) {
-    alert("缺少地點或日期，無法加入行程");
+    alert("請選擇地點與日期");
     return;
   }
 
-  if (itineraryRef.value?.addPlace) {
-    itineraryRef.value.addPlace(place, date).then((success) => {
-      if (success) {
-        props.dailyPlanRef?.refresh?.();
-        alert("成功加入行程！");
-      }
-    });
+  const success = itineraryRef.value?.addPlace(place, date);
+
+  if (success) {
+    emit("place-added", { place, date });
+
+    if (props.scheduleDetailRef?.refreshDailyPlan) {
+      props.scheduleDetailRef.refreshDailyPlan();
+    }
+
+    alert("成功加入行程！");
   }
 }
 
