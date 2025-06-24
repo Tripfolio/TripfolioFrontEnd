@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "npx vite build && npx cpx \"public/_redirects\" dist/",
     "preview": "vite preview",
     "lint": "eslint . --ext .js,.vue"
   },
@@ -16,11 +16,12 @@
     "@googlemaps/markerclusterer": "^2.5.3",
     "@tailwindcss/vite": "^4.1.6",
     "axios": "^1.9.0",
+    "braintree-web-drop-in": "^1.45.0",
     "dayjs": "^1.11.13",
     "jwt-decode": "^4.0.0",
     "pinia": "^3.0.1",
-    "uuid": "^11.1.0",
     "qrcode.vue": "^3.6.0",
+    "uuid": "^11.1.0",
     "v-click-outside": "^3.2.0",
     "vue": "^3.5.13",
     "vue-advanced-cropper": "^2.8.9",
