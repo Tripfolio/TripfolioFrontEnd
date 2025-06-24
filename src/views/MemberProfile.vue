@@ -126,7 +126,6 @@ import { Cropper } from "vue-advanced-cropper";
 import "vue-advanced-cropper/dist/style.css";
 import dayjs from "dayjs";
 
-
 //確認會員token
 const token = localStorage.getItem("token");
 if (!token) {
@@ -145,12 +144,11 @@ const profileData = ref({
 //元件掛載時載入會員資料
 onMounted(async () => {
   try {
-    const res = await axios.get(
-      `${import.meta.env.VITE_API_URL}/api/profile`,{
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+    const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/profile`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     const data = res.data;
 
     //生日時區
@@ -196,19 +194,23 @@ const saveAvatar = async () => {
     try {
       await axios.post(
         `${import.meta.env.VITE_API_URL}/api/profile/upload-avatar`,
-        formData,{
+        formData,
+        {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        });
+        },
+      );
       alert("大頭貼上傳成功");
 
       const profileRes = await axios.get(
-        `${import.meta.env.VITE_API_URL}/api/profile`,{
+        `${import.meta.env.VITE_API_URL}/api/profile`,
+        {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        });
+        },
+      );
       profileData.value = profileRes.data;
       previewUrl.value = "";
       showCropper.value = false;
@@ -238,11 +240,13 @@ const saveProfile = async () => {
   try {
     const res = await axios.put(
       `${import.meta.env.VITE_API_URL}/api/profile`,
-      profileData.value, {
+      profileData.value,
+      {
         headers: {
           Authorization: `Bearer ${token}`,
-        }
-      });
+        },
+      },
+    );
     alert("儲存成功");
     profileData.value = res.data;
   } catch (err) {
@@ -311,8 +315,8 @@ const changePassword = async () => {
         newPassword: passwordData.value.newPassword,
       },
       {
-        headers: { Authorization: `Bearer ${token}` }
-      }
+        headers: { Authorization: `Bearer ${token}` },
+      },
     );
     alert("密碼修改成功");
 
