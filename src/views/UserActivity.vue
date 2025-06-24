@@ -1,5 +1,5 @@
 <template>
-    <div class="max-w-screen-lg mx-auto p-6 bg-white rounded-lg shadow">
+    <div class="max-w-6xl mx-auto p-6 bg-white rounded-lg shadow">
         <h2 class="text-2xl font-bold mb-4">動態追蹤</h2>
         <!--切換選單-->
         <div class="flex gap-4 mb-6">
@@ -122,8 +122,8 @@ const fetchData = async () => {
 onMounted(fetchData)
 watch(() => route.fullPath, fetchData)
 
-const goToTravel = id => router.push(`/travel/${id}`)
-const goToPost = id => router.push(`community/post/${id}`)
+const goToTravel = id => router.push({ path: `/schedule/${id}`, query: { from: 'tracker' } })
+const goToPost = id => router.push(`/community/post/${id}`)
 
 
 //測試用的貼文假資料，合併後改連資料庫

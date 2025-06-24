@@ -73,6 +73,14 @@ const dailyPlanRef = ref(null);
 
 const token = localStorage.getItem('token');
 
+//會員動態頁面用
+import { useRoute } from 'vue-router';
+import { computed } from 'vue';
+
+const route = useRoute();
+const isFromTracker = computed(() => route.query.from === 'tracker');
+
+
 //返回行程列表
 const goBack = () => {
   emit('back');
