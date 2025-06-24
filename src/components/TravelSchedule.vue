@@ -130,6 +130,7 @@ import{ ref, watch } from 'vue';
 import axios from 'axios'; 
 import { Cropper } from 'vue-advanced-cropper';
 import { useRouter } from 'vue-router';
+import dayjs from 'dayjs';
 const router = useRouter();
 import 'vue-advanced-cropper/dist/style.css';
 
@@ -155,7 +156,6 @@ const coverPreviewUrl = ref("");
 const defaultCover = "https://fakeimg.pl/800x400/?text=行程封面&font=noto";
 
 
-//DOM元素參考
 const fileInput = ref(null);
 
 //點上傳圖片按鈕時觸發Input
@@ -189,9 +189,7 @@ const applyCrop = () => {
 //自動計算行程天數
 watch([startDate, endDate], () => {
   if (startDate.value && endDate.value) {
-    const start = new Date(startDate.value);
-    const end = new Date(endDate.value);
-    const diff = Math.round((end - start) / (1000 * 60 * 60 * 24)) + 1;
+    const diff = dayjs(endDate.value).diff(dayjs(startDate.value), 'day') + 1;
     days.value = diff > 0 ? diff : 0;
   } else {
     days.value = 0;
