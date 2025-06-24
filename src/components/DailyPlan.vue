@@ -7,7 +7,7 @@
         :trip-id="selectedTrip.id"
         :selected-date="currentDay.date"
         class="hidden"
-        @refresh="updateSpots"
+        @refresh="refresh"
         />
 
 
@@ -124,6 +124,10 @@ function updateSpots(allPlaces) {
 //   itinerarySpots.value = itineraryRef.value?.itineraryPlaces?.filter(p => p.date === date) || [];
 // });
 
+function refresh() {
+  const date = currentDay.value?.date || '';
+  itinerarySpots.value = itineraryRef.value?.itineraryPlaces?.filter(p => p.date === date) || [];
+}
 
 
 function toggleMenu(index) {
@@ -157,7 +161,7 @@ function updateOrder() {
   }));
   axios.put(`${API_URL}/api/itinerary/places/reorder`, { places: newOrder })
     .then(() => {
-      // 更新成功你可以選擇 alert 或 console
+
       console.log('排序更新成功');
     })
     .catch(() => {

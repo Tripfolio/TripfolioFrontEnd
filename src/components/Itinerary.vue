@@ -113,6 +113,7 @@ async function updateOrder() {
   try {
     await axios.put(`${API_URL}/api/itinerary/places/reorder`, { places: newOrder });
     await loadItinerary();
+    emit('refresh');
   } catch {
     alert("排序更新失敗");
   }
@@ -140,6 +141,7 @@ async function addPlace(place, date) {
     });
     if (res.data.success) {
       await loadItinerary();
+      emit('refresh');
       return true;
     }
     alert("加入失敗：" + res.data.message);
@@ -157,6 +159,7 @@ async function removePlace(p) {
     });
     if (res.data.success) {
       await loadItinerary();
+      emit('refresh');
       return true;
     }
     alert("刪除失敗");
