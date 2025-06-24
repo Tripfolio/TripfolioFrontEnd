@@ -32,10 +32,12 @@ onBeforeUnmount(() => {
   window.removeEventListener("click", onClickOutside);
 });
 
+//日期變了重新載入清單
 watch(selectedDate, () => {
   loadItinerary();
 });
 
+//向後端請求景點資料
 async function loadItinerary() {
   try {
     if (!tripId.value || !selectedDate.value) return;
@@ -60,7 +62,7 @@ const toggleMenu = (index) => {
   openMenuIndex.value = openMenuIndex.value === index ? null : index;
 };
 
-// 全局點擊事件處理
+// 全域點擊事件處理
 function onClickOutside(e) {
   if (!e.target.closest(".button-list") && !e.target.closest(".menu-list")) {
     openMenuIndex.value = null;
@@ -119,6 +121,7 @@ async function updateOrder() {
   }
 }
 
+//加入景點
 async function addPlace(place, date) {
   if (!place || !date) {
     alert("請選擇地點與日期");
@@ -152,6 +155,8 @@ async function addPlace(place, date) {
   }
 }
 
+
+//移除景點
 async function removePlace(p) {
   try {
     const res = await axios.delete(`${API_URL}/api/itinerary/place`, {
@@ -169,6 +174,7 @@ async function removePlace(p) {
     return false;
   }
 }
+
 
 defineExpose({
   addPlace,

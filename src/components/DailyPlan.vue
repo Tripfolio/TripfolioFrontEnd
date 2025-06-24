@@ -107,23 +107,24 @@ const { selectedTrip, dayIndex } = toRefs(props);
 
 const openMenuIndex = ref(null);
 
-
+//取得目前日期
 const currentDay = computed(() => {
   return selectedTrip.value?.days?.[dayIndex.value] || null;
 });
 
 const itinerarySpots = ref([]);
 
-function updateSpots(allPlaces) {
-  const date = currentDay.value?.date || '';
-  itinerarySpots.value = allPlaces.filter(p => p.date === date);
-}
+// function updateSpots(allPlaces) {
+//   const date = currentDay.value?.date || '';
+//   itinerarySpots.value = allPlaces.filter(p => p.date === date);
+// }
 
 // watchEffect(() => {
 //   const date = currentDay.value?.date || '';
 //   itinerarySpots.value = itineraryRef.value?.itineraryPlaces?.filter(p => p.date === date) || [];
 // });
 
+//更新景點資料
 function refresh() {
   const date = currentDay.value?.date || '';
   itinerarySpots.value = itineraryRef.value?.itineraryPlaces?.filter(p => p.date === date) || [];
@@ -138,6 +139,7 @@ function formatTime(hour, minute) {
   return `${String(hour ?? 0).padStart(2, '0')}:${String(minute ?? 0).padStart(2, '0')}`;
 }
 
+//呼叫子層
 function startEditing(p) {
   itineraryRef.value?.startEditing(p);
 }
@@ -154,6 +156,8 @@ function removePlace(p) {
   itineraryRef.value?.removePlace(p);
 }
 
+
+//更新排序
 function updateOrder() {
   const newOrder = itinerarySpots.value.map((p, i) => ({
     id: p.id,

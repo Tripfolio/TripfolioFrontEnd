@@ -73,11 +73,12 @@ const dailyPlanRef = ref(null);
 
 const token = localStorage.getItem('token');
 
+//返回行程列表
 const goBack = () => {
   emit('back');
 };
 
-
+//取得行程資料
 const fetchTrip = async () => {
   try {
     const res = await axios.get(
@@ -104,7 +105,7 @@ watch(() => props.tripId, () => {
   }
 );
 
-
+//更新送到後端
 const updateCover = async (blob) => {
     const formData = new FormData()
     formData.append('cover', blob)

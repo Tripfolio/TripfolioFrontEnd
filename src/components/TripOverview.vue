@@ -118,6 +118,7 @@ watch(() => props.trip.description, (newNotes) => {
   editableNotes.value = newNotes || '';
 });
 
+//動態計算天數
 const tripDays = computed(() => {
   const start = dayjs(editableStartDate.value)
   const end = dayjs(editableEndDate.value)
@@ -157,6 +158,8 @@ const computedCoverURL = computed(() => {
   return `${props.trip.coverURL}?t=${timestamp.value}`
 })
 
+
+//處理圖片上傳
 const applyCrop = () => {
   if (cropperRef.value) {
     const { canvas } = cropperRef.value.getResult();
@@ -174,7 +177,7 @@ const cancelCrop = () => {
   cropImage.value = null;
 };
 
-
+//儲存名稱
 const saveTitle = () => {
   if (editableTitle.value !== props.trip.title) {
     emit('update-title', editableTitle.value)
@@ -184,6 +187,7 @@ const saveTitle = () => {
   isTitleEditing.value = false;
 };
 
+//儲存日期
 const saveDates = () => {
   if (
     editableStartDate.value !== props.trip.startDate ||
@@ -198,7 +202,7 @@ const saveDates = () => {
   }
 };
 
-
+//儲存筆記
 const saveNotes = () => {
   if (editableNotes.value !== props.trip.description) {
     emit('update-notes', editableNotes.value)
