@@ -1,5 +1,7 @@
 <template>
-		<nav class="w-full max-w-5xl mx-auto bg-[#A2A2A2] text-white rounded-full p-3 mb-8 nav-convex-effect">
+		<nav class="fixed left-1/2 -translate-x-1/2 w-[80vw] 
+		mx-auto bg-[#A2A2A2]/30 text-white rounded-full p-3 padding-bottom 
+		box-border z-50 top-4 nav-convex-effect">
       <div class="flex items-center justify-between">
         <button class="w-10 h-10 flex items-center justify-center bg-gray-600 rounded-full hover:bg-gray-500 transition-colors">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -21,10 +23,6 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import { useRouter } from 'vue-router';
-
-const router = useRouter();
 
 const navLinks = [
 	{ name: '首頁', path: '/' },
@@ -39,7 +37,9 @@ const navLinks = [
 
 <style scoped>
 .nav-convex-effect {
-		background-color: #A2A2A2;
+		background-color: rgba(33, 28, 28, 0.3);
+		backdrop-filter: blur(8px);
+		-webkit-backdrop-filter: blur(8px); /* Safari 支援 */
     box-shadow:
       /* 整體外凸陰影 (浮起效果) */
       -6px -6px 12px rgba(255, 255, 255, 0.2),  /* 左上 */
