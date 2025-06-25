@@ -5,7 +5,7 @@
     <router-link
       to="/payment"
       class="inline-block bg-red-600 text-white px-6 py-3 rounded-md hover:bg-red-700 transition"
-      >
+    >
       返回付款頁面
     </router-link>
   </div>

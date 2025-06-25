@@ -13,8 +13,8 @@ import GetInvite from "@/views/GetInvite.vue";
 import Post from "@/components/PostForm.vue";
 import Community from "@/views/CommunityList.vue";
 import Payment from "@/views/Payment.vue";
-import PaymentSuccess from '@/views/PaymentSuccess.vue';
-import PaymentFail from '@/views/PaymentFail.vue';
+import LinePaySuccess from '@/views/LinePaySuccess.vue';
+import LinePayFail from '@/views/LinePayFail.vue';
 
 const routes = [
   {
@@ -89,14 +89,14 @@ const routes = [
   },
 
   {
-    path: '/payment-success',
-    name: 'PaymentSuccess',
-    component: PaymentSuccess,
+    path: '/linepay-success',
+    name: 'linepaysuccess',
+    component: LinePaySuccess,
   },
   {
-    path: '/payment-fail',
-    name: 'PaymentFail',
-    component: PaymentFail,
+    path: '/linepay-fail',
+    name: 'linepayfail',
+    component: LinePayFail,
   },
 ];
 
