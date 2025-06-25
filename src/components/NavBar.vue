@@ -1,6 +1,6 @@
 <template>
   <header
-    class="flex items-center bg-gray-300 rounded-full px-6 py-4 shadow-md"
+    class="flex items-center rounded-full px-6 py-4 shadow-md backdrop-blur-sm bg-gray-500/30"
   >
     <div class="flex-none font-bold w-7 h-7">
       <router-link to="/" class="cursor-pointer block">
@@ -38,3 +38,7 @@
 <script setup>
 import logo from "../assets/icons/logoIcon/logo.svg";
 </script>
+
+<!-- class="absolute top-5 left-1/2 w-[65%] -translate-x-1/2 z-10
+             backdrop-blur-xl bg-white/20 border border-white/30 
+             rounded-full px-6 py-4 shadow-lg" -->
