@@ -1,14 +1,5 @@
 <template>
   <div class="min-h-screen bg-gray-100 flex flex-col">
-    <header class="bg-white shadow-md py-3 px-6 flex items-center justify-between z-10">
-      <div class="flex items-center space-x-4">
-        <RouterLink to="/community/posts" class="text-xl font-bold text-gray-800">社群/貼文</RouterLink>
-      </div>
-      <div class="flex items-center">
-        <a href="#" class="text-gray-600 hover:text-gray-900">
-        </a>
-      </div>
-    </header>
 
     <main class="flex-grow flex items-center justify-center p-6">
       <div class="relative bg-white rounded-lg shadow-md w-full max-w-4xl h-[70vh] flex flex-col">
