@@ -55,19 +55,18 @@
         {{ isSubmitting ? "送出中..." : "發表留言" }}
       </button>
     </div> -->
-  <AddComment
-  :isSubmitting="isSubmitting"
-  @submit="submitComment"
-  class="absolute bottom-0"
-/>
+    <AddComment
+      :isSubmitting="isSubmitting"
+      @submit="submitComment"
+      class="absolute bottom-0"
+    />
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted } from "vue";
 import axios from "axios";
-import AddComment from "../components/ AddComment.vue";
-
+import AddComment from "../components/AddComment.vue";
 
 const props = defineProps({
   post: {
@@ -84,14 +83,14 @@ const isDeletingComment = ref(null); // 追蹤正在刪除的留言 ID
 
 // 取得目前使用者 ID
 const getCurrentUserId = () => {
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem("token");
   if (token) {
     try {
-      const payload = JSON.parse(atob(token.split('.')[1]));
+      const payload = JSON.parse(atob(token.split(".")[1]));
       // 根據實際 payload key 調整
       return payload.userId || payload.id || payload.memberId || null;
     } catch (error) {
-      console.error('解析 token 失敗:', error);
+      console.error("解析 token 失敗:", error);
       return null;
     }
   }
@@ -108,7 +107,7 @@ const getCurrentUserId = () => {
 //       `${import.meta.env.VITE_API_URL}/api/post/${props.post.postId}/comments`,
 //       {
 //         content: newComment.value.trim(),
-//         memberId: getCurrentUserId(), 
+//         memberId: getCurrentUserId(),
 //       }
 //     );
 
@@ -131,7 +130,7 @@ const submitComment = async (commentText) => {
       {
         content: commentText,
         memberId: getCurrentUserId(),
-      }
+      },
     );
     comments.value.unshift(response.data);
     console.log("留言發表成功", response.data);
@@ -141,8 +140,6 @@ const submitComment = async (commentText) => {
     isSubmitting.value = false;
   }
 };
-
-
 
 const formatTime = (timeString) => {
   if (!timeString) return "";
@@ -167,7 +164,7 @@ const loadComments = async () => {
     console.log(`正在載入貼文 ${props.post.postId} 的留言`);
 
     const response = await axios.get(
-      `${import.meta.env.VITE_API_URL}/api/post/${props.post.postId}/comments`
+      `${import.meta.env.VITE_API_URL}/api/post/${props.post.postId}/comments`,
     );
     comments.value = response.data;
     console.log("載入留言成功:", response.data);
@@ -197,15 +194,15 @@ const deleteComment = async (commentId) => {
     await axios.delete(
       `${import.meta.env.VITE_API_URL}/api/post/${props.post.postId}/comments/${commentId}`,
       {
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem('token')}`
-    }
-  }
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      },
     );
 
     // 從本地陣列中移除已刪除的留言
     comments.value = comments.value.filter(
-      (comment) => comment.id !== commentId
+      (comment) => comment.id !== commentId,
     );
 
     console.log("留言刪除成功");
@@ -218,7 +215,7 @@ const deleteComment = async (commentId) => {
       alert("留言不存在或已被刪除");
       // 從本地陣列中移除不存在的留言
       comments.value = comments.value.filter(
-        (comment) => comment.id !== commentId
+        (comment) => comment.id !== commentId,
       );
     } else {
       alert("刪除失敗，請稍後再試");

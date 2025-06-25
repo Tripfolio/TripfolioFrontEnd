@@ -1,7 +1,7 @@
-## 🌍 Tripfolio Backend
+## 🌍 Tripfolio Frontend
 
 📌 這是一個旅遊網站，包含地圖搜尋景點、景點加入行程規劃表中進行編輯與分享、社群建立旅遊貼文並可以按讚、留言等功能。
-📌 搭配**前端專案**請參考 → [link](https://github.com/Tripfolio/TripfolioFrontEnd)
+📌 搭配**後端專案**請參考 → [link](https://github.com/Tripfolio/TripfolioBackEnd)
 📌 網站連結 → [link](https://tripfolioo.netlify.app/)
 
 ## 技術架構

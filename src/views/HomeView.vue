@@ -34,9 +34,15 @@
           <section class="mt-10 p-6">
             <p class="mb-2">其他連結 我先放這</p>
             <div class="flex flex-wrap gap-4">
-              <RouterLink to="/emailSettings" class="underline">Email 通知</RouterLink>
-              <RouterLink to="/profile" class="underline">會員資料修改</RouterLink>
-              <RouterLink to="/calendar" class="underline">連結 Google Calendar</RouterLink>
+              <RouterLink to="/emailSettings" class="underline"
+                >Email 通知</RouterLink
+              >
+              <RouterLink to="/profile" class="underline"
+                >會員資料修改</RouterLink
+              >
+              <RouterLink to="/calendar" class="underline"
+                >連結 Google Calendar</RouterLink
+              >
               <RouterLink to="/schedule" class="underline">個人行程</RouterLink>
               <RouterLink to="/community">社群貼文</RouterLink>
             </div>

@@ -11,8 +11,8 @@ export function useMapSearch({ map, service, clearMap, handleResults }) {
   function performSearch({
     type = SearchType.CITY_DEFAULT,
     query = "",
-    cityName = "",    
-    location = null,  
+    cityName = "",
+    location = null,
     radius = 3000,
   } = {}) {
     const resolvedMap = unref(map);

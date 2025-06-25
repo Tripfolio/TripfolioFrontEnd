@@ -1,5 +1,5 @@
 <template>
-  <div class="add-comment flex bg-[#d2e8b8] ">
+  <div class="add-comment flex bg-[#d2e8b8]">
     <input
       v-model="input"
       placeholder="寫下你的留言..."
