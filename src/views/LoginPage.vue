@@ -80,15 +80,7 @@
 	const showError = ref(false)
 	const errorMessage = ref('')
   const API_BASE_URL = `${import.meta.env.VITE_API_URL}/api/login/`;
-
-	const navLinks = [
-  { name: '行程安排', path: '/schedule' },
-  { name: '探索', path: '/explore' },
-	{ name: '社群', path: '/community' },
-  { name: '評論', path: '/reviews' },
-  { name: '關於我們', path: '/about' },
-	];
-	
+  
 	const clearText = () => {
   email.value = ''
   password.value = ''
