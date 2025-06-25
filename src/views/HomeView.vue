@@ -1,200 +1,211 @@
 <template>
-
-  <div class="min-h-screen homepage-bg">
-    <transition name="fade-landing">
-      <div class="landing fixed inset-0 bg-white text-gray-400 flex justify-center items-center" v-if="show">
-        <div class="loading text-5xl tracking-[0.4em] whitespace-no-wrap" >
-          <span style="--i: 0">T</span>
-          <span style="--i: 1">R</span>
-          <span style="--i: 2">I</span>
-          <span style="--i: 3">P</span>
-          <span style="--i: 4">F</span>
-          <span style="--i: 5">O</span>
-          <span style="--i: 6">L</span>
-          <span style="--i: 7">I</span>
-          <span style="--i: 8;; margin-right: -0.4em;">O</span>
+  <div class="homepage-bg overflow-x-hidden">
+    <section class="min-h-screen  flex justify-center">
+      <!-- <transition name="fade-landing">
+        <div class="landing fixed inset-0 bg-white text-gray-400 flex justify-center items-center" v-if="show">
+          <div class="loading text-5xl tracking-[0.4em] whitespace-no-wrap" >
+            <span style="--i: 0">T</span>
+            <span style="--i: 1">R</span>
+            <span style="--i: 2">I</span>
+            <span style="--i: 3">P</span>
+            <span style="--i: 4">F</span>
+            <span style="--i: 5">O</span>
+            <span style="--i: 6">L</span>
+            <span style="--i: 7">I</span>
+            <span style="--i: 8;; margin-right: -0.4em;">O</span>
+          </div>
         </div>
-      </div>
-    </transition>
-    <div class="px-4 py-6 ">
-      <div class="w-[80vw] mx-auto">
-        <header
-          class="flex custom-frosted items-center rounded-[32px] px-6 py-2"
-        >
-          <!-- 左 -->
-          <div class="flex-none font-bold">logo</div>
-          <!-- 中 -->
-          <nav
-            class="flex-1 flex justify-center space-x-6 items-center text-gray-700"
+      </transition> -->
+      <div class="px-4 py-6 ">
+        <div class="w-[80vw] mx-auto">
+          <header
+            class="flex custom-frosted items-center rounded-[32px] px-6 py-2"
           >
-            <button class="flex items-center space-x-1">
-              <RouterLink to="/map" class="underline">探索</RouterLink>
-            </button>
-            <button class="flex items-center space-x-1">
-              <span>社群</span>
-            </button>
-            <button class="flex items-center space-x-1">
-              <span>關於我們</span>
-            </button>
-          </nav>
-          <!-- 右 -->
-          <div class="flex-none text-gray-700">
-            <RouterLink to="/signup" class="underline">註冊</RouterLink>
-            |
-            <RouterLink to="/login" class="underline">登入</RouterLink>
-          </div>
-        </header>
-      </div>
-      <div class="w-[100vw] mx-auto">
-        <HomeCarousel />
-        <div class="w-[60vw] mx-auto -mt-16 z-10">
-        <section class="bg-gray-800/30 custom-frosted backdrop-blur-[30px] text-white rounded-4xl py-3 px-6 shadow-md">
-          <div
-            class="flex flex-col md:flex-row md:items-center space-y-4 md:space-y-0 md:space-x-4"
-          >
-            <div class="relative w-fit">
-              <select
-                :value="route.query.city || 'none'"
-                @change="onCityChange($event)"
-                class="appearance-none bg-gray-500/80 text-white text-sm py-2 pl-4 pr-10 rounded-full focus:outline-none hover:bg-gray-400 transition duration-200 cursor-pointer shadow-inner"
-              >
-                <option value="none">當前</option>
-                <option
-                  v-for="city in cities"
-                  :key="city.name"
-                  :value="city.name"
-                >
-                  {{ city.name }}
-                </option>
-              </select>
-              <svg
-                class="w-4 h-4 absolute right-3 top-1/2 -translate-y-1/2 text-white pointer-events-none"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M19 9l-7 7-7-7"
-                />
-              </svg>
-            </div>
-            <div class="relative w-full bg-gray-600 rounded-full">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-                class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-white pointer-events-none"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
-                />
-              </svg>
-              <input
-                type="text"
-                v-model="searchQuery"
-                placeholder="輸入地點"
-                class="w-full rounded-full border-none text-white px-9 py-1.5 box-border text-base placeholder-white focus:outline-none"
-                ref="searchInput"
-                @keyup.enter="searchPlace"
-              />
-              <button
-                @click.prevent="searchPlace"
-                class="absolute right-2 top-1/2 -translate-y-1/2 bg-gray-800 px-2.5 py-1.5 rounded-full border-none cursor-pointer text-xs text-white"
-              >
-                搜尋
-              </button>
-            </div>
-          </div>
-          <div class="mt-4 flex flex-wrap gap-2">
-            <button
-              v-for="item in categories"
-              :key="item.type"
-              @click="searchByCategory(item.type)"
-              class="bg-gray-700 px-3 py-1 rounded-full flex items-center space-x-1 hover:bg-blue-100"
+            <!-- 左 -->
+            <div class="flex-none font-bold">logo</div>
+            <!-- 中 -->
+            <nav
+              class="flex-1 flex justify-center space-x-6 items-center text-gray-700"
             >
-              {{ item.label }}
-            </button>
-            <div class="relative" ref="menuRef">
-              <button
-                @click="showCustomCategory = !showCustomCategory"
-                class="block w-full text-left px-3 py-2 rounded hover:bg-green-100 text-green-700 font-semibold left-3.5"
-              >
-                + others
+              <button class="flex items-center space-x-1">
+                <RouterLink to="/map" class="underline">探索</RouterLink>
               </button>
+              <button class="flex items-center space-x-1">
+                <span>社群</span>
+              </button>
+              <button class="flex items-center space-x-1">
+                <span>關於我們</span>
+              </button>
+            </nav>
+            <!-- 右 -->
+            <div class="flex-none text-gray-700">
+              <RouterLink to="/signup" class="underline">註冊</RouterLink>
+              |
+              <RouterLink to="/login" class="underline">登入</RouterLink>
+            </div>
+          </header>
+        </div>
+        <div class="w-[100vw] mx-auto ">
+          <HomeCarousel/>
+          <div class="w-[60vw] mx-auto -mt-16 z-10 relative">
+            <section class="bg-gray-800/30  custom-frosted backdrop-blur-[30px] text-white rounded-4xl py-3 px-6 shadow-md">
               <div
-                v-if="showCustomCategory"
-                class="absolute z-10 bg-gray-400/90 rounded-4xl p-3 w-80 shadow-md bottom-1 left-18 transform transition-all duration-300 ease-in-out translate-x-0 opacity-100"
+                class="flex flex-col md:flex-row md:items-center space-y-4 md:space-y-0 md:space-x-4"
               >
+                <div class="relative w-fit">
+                  <select
+                    :value="route.query.city || 'none'"
+                    @change="onCityChange($event)"
+                    class="appearance-none bg-gray-500/80 text-white text-sm py-2 pl-4 pr-10 rounded-full focus:outline-none hover:bg-gray-400 transition duration-200 cursor-pointer shadow-inner"
+                  >
+                    <option value="none">當前</option>
+                    <option
+                      v-for="city in cities"
+                      :key="city.name"
+                      :value="city.name"
+                    >
+                      {{ city.name }}
+                    </option>
+                  </select>
+                  <svg
+                    class="w-4 h-4 absolute right-3 top-1/2 -translate-y-1/2 text-white pointer-events-none"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M19 9l-7 7-7-7"
+                    />
+                  </svg>
+                </div>
+                <div class="relative w-full bg-gray-600 rounded-full">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-white pointer-events-none"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
+                    />
+                  </svg>
+                  <input
+                    type="text"
+                    v-model="searchQuery"
+                    placeholder="輸入地點"
+                    class="w-full rounded-full border-none text-white px-9 py-1.5 box-border text-base placeholder-white focus:outline-none"
+                    ref="searchInput"
+                    @keyup.enter="searchPlace"
+                  />
+                  <button
+                    @click.prevent="searchPlace"
+                    class="absolute right-2 top-1/2 -translate-y-1/2 bg-gray-800 px-2.5 py-1.5 rounded-full border-none cursor-pointer text-xs text-white"
+                  >
+                    搜尋
+                  </button>
+                </div>
+              </div>
+              <div class="mt-4 flex flex-wrap gap-2">
                 <button
-                  @click="removeCategory(item)"
                   v-for="item in categories"
                   :key="item.type"
-                  class="m-4"
-                >
-                  {{ item.label }} ❌
-                </button>
-                <hr />
-                <button
-                  @click="addCategory(item)"
-                  v-for="item in placeCategories"
-                  :key="item.type"
-                  class="m-4 cursor-pointer"
+                  @click="searchByCategory(item.type)"
+                  class="bg-gray-700 px-3 py-1 rounded-full flex items-center space-x-1 hover:bg-blue-100"
                 >
                   {{ item.label }}
                 </button>
+                <div class="relative" ref="menuRef">
+                  <button
+                    @click="showCustomCategory = !showCustomCategory"
+                    class="block w-full text-left px-3 py-2 rounded hover:bg-green-100 text-green-700 font-semibold left-3.5"
+                  >
+                    + others
+                  </button>
+                  <div
+                    v-if="showCustomCategory"
+                    class="absolute z-10 bg-gray-400/90 rounded-4xl p-3 w-80 shadow-md bottom-1 left-18 transform transition-all duration-300 ease-in-out translate-x-0 opacity-100"
+                  >
+                    <button
+                      @click="removeCategory(item)"
+                      v-for="item in categories"
+                      :key="item.type"
+                      class="m-4"
+                    >
+                      {{ item.label }} ❌
+                    </button>
+                    <hr />
+                    <button
+                      @click="addCategory(item)"
+                      v-for="item in placeCategories"
+                      :key="item.type"
+                      class="m-4 cursor-pointer"
+                    >
+                      {{ item.label }}
+                    </button>
+                  </div>
+                </div>
               </div>
-            </div>
+            </section>
           </div>
-        </section>
         </div>
       </div>
-    </div>
-    <div class="homepage-bg" data-aos="zoom-out">
-      <h2 class="text-4xl font-bold text-left">
-      Find your destination
+      <!-- <div v-if="placeDetails.length" class="w-full mx-auto">
+        <div class="backdrop-blur-lg rounded-2xl shadow-xl px-6 py-4 space-y-3">
+          <div
+            v-for="(place, index) in placeDetails"
+            :key="index"
+            @click="selectedPlace = place"
+            class="p-3 rounded-xl bg-white shadow hover:shadow-md transition duration-200 cursor-pointer"
+          >
+            <h2
+              class="text-base font-semibold text-gray-800 truncate"
+              :title="place.name"
+            >
+              {{ place.name }}
+            </h2>
+            <p v-if="place.rating" class="text-sm text-yellow-600 mt-1">
+              ⭐ {{ place.rating }} / {{ place.user_ratings_total }} 則評價
+            </p>
+            <p
+              v-if="place.formatted_address"
+              class="text-sm text-gray-500 mt-1 truncate"
+            >
+              📍 {{ place.formatted_address }}
+            </p>
+          </div>
+          <div v-if="hasMoreResults" class="flex justify-center pt-4">
+            <button
+              class="bg-gray-500 text-white py-2 px-6 rounded-full text-sm hover:bg-gray-700"
+              @click="loadNextPage"
+            >
+              載入更多
+            </button>
+          </div>
+        </div>
+      </div> -->
+    </section>
+    <section class="min-h-screen flex relative ">
+      <h2 class="text-4xl font-bold text-lef ml-40 mt-30" data-aos="fade-up" data-aos-duration="1000" data-aos-anchor-placement="top-center">
+        Slogan Slogan Slogan
       </h2>
-    </div>
-    <div v-if="placeDetails.length" class="w-full mx-auto">
-      <div class="backdrop-blur-lg rounded-2xl shadow-xl px-6 py-4 space-y-3">
-        <div
-          v-for="(place, index) in placeDetails"
-          :key="index"
-          @click="selectedPlace = place"
-          class="p-3 rounded-xl bg-white shadow hover:shadow-md transition duration-200 cursor-pointer"
-        >
-          <h2
-            class="text-base font-semibold text-gray-800 truncate"
-            :title="place.name"
-          >
-            {{ place.name }}
-          </h2>
-          <p v-if="place.rating" class="text-sm text-yellow-600 mt-1">
-            ⭐ {{ place.rating }} / {{ place.user_ratings_total }} 則評價
-          </p>
-          <p
-            v-if="place.formatted_address"
-            class="text-sm text-gray-500 mt-1 truncate"
-          >
-            📍 {{ place.formatted_address }}
-          </p>
-        </div>
-        <div v-if="hasMoreResults" class="flex justify-center pt-4">
-          <button
-            class="bg-gray-500 text-white py-2 px-6 rounded-full text-sm hover:bg-gray-700"
-            @click="loadNextPage"
-          >
-            載入更多
-          </button>
-        </div>
+      <div class="relative ml-auto mr-60">
+        <img :src="taiwan"  ref="mapImg" alt="台灣地圖" class="w-auto max-w-[500px] h-auto  " data-aos="fade-up" data-aos-duration="1000" />
+        <img :src="marker1" v-show="showMarker1" alt="marker" class="absolute z-50 top-[10%] left-[50%] w-16 h-16 fade-in-down" />
+        <img :src="marker2" v-show="showMarker2" alt="marker" class="absolute z-50 top-[30%] left-[60%] w-16 h-16 fade-in-down" />
+        <img :src="marker3" v-show="showMarker3" alt="marker" class="absolute z-50 top-[40%] left-[30%] w-16 h-16 fade-in-down" />
+        <img :src="marker4" v-show="showMarker4" alt="marker" class="absolute z-50 top-[60%] left-[40%] w-16 h-16 fade-in-down" />
       </div>
-    </div>
+    </section>
+    <section class="min-h-screen" data-aos="fade">Hero 區</section>
+    <section class="min-h-screen" data-aos="fade-up">Slogan 區</section>
+    <section class="min-h-screen" data-aos="zoom-in">內容區</section>
   </div>
 </template>
 
@@ -207,8 +218,18 @@ import { useCategoryMenu } from "../composable/useCategoryMenu";
 import AOS from 'aos'
 import 'aos/dist/aos.css'
 import HomeCarousel from '../components/HomeCarousel.vue';
+import taiwan from '../assets/HomePage/taiwan.png';
+import marker1 from '../assets/icons/mapIcons/amusement_park.svg';
+import marker2 from '../assets/icons/mapIcons/restaurant.svg';
+import marker3 from '../assets/icons/mapIcons/cafe.svg';
+import marker4 from '../assets/icons/mapIcons/default.svg';
 
 const show = ref(true)
+const showMarker1 = ref(false)
+const showMarker2 = ref(false)
+const showMarker3 = ref(false)
+const showMarker4 = ref(false)
+const mapImg = ref(null)
 
 const {
   categories,
@@ -225,7 +246,7 @@ const router = useRouter();
 
 const searchQuery = ref("");
 const searchInput = ref(null);
-const placeDetails = ref([]);
+// const placeDetails = ref([]);
 const hasMoreResults = ref(false);
 const selectedPlace = ref(null);
 const selectedCityName = ref("none");
@@ -271,10 +292,42 @@ function onCityChange(event) {
 
 onMounted(async () => {
   document.addEventListener("click", handleClickOutside);
+
   setTimeout(() => {
     show.value = false  
   }, 5000);
-  AOS.init({ once: true });
+
+  AOS.init({ once: false, duration: 1000,});
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      if (entries[0].isIntersecting) {
+        setTimeout(() => {
+          showMarker1.value = true
+        }, 1000)
+        setTimeout(() => {
+          showMarker2.value = true
+        }, 1500)
+        setTimeout(() => {
+          showMarker3.value = true
+        }, 2000)
+        setTimeout(() => {
+          showMarker4.value = true
+        }, 2500)
+      } else {
+        showMarker1.value = false
+        showMarker2.value = false
+        showMarker3.value = false
+        showMarker4.value = false
+      }
+    },
+    {
+      threshold: 0.4,
+    }
+  )
+  if (mapImg.value) {
+    observer.observe(mapImg.value)
+  }
 });
 
 onUnmounted(() => {
@@ -323,6 +376,17 @@ onUnmounted(() => {
   animation: blur 1.5s calc(var(--i) / 5 * 1s) alternate infinite;
 }
 
+.fade-in-down {
+  animation: fadeInDown 0.6s ease-out forwards;
+}
+
+.custom-frosted {
+  background: rgba(0, 0, 0, 0.2);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.25);
+  opacity: 0.8;
+  backdrop-filter: blur(100px);
+}
+
 @keyframes fadeout {
   0% { opacity: 1; }
   80% { opacity: 1; }
@@ -338,15 +402,15 @@ onUnmounted(() => {
   }
 }
 
-.custom-frosted {
-  background: rgba(0, 0, 0, 0.2);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.25);
-  opacity: 0.8;
-  backdrop-filter: blur(100px);
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-25px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
-
-
-
-
 
 </style>
