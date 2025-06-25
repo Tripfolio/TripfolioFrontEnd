@@ -1,135 +1,140 @@
 <template>
-  <main class="pl-[100px] pt-[100px]">
-    <h1 class="text-2xl font-bold mb-6">登入頁面</h1>
-
-    <div
-      v-if="showError"
-      class="w-[300px] flex items-center gap-2 bg-red-100 text-red-800 border border-red-200 px-4 py-3 rounded-md mb-4"
-    >
-      <font-awesome-icon
-        icon="exclamation-triangle"
-        class="mr-2 mt-0.5 text-red-600"
-      />
-      <span class="text-sm">
-        {{ errorMessage }}
-      </span>
-    </div>
-
-    <form v-if="!isLoggedIn" @submit.prevent="login" class="space-y-6">
-      <div>
-        <input
-          v-model="email"
-          type="email"
-          id="email"
-          placeholder="請輸入電子郵件"
-          required
-          class="mb-5 block w-[300px] rounded-md border border-gray-300 shadow-sm p-2"
-        />
+  <div class="bg-white min-h-screen p-4 sm:p-8 flex flex-col items-center">
+    <main class="w-full max-w-sm text-white rounded-2xl overflow-hidden p-6 sm:p-8
+		bg-[#A2A2A2] main-convex-effect">
+      <div class="text-center mb-6">
+        <div class="flex justify-center mb-4">
+          <img 
+					src="https://plus.unsplash.com/premium_photo-1722908886610-85956c1f55e6?q=80&w=1332&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" 
+					alt="Tripfolio Logo" class="w-20 h-20 rounded-full object-cover "> </div>
+        <h1 class="text-2xl font-semibold mb-2">welcome to Tripfolio</h1>
+        <p class="text-gray-300">Nice to see you</p>
       </div>
 
-      <div>
+      <form class="flex flex-col gap-4" @submit.prevent="login">
+        <input
+          v-model="email"
+          type="text"
+          placeholder="Email"
+          class="p-3 bg-gray-500 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-white placeholder-gray-300"
+        />
         <input
           v-model="password"
           type="password"
-          id="password"
-          placeholder="請輸入密碼"
-          required
-          class="mb-5 block w-[300px] rounded-md border border-gray-300 shadow-sm p-2"
+          placeholder="Password"
+          class="p-3 bg-gray-500 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-white placeholder-gray-300"
         />
-      </div>
-
-      <div class="flex justify-start gap-[20px] mt-[10px] w-[300px]">
         <button
           type="submit"
-          class="w-[100px] bg-blue-200 text-black py-2 rounded transition"
+          class="p-3 bg-white text-black rounded-lg font-bold hover:bg-blue-200 transition-colors duration-200"
         >
-          登入
+          LOGIN
         </button>
+
+        <button
+          type="button"
+          @click="goToSignUp"
+          class="p-3 bg-blue-500 text-white rounded-lg font-bold hover:bg-blue-600 transition-colors duration-200"
+        >
+          Sign up
+        </button>
+
+        <div class="relative flex items-center my-4">
+          <div class="flex-grow border-t border-gray-500"></div>
+          <span class="flex-shrink mx-4 text-gray-400">Or sign in with</span>
+          <div class="flex-grow border-t border-gray-500"></div>
+        </div>
+
+				<!-- 匯入第三方登入功能請修改~ -->
+        <button
+          type="button"
+          class="flex items-center justify-center p-3 bg-gray-600 text-white rounded-lg font-bold hover:bg-gray-800 transition-colors duration-200">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/1024px-Google_%22G%22_logo.svg.png" alt="Google Logo" class="w-5 h-5 mr-2">
+          Google
+        </button>
+      </form>
+    </main>
+
+    <div v-if="showError" class="space-y-2 w-full max-w-sm mt-4">
+      <div
+        v-for="(msg, index) in errorMessage"
+        :key="index"
+        class="flex items-start bg-red-800 text-white border border-red-700 px-4 py-3 rounded-md text-sm">
+        <font-awesome-icon icon="exclamation-triangle" class="mr-2 mt-0.5 text-red-400" />
+        <span>{{ msg }}</span>
       </div>
-    </form>
-
-    <RouterLink to="/signup">
-      <button
-        class="w-[100px] text-black py-2 rounded transition hover:text-[#0d4a87]"
-      >
-        我要註冊
-      </button>
-    </RouterLink>
-
-    <div v-if="isLoggedIn" class="mt-6">
-      <p class="text-blue-600 font-semibold mb-4">您已登入</p>
-      <button
-        @click="logout"
-        class="bg-blue-200 text-black py-2 px-4 rounded transition"
-      >
-        登出
-      </button>
     </div>
-  </main>
+
+  </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
-import { useRouter } from "vue-router";
-import axios from "axios";
-import { jwtDecode } from "jwt-decode";
+	import { ref, onMounted } from 'vue';
+	import axios from 'axios';
+	import {jwtDecode} from "jwt-decode";
+	
+	const TOKEN_NAME = 'user_token'
+	const email = ref('')
+	const password = ref('')
+	const isLoggedIn = ref(false)
+	const showError = ref(false)
+	const errorMessage = ref('')
+  const API_BASE_URL = `${import.meta.env.VITE_API_URL}/api/login/`;
 
-const router = useRouter();
-const TOKEN_NAME = "token";
-const email = ref("");
-const password = ref("");
-const isLoggedIn = ref(false);
-const showError = ref(false);
-const errorMessage = ref("");
-const API_BASE_URL = `${import.meta.env.VITE_API_URL}/api/login/`;
-
-const clearText = () => {
-  email.value = "";
-  password.value = "";
-};
+	const navLinks = [
+  { name: '行程安排', path: '/schedule' },
+  { name: '探索', path: '/explore' },
+	{ name: '社群', path: '/community' },
+  { name: '評論', path: '/reviews' },
+  { name: '關於我們', path: '/about' },
+	];
+	
+	const clearText = () => {
+  email.value = ''
+  password.value = ''
+}
 
 const login = async () => {
-  if (email.value === "" || password.value === "") {
-    showError.value = true;
-    errorMessage.value = "請輸入 Email 和密碼";
-    return;
+  if (email.value === '' || password.value === '') {
+    showError.value = true
+    errorMessage.value = '請輸入 Email 和密碼'
+    return
   }
   const userData = {
     email: email.value,
-    password: password.value,
-  };
+    password: password.value
+  }
 
   try {
-    const res = await axios.post(API_BASE_URL, userData);
-    const token = res.data.token;
-    localStorage.setItem(TOKEN_NAME, token);
-    axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+    const res = await axios.post(API_BASE_URL
+, userData)
+    const token = res.data.token
+    localStorage.setItem(TOKEN_NAME, token)
+    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
 
-    isLoggedIn.value = true;
-    showError.value = false;
-    clearText();
-    router.push("/");
+    isLoggedIn.value = true
+    showError.value = false
+    clearText()
   } catch (err) {
-    showError.value = true;
-    errorMessage.value =
-      err.response?.data?.message || "登入失敗，請檢查郵件與密碼";
+    showError.value = true
+    errorMessage.value = err.response?.data?.message || '登入失敗，請檢查郵件與密碼'
   }
-};
-
+}
+  
 const logout = async () => {
-  const token = localStorage.getItem(TOKEN_NAME);
-  if (!token) return;
+  const token = localStorage.getItem(TOKEN_NAME)
+  if (!token) return
 
-  localStorage.removeItem(TOKEN_NAME);
-  localStorage.removeItem("memberId");
-  isLoggedIn.value = false;
-  clearText();
-};
-
+    localStorage.removeItem(TOKEN_NAME)
+    localStorage.removeItem('memberId')
+    isLoggedIn.value = false
+    clearText()
+}
+  
 onMounted(() => {
-  const token = localStorage.getItem(TOKEN_NAME);
+  const token = localStorage.getItem(TOKEN_NAME)
   showError.value = false;
-  errorMessage.value = "";
+  errorMessage.value = '';
 
   if (!token) {
     isLoggedIn.value = false;
@@ -137,25 +142,74 @@ onMounted(() => {
   }
 
   try {
-    const payload = JSON.parse(atob(token.split(".")[1]));
-    const exp = payload.exp;
-    const now = Math.floor(Date.now() / 1000);
+    const payload = JSON.parse(atob(token.split('.')[1]))
+    const exp = payload.exp
+    const now = Math.floor(Date.now() / 1000)
 
     if (exp > now) {
-      isLoggedIn.value = true;
-      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+      isLoggedIn.value = true
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
     } else {
-      localStorage.removeItem(TOKEN_NAME);
-      isLoggedIn.value = false;
+      localStorage.removeItem(TOKEN_NAME)
+      isLoggedIn.value = false
       showError.value = false;
-      errorMessage.value = "";
+      errorMessage.value = '';
     }
   } catch (err) {
-    console.error("Token 驗證失敗", err);
-    localStorage.removeItem(TOKEN_NAME);
-    isLoggedIn.value = false;
+    console.error("Token 驗證失敗", err)
+    localStorage.removeItem(TOKEN_NAME)
+    isLoggedIn.value = false
     showError.value = false;
-    errorMessage.value = "";
+    errorMessage.value = '';
   }
-});
+})
+
 </script>
+	
+<style scoped>
+
+	.main-convex-effect {
+		/* background-color: #A2A2A2; */
+		box-shadow:
+    /* 整體外凸陰影 */
+    -8px -8px 16px rgba(255, 255, 255, 0.2),  /* 左上 */
+    8px 8px 16px rgba(0, 0, 0, 0.3),           /* 右下 */
+    -4px 0px 8px rgba(0, 0, 0, 0.1),           /* 左側 */
+    /* Neumorphism 紋理 */
+    inset 2px 2px 5px rgba(0, 0, 0, 0.1),     
+    inset -2px -2px 5px rgba(255, 255, 255, 0.1); 
+
+    transition: all 0.2s ease-in-out;
+	}
+
+	.main-convex-effect:hover {
+		box-shadow: -12px -12px 24px rgba(255, 255, 255, 0.3),
+		12px 12px 24px rgba(0, 0, 0, 0.4);
+	}
+
+	.main-convex-effect input {
+  background-color: #909090;
+  border: none; 
+  box-shadow:
+    inset 3px 3px 6px rgba(0, 0, 0, 0.2),
+    inset -3px -3px 6px rgba(255, 255, 255, 0.1);
+}
+
+/* 按鈕的 Neumorphism 風格調整 (外凸效果) */
+.main-convex-effect button:not(.bg-gray-700) {
+  box-shadow:
+    4px 4px 8px rgba(0, 0, 0, 0.2),          
+    -4px -4px 8px rgba(255, 255, 255, 0.15);
+  border: none;
+  transition: all 0.2s ease-in-out;
+}
+
+
+.main-convex-effect button:not(.bg-gray-700):active {
+  box-shadow:
+    inset 2px 2px 5px rgba(0, 0, 0, 0.3),
+    inset -2px -2px 5px rgba(255, 255, 255, 0.05);
+  transform: translateY(2px);
+}
+</style>
+	
