@@ -1,45 +1,78 @@
 <template>
   <div class="w-full bg-white rounded-xl shadow p-6">
-    <button @click="$emit('back-to-list')" class="mb-4 text-gray-600 hover:text-gray-800 flex items-center text-sm">
+    <button
+      @click="$emit('back-to-list')"
+      class="mb-4 text-gray-600 hover:text-gray-800 flex items-center text-sm"
+    >
       <font-awesome-icon :icon="['fas', 'arrow-left']" class="w-4 h-4 mr-1" />
-        返回行程總覽
+      返回行程總覽
     </button>
     <div class="bg-white rounded-lg shadow-md overflow-hidden p-4 mb-6">
       <div class="relative w-full h-56 rounded-md mb-4 group overflow-hidden">
-        <img v-if="trip.coverURL" :src="computedCoverURL" :key="computedCoverURL" alt="行程封面" class="w-full h-full object-cover rounded-md" />
-        <div v-else class="w-full h-full bg-gray-200 flex items-center justify-center text-gray-500">
+        <img
+          v-if="trip.coverURL"
+          :src="computedCoverURL"
+          :key="computedCoverURL"
+          alt="行程封面"
+          class="w-full h-full object-cover rounded-md"
+        />
+        <div
+          v-else
+          class="w-full h-full bg-gray-200 flex items-center justify-center text-gray-500"
+        >
           無封面圖片
         </div>
-  
-        <label for="cover-upload" class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center text-white text-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 cursor-pointer">
+
+        <label
+          for="cover-upload"
+          class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center text-white text-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 cursor-pointer"
+        >
           <font-awesome-icon :icon="['fas', 'camera']" class="w-6 h-6 mr-2" />
           更改封面
         </label>
-        <input type="file" id="cover-upload" class="hidden" @change="handleCoverUpload" accept="image/*">
+        <input
+          type="file"
+          id="cover-upload"
+          class="hidden"
+          @change="handleCoverUpload"
+          accept="image/*"
+        />
       </div>
-  
+
       <div class="px-2">
-        <h2 v-if="!isTitleEditing" @click="isTitleEditing = true" class="text-2xl font-bold text-gray-900 mb-2 cursor-pointer hover:text-gray-700">
+        <h2
+          v-if="!isTitleEditing"
+          @click="isTitleEditing = true"
+          class="text-2xl font-bold text-gray-900 mb-2 cursor-pointer hover:text-gray-700"
+        >
           {{ trip.title }}
-          <font-awesome-icon :icon="['fas', 'pen-to-square']" class="ml-2 text-gray-500 text-lg" />
-          <span v-if="titleSaved" class="ml-2 text-green-500 text-sm">已儲存</span>
+          <font-awesome-icon
+            :icon="['fas', 'pen-to-square']"
+            class="ml-2 text-gray-500 text-lg"
+          />
+          <span v-if="titleSaved" class="ml-2 text-green-500 text-sm"
+            >已儲存</span
+          >
         </h2>
         <input
           v-else
           v-model="editableTitle"
           @blur="saveTitle"
           @keyup.enter="saveTitle"
-          class="text-2xl font-bold text-gray-900 mb-2 p-1 border border-gray-300 rounded w-full"/>
-  
-        <div class="text-md text-gray-600 mb-2 flex items-center flex-wrap gap-2">
-          <input 
+          class="text-2xl font-bold text-gray-900 mb-2 p-1 border border-gray-300 rounded w-full"
+        />
+
+        <div
+          class="text-md text-gray-600 mb-2 flex items-center flex-wrap gap-2"
+        >
+          <input
             type="date"
             v-model="editableStartDate"
             @blur="saveDates"
             class="border px-2 py-1 rounded text-sm"
           />
           <span>-</span>
-          <input 
+          <input
             type="date"
             v-model="editableEndDate"
             @blur="saveDates"
@@ -47,7 +80,9 @@
             class="border px-2 py-1 rounded text-sm"
           />
           <span>(共 {{ tripDays }} 天)</span>
-          <span v-if="dateSaved" class="text-green-500 text-sm ml-2">已儲存</span>
+          <span v-if="dateSaved" class="text-green-500 text-sm ml-2"
+            >已儲存</span
+          >
         </div>
         <div class="flex items-center text-gray-500 mb-4">
           <span class="text-sm">筆記：</span>
@@ -55,47 +90,68 @@
             v-model="editableNotes"
             @blur="saveNotes"
             class="flex-grow ml-2 p-2 border border-gray-300 rounded-md text-sm resize-y min-h-[60px] text-gray-800"
-            placeholder="點擊這裡新增或編輯行程筆記...">
+            placeholder="點擊這裡新增或編輯行程筆記..."
+          >
           </textarea>
-          <span v-if="noteSaved" class="ml-2 text-green-500 text-sm">已儲存</span>
+          <span v-if="noteSaved" class="ml-2 text-green-500 text-sm"
+            >已儲存</span
+          >
         </div>
       </div>
-    </div> 
-    <div v-if="showCropper" class="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50">
+    </div>
+    <div
+      v-if="showCropper"
+      class="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50"
+    >
       <div class="bg-white p-4 rounded-lg max-w-md w-full">
-        <cropper ref="cropperRef" :src="cropImage" :stencil-props="{ aspect: 2 }" :autoZoom="true" :resizeImage="true" class="w-full h-64" />
+        <cropper
+          ref="cropperRef"
+          :src="cropImage"
+          :stencil-props="{ aspect: 2 }"
+          :autoZoom="true"
+          :resizeImage="true"
+          class="w-full h-64"
+        />
         <div class="flex justify-end gap-2 mt-4">
-          <button @click="cancelCrop" class="bg-gray-300 px-4 py-2 rounded">取消</button>
-          <button type="button" @click="applyCrop" class="bg-blue-500 text-white px-4 py-2 rounded">裁切</button>
+          <button @click="cancelCrop" class="bg-gray-300 px-4 py-2 rounded">
+            取消
+          </button>
+          <button
+            type="button"
+            @click="applyCrop"
+            class="bg-blue-500 text-white px-4 py-2 rounded"
+          >
+            裁切
+          </button>
         </div>
       </div>
     </div>
   </div>
 </template>
-  
+
 <script setup>
-import { ref, defineProps, watch, computed } from 'vue';
-import { Cropper } from 'vue-advanced-cropper';
-import 'vue-advanced-cropper/dist/style.css';
-import dayjs from 'dayjs';
+import { ref, defineProps, watch, computed } from "vue";
+import { Cropper } from "vue-advanced-cropper";
+import "vue-advanced-cropper/dist/style.css";
+import dayjs from "dayjs";
 
 const props = defineProps({
   trip: {
     type: Object,
     required: true,
-  }
+  },
 });
 
 const emit = defineEmits([
-  'back-to-list',
-  'update-cover',
-  'update-title',
-  'update-notes',
-  'update-dates'
+  "back-to-list",
+  "update-cover",
+  "update-title",
+  "update-notes",
+  "update-dates",
 ]);
 
 const editableTitle = ref(props.trip.title);
-const editableNotes = ref(props.trip.description || '');
+const editableNotes = ref(props.trip.description || "");
 
 const isTitleEditing = ref(false);
 
@@ -108,36 +164,41 @@ const noteSaved = ref(false);
 
 const editableStartDate = ref(props.trip.startDate);
 const editableEndDate = ref(props.trip.endDate);
-const dateSaved = ref(false)
+const dateSaved = ref(false);
 
-watch(() => props.trip.title, (newTitle) => {
-  editableTitle.value = newTitle;
-});
+watch(
+  () => props.trip.title,
+  (newTitle) => {
+    editableTitle.value = newTitle;
+  },
+);
 
-watch(() => props.trip.description, (newNotes) => {
-  editableNotes.value = newNotes || '';
-});
+watch(
+  () => props.trip.description,
+  (newNotes) => {
+    editableNotes.value = newNotes || "";
+  },
+);
 
 //動態計算天數
 const tripDays = computed(() => {
-  const start = dayjs(editableStartDate.value)
-  const end = dayjs(editableEndDate.value)
+  const start = dayjs(editableStartDate.value);
+  const end = dayjs(editableEndDate.value);
 
   if (start.isValid() && end.isValid()) {
-    return end.diff(start, 'day') + 1
+    return end.diff(start, "day") + 1;
   }
 
-  return 0
-})
-  
+  return 0;
+});
 
 const handleCoverUpload = (event) => {
   const file = event.target.files[0];
   if (file) {
     const reader = new FileReader();
     reader.onload = (e) => {
-    cropImage.value = e.target.result;
-    showCropper.value = true;
+      cropImage.value = e.target.result;
+      showCropper.value = true;
     };
     reader.readAsDataURL(file);
   }
@@ -147,17 +208,19 @@ const handleCoverUpload = (event) => {
   }
 };
 
-const timestamp = ref(Date.now())
+const timestamp = ref(Date.now());
 
-watch(() => props.trip.coverURL, () => {
-  timestamp.value = Date.now()
-})
+watch(
+  () => props.trip.coverURL,
+  () => {
+    timestamp.value = Date.now();
+  },
+);
 
 const computedCoverURL = computed(() => {
-  if (!props.trip?.coverURL) return ''
-  return `${props.trip.coverURL}?t=${timestamp.value}`
-})
-
+  if (!props.trip?.coverURL) return "";
+  return `${props.trip.coverURL}?t=${timestamp.value}`;
+});
 
 //處理圖片上傳
 const applyCrop = () => {
@@ -165,9 +228,9 @@ const applyCrop = () => {
     const { canvas } = cropperRef.value.getResult();
     if (canvas) {
       canvas.toBlob((blob) => {
-        emit('update-cover', blob);
+        emit("update-cover", blob);
         showCropper.value = false;
-        }, 'image/jpeg');
+      }, "image/jpeg");
     }
   }
 };
@@ -180,9 +243,9 @@ const cancelCrop = () => {
 //儲存名稱
 const saveTitle = () => {
   if (editableTitle.value !== props.trip.title) {
-    emit('update-title', editableTitle.value)
-    titleSaved.value = true
-    setTimeout(() => titleSaved.value = false, 2000)
+    emit("update-title", editableTitle.value);
+    titleSaved.value = true;
+    setTimeout(() => (titleSaved.value = false), 2000);
   }
   isTitleEditing.value = false;
 };
@@ -193,21 +256,21 @@ const saveDates = () => {
     editableStartDate.value !== props.trip.startDate ||
     editableEndDate.value !== props.trip.endDate
   ) {
-    emit('update-dates', {
+    emit("update-dates", {
       startDate: editableStartDate.value,
-      endDate: editableEndDate.value
-    })
-    dateSaved.value = true
-    setTimeout(() => (dateSaved.value = false), 2000)
+      endDate: editableEndDate.value,
+    });
+    dateSaved.value = true;
+    setTimeout(() => (dateSaved.value = false), 2000);
   }
 };
 
 //儲存筆記
 const saveNotes = () => {
   if (editableNotes.value !== props.trip.description) {
-    emit('update-notes', editableNotes.value)
-    noteSaved.value = true
-    setTimeout(() => noteSaved.value = false, 2000)
+    emit("update-notes", editableNotes.value);
+    noteSaved.value = true;
+    setTimeout(() => (noteSaved.value = false), 2000);
   }
 };
 </script>

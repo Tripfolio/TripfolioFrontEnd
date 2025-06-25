@@ -90,7 +90,7 @@
   </template>
   
   <script setup>
-import { ref, computed, toRefs } from 'vue';
+import { ref, computed, toRefs, onMounted, watch } from 'vue';
 import draggable from 'vuedraggable';
 import Itinerary from './Itinerary.vue';
 import axios from 'axios';
@@ -107,6 +107,12 @@ const { selectedTrip, dayIndex } = toRefs(props);
 
 const openMenuIndex = ref(null);
 
+
+// 暴露方法給父元件使用
+defineExpose({
+  refresh
+});
+
 //取得目前日期
 const currentDay = computed(() => {
   return selectedTrip.value?.days?.[dayIndex.value] || null;
@@ -114,21 +120,40 @@ const currentDay = computed(() => {
 
 const itinerarySpots = ref([]);
 
-// function updateSpots(allPlaces) {
-//   const date = currentDay.value?.date || '';
-//   itinerarySpots.value = allPlaces.filter(p => p.date === date);
-// }
-
-// watchEffect(() => {
-//   const date = currentDay.value?.date || '';
-//   itinerarySpots.value = itineraryRef.value?.itineraryPlaces?.filter(p => p.date === date) || [];
-// });
-
 //更新景點資料
-function refresh() {
-  const date = currentDay.value?.date || '';
-  itinerarySpots.value = itineraryRef.value?.itineraryPlaces?.filter(p => p.date === date) || [];
+async function refresh() {
+  if (!selectedTrip.value?.id || !currentDay.value?.date) {
+    return;
+  }
+
+  try {
+    // 直接向 API 請求最新資料
+    const res = await axios.get(`${API_URL}/api/itinerary/places`, {
+      params: {
+        itineraryId: selectedTrip.value.id,
+        date: currentDay.value.date
+      },
+    });
+
+    // 直接更新 DailyPlan 的資料
+    itinerarySpots.value = res.data.places
+      .filter(p => p.date === currentDay.value.date)
+      .sort((a, b) => a.arrivalHour - b.arrivalHour);
+
+  } catch (error) {
+    console.error("載入行程失敗", error);
+  }
 }
+
+// 元件掛載時載入資料
+onMounted(() => {
+  refresh();
+});
+
+// 監聽日期變化時重新載入
+watch(() => currentDay.value?.date, () => {
+  refresh();
+});
 
 
 function toggleMenu(index) {

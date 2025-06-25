@@ -4,9 +4,9 @@
 
     <div
       v-if="showError"
-      class="flex items-center gap-2 bg-red-100 text-red-700 border border-red-300 px-5 py-3 rounded-lg shadow-sm mb-6 max-w-sm"
+      class="w-[300px] flex items-center gap-2 bg-red-100 text-red-700 border border-red-300 px-5 py-3 rounded-lg shadow-sm mb-6 max-w-sm"
     >
-      <font-awesome-icon icon="exclamation-triangle" class="text-red-500 text-lg" />
+      <font-awesome-icon icon="exclamation-triangle" class="mr-2 mt-0.5 text-red-500 text-lg" />
       <span class="text-sm font-medium">
         {{ errorMessage }}
       </span>
@@ -17,6 +17,7 @@
         <input
           v-model="email"
           type="email"
+          id="email"
           placeholder="請輸入電子郵件"
           required
           class="block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
@@ -27,6 +28,7 @@
         <input
           v-model="password"
           type="password"
+          id="password"
           placeholder="請輸入密碼"
           required
           class="block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
@@ -69,8 +71,8 @@
 import { ref, onMounted } from 'vue';
 import { useRouter, RouterLink } from 'vue-router';
 import axios from 'axios';
-import { logoutUser, checkLoginStatus } from '../composable/authUtils';
 import { jwtDecode } from 'jwt-decode';
+import { logoutUser } from '../composable/authUtils'; 
 
 const router = useRouter();
 const TOKEN_NAME = 'user_token';
@@ -94,7 +96,7 @@ const login = async () => {
   }
   const userData = {
     email: email.value,
-    password: password.value
+    password: password.value,
   };
 
   try {
@@ -125,9 +127,37 @@ const handleGoogleLogin = () => {
 };
 
 onMounted(() => {
-  isLoggedIn.value = checkLoginStatus(TOKEN_NAME); 
+  const token = localStorage.getItem(TOKEN_NAME);
   showError.value = false;
   errorMessage.value = '';
-});
 
+  if (!token) {
+    isLoggedIn.value = false;
+    return;
+  }
+
+  try {
+    const payload = JSON.parse(atob(token.split(".")[1]));
+    const exp = payload.exp;
+    const now = Math.floor(Date.now() / 1000);
+
+    if (exp > now) {
+      isLoggedIn.value = true;
+      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+    } else {
+      localStorage.removeItem(TOKEN_NAME);
+      isLoggedIn.value = false;
+      showError.value = false;
+      errorMessage.value = '';
+    }
+  } catch (err) {
+    console.error("Token 驗證失敗", err);
+    localStorage.removeItem(TOKEN_NAME);
+    isLoggedIn.value = false;
+    showError.value = false; 
+    errorMessage.value = ''; 
+  }
+});
 </script>
+
+<style></style>

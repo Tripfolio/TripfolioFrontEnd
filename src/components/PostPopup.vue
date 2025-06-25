@@ -64,7 +64,7 @@
           <FavoriteButton
             :postId="post.postId"
             :memberId="getCurrentUserId()"
-            class=" absolute bottom-5 right-10"
+            class="absolute bottom-5 right-10"
           />
         </div>
       </div>
@@ -77,8 +77,7 @@ import { ref, onMounted, watch } from "vue";
 import axios from "axios";
 import CommentSection from "../components/CommentSection.vue";
 import FavoriteButton from "../components/FavoriteButton.vue";
-import AddComment from "../components/ AddComment.vue";
-
+import AddComment from "../components/AddComment.vue";
 
 const props = defineProps({
   post: {
@@ -96,7 +95,6 @@ const props = defineProps({
   },
 });
 
-
 const emit = defineEmits(["close", "update-post"]);
 
 const comments = ref([]);
@@ -104,8 +102,6 @@ const newComment = ref("");
 const liked = ref(false);
 const isSubmitting = ref(false);
 const isLoading = ref(false);
-
-
 
 const close = () => {
   emit("close");
@@ -128,7 +124,6 @@ const formatTime = (timeString) => {
 
   return date.toLocaleDateString("zh-TW");
 };
-
 
 // 切換按讚
 // const toggleLike = async () => {
@@ -154,7 +149,7 @@ const formatTime = (timeString) => {
 //       `${import.meta.env.VITE_API_URL}/api/post/${props.post.postId}/comments`,
 //       {
 //         content: newComment.value.trim(),
-//         memberId: getCurrentUserId(), 
+//         memberId: getCurrentUserId(),
 //       }
 //     );
 
@@ -170,10 +165,10 @@ const formatTime = (timeString) => {
 // };
 
 const getCurrentUserId = () => {
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem("token");
   if (token) {
     try {
-      const payload = JSON.parse(atob(token.split('.')[1]));
+      const payload = JSON.parse(atob(token.split(".")[1]));
       return payload.id || payload.userId || payload.memberId || null;
     } catch (error) {
       return null;
@@ -188,7 +183,6 @@ const getCurrentUserId = () => {
 //     console.log('FavoriteButton 監聽到 memberName 變化:', newVal);
 //   }
 // );
-
 </script>
 
 <style scoped>
