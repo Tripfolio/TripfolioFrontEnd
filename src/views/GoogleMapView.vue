@@ -688,12 +688,14 @@ function locateUser() {
     },
   );
 }
-// 這段還是引用不到，晚點再看
+
+
+// 這段還是引用不到
 function getPlaceIconUrl(types) {
   if (types && types.length > 0) {
-    return `/icons/mapIcons/${types[0]}.svg`;
+    return `/mapIcons/${types[0]}.svg`
   }
-  return "/icons/mapIcons/default.svg";
+  return "/mapIcons/default.svg";
 }
 
 watch(
