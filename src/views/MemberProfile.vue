@@ -119,8 +119,8 @@
   </div>
 </template>
 
-<script setup>  // 拆功能，參考map -> itininerary
-import { ref, watch, onMounted, defineProps, defineEmits } from "vue";
+<script setup>  
+import { ref, watch, onMounted } from "vue";
 import axios from "axios";
 import { Cropper } from "vue-advanced-cropper";
 import "vue-advanced-cropper/dist/style.css";

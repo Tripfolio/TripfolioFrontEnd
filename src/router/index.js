@@ -3,8 +3,8 @@ import HomeView from "@/views/HomeView.vue";
 import SignUp from "@/views/SignUp.vue";
 import LoginPage from "@/views/LoginPage.vue";
 import GoogleMapView from "@/views/GoogleMapView.vue";
-// import MemberProfile from "@/views/MemberProfile.vue";
-import ProfilePreview from "@/views/ProfilePreview.vue";
+import MemberProfile from "@/views/MemberProfile.vue";
+// import ProfilePreview from "@/views/ProfilePreview.vue";
 import GoogleCalendar from "@/views/GoogleCalendar.vue";
 import TripPlannerView from "@/views/TripPlannerView.vue";
 import EmailSettings from "@/views/EmailSettings.vue";
@@ -43,16 +43,16 @@ const routes = [
     name: "calendar",
     component: GoogleCalendar,
   },
-  // {
-  //   path: "/profile",
-  //   name: "profile",
-  //   component: MemberProfile,
-  // },
   {
-    path: "/profile", // 如果profile復原這頁請修改路徑
-    name: "profilePreview",
-    component: ProfilePreview, // 會員中心
+    path: "/editProfile",
+    name: "editProfile",
+    component: MemberProfile,
   },
+  // {
+  //   path: "/profile", // 如果profile復原這頁請修改路徑
+  //   name: "profilePreview",
+  //   component: ProfilePreview, // 會員中心
+  // },
   {
     path: "/emailSettings",
     name: "emailSettings",
@@ -92,11 +92,6 @@ const routes = [
     path: "/schedule/:id",
     name: "scheduledetail",
     component: scheduleDetail,
-  },
-  {
-    path: "/social",
-    name: "social",
-    component: SocialHomePage,
   },
   {
     path: "/payment",
