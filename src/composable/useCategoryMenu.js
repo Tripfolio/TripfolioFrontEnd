@@ -1,6 +1,10 @@
 import { ref } from "vue";
 
-export function useCategoryMenu(initialCategories = [], initialPlaceCategories = [], maxCategoryCount = 5) {
+export function useCategoryMenu(
+  initialCategories = [],
+  initialPlaceCategories = [],
+  maxCategoryCount = 5,
+) {
   const categories = ref([...initialCategories]);
   const placeCategories = ref([...initialPlaceCategories]);
   const showCustomCategory = ref(false);
@@ -15,7 +19,7 @@ export function useCategoryMenu(initialCategories = [], initialPlaceCategories =
     }
     categories.value.push(item);
     placeCategories.value = placeCategories.value.filter(
-      (cat) => cat.type !== item.type
+      (cat) => cat.type !== item.type,
     );
   }
 

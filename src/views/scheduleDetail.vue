@@ -34,9 +34,9 @@
         v-if="trip && currentDayIndex !== null"
         :selected-trip="trip"
         :day-index="currentDayIndex"
-        :day-number="currentDayIndex + 1"
         :itinerary-places="itineraryRef?.itineraryPlaces || []"
         class="mt-6"
+        ref="dailyPlanRef"
       />
     </div>
 
@@ -45,7 +45,7 @@
       <Itinerary
         v-if="tripLoaded && trip?.id && currentDayIndex !== null"
         :trip-id="trip.id"
-        :selected-date="trip.days[currentDayIndex]"
+        :selected-date="trip.days[currentDayIndex].date"
         :default-image="'/images/default.jpg'"
         ref="itineraryRef"
       />
@@ -63,14 +63,7 @@ import Itinerary from "../components/Itinerary.vue";
 import { generateDaysArray } from "../stores/tripStore";
 
 const props = defineProps({
-  tripId: {
-    type: [String, Number],
-    required: true,
-  },
-  selectedDate: {
-    type: String,
-    required: true,
-  },
+  tripId: [String, Number],
 });
 
 const emit = defineEmits(["back"]);
@@ -80,20 +73,22 @@ const tripLoaded = ref(false);
 const currentDayIndex = ref(0);
 const coverTimestamp = ref(Date.now());
 const itineraryRef = ref(null);
+const dailyPlanRef = ref(null);
 
 const token = localStorage.getItem("token");
 
+//返回行程列表
 const goBack = () => {
   emit("back");
 };
 
+//取得行程資料
 const fetchTrip = async () => {
   try {
     const res = await axios.get(
       `${import.meta.env.VITE_API_URL}/api/travelSchedule/${props.tripId}`,
       { headers: { Authorization: `Bearer ${token}` } },
     );
-
     const tripData = res.data;
     tripData.days = generateDaysArray(tripData);
     trip.value = tripData;
@@ -115,6 +110,7 @@ watch(
   },
 );
 
+//更新送到後端
 const updateCover = async (blob) => {
   const formData = new FormData();
   formData.append("cover", blob);
@@ -193,4 +189,9 @@ watch(
   },
   { deep: true },
 );
+
+// 給父層或地圖強制刷新 DailyPlan 用
+defineExpose({
+  dailyPlanRef,
+});
 </script>

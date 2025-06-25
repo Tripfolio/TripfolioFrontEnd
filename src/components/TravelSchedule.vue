@@ -108,54 +108,69 @@
         ></textarea>
       </div>
 
-            <div class="flex justify-end gap-2">
-                <button type="button" @click="scheduleCancel" class="bg-gray-300 hover:bg-gray-200 px-4 py-2 rounded">取消</button>
-                <button type="submit" :disabled="isLoading" class="bg-blue-400 hover:bg-blue-300 text-white px-4 py-2 rounded">
-                    <span v-if="isLoading" class="flex items-center gap-2">
-                        儲存中...<span class="inline-block animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white"></span>
-                    </span>
-                    <span v-else>建立</span>
-                </button>
-            </div>
-        </form>
-        <!-- 新增成功，顯示前往編輯按鈕 -->
-        <div v-if="createdScheduleId" class="mt-6 text-right">
-        <RouterLink :to="`/schedule/${createdScheduleId}`" class="text-blue-600 hover:underline" >查看並繼續編輯行程</RouterLink>
-        </div>
+      <div class="flex justify-end gap-2">
+        <button
+          type="button"
+          @click="scheduleCancel"
+          class="bg-gray-300 hover:bg-gray-200 px-4 py-2 rounded"
+        >
+          取消
+        </button>
+        <button
+          type="submit"
+          :disabled="isLoading"
+          class="bg-blue-400 hover:bg-blue-300 text-white px-4 py-2 rounded"
+        >
+          <span v-if="isLoading" class="flex items-center gap-2">
+            儲存中...<span
+              class="inline-block animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white"
+            ></span>
+          </span>
+          <span v-else>建立</span>
+        </button>
+      </div>
+    </form>
+    <!-- 新增成功，顯示前往編輯按鈕 -->
+    <div v-if="createdScheduleId" class="mt-6 text-right">
+      <RouterLink
+        :to="`/schedule/${createdScheduleId}`"
+        class="text-blue-600 hover:underline"
+        >查看並繼續編輯行程</RouterLink
+      >
     </div>
+  </div>
 </template>
 
-<script  setup>
-import{ ref, watch } from 'vue';
-import axios from 'axios'; 
-import { Cropper } from 'vue-advanced-cropper';
-import { useRouter } from 'vue-router';
+<script setup>
+import { ref, watch } from "vue";
+import axios from "axios";
+import { Cropper } from "vue-advanced-cropper";
+import { useRouter } from "vue-router";
+import dayjs from "dayjs";
 const router = useRouter();
-import 'vue-advanced-cropper/dist/style.css';
+import "vue-advanced-cropper/dist/style.css";
 
 /* global defineEmits */
 const emit = defineEmits(["close", "submitted"]);
 
 //狀態
-const file = ref(null)
-const title = ref('')
-const startDate = ref('')
-const endDate = ref('')
-const days = ref(0)
-const description = ref('')
-const isDirty = ref(false)
-const showCropper = ref(false)
-const cropImage = ref(null)
-const cropperRef = ref(null)
-const createdScheduleId = ref(null)
+const file = ref(null);
+const title = ref("");
+const startDate = ref("");
+const endDate = ref("");
+const days = ref(0);
+const description = ref("");
+const isDirty = ref(false);
+const showCropper = ref(false);
+const cropImage = ref(null);
+const cropperRef = ref(null);
+const createdScheduleId = ref(null);
 const isLoading = ref(false);
 
 //預覽封面圖片
 const coverPreviewUrl = ref("");
 const defaultCover = "https://fakeimg.pl/800x400/?text=行程封面&font=noto";
 
-
-//DOM元素參考
 const fileInput = ref(null);
 
 //點上傳圖片按鈕時觸發Input
@@ -174,24 +189,20 @@ const handleFile = (event) => {
 
 //處理裁切的圖
 const applyCrop = () => {
-
-    const canvas = cropperRef.value?.getResult()?.canvas
-    if(canvas){
-        canvas.toBlob((blob) => {
-            file.value = new File([blob],`cropper-image.png`, { type: 'image/png'})
-            coverPreviewUrl.value = URL.createObjectURL(file.value)
-            showCropper.value = false
-        }, 'image/png' )
-    }
-
+  const canvas = cropperRef.value?.getResult()?.canvas;
+  if (canvas) {
+    canvas.toBlob((blob) => {
+      file.value = new File([blob], `cropper-image.png`, { type: "image/png" });
+      coverPreviewUrl.value = URL.createObjectURL(file.value);
+      showCropper.value = false;
+    }, "image/png");
+  }
 };
 
 //自動計算行程天數
 watch([startDate, endDate], () => {
   if (startDate.value && endDate.value) {
-    const start = new Date(startDate.value);
-    const end = new Date(endDate.value);
-    const diff = Math.round((end - start) / (1000 * 60 * 60 * 24)) + 1;
+    const diff = dayjs(endDate.value).diff(dayjs(startDate.value), "day") + 1;
     days.value = diff > 0 ? diff : 0;
   } else {
     days.value = 0;
@@ -214,16 +225,14 @@ const handleClose = () => {
 
 //點取消清空表單
 const scheduleCancel = () => {
-
-    file.value = null
-    coverPreviewUrl.value = ''
-    title.value = ''
-    startDate.value = ''
-    endDate.value = ''
-    days.value = 0
-    description.value = ''
-    isDirty.value = false
-
+  file.value = null;
+  coverPreviewUrl.value = "";
+  title.value = "";
+  startDate.value = "";
+  endDate.value = "";
+  days.value = 0;
+  description.value = "";
+  isDirty.value = false;
 };
 
 //點儲存打包成formData送到後端
@@ -234,7 +243,7 @@ const scheduleSubmit = async () => {
   }
 
   const token = localStorage.getItem("token");
-const formData = new FormData();
+  const formData = new FormData();
   if (file.value) formData.append("cover", file.value);
   formData.append("title", title.value);
   formData.append("startDate", startDate.value);
@@ -243,12 +252,16 @@ const formData = new FormData();
 
   try {
     isLoading.value = true;
-    const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/travelSchedule`, formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-        Authorization: `Bearer ${token}`,
+    const res = await axios.post(
+      `${import.meta.env.VITE_API_URL}/api/travelSchedule`,
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
+        },
       },
-    });
+    );
 
     const newId = res.data.schedule.id;
     createdScheduleId.value = newId;

@@ -44,7 +44,6 @@
               >
               <RouterLink to="/schedule" class="underline">個人行程</RouterLink>
               <RouterLink to="/community">社群貼文</RouterLink>
-              <RouterLink to="/trips">行程建立</RouterLink>
             </div>
           </section>
         </section>

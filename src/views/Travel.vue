@@ -10,6 +10,7 @@
             :default-image="defaultImage"
             :current-day-index="currentDayIndex"
             :trip="selectedTrip"
+            :daily-plan-ref="dailyPlanRef"
             @select-place="handlePlaceSelect"
             @call-itinerary="callItinerary"
           />
@@ -64,8 +65,7 @@
         <ScheduleDetail
           v-else
           :trip-id="editingTripId"
-          :current-day-index="currentDayIndex"
-          :selected-date="selectedTrip?.days?.[currentDayIndex]"
+          :selected-date="selectedTrip?.days?.[currentDayIndex]?.date"
           ref="itineraryRef"
           @back="handleCloseDetail"
         />
@@ -77,11 +77,7 @@
       class="fixed inset-0 bg-white/50 backdrop-blur-sm flex items-center justify-center z-50"
     >
       <div class="bg-white w-full max-w-xl rounded-2xl p-6 shadow-lg relative">
-        <TravelSchedule
-          @close="handleCloseForm"
-          @submitted="handleScheduleCreated"
-        />
-        <button @click="handleCloseForm"></button>
+        <TravelSchedule @close="handleCloseForm" />
       </div>
     </div>
 
@@ -135,6 +131,7 @@ const selectedPlace = ref(null);
 const defaultImage = "https://picsum.photos/1000?image";
 const currentDayIndex = ref(0);
 const itineraryRef = ref(null);
+const dailyPlanRef = ref(null);
 const mapRef = ref(null);
 
 const selectedTrip = computed(() => {
@@ -144,7 +141,6 @@ const selectedTrip = computed(() => {
 //取得會員是否為付費會員
 const fetchIsPremium = async () => {
   const token = localStorage.getItem("token");
-  if (!token) return;
 
   try {
     const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/profile`, {
@@ -152,7 +148,7 @@ const fetchIsPremium = async () => {
     });
     isPremium.value = res.data.isPremium;
   } catch (err) {
-    console.log(err);
+    // eslint-disable-next-line no-empty
   }
 };
 
@@ -163,43 +159,20 @@ onMounted(() => {
 });
 
 //建立行程時檢查是否登入
-const handleOpenForm = async () => {
+const handleOpenForm = () => {
   const token = localStorage.getItem("token");
   if (!token) {
     alert("請先登入會員");
     return;
   }
 
-  try {
-    const res = await axios.get(
-      `${import.meta.env.VITE_API_URL}/api/profile/checkpremium`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      },
-    );
+  const count = tripStore.trips.length;
 
-    const { requiresPayment } = res.data;
-    const count = tripStore.trips.length;
-
-    if (requiresPayment && !isPremium.value && count >= 1) {
-      showPayModal.value = true;
-      return;
-    }
-
+  if (isPremium.value || count < 1) {
     showForm.value = true;
-  } catch (err) {
-    alert("檢查會員狀態失敗，請稍後再試");
-    console.error(err);
+  } else {
+    showPayModal.value = true;
   }
-};
-
-const handleScheduleCreated = () => {
-  showForm.value = false;
-  tripStore.fetchTrips();
-  fetchIsPremium();
-  router.push(`/schedule`);
 };
 
 const goToPay = () => {
@@ -222,8 +195,8 @@ const handleCloseDetail = () => {
 
 //刪除行程
 const deleteSchedule = async (id) => {
-  const confirmDelete = confirm("確定刪除這個行程嗎?");
-  if (!confirmDelete) return;
+  const confirmed = confirm("確定刪除這個行程嗎?");
+  if (!confirmed) return;
 
   const token = localStorage.getItem("token");
 
@@ -231,9 +204,7 @@ const deleteSchedule = async (id) => {
     await axios.delete(
       `${import.meta.env.VITE_API_URL}/api/travelSchedule/${id}`,
       {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
       },
     );
 
@@ -249,17 +220,6 @@ function handlePlaceSelect(place) {
 }
 
 function callItinerary() {
-  const place = selectedPlace.value;
-  const date = selectedTrip.value?.days?.[currentDayIndex.value];
-  if (!place || !date) {
-    alert("缺少地點或日期，無法加入行程");
-    return;
-  }
-
-  if (itineraryRef.value?.addPlace) {
-    itineraryRef.value.addPlace(place, date);
-  } else {
-    alert("行程尚未載入，無法加入景點");
-  }
+  mapRef.value?.callItinerary();
 }
 </script>

@@ -37,7 +37,7 @@ onMounted(async () => {
       `${import.meta.env.VITE_API_URL}/api/travelSchedule/user`,
       {
         headers: { Authorization: `Bearer ${token}` },
-      }
+      },
     );
     schedules.value = res.data.schedules;
   } catch {
@@ -47,7 +47,7 @@ onMounted(async () => {
 
 function onScheduleChange() {
   const selected = schedules.value.find(
-    (s) => s.id === selectedScheduleId.value
+    (s) => s.id === selectedScheduleId.value,
   );
   if (selected) {
     content.value = selected.description;
@@ -60,26 +60,24 @@ function handleImageUpload(e) {
   if (!file) return;
 
   const acceptedTypes = ["image/jpeg", "image/png", "image/webp"];
-  const maxSizeBytes = 3145728; 
-  if (!acceptedTypes.includes(file.type) ||file.size > maxSizeBytes ) {
-
+  const maxSizeBytes = 3145728;
+  if (!acceptedTypes.includes(file.type) || file.size > maxSizeBytes) {
     alert("格式不支援或檔案太大。請上傳 JPG、PNG 或 WebP。檔案最高3MB");
 
     const selected = schedules.value.find(
-      (s) => s.id === selectedScheduleId.value
+      (s) => s.id === selectedScheduleId.value,
     );
     if (selected) {
       previewImage.value = selected.coverURL || null;
       imageFile.value = null;
     }
-    e.target.value = ""; 
+    e.target.value = "";
     return;
   }
 
   imageFile.value = file;
   previewImage.value = URL.createObjectURL(file);
 }
-
 
 async function submitPost() {
   if (!selectedScheduleId.value || !content.value) {
@@ -105,7 +103,7 @@ async function submitPost() {
           Authorization: `Bearer ${token}`,
           "Content-Type": "multipart/form-data",
         },
-      }
+      },
     );
     alert("success");
     router.push("/community");
