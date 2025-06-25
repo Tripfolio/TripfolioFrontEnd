@@ -2,12 +2,11 @@
   <div class="min-h-screen homepage-bg">
     <div class="min-h-screen px-4 py-6">
       <div class="w-[80vw] mx-auto">
-        <header
+        <!-- <header
           class="flex items-center bg-gray-300 rounded-full px-6 py-2 shadow-md"
         >
-          <!-- 左 -->
           <div class="flex-none font-bold">logo</div>
-          <!-- 中 -->
+
           <nav
             class="flex-1 flex justify-center space-x-6 items-center text-gray-700"
           >
@@ -21,13 +20,13 @@
               <span>關於我們</span>
             </button>
           </nav>
-          <!-- 右 -->
           <div class="flex-none text-gray-700">
             <RouterLink to="/signup" class="underline">註冊</RouterLink>
             |
             <RouterLink to="/login" class="underline">登入</RouterLink>
           </div>
-        </header>
+        </header> -->
+
         <section
           class="mt-10 bg-gray-300 rounded-[3rem] h-[300px] md:h-[400px] shadow-inner"
         >

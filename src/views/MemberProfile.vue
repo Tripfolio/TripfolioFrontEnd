@@ -329,3 +329,21 @@ const changePassword = async () => {
   }
 };
 </script>
+
+<style scoped>
+.homepage-bg {
+  background-image:
+    radial-gradient(#999 1px, transparent 1px),
+    linear-gradient(to right, rgba(0, 0, 0, 0.08) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.08) 1px, transparent 1px);
+  background-size:
+    40px 40px,
+    40px 40px,
+    40px 40px;
+  background-position:
+    20px 20px,
+    0px 0px,
+    0px 0px;
+  background-color: white;
+}
+</style>
