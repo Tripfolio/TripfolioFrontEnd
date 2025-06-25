@@ -83,20 +83,20 @@ const fetchPosts = async () => {
 
 // 點擊右下角按鈕跳轉建立頁
 const goToCreatePost = () => {
-  router.push("/create-post"); // 之後需改成實際路由
+  router.push("/community/post"); // 之後需改成實際路由
 };
 
 // 初始化 IntersectionObserver
 const initObserver = () => {
   observer = new IntersectionObserver(
     ([entry]) => {
-      if (entry.isIntersecting) {
+      if (entry.isIntersecting && !isLoading.value && hasMore.value) {
         fetchPosts();
       }
     },
     {
       root: null,
-      threshold: 1.0,
+      threshold: 0.3,
     },
   );
 

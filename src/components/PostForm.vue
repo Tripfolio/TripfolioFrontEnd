@@ -80,10 +80,7 @@ function handleImageUpload(e) {
 }
 
 async function submitPost() {
-  if (!selectedScheduleId.value || !content.value) {
-    alert("選擇行程並填寫內容!!");
-    return;
-  }
+
   const formData = new FormData();
   formData.append("scheduleId", selectedScheduleId.value);
   formData.append("content", content.value);
