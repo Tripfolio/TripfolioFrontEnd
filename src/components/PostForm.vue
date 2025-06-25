@@ -47,7 +47,7 @@
           <img v-if="previewImage" :src="previewImage" alt="預覽" width="200" />
 
           <label>貼文內容</label>
-          <textarea v-model="content" rows="5"></textarea>
+          <textarea style="resize: both;" v-model="content" rows="5"></textarea>
 
           <button @click="submitPost">送出貼文</button>
         </div>
