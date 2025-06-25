@@ -39,6 +39,9 @@
               <RouterLink to="/profile" class="underline"
                 >會員資料修改</RouterLink
               >
+              <RouterLink to="/memberHub" class="underline">
+                會員中心</RouterLink
+              >
               <RouterLink to="/calendar" class="underline"
                 >連結 Google Calendar</RouterLink
               >
