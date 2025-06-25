@@ -7,63 +7,48 @@
       <div
         v-for="post in posts"
         :key="post.postId"
-        class="border p-4 rounded-lg shadow space-y-2 w-full"
+        class="bg-white rounded-[24px] overflow-hidden shadow hover:shadow-lg transition cursor-pointer flex flex-col"
         @click="openPostDetail(post)"
       >
-        <div>
-          <p class="font-bold text-lg">標題：{{ post.scheduleTitle }}</p>
-
-          <textarea
-            v-if="post.isEditing"
-            v-model="post.content"
-            class="w-full border rounded p-2"
-            rows="4"
-          />
-          <p v-else>{{ post.content }}</p>
-
-          <p class="text-gray-500">
-            {{ dayjs(post.createdAt).format("YYYY-MM-DD HH:mm") }}
-          </p>
+        <!-- Header -->
+        <div class="flex items-center gap-2 p-4">
+          <div
+            class="w-9 h-9 bg-gray-400 rounded-full flex items-center justify-center text-white font-bold text-xs"
+          >
+            {{ post.authorName?.[0] || "U" }}
+          </div>
+          <span class="text-sm font-semibold">{{
+            post.authorName || "User Name"
+          }}</span>
         </div>
 
-        <div v-if="post.isEditing">
-          <input
-            type="file"
-            accept="image/*"
-            @change="onImageChange($event, post)"
-          />
-        </div>
-
+        <!-- Image -->
         <img
-          v-if="post.previewImage || post.coverURL"
-          :src="post.previewImage || post.coverURL"
-          alt="封面"
-          class="w-full max-w-md rounded mb-4"
+          :src="
+            post.previewImage ||
+            post.coverURL ||
+            post.imageUrl ||
+            'https://picsum.photos/400/300?random'
+          "
+          alt="post image"
+          class="w-full aspect-square object-cover"
         />
 
-        <div class="flex space-x-4">
-          <button
-            v-if="post.isEditing"
-            class="text-green-500 hover:underline"
-            @click.stop="saveEdit(post)"
+        <!-- Footer -->
+        <div class="p-4 flex flex-col justify-between flex-grow">
+          <p class="text-gray-800 font-medium truncate">{{ post.content }}</p>
+          <div
+            class="mt-2 flex items-center justify-end text-gray-600 text-sm gap-4"
           >
-            儲存
-          </button>
-
-          <button
-            v-else
-            class="text-blue-500 hover:underline"
-            @click.stop="post.isEditing = true"
-          >
-            編輯
-          </button>
-
-          <button
-            class="text-red-500 hover:underline"
-            @click.stop="deletePost(post.postId)"
-          >
-            刪除
-          </button>
+            <div class="flex items-center gap-1">
+              <span>❤️</span>
+              <span>{{ post.favoriteCount || 0 }}</span>
+            </div>
+            <div class="flex items-center gap-1">
+              <span>💬</span>
+              <span>{{ post.commentCount || 0 }}</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -71,11 +56,14 @@
     <div ref="scrollTrigger" class="h-10"></div>
 
     <!-- Skeleton loading（載入中顯示） -->
-    <div v-if="isLoading" class="space-y-4 my-4">
+    <div
+      v-if="isLoading"
+      class="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
+    >
       <div
         v-for="n in 3"
         :key="n"
-        class="animate-pulse border rounded-xl p-4 shadow"
+        class="animate-pulse border-none rounded-xl p-4 shadow"
       >
         <div class="w-full h-60 bg-gray-300 rounded-xl mb-3"></div>
         <div class="h-4 bg-gray-300 rounded w-3/4 mb-2"></div>
@@ -130,7 +118,7 @@ const token = localStorage.getItem("token");
 const showModal = ref(false);
 const selectedPost = ref(null);
 let observer = null;
-
+const defaultImage = `https://picsum.photos/`;
 // 分頁載入貼文，append 並保留互動欄位
 const fetchPosts = async () => {
   if (isLoading.value || !hasMore.value) return;
@@ -157,60 +145,6 @@ const fetchPosts = async () => {
     alert("載入貼文失敗");
   } finally {
     isLoading.value = false;
-  }
-};
-
-const deletePost = async (postId) => {
-  if (!confirm("確定要刪？")) return;
-  try {
-    await axios.delete(
-      `${import.meta.env.VITE_API_URL}/api/community/community-posts/${postId}`,
-      {
-        headers: { Authorization: `Bearer ${token}` },
-      },
-    );
-    // 移除本地 posts
-    posts.value = posts.value.filter((p) => p.postId !== postId);
-  } catch {
-    alert("刪除失敗");
-  }
-};
-
-const onImageChange = (e, post) => {
-  const file = e.target?.files?.[0];
-  if (!file) return;
-  post.imageFile = file;
-  post.previewImage = URL.createObjectURL(file);
-};
-
-const saveEdit = async (post) => {
-  try {
-    const formData = new FormData();
-    formData.append("content", post.content);
-    if (post.imageFile) {
-      formData.append("cover", post.imageFile);
-    } else if (post.coverURL) {
-      formData.append("coverURL", post.coverURL);
-    }
-    await axios.put(
-      `${import.meta.env.VITE_API_URL}/api/community/community-posts/${post.postId}`,
-      formData,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data",
-        },
-      },
-    );
-    post.isEditing = false;
-    post.previewImage = null;
-    post.imageFile = null;
-    // 重新取得該貼文最新內容
-    // 這裡可選擇只更新單一 post，或簡單做法直接重載全部
-    // await fetchPosts();
-    alert("更新成功！");
-  } catch {
-    alert("更新失敗！");
   }
 };
 
@@ -262,4 +196,5 @@ onBeforeUnmount(() => {
     observer.unobserve(scrollTrigger.value);
   }
 });
+console.log("communityList mounted");
 </script>
