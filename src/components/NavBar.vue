@@ -1,7 +1,5 @@
 <template>
-  <header
-    class="flex items-center rounded-full px-6 py-4 shadow-md backdrop-blur-sm bg-gray-500/30"
-  >
+  <header class="frosted-style flex items-center rounded-full px-6 py-4">
     <div class="flex-none font-bold w-7 h-7">
       <router-link to="/" class="cursor-pointer block">
         <img :src="logo" alt="Logo" />
@@ -17,12 +15,13 @@
           <span class="pl-2 no-underline">探索</span>
         </RouterLink>
       </button>
-      <RouterLink to="/community" class="">
-        <button class="flex items-center space-x-1">
+
+      <button class="flex items-center space-x-1">
+        <RouterLink to="/community" class="">
           <font-awesome-icon :icon="['fas', 'globe']" />
           <span class="pl-2 no-underline">社群</span>
-        </button>
-      </RouterLink>
+        </RouterLink>
+      </button>
 
       <slot name="mapSearch"> </slot>
     </nav>
