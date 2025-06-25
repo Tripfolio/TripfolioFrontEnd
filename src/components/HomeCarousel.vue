@@ -6,11 +6,11 @@
     :loop="true"
     :centered-slides="true" 
     :autoplay="{ delay: 3000 }"
-    class="w-full overflow-visible h-[550px]"
+    class="w-full flex justify-center overflow-visible h-[550px]"
   >
     <SwiperSlide v-for="(block, index) in blocks" :key="index" >
       <section
-        class="mt-10 w-[80vw] h-[500px] bg-gray-300 rounded-[3rem] shadow-inner flex items-center justify-center text-2xl font-bold"
+        class="mt-10 h-[500px] bg-gray-300 rounded-[3rem] shadow-inner flex items-center justify-center text-2xl font-bold"
       >
         {{ block.text }}
       </section>

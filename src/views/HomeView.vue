@@ -1,5 +1,6 @@
 <template>
   <div class="homepage-bg overflow-x-hidden">
+
     <section class="min-h-screen  flex justify-center">
       <!-- <transition name="fade-landing">
         <div class="landing fixed inset-0 bg-white text-gray-400 flex justify-center items-center" v-if="show">
@@ -45,7 +46,7 @@
             </div>
           </header>
         </div>
-        <div class="w-[100vw] mx-auto ">
+        <div class="w-[100vw]">
           <HomeCarousel/>
           <div class="w-[60vw] mx-auto -mt-16 z-10 relative">
             <section class="bg-gray-800/30  custom-frosted backdrop-blur-[30px] text-white rounded-4xl py-3 px-6 shadow-md">
@@ -191,23 +192,88 @@
         </div>
       </div> -->
     </section>
-    <section class="min-h-screen flex relative ">
-      <h2 class="text-4xl font-bold text-lef ml-40 mt-30" data-aos="fade-up" data-aos-duration="1000" data-aos-anchor-placement="top-center">
-        Slogan Slogan Slogan
+
+    <section class="min-h-[500px] flex relative ">
+      <h2 class="text-4xl font-bold text-lef ml-40 mt-30" data-aos="fade-up" data-aos-duration="1000">
+        TRIPFOLIO：<br>
+        Where your journey begins
       </h2>
       <div class="relative ml-auto mr-60">
         <img :src="taiwan"  ref="mapImg" alt="台灣地圖" class="w-auto max-w-[500px] h-auto  " data-aos="fade-up" data-aos-duration="1000" />
-        <img :src="marker1" v-show="showMarker1" alt="marker" class="absolute z-50 top-[10%] left-[50%] w-16 h-16 fade-in-down" />
-        <img :src="marker2" v-show="showMarker2" alt="marker" class="absolute z-50 top-[30%] left-[60%] w-16 h-16 fade-in-down" />
-        <img :src="marker3" v-show="showMarker3" alt="marker" class="absolute z-50 top-[40%] left-[30%] w-16 h-16 fade-in-down" />
-        <img :src="marker4" v-show="showMarker4" alt="marker" class="absolute z-50 top-[60%] left-[40%] w-16 h-16 fade-in-down" />
+        <img :src="marker1" v-show="showMarker1" alt="marker" class="absolute z-50 top-[18%] left-[40%] w-16 h-16 fade-in-down will-change: transform" />
+        <img :src="marker2" v-show="showMarker2" alt="marker" class="absolute z-50 top-[30%] left-[60%] w-16 h-16 fade-in-down will-change: transform" />
+        <img :src="marker3" v-show="showMarker3" alt="marker" class="absolute z-50 top-[50%] left-[30%] w-16 h-16 fade-in-down will-change: transform" />
       </div>
     </section>
-    <section class="min-h-screen" data-aos="fade">Hero 區</section>
-    <section class="min-h-screen" data-aos="fade-up">Slogan 區</section>
-    <section class="min-h-screen" data-aos="zoom-in">內容區</section>
+    
+    <section class="min-h-[600px] px-6 py-16">
+      <!-- 標題區 -->
+      <h2 class="text-4xl font-bold text-center mb-20" data-aos="fade-up" data-aos-duration="1000" data-aos-anchor-placement="top-center">
+        讓分享，成為彼此的路標
+      </h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+        <!-- 卡片 1 -->
+        <div class="rounded-3xl bg-white shadow-md overflow-hidden" data-aos="fade-up" data-aos-delay="700">
+          <div class="relative h-[300px] bg-gray-300">
+            <img :src="s1" alt="行程圖" class="w-full h-full object-cover " loading="lazy"/>
+            <div class="absolute top-3 left-3 bg-black text-white text-xs px-2 py-1 rounded-full flex items-center space-x-2">
+              <img :src="s2" alt="avatar" class="w-5 h-5 rounded-full object-cover ml-0.5 mr-2" />
+              <p class="mr-2">Kris</p>
+            </div>
+          </div>
+          <div class="p-4 flex justify-between items-center">
+            <p class="text-sm font-medium">慢遊台灣五日行</p>
+            <button class="text-xl">♡</button>
+          </div>
+        </div>
+
+        <!-- 卡片 2 -->
+        <div class="rounded-3xl bg-white shadow-md overflow-hidden" data-aos="fade-up" data-aos-delay="1000">
+          <div class="relative h-[300px] bg-gray-300">
+            <img :src="s2" alt="行程圖" class="w-full h-full object-cover" loading="lazy"/>
+            <div class="absolute top-3 left-3 bg-black text-white text-xs px-2 py-1 rounded-full flex items-center space-x-2">
+              <img :src="p1" alt="avatar" class="w-5 h-5 rounded-full object-cover ml-0.5 mr-2" />
+              <p class="mr-2">May</p>
+            </div>
+          </div>
+          <div class="p-4 flex justify-between items-center">
+            <p class="text-sm font-medium">一步一景，小島旅行中</p>
+            <button class="text-xl">♡</button>
+          </div>
+        </div>
+
+        <!-- 卡片 3 -->
+        <div class="rounded-3xl bg-white shadow-md overflow-hidden" data-aos="fade-up" data-aos-delay="1300">
+          <div class="relative h-[300px] bg-gray-300">
+            <img :src="s3" alt="行程圖" class="w-full h-full object-cover" loading="lazy" />
+            <div class="absolute top-3 left-3 bg-black text-white text-xs px-2 py-1 rounded-full flex items-center space-x-2">
+              <img :src="p2" alt="avatar" class="w-5 h-5 rounded-full object-cover ml-0.5 mr-2" />
+              <p class="mr-2">Kiwi</p>
+            </div>
+          </div>
+          <div class="p-4 flex justify-between items-center">
+            <p class="text-sm font-medium">台北三天兩夜攻略</p>
+            <button class="text-xl">♡</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="w-full flex justify-center z-50 ">
+        <button
+          @click="scrollToTop"
+          class="bg-black text-white pl-10 pr-10 pt-5 pb-5 rounded-full shadow-lg hover:bg-gray-400 transition-all duration-300 mt-35 mb-15 cursor-pointer"
+        >
+          Start Exploring With TRIPFOLIO 
+        </button>
+      </div>
+    </section>
+
+    <!-- <section class="min-h-screen" data-aos="fade-up">社群</section> -->
+
   </div>
 </template>
+//記得把email routes拿回來
 
 <script setup>
 import { ref, onMounted, onUnmounted } from "vue";
@@ -222,13 +288,17 @@ import taiwan from '../assets/HomePage/taiwan.png';
 import marker1 from '../assets/icons/mapIcons/amusement_park.svg';
 import marker2 from '../assets/icons/mapIcons/restaurant.svg';
 import marker3 from '../assets/icons/mapIcons/cafe.svg';
-import marker4 from '../assets/icons/mapIcons/default.svg';
+import s1 from '../assets/HomePage/s1.png';
+import s2 from '../assets/HomePage/s2.png';
+import s3 from '../assets/HomePage/s3.png';
+import p1 from '../assets/HomePage/p1.png';
+import p2 from '../assets/HomePage/p2.png';
 
 const show = ref(true)
 const showMarker1 = ref(false)
 const showMarker2 = ref(false)
 const showMarker3 = ref(false)
-const showMarker4 = ref(false)
+
 const mapImg = ref(null)
 
 const {
@@ -290,6 +360,13 @@ function onCityChange(event) {
   });
 }
 
+const scrollToTop = () => {
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth'
+  })
+}
+
 onMounted(async () => {
   document.addEventListener("click", handleClickOutside);
 
@@ -311,14 +388,10 @@ onMounted(async () => {
         setTimeout(() => {
           showMarker3.value = true
         }, 2000)
-        setTimeout(() => {
-          showMarker4.value = true
-        }, 2500)
       } else {
         showMarker1.value = false
         showMarker2.value = false
         showMarker3.value = false
-        showMarker4.value = false
       }
     },
     {
