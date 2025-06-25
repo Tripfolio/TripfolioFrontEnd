@@ -2,45 +2,23 @@
   <div class="min-h-screen homepage-bg">
     <div class="min-h-screen px-4 py-6">
       <div class="w-[80vw] mx-auto">
-        <header
-          class="flex items-center bg-gray-300 rounded-full px-6 py-2 shadow-md"
-        >
-          <!-- 左 -->
-          <div class="flex-none font-bold">logo</div>
-          <!-- 中 -->
-          <nav
-            class="flex-1 flex justify-center space-x-6 items-center text-gray-700"
-          >
-            <button class="flex items-center space-x-1">
-              <RouterLink to="/map" class="underline">探索</RouterLink>
-            </button>
-            <button class="flex items-center space-x-1">
-              <span>社群</span>
-            </button>
-            <button class="flex items-center space-x-1">
-              <span>關於我們</span>
-            </button>
-          </nav>
-          <!-- 右 -->
-          <div class="flex-none text-gray-700">
-            <RouterLink to="/signup" class="underline">註冊</RouterLink>
-            |
-            <RouterLink to="/login" class="underline">登入</RouterLink>
-          </div>
-        </header>
         <section
           class="mt-10 bg-gray-300 rounded-[3rem] h-[300px] md:h-[400px] shadow-inner"
         >
           <section class="mt-10 p-6">
             <p class="mb-2">其他連結 我先放這</p>
             <div class="flex flex-wrap gap-4">
-              <RouterLink to="/emailSettings" class="underline">Email 通知</RouterLink>
-              <RouterLink to="/profile" class="underline">會員資料修改</RouterLink>
-              <RouterLink to="/calendar" class="underline">連結 Google Calendar</RouterLink>
+              <RouterLink to="/emailSettings" class="underline"
+                >Email 通知</RouterLink
+              >
+              <RouterLink to="/profile" class="underline"
+                >會員資料修改</RouterLink
+              >
+              <RouterLink to="/calendar" class="underline"
+                >連結 Google Calendar</RouterLink
+              >
               <RouterLink to="/schedule" class="underline">個人行程</RouterLink>
               <RouterLink to="/community">社群貼文</RouterLink>
-              <RouterLink to="/trips">行程建立</RouterLink>
-              <RouterLink to="/payment">LINE Pay</RouterLink>
             </div>
           </section>
         </section>

@@ -69,7 +69,7 @@
           >
             <div class="flex items-center space-x-3">
               <img
-                :src="member.avatarUrl"
+                :src="member.avatar"
                 alt="avatar"
                 class="w-8 h-8 rounded-full object-cover"
               />
@@ -138,7 +138,7 @@ const generateShareUrl = async () => {
       `${import.meta.env.VITE_API_URL}/api/trip-shares/${props.tripId}`,
       {
         permission: permission.value,
-      }
+      },
     );
     shareUrl.value = res.data.shareLink;
     await fetchMembers();
@@ -161,13 +161,13 @@ const copyToClipboard = async () => {
 const fetchMembers = async () => {
   try {
     const res = await axios.get(
-      `${import.meta.env.VITE_API_URL}/api/trip-shares/${props.tripId}`
+      `${import.meta.env.VITE_API_URL}/api/trip-shares/${props.tripId}`,
     );
     members.value = res.data.map((item) => ({
       token: item.token,
       permission: item.permission,
       name: item.name || "未知使用者",
-      avatarUrl: item.avatarUrl, // 頭像須從user資料取得
+      avatarUrl: item.avatar, // 頭像須從user資料取得
     }));
   } catch (err) {
     alert("取得共編成員失敗。");
@@ -180,7 +180,7 @@ const changePermission = async (member) => {
       `${import.meta.env.VITE_API_URL}/api/trip-shares/${member.token}`,
       {
         permission: member.permission,
-      }
+      },
     );
   } catch (err) {
     alert("變更權限失敗");
@@ -191,7 +191,7 @@ const removeMember = async (member) => {
   if (!confirm(`確定要移除 ${member.name} 嗎？`)) return;
   try {
     await axios.delete(
-      `${import.meta.env.VITE_API_URL}/api/trip-shares/${member.token}`
+      `${import.meta.env.VITE_API_URL}/api/trip-shares/${member.token}`,
     );
     await fetchMembers();
   } catch (err) {
