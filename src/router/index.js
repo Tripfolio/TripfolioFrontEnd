@@ -14,6 +14,7 @@ import Post from "@/components/PostForm.vue";
 import Community from "@/views/CommunityList.vue";
 import scheduleDetail from "@/views/scheduleDetail.vue";
 import Payment from "@/views/Payment.vue";
+import MemberHub from "@/views/MemberHub.vue";
 
 const routes = [
   {
@@ -90,6 +91,11 @@ const routes = [
     path: "/payment",
     name: "payment",
     component: Payment,
+  },
+  {
+    path: "/memberHub",
+    name: "memberHub",
+    component: MemberHub,
   },
 ];
 
