@@ -23,7 +23,13 @@ const props = defineProps({
     type: Number,
     required: true,
   },
+  favoriteCount: {
+    type: Number,
+    default: 0,
+  },
 });
+
+const emit = defineEmits(["favorite-toggled"]);
 
 const isFavorited = ref(false);
 const isLoading = ref(false);
@@ -37,7 +43,7 @@ const checkFavoriteStatus = async () => {
 
     console.log("後端查看通過");
   } catch (error) {
-    console.error("檢查收藏狀態失敗:", error);
+    console.error("檢查收藏狀態失敗", error);
   }
 };
 
@@ -54,6 +60,12 @@ const toggleFavorite = async () => {
       );
       isFavorited.value = false;
       console.log("已取消收藏");
+
+      // 發送收藏狀態變更事件，包含更新後的計數
+      emit("favorite-toggled", {
+        postId: props.postId,
+        favoriteCount: Math.max(0, props.favoriteCount - 1),
+      });
     } else {
       // 新增
       await axios.post(`${import.meta.env.VITE_API_URL}/api/favorites`, {
@@ -61,9 +73,15 @@ const toggleFavorite = async () => {
         memberId: props.memberId,
       });
       isFavorited.value = true;
+
+      // 發送收藏狀態變更事件，包含更新後的計數
+      emit("favorite-toggled", {
+        postId: props.postId,
+        favoriteCount: props.favoriteCount + 1,
+      });
     }
   } catch (error) {
-    console.error("切換收藏狀態失敗:", error);
+    console.error("切換收藏狀態失敗", error);
   } finally {
     isLoading.value = false; // 關鍵修正
   }

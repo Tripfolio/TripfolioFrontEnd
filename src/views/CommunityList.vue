@@ -12,11 +12,12 @@
       >
         <!-- Header -->
         <div class="flex items-center gap-2 p-4">
-          <div
-            class="w-9 h-9 bg-gray-400 rounded-full flex items-center justify-center text-white font-bold text-xs"
-          >
-            {{ post.authorName?.[0] || "U" }}
-          </div>
+          <img
+            :src="post.authorAvatar || 'https://picsum.photos/36/36?random=1'"
+            :alt="post.authorName || 'User'"
+            class="w-9 h-9 rounded-full object-cover"
+            @error="$event.target.src = 'https://picsum.photos/36/36?random=1'"
+          />
           <span class="text-sm font-semibold">{{
             post.authorName || "User Name"
           }}</span>
@@ -36,7 +37,7 @@
 
         <!-- Footer -->
         <div class="p-4 flex flex-col justify-between flex-grow">
-          <p class="text-gray-800 font-medium truncate">{{ post.content }}</p>
+          <!-- <p class="text-gray-800 font-medium truncate">{{ post.content }}</p> -->
           <div
             class="mt-2 flex items-center justify-end text-gray-600 text-sm gap-4"
           >
@@ -132,6 +133,30 @@ const fetchPosts = async () => {
     if (fetched.length < limit) {
       hasMore.value = false;
     }
+
+    // 檢查 API 回應的資料結構
+    console.log("API 回應的原始資料:", fetched);
+    if (fetched.length > 0) {
+      console.log("第一個貼文的完整資料:", fetched[0]);
+      console.log("發文者相關欄位:", {
+        authorName: fetched[0].authorName,
+        authorAvatar: fetched[0].authorAvatar,
+        author: fetched[0].author,
+        user: fetched[0].user,
+        member: fetched[0].member,
+      });
+      console.log("行程相關欄位:", {
+        scheduleId: fetched[0].scheduleId,
+        scheduleTitle: fetched[0].scheduleTitle,
+        schedule: fetched[0].schedule,
+        travelScheduleId: fetched[0].travelScheduleId,
+        travelSchedule: fetched[0].travelSchedule,
+        tripId: fetched[0].tripId,
+        trip: fetched[0].trip,
+      });
+      console.log("所有欄位名稱:", Object.keys(fetched[0]));
+    }
+
     // append 並保留互動欄位
     posts.value.push(
       ...fetched.map((post) => ({
@@ -153,7 +178,18 @@ const fetchPosts = async () => {
 const updatePost = (updatedPost) => {
   const index = posts.value.findIndex((p) => p.postId === updatedPost.postId);
   if (index !== -1) {
-    posts.value[index] = { ...posts.value[index], ...updatedPost };
+    // 保留原有的互動欄位，只更新計數相關的欄位
+    posts.value[index] = {
+      ...posts.value[index],
+      commentCount: updatedPost.commentCount,
+      favoriteCount: updatedPost.favoriteCount,
+      // 保留其他可能更新的欄位
+      ...updatedPost,
+    };
+    console.log(`更新貼文 ${updatedPost.postId} 的計數:`, {
+      commentCount: updatedPost.commentCount,
+      favoriteCount: updatedPost.favoriteCount,
+    });
   }
 };
 
