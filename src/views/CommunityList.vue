@@ -119,13 +119,14 @@ const showModal = ref(false);
 const selectedPost = ref(null);
 let observer = null;
 const defaultImage = `https://picsum.photos/`;
+
 // 分頁載入貼文，append 並保留互動欄位
 const fetchPosts = async () => {
   if (isLoading.value || !hasMore.value) return;
   isLoading.value = true;
   try {
     const res = await axios.get(
-      `${import.meta.env.VITE_API_URL}/api/community?page=${page.value}&limit=${limit}`,
+      `${import.meta.env.VITE_API_URL}/api/allposts?page=${page.value}&limit=${limit}`,
     );
     const fetched = res.data.posts || [];
     if (fetched.length < limit) {
@@ -141,6 +142,7 @@ const fetchPosts = async () => {
       })),
     );
     page.value++;
+    console.log(posts.value);
   } catch (err) {
     alert("載入貼文失敗");
   } finally {
