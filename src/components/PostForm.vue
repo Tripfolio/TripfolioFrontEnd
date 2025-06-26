@@ -1,20 +1,109 @@
 <template>
-  <div class="post-form">
-    <label>選擇行程</label>
-    <select v-model="selectedScheduleId" @change="onScheduleChange">
-      <option v-for="s in schedules" :key="s.id" :value="s.id">
-        {{ s.title }}
-      </option>
-    </select>
+  <div class="min-h-screen bg-gray-100 flex flex-col">
+    <main class="flex-grow flex items-center justify-center p-6">
+      <div
+        class="relative bg-white rounded-lg shadow-md w-full max-w-4xl h-[70vh] flex flex-col"
+      >
+        <div
+          class="flex items-center justify-between p-4 border-b border-gray-200"
+        >
+          <button
+            class="text-gray-600 hover:text-gray-900 flex items-center text-lg"
+            @click="goBack"
+          >
+            <svg
+              class="w-6 h-6 mr-1"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M10 19l-7-7m0 0l7-7m-7 7h18"
+              ></path>
+            </svg>
+          </button>
+          <h2 class="text-xl font-semibold text-gray-800">建立貼文</h2>
+          <button
+            class="text-blue-600 hover:text-blue-800 font-medium text-lg"
+            @click="nextStep"
+          >
+            下一步
+          </button>
+        </div>
 
-    <label>貼文主圖</label>
-    <input type="file" accept="image/*" @change="handleImageUpload" />
-    <img v-if="previewImage" :src="previewImage" alt="預覽" width="200" />
+        <div
+          class="flex-grow flex flex-col items-center justify-center p-6 bg-gray-200 text-gray-600 text-center cursor-pointer relative overflow-hidden"
+          @click="fileInput.click()"
+        >
+          <input
+            type="file"
+            accept="image/*"
+            ref="fileInput"
+            class="hidden"
+            @change="handleImageUpload"
+          />
 
-    <label>貼文內容</label>
-    <textarea v-model="content" rows="5" />
+          <div
+            v-if="!previewImage"
+            class="flex flex-col items-center justify-center"
+          >
+            <svg
+              class="w-20 h-20 text-gray-500 mb-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="1.5"
+                d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
+              ></path>
+            </svg>
+            <p class="text-xl">選擇檔案</p>
+          </div>
+          <div
+            v-else
+            class="relative w-full h-full flex items-center justify-center"
+          >
+            <img
+              :src="previewImage"
+              alt="預覽圖片"
+              class="max-w-full max-h-full object-contain rounded"
+            />
+            <button
+              class="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 text-xs w-6 h-6 flex items-center justify-center"
+              @click.stop="clearImage"
+            >
+              X
+            </button>
+          </div>
+        </div>
 
-    <button @click="submitPost">送出貼文</button>
+        <div>
+          <label>選擇行程</label>
+          <select v-model="selectedScheduleId" @change="onScheduleChange">
+            <option v-for="s in schedules" :key="s.id" :value="s.id">
+              {{ s.title }}
+            </option>
+          </select>
+
+          <label>貼文主圖</label>
+          <input type="file" accept="image/*" @change="handleImageUpload" />
+          <img v-if="previewImage" :src="previewImage" alt="預覽" width="200" />
+
+          <label>貼文內容</label>
+          <textarea v-model="content" style="resize: both" rows="5"></textarea>
+
+          <button @click="submitPost">送出貼文</button>
+        </div>
+      </div>
+    </main>
   </div>
 </template>
 
@@ -79,6 +168,11 @@ function handleImageUpload(e) {
   previewImage.value = URL.createObjectURL(file);
 }
 
+// 假設這些函式已經存在於您的 script 中，因為 template 需要調用它們
+const goBack = () => {
+  router.back();
+};
+
 async function submitPost() {
   if (!selectedScheduleId.value || !content.value) {
     alert("選擇行程並填寫內容!!");
@@ -111,4 +205,10 @@ async function submitPost() {
     alert("發佈貼文失敗，請稍後再試！");
   }
 }
+
+// 這裡假設 nextStep 會觸發 submitPost
+const nextStep = async () => {
+  await submitPost();
+};
+
 </script>
