@@ -1,5 +1,7 @@
 <template>
+
   <header class="navbar-style flex items-center rounded-full px-6 py-4">
+
     <div class="flex-none font-bold w-7 h-7">
       <router-link to="/" class="cursor-pointer block">
         <img :src="logo" alt="Logo" />
