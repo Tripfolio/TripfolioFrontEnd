@@ -9,13 +9,13 @@
   />
 
   <div
-    class="absolute top-2.5 left-1/2 -translate-x-1/2 z-[2] flex items-center gap-2.5 bg-gray-400/95 px-2 py-1 rounded-full"
+    class="navbar-style absolute top-22.5 right-35 -translate-x-1/2 z-[2] flex items-center gap-2.5 px-2 py-1 rounded-full"
   >
     <div class="relative w-fit">
       <select
         v-model="selectedCityName"
         @change="onCityChange($event)"
-        class="appearance-none bg-gray-500/80 text-white text-sm py-2 pl-4 pr-10 rounded-full focus:outline-none hover:bg-gray-400 transition duration-200 cursor-pointer shadow-inner"
+        class="appearance-none bg-gray-500/80 backdrop-blur-4xl text-white text-sm py-1 pl-2 pr-3 rounded-full focus:outline-none hover:bg-gray-400 transition duration-200 cursor-pointer shadow-inner"
       >
         <option value="none">當前</option>
         <option v-for="city in cities" :key="city.name" :value="city.name">
@@ -37,8 +37,8 @@
         />
       </svg>
     </div>
-    <div class="relative w-[300px]">
-      <svg
+    <div class="relative w-[150px]">
+      <!-- <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"
@@ -51,12 +51,12 @@
           stroke-linejoin="round"
           d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
         />
-      </svg>
+      </svg> -->
       <input
         type="text"
         v-model="searchQuery"
         placeholder="輸入地點"
-        class="w-full rounded-full border-none text-white px-7 py-1.5 box-border text-base placeholder-white focus:outline-none"
+        class="w-[80%] rounded-full border-none text-white px-3 py-1.5 box-border text-base placeholder-white focus:outline-none"
         ref="searchInput"
         @keyup.enter="searchPlace"
       />
@@ -141,16 +141,10 @@
     class="fixed inset-0 bg-black/50 flex items-center justify-center z-[4]"
     @click.self="selectedPlace = null"
   >
-    <div class="bg-white rounded-lg p-6 w-full max-w-md relative">
-      <h2 class="text-2xl font-bold mb-3">{{ selectedPlace.name }}</h2>
-      <p class="text-gray-600 text-sm mb-3">
-        {{ selectedPlace.formatted_address }}
-      </p>
-      <p v-if="selectedPlace.rating" class="text-yellow-600 mb-3">
-        ⭐ {{ selectedPlace.rating }}（共
-        {{ selectedPlace.user_ratings_total }} 則評價）
-      </p>
-      <div class="relative w-full aspect-[4/3]">
+    <div
+      class="solo-card-style w-full max-w-2xl p-3 border-2 border-white/30 shadow-[0_0_10px_1px_rgba(255,255,255,0.5)] bg-white/10 backdrop-blur-md flex rounded-lg relative gap-5"
+    >
+      <div class="relative">
         <button
           v-if="selectedPlace.photos && selectedPlace.photos.length > 1"
           @click.stop="
@@ -168,13 +162,13 @@
           :src="
             selectedPlace.photos && selectedPlace.photos.length
               ? selectedPlace.photos[selectedPlacePhotoIndex].getUrl({
-                  maxWidth: 800,
+                  maxWidth: 400,
                 })
               : defaultImage
           "
           @error="(e) => (e.target.src = defaultImage)"
           alt="地點圖片"
-          class="max-w-full aspect-[4/3] object-cover rounded-lg mt-2.5"
+          class="max-w-full aspect-[4/3] object-cover rounded-lg"
         />
         <button
           v-if="selectedPlace.photos && selectedPlace.photos.length > 1"
@@ -188,7 +182,25 @@
           ›
         </button>
       </div>
-      <button @click="callItinerary">🤍 加入行程</button>
+      <div class="mr-2.5">
+        <h2 class="text-2xl text-white mb-3 mt-10 break-words max-w-[20rem]">
+          {{ selectedPlace.name }}
+        </h2>
+        <p class="text-white text-sm mb-3">
+          {{ selectedPlace.formatted_address }}
+        </p>
+        <p v-if="selectedPlace.rating" class="text-yellow-600 mb-3">
+          ⭐ {{ selectedPlace.rating }}（共
+          {{ selectedPlace.user_ratings_total }} 則評價）
+        </p>
+
+        <button
+          @click="callItinerary"
+          class="absolute bottom-4 right-4 border px-4 py-1 rounded-2xl text-white"
+        >
+          加入行程+
+        </button>
+      </div>
     </div>
   </div>
 
@@ -343,7 +355,6 @@ function callItinerary() {
   }
 }
 
-
 const {
   categories,
   placeCategories,
@@ -465,7 +476,7 @@ function moveToCity(event) {
       (position) => {
         const center = new google.maps.LatLng(
           position.coords.latitude,
-          position.coords.longitude
+          position.coords.longitude,
         );
         map.value.setCenter(center);
         map.value.setZoom(15);
@@ -477,7 +488,7 @@ function moveToCity(event) {
       },
       () => {
         console.log("無法取得你的定位！");
-      }
+      },
     );
   }
 
@@ -621,7 +632,7 @@ function calculateRoute(origin, destination) {
       } else {
         alert("路線規劃失敗：" + status);
       }
-    }
+    },
   );
 }
 
@@ -681,7 +692,7 @@ function locateUser() {
     (error) => {
       isLocated.value = true;
       alert("無法取得你的定位資訊", error);
-    }
+    },
   );
 }
 
@@ -696,7 +707,7 @@ watch(
   () => route.query.city,
   (newCity) => {
     selectedCityName.value = newCity || "none";
-  }
+  },
 );
 
 watch(selectedPlace, (newVal) => {
@@ -738,7 +749,7 @@ watch(
         location: map.value.getCenter(),
       });
     }
-  }
+  },
 );
 
 onMounted(async () => {
@@ -849,7 +860,7 @@ onMounted(async () => {
               selectedPlace.value = null;
               calculateRoute(
                 selectedMarkers[0].getPosition(),
-                selectedMarkers[1].getPosition()
+                selectedMarkers[1].getPosition(),
               );
             }
           } else {
@@ -864,7 +875,7 @@ onMounted(async () => {
     mapClickListener = google.maps.event.addListener(
       map.value,
       "click",
-      handleClickOutside
+      handleClickOutside,
     );
   } catch (err) {
     alert("Google Maps 載入失敗");
@@ -895,4 +906,5 @@ onUnmounted(() => {
   opacity: 0;
 }
 </style>
+
 
