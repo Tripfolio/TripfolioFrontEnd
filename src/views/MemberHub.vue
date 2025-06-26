@@ -5,9 +5,13 @@
       <div class="bg-[#A2A2A2] text-white shadow-md p-4 flex justify-between items-center">
         <h2 class="text-2xl font-bold">會員中心</h2>
         <div class="w-8 h-8 rounded-full bg-gray-500 flex items-center justify-center text-gray-300">
+          <div class="flex flex-col sm:flex-row items-center gap-6 mb-6">
+            <img class="w-24 h-24 rounded-full border-2 border-blye-200 object-cover" src="https://images.unsplash.com/photo-1529570058547-733204bf87e5?q=80&w=1362&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="使用者頭像">
+          </div>  
         </div>
       </div>
-
+      
+      <!-- 自我介紹 -->
       <div class="p-6 sm:p-8">
         <div class="flex flex-col sm:flex-row items-center gap-6 mb-6">
           <img class="w-24 h-24 rounded-full border-4 border-gray-500 object-cover" src="https://images.unsplash.com/photo-1529570058547-733204bf87e5?q=80&w=1362&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="使用者頭像">
@@ -37,11 +41,12 @@
           </button>
         </div>
         
+        <!--卡片顯示區-->
         <div class="mt-6"> 
           <div v-if="activeTab === 'travels'" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <div v-for="travel in travels" :key="travel.id" @click="goToTravel(travel.id)" class="bg-gray-600 rounded-xl overflow-hidden cursor-pointer group">
               <div class="relative">
-                <img :src="travel.coverUrl" class="w-full h-48 object-cover" alt="行程預覽圖"/>
+                <img :src="travel.coverURL" @error="e => e.target.src = 'https://via.placeholder.com/400x200?text=No+Image'" class="w-full h-60 object-cover rounded-t-lg" alt="行程預覽圖"/>
                 <div class="absolute inset-0 bg-black bg-opacity-20 flex flex-col justify-end p-4 opacity-0 group-hover:opacity-100 transition-opacity">
                   <div class="flex justify-end gap-2">
                     <button class="w-8 h-8 rounded-full bg-gray-800 bg-opacity-70 flex items-center justify-center hover:bg-opacity-100">⋯</button>
@@ -55,28 +60,30 @@
               </div>
             </div>
           </div>
+
+          <!-- 我建立的行程 -->
           <div v-else-if="activeTab === 'my_posts'" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <div v-for="post in posts" :key="post.id" @click="goToPost(post.id)" class="bg-gray-600 rounded-xl overflow-hidden cursor-pointer group">
-              <img :src="post.postImage" class="w-full h-48 object-cover" alt="貼文預覽圖" />
+              <img :src="post.coverImage" class="w-full h-60 object-cover rounded-t-lg" alt="貼文預覽圖" />
               <div class="p-4">
                 <div class="font-semibold text-lg">{{ post.title }}</div>
-                <div class="text-sm text-gray-400">作者: {{ post.author }}</div>
               </div>
             </div>
           </div>
-          <div v-else-if="activeTab === 'collected_posts'" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div v-for="post in collectedPosts" :key="post.id" @click="goToPost(post.id)" class="bg-gray-600 rounded-xl overflow-hidden cursor-pointer group">
-              <img :src="post.postImage" class="w-full h-48 object-cover" alt="貼文預覽圖" />
+
+          <!-- 我收藏的貼文 -->
+          <div v-else-if="activeTab === 'collected'" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div v-for="post in collectedPosts" :key="collected.id" @click="goToPost(collected.id)" class="bg-gray-600 rounded-xl overflow-hidden cursor-pointer group">
+              <img :src="collected.postImage" class="w-full h-60 object-cover rounded-t-lg" alt="貼文預覽圖" />
               <div class="p-4">
-                <div class="font-semibold text-lg">{{ post.title }}</div>
-                <div class="text-sm text-gray-400">作者: {{ post.author }}</div>
+                <div class="font-semibold text-lg">{{ collected.title }}</div>
               </div>
             </div>
           </div>
           <div v-else-if="activeTab === 'notifications'">
             <div class="bg-gray-600 rounded-xl p-8 text-center">
               <h3 class="text-xl font-semibold mb-4">通知設定</h3>
-              <p class="text-gray-400">這裡將會放置您的通知設定選項。</p>
+              <p class="text-gray-400">email通知設定選項。</p>
             </div>
           </div>
         </div>
@@ -104,33 +111,34 @@ const tabs = [
     { key: 'notifications', label: '通知設定' }, 
 ]
 
-//確認會員登入 抓id
-const memberId = localStorage.getItem('memberId') || '1'
-if (!memberId) {
-  alert('請先登入會員')
-  throw new Error('memberId 不存在')
-}
-
+//確認會員token (切版完開啟註解)
 const fetchData = async () => {
-    try {
-        //抓自己發過的行程
-        const travelRes = await axios.get(`${import.meta.env.VITE_API_URL}/api/schedules/member/${memberId}`)
-        travels.value = travelRes.data.map(item => ({
-            id: item.id,
-            title: item.title,
-            startDate: item.startDate?.slice(0, 10),
-            endDate: item.endDate?.slice(0, 10),
-            coverUrl: item.coverURL
-        }));
-    } catch (err) {
-        alert('Failed to fetch travel data, please check API path and service. (Can be ignored, will be replaced with real data after database merge)', err);
-        // 連接後端請註解，關閉假資料
-        travels.value = [
-            { id: 1, title: '沖繩海島慢活之旅', startDate: '2025-07-10', endDate: '2025-07-15', coverUrl: 'https://images.unsplash.com/photo-1662381523885-914182622e12?q=80&w=735&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' },
-            { id: 2, title: '京都楓葉古寺巡禮', startDate: '2025-11-20', endDate: '2025-11-25', coverUrl: 'https://images.unsplash.com/photo-1545569341-9eb8b30979d9?w=500&q=80' },
-            { id: 3, title: '探索冰島極光', startDate: '2026-01-05', endDate: '2026-01-12', coverUrl: 'https://plus.unsplash.com/premium_photo-1661926694528-a833cc729d54?q=80&w=1472&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' },
-        ];
-    }
+  // const token = localStorage.getItem('token')
+  //   if(!token) {
+  //       alert('請先登入會員')
+  //       throw new Error('token 不存在')
+  //   }
+  //   const decoded = jwtDecode(token);
+  //   const memberId = decoded.id;
+
+  try {
+      //抓自己發過的行程
+      const travelRes = await axios.get(`${import.meta.env.VITE_API_URL}/api/schedules/member/${memberId}`)
+      travels.value = travelRes.data.map(item => ({
+          id: item.id,
+          title: item.title,
+          startDate: item.startDate?.slice(0, 10),
+          endDate: item.endDate?.slice(0, 10),
+          coverUrl: item.coverURL
+      }));
+  } catch (err) {
+      alert('取得行程失敗', err);
+      travels.value = [
+          { id: 1, title: '沖繩海島慢活之旅', startDate: '2025-07-10', endDate: '2025-07-15', coverUrl: 'https://images.unsplash.com/photo-1662381523885-914182622e12?q=80&w=735&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' },
+          { id: 2, title: '京都楓葉古寺巡禮', startDate: '2025-11-20', endDate: '2025-11-25', coverUrl: 'https://images.unsplash.com/photo-1545569341-9eb8b30979d9?w=500&q=80' },
+          { id: 3, title: '探索冰島極光', startDate: '2026-01-05', endDate: '2026-01-12', coverUrl: 'https://plus.unsplash.com/premium_photo-1661926694528-a833cc729d54?q=80&w=1472&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' },
+      ];
+  }
 
     //     抓自己發過的貼文(先用假資料合併後再改掉註解)
     	// try {
@@ -166,37 +174,6 @@ watch(() => route.fullPath, fetchData)
 const goToTravel = id => router.push(`/travel/${id}`)
 const goToPost = id => router.push(`/community/post/${id}`) 
 
-
-//測試用的貼文假資料，合併後改連資料庫
-posts.value = [
-    {
-        id: 1,
-        title: '台北兩日遊',
-        postImage: 'https://via.placeholder.com/400x200?text=Trip',
-        author: '旅行家A'
-    },
-    {
-        id: 2,
-        title: '高雄兩日遊',
-        postImage: 'https://via.placeholder.com/400x200?text=Trip',
-        author: '美食家B' 
-    },  
-];
-
-collectedPosts.value = [
-    {
-        id: 1,
-        title: '台中兩日遊',
-        postImage: 'https://via.placeholder.com/400x200?text=Trip',
-        author: '探險家C' 
-    },
-    {
-        id: 2, 
-        title: '花蓮兩日遊',
-        postImage: 'https://via.placeholder.com/400x200?text=Trip',
-        author: '攝影師D' 
-    },
-];
 
 const user = ref({
   name: 'yourName',
