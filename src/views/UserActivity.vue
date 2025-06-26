@@ -45,7 +45,9 @@
 <script setup>
 import { ref, onMounted, watch } from 'vue';
 import { useRouter,useRoute } from 'vue-router';
+import { jwtDecode } from "jwt-decode";
 import axios from 'axios';
+
 
 const router = useRouter()
 const route = useRoute()
@@ -68,6 +70,8 @@ const fetchData = async () => {
         alert('請先登入會員')
         throw new Error('token 不存在')
     }
+    const decoded = jwtDecode(token);
+    const memberId = decoded.id;
 
     try {
         //抓自己發過的行程
@@ -103,19 +107,19 @@ const fetchData = async () => {
         console.warn('取得貼文失敗', err)
     }
 
-    // try {
-    //     抓自己收藏過的貼文(先用假資料合併後再改掉註解)
-    //     const collectRes = await axios.get(`${import.meta.env.VITE_API_URL}/api/members/${memberId}/collections`)
-    //     collectedPosts.value = collectRes.data.map(item => ({
-    //         id: item.id,
-    //         title: item.title,
-    //         postImage: item.post_image
-    //     }));
-    // } catch (err) {
-    //     console.warn('抓貼文失效，可忽略，等合併資料庫再開啟', err)
-    // }
-    console.log('🧪 travels:', travels.value)
-    console.log('🧪 posts:', posts.value)
+    try {
+            //抓自己收藏過的貼文
+        const collectRes = await axios.get(`${import.meta.env.VITE_API_URL}/api/favorites/user/${memberId}`, {
+            headers: { Authorization: `Bearer ${token}` }
+        });
+        collectedPosts.value = collectRes.data.map(item => ({
+            id: item.postId,
+            title: item.postTitle,
+            postImage: item.postImageUrl
+        }));
+    } catch (err) {
+        console.warn('抓貼文失效', err)
+    }
 };
 
 //初始化與返回頁面重新載入
@@ -125,20 +129,6 @@ watch(() => route.fullPath, fetchData)
 const goToTravel = id => router.push({ path: `/schedule/${id}`, query: { from: 'tracker' } })
 const goToPost = id => router.push(`/community/post/${id}`)
 
-
-//測試用的貼文假資料，合併後改連資料庫
-collectedPosts.value = [
-  {
-    id: 1,
-    title: '台中兩日遊',
-    postImage: 'https://via.placeholder.com/400x200?text=Trip'
-  },
-    {
-    id: 1,
-    title: '花蓮兩日遊',
-    postImage: 'https://via.placeholder.com/400x200?text=Trip'
-  },
-];
 
 
 </script>
