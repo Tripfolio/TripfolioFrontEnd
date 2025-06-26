@@ -8,7 +8,7 @@
   />
 
   <div
-    class="navbar-style absolute top-32.5 right-65 -translate-x-1/2 z-[2] flex items-center gap-2.5 px-2 py-1 rounded-full"
+    class="navbar-style absolute top-22.5 right-35 -translate-x-1/2 z-[2] flex items-center gap-2.5 px-2 py-1 rounded-full"
   >
     <div class="relative w-fit">
       <select
