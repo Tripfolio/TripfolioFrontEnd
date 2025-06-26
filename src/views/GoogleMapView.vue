@@ -8,13 +8,13 @@
   />
 
   <div
-    class="absolute top-2.5 left-1/2 -translate-x-1/2 z-[2] flex items-center gap-2.5 bg-gray-400/95 px-2 py-1 rounded-full"
+    class="navbar-style absolute top-32.5 right-65 -translate-x-1/2 z-[2] flex items-center gap-2.5 px-2 py-1 rounded-full"
   >
     <div class="relative w-fit">
       <select
         v-model="selectedCityName"
         @change="onCityChange($event)"
-        class="appearance-none bg-gray-500/80 text-white text-sm py-2 pl-4 pr-10 rounded-full focus:outline-none hover:bg-gray-400 transition duration-200 cursor-pointer shadow-inner"
+        class="appearance-none bg-gray-500/80 backdrop-blur-4xl text-white text-sm py-1 pl-2 pr-3 rounded-full focus:outline-none hover:bg-gray-400 transition duration-200 cursor-pointer shadow-inner"
       >
         <option value="none">當前</option>
         <option v-for="city in cities" :key="city.name" :value="city.name">
@@ -36,8 +36,8 @@
         />
       </svg>
     </div>
-    <div class="relative w-[300px]">
-      <svg
+    <div class="relative w-[150px]">
+      <!-- <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"
@@ -50,12 +50,12 @@
           stroke-linejoin="round"
           d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
         />
-      </svg>
+      </svg> -->
       <input
         type="text"
         v-model="searchQuery"
         placeholder="輸入地點"
-        class="w-full rounded-full border-none text-white px-7 py-1.5 box-border text-base placeholder-white focus:outline-none"
+        class="w-[80%] rounded-full border-none text-white px-3 py-1.5 box-border text-base placeholder-white focus:outline-none"
         ref="searchInput"
         @keyup.enter="searchPlace"
       />
