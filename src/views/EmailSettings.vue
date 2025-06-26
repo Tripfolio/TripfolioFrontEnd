@@ -26,27 +26,17 @@ import { ref, onMounted } from "vue";
 import axios from "axios";
 
 const preferences = ref({
-  onRegister: true,
   onLogin: true,
   onLoginfail: true,
-  onVerify: true,
   onComment: true,
-  onLike: true,
   onBookmark: true,
-  onShare: true,
-  onCustomerReply: true,
 });
 
 const labels = {
-  onRegister: "註冊成功",
   onLogin: "登入成功",
   onLoginfail: "帳號登入異常",
-  onVerify: "信箱驗證提醒",
   onComment: "貼文被留言",
-  onLike: "貼文被按讚",
   onBookmark: "貼文被收藏",
-  onShare: "貼文被分享",
-  onCustomerReply: "客服回覆",
 };
 
 const loading = ref(false);
@@ -62,7 +52,7 @@ const fetchPreferences = async () => {
     }
 
     const { data } = await axios.get(
-      `${import.meta.env.VITE_API_URL}/api/email-preferences`,
+      `${import.meta.env.VITE_API_URL}/api/email-preferences/get`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -87,7 +77,7 @@ const savePreferences = async () => {
     }
 
     await axios.put(
-      `${import.meta.env.VITE_API_URL}/api/email-preferences`,
+      `${import.meta.env.VITE_API_URL}/api/email-preferences/update`,
       { preferences: preferences.value },
       {
         headers: {

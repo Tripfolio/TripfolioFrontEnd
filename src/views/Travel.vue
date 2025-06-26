@@ -4,15 +4,16 @@
       <!-- 左側：可放地圖或其他內容 -->
       <div class="w-4/6 bg-gray-50 p-4 h-full relative overflow-hidden">
         <div class="w-full h-full relative rounded-xl overflow-hidden">
-          <GoogleMapView 
+          <GoogleMapView
             ref="mapRef"
-            :selected-place="selectedPlace"
-            :default-image="defaultImage"
-            :current-day-index="currentDayIndex"
             :trip="selectedTrip"
-            @select-place="handlePlaceSelect"
-            @call-itinerary="callItinerary"
-          />
+            :selected-place="selectedPlace"
+            :current-day-index="currentDayIndex"
+            :daily-plan-ref="dailyPlanRef"
+            :schedule-detail-ref="scheduleDetailRef"
+            :default-image="defaultImage"
+            @place-added="handlePlaceAdded"
+            />
         </div>
       </div>
 
@@ -43,13 +44,12 @@
 
       <!-- 編輯行程 -->
       <ScheduleDetail 
-        v-else 
-        :trip-id="editingTripId" 
-        :current-day-index="currentDayIndex"
-        :selected-date="selectedTrip?.days?.[currentDayIndex]"
-        ref="itineraryRef"
-        @back="handleCloseDetail" 
-        />
+          v-else 
+          :trip-id="editingTripId" 
+          :selected-date="selectedTrip?.days?.[currentDayIndex]?.date"
+          ref="scheduleDetailRef"
+          @back="handleCloseDetail"
+      />
       </div>
     </div>
     <!-- 彈出建立行程表單 -->
@@ -80,7 +80,7 @@ import { useRouter } from 'vue-router'
 import TravelSchedule from '@/components/TravelSchedule.vue';
 import axios from 'axios';
 import GoogleMapView from '@/views/GoogleMapView.vue';
-import ScheduleDetail from '@/views/ScheduleDetail.vue';
+import ScheduleDetail from '@/views/scheduleDetail.vue';
 import { useTripStore } from '@/stores/tripStore';
 
 
@@ -94,12 +94,14 @@ const selectedPlace = ref(null);
 const defaultImage = "https://picsum.photos/1000?image";
 const currentDayIndex = ref(0);
 const itineraryRef = ref(null)
+const dailyPlanRef = ref(null);
+const mapRef = ref(null);
+const scheduleDetailRef = ref(null);
 
 const selectedTrip = computed(() => {
-  return tripStore.trips.find((t) => t.id ===editingTripId.value);
+  return tripStore.trips.find(t => t.id === editingTripId.value);
 });
 
-const mapRef = ref(null);
 
 //取得會員是否為付費會員
 const fetchIsPremium = async () => {
@@ -144,6 +146,18 @@ const goToPay = () => {
   router.push('/payment');
 }
 
+//事件處理函式
+function handlePlaceAdded() {
+  if (scheduleDetailRef.value?.refreshDailyPlan) {
+    scheduleDetailRef.value.refreshDailyPlan();
+  }
+}
+
+function refreshDailyPlan() {
+  // 呼叫 DailyPlan 的 refresh 方法
+  dailyPlanRef.value?.refresh?.();
+}
+
 
 //表單關閉後刷新行程列表
 const handleCloseForm = () => {
@@ -183,18 +197,12 @@ function handlePlaceSelect(place) {
 }
 
 function callItinerary() {
-  const place = selectedPlace.value;
-  const date = selectedTrip.value?.days?.[currentDayIndex.value];
-  if (!place || !date) {
-    alert("缺少地點或日期，無法加入行程");
-    return;
-  }
-
-  if (itineraryRef.value?.addPlace) {
-    itineraryRef.value.addPlace(place, date);
-  } else {
-    alert("行程尚未載入，無法加入景點");
-  }
+  mapRef.value?.callItinerary();
 }
 
+// 暴露方法給父元件使用
+defineExpose({
+  refreshDailyPlan,
+  dailyPlanRef
+});
 </script>

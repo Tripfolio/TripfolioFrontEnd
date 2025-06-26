@@ -2,22 +2,23 @@
     <div v-if="selectedTrip && currentDay">
       <h2 class="text-xl font-bold mb-4">{{ currentDay.date }}</h2>
 
-      <!-- Itinerary.vue 放隱藏 ref -->
       <Itinerary
         ref="itineraryRef"
         :trip-id="selectedTrip.id"
-        :selected-date="selectedTrip.days[dayIndex].date"
-        :selected-place="selectedPlace"
+        :selected-date="currentDay.date"
         class="hidden"
-      />
+        @refresh="refresh"
+        />
+
 
       <draggable
-        :list="currentDay.spots"
+        :list="itinerarySpots"
         item-key="id"
         ghost-class="bg-yellow-100"
         animation="200"
         @end="updateOrder"
       >
+
         <template #item="{ element: p, index }">
           <li class="mb-4 border-b bg-gray-500 list-none flex justify-between rounded-2xl w-full relative items-stretch">
             <div class="w-1/2 p-3">
@@ -78,7 +79,7 @@
         </template>   
       </draggable>
 
-      <div v-if="currentDay.spots?.length === 0" class="text-gray-400 mb-2">
+      <div v-if="itinerarySpots.length === 0" class="text-gray-400 mb-2">
         尚未加入任何景點
       </div>
     </div>
@@ -89,46 +90,81 @@
   </template>
   
   <script setup>
-import { computed, ref, watch } from 'vue';
+import { ref, computed, toRefs, onMounted, watch } from 'vue';
 import draggable from 'vuedraggable';
 import Itinerary from './Itinerary.vue';
+import axios from 'axios';
 
+const API_URL = import.meta.env.VITE_API_URL;
 
 const itineraryRef = ref(null);
 
 const props = defineProps({
   selectedTrip: Object,
   dayIndex: Number,
-  selectedPlace: Object,
 });
+const { selectedTrip, dayIndex } = toRefs(props);
 
 const openMenuIndex = ref(null);
 
 
-const refreshKey = ref(0)
+// 暴露方法給父元件使用
+defineExpose({
+  refresh
+});
 
-watch(() => itineraryRef.value?.itineraryPlaces?.length, () => {
-  refreshKey.value++
-})
-
-
+//取得目前日期
 const currentDay = computed(() => {
-  refreshKey.value
-  const dateObj = props.selectedTrip?.days?.[props.dayIndex];
-  const date = dateObj?.date || '';
-  const spots = itineraryRef.value?.itineraryPlaces?.filter(p => p.date === date) || [];
-  return { date, spots };
+  return selectedTrip.value?.days?.[dayIndex.value] || null;
+});
+
+const itinerarySpots = ref([]);
+
+//更新景點資料
+async function refresh() {
+  if (!selectedTrip.value?.id || !currentDay.value?.date) {
+    return;
+  }
+
+  try {
+    // 直接向 API 請求最新資料
+    const res = await axios.get(`${API_URL}/api/itinerary/places`, {
+      params: {
+        itineraryId: selectedTrip.value.id,
+        date: currentDay.value.date
+      },
+    });
+
+    // 直接更新 DailyPlan 的資料
+    itinerarySpots.value = res.data.places
+      .filter(p => p.date === currentDay.value.date)
+      .sort((a, b) => a.arrivalHour - b.arrivalHour);
+
+  } catch (error) {
+    console.error("載入行程失敗", error);
+  }
+}
+
+// 元件掛載時載入資料
+onMounted(() => {
+  refresh();
+});
+
+// 監聽日期變化時重新載入
+watch(() => currentDay.value?.date, () => {
+  refresh();
 });
 
 
-const toggleMenu = (index) => {
+function toggleMenu(index) {
   openMenuIndex.value = openMenuIndex.value === index ? null : index;
-};
+}
 
 function formatTime(hour, minute) {
   return `${String(hour ?? 0).padStart(2, '0')}:${String(minute ?? 0).padStart(2, '0')}`;
 }
 
+//呼叫子層
 function startEditing(p) {
   itineraryRef.value?.startEditing(p);
 }
@@ -145,8 +181,22 @@ function removePlace(p) {
   itineraryRef.value?.removePlace(p);
 }
 
+
+//更新排序
 function updateOrder() {
-  itineraryRef.value?.updateOrder();
+  const newOrder = itinerarySpots.value.map((p, i) => ({
+    id: p.id,
+    placeOrder: i + 1,
+  }));
+  axios.put(`${API_URL}/api/itinerary/places/reorder`, { places: newOrder })
+    .then(() => {
+
+      console.log('排序更新成功');
+    })
+    .catch(() => {
+      alert('排序更新失敗');
+    });
 }
 
-  </script>
+
+</script>

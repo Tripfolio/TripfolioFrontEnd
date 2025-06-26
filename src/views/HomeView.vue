@@ -1,6 +1,5 @@
 <template>
   <div class="homepage-bg overflow-x-hidden">
-
     <section class="min-h-screen  flex justify-center">
       <transition name="fade-landing">
         <div class="landing fixed inset-0 bg-white text-gray-400 flex justify-center items-center" v-if="show">
@@ -17,38 +16,9 @@
           </div>
         </div>
       </transition>
-      <div class="px-4 py-6 ">
-        <div class="w-[80vw] mx-auto">
-          <header
-            class="flex custom-frosted items-center rounded-[32px] px-6 py-2"
-          >
-            <!-- 左 -->
-            <div class="flex-none font-bold">logo</div>
-            <!-- 中 -->
-            <nav
-              class="flex-1 flex justify-center space-x-6 items-center text-gray-700"
-            >
-              <button class="flex items-center space-x-1">
-                <RouterLink to="/map" class="underline">探索</RouterLink>
-              </button>
-              <button class="flex items-center space-x-1">
-                <span>社群</span>
-              </button>
-              <button class="flex items-center space-x-1">
-                <span>關於我們</span>
-              </button>
-            </nav>
-            <!-- 右 -->
-            <div class="flex-none text-gray-700">
-              <RouterLink to="/signup" class="underline">註冊</RouterLink>
-              |
-              <RouterLink to="/login" class="underline">登入</RouterLink>
-            </div>
-          </header>
-        </div>
-        <div class="w-[100vw]">
+      <div class="w-[100vw]">
           <HomeCarousel/>
-          <div class="w-[60vw] mx-auto -mt-6 z-10 relative">
+          <div class="w-[60vw] mx-auto mt-20 z-10 relative">
             <section class="bg-gray-800/30  custom-frosted backdrop-blur-[30px] text-white rounded-4xl py-3 px-6 shadow-md">
               <div
                 class="flex flex-col md:flex-row md:items-center space-y-4 md:space-y-0 md:space-x-4"
@@ -155,8 +125,10 @@
               </div>
             </section>
           </div>
-        </div>
       </div>
+    </section>
+
+
       <!-- <div v-if="placeDetails.length" class="w-full mx-auto">
         <div class="backdrop-blur-lg rounded-2xl shadow-xl px-6 py-4 space-y-3">
           <div
@@ -191,9 +163,8 @@
           </div>
         </div>
       </div> -->
-    </section>
 
-    <section class="min-h-[500px] flex relative ">
+    <section class="min-h-[500px] flex relative">
       <h2 class="text-4xl font-bold text-lef ml-40 mt-30" data-aos="fade-up" data-aos-duration="1000">
         <p class="text-5xl tracking-[15px]">TRIPFOLIO</p>
         <p class="ml-30 mt-5 text-3xl font-medium tracking-wider"> Where your journey begins</p>
@@ -210,9 +181,9 @@
 
       <div class="relative ml-auto mr-50">
         <img :src="taiwan"  ref="mapImg" alt="台灣地圖" class="w-auto max-w-[500px] h-auto  " data-aos="fade-up" data-aos-duration="1000" />
-        <img :src="marker1" v-show="showMarker1" alt="marker" class="absolute z-50 top-[18%] left-[40%] w-16 h-16 fade-in-down will-change: transform" />
-        <img :src="marker2" v-show="showMarker2" alt="marker" class="absolute z-50 top-[30%] left-[60%] w-16 h-16 fade-in-down will-change: transform" />
-        <img :src="marker3" v-show="showMarker3" alt="marker" class="absolute z-50 top-[50%] left-[30%] w-16 h-16 fade-in-down will-change: transform" />
+        <img src="/mapIcons/amusement_park.svg" v-show="showMarker1" alt="marker" class="absolute z-30 top-[18%] left-[40%] w-16 h-16 fade-in-down will-change: transform" />
+        <img src="/mapIcons/restaurant.svg" v-show="showMarker2" alt="marker" class="absolute z-30 top-[30%] left-[60%] w-16 h-16 fade-in-down will-change: transform" />
+        <img src="/mapIcons/cafe.svg" v-show="showMarker3" alt="marker" class="absolute z-30 top-[50%] left-[30%] w-16 h-16 fade-in-down will-change: transform" />
       </div>
     </section>
     
@@ -281,9 +252,25 @@
 
     <!-- <section class="min-h-screen" data-aos="fade-up">社群</section> -->
 
+    <section class="mt-10 p-6">
+            <p class="mb-2">其他連結 我先放這</p>
+            <div class="flex flex-wrap gap-4">
+              <RouterLink to="/emailSettings" class="underline"
+                >Email 通知</RouterLink
+              >
+              <RouterLink to="/profile" class="underline"
+                >會員資料修改</RouterLink
+              >
+              <RouterLink to="/calendar" class="underline"
+                >連結 Google Calendar</RouterLink
+              >
+              <RouterLink to="/schedule" class="underline">個人行程</RouterLink>
+              <RouterLink to="/community">社群貼文</RouterLink>
+            </div>
+    </section>
+
   </div>
 </template>
-//記得把email routes拿回來
 
 <script setup>
 import { ref, onMounted, onUnmounted } from "vue";
@@ -295,9 +282,6 @@ import AOS from 'aos'
 import 'aos/dist/aos.css'
 import HomeCarousel from '../components/HomeCarousel.vue';
 import taiwan from '../assets/HomePage/taiwan.png';
-import marker1 from '../assets/icons/mapIcons/amusement_park.svg';
-import marker2 from '../assets/icons/mapIcons/restaurant.svg';
-import marker3 from '../assets/icons/mapIcons/cafe.svg';
 import s1 from '../assets/HomePage/s1.png';
 import s2 from '../assets/HomePage/s2.png';
 import s3 from '../assets/HomePage/s3.png';
@@ -463,12 +447,6 @@ onUnmounted(() => {
   animation: fadeInDown 0.6s ease-out forwards;
 }
 
-.custom-frosted {
-  background: rgba(0, 0, 0, 0.2);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.25);
-  opacity: 0.8;
-  backdrop-filter: blur(100px);
-}
 
 @keyframes fadeout {
   0% { opacity: 1; }
