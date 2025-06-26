@@ -164,18 +164,18 @@
         </div>
       </div> -->
 
-    <section class="min-h-[500px] flex relative">
+    <section class="min-h-[500px] flex relative mt-28">
       <h2 class="text-4xl font-bold text-lef ml-40 mt-30" data-aos="fade-up" data-aos-duration="1000">
         <p class="text-5xl tracking-[15px]">TRIPFOLIO</p>
         <p class="ml-30 mt-5 text-3xl font-medium tracking-wider"> Where your journey begins</p>
       </h2>
 
       <div class="relative mt-6 h-4">
-        <div data-aos="fade-up" class="absolute right-60 top-80 w-32 min-h-10 bg-black rounded-full flex items-center justify-center">
-          <p class="text-white">hsjdhfhdfkajhd</p>
+        <div data-aos="fade-up" class="absolute right-60 top-80 w-50 min-h-10 bg-black rounded-full flex items-center justify-center">
+          <p class="text-white pt-3 pb-3 pl-5 pr-5">高自由度行程規劃</p>
         </div>
         <div data-aos="fade-up" data-aos-delay="300" class="absolute right-60 top-100 w-32 min-h-10 bg-black rounded-full flex items-center justify-center">
-          <p class="text-white">hsjdhfhdfkajhd</p>
+          <p class="text-white">輕鬆篩選地點</p>
         </div>
       </div>
 
@@ -250,7 +250,9 @@
       </div>
     </section>
 
-    <!-- <section class="min-h-screen" data-aos="fade-up">社群</section> -->
+    <section class="min-h-[600px] px-6 py-16">
+      <HomeSchedule />
+    </section>
 
     <section class="mt-10 p-6">
             <p class="mb-2">其他連結 我先放這</p>
@@ -281,6 +283,7 @@ import { useCategoryMenu } from "../composable/useCategoryMenu";
 import AOS from 'aos'
 import 'aos/dist/aos.css'
 import HomeCarousel from '../components/HomeCarousel.vue';
+import HomeSchedule from "../components/HomeSchedule.vue";
 import taiwan from '../assets/HomePage/taiwan.png';
 import s1 from '../assets/HomePage/s1.png';
 import s2 from '../assets/HomePage/s2.png';
