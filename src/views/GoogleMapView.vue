@@ -256,12 +256,13 @@ import { useCategoryMenu } from "../composable/useCategoryMenu";
 import { useMapSearch, SearchType } from "../composable/useMapSearch";
 import NavBar from "../components/NavBar.vue";
 
-const emit = defineEmits(["call-itinerary"]);
+const emit = defineEmits(["call-itinerary", "place-added"]);
 
 const props = defineProps({
   trip: Object,
   currentDayIndex: Number,
   dailyPlanRef: Object,
+  scheduleDetailRef: Object,
 });
 
 const { trip, currentDayIndex } = toRefs(props);
@@ -321,23 +322,27 @@ function scrollRight() {
 
 //import
 function callItinerary() {
-  const place = selectedPlace.value;
   const date = selectedDate.value?.date;
+  const place = selectedPlace.value;
 
   if (!place || !date) {
-    alert("缺少地點或日期，無法加入行程");
+    alert("請選擇地點與日期");
     return;
   }
 
-  if (itineraryRef.value?.addPlace) {
-    itineraryRef.value.addPlace(place, date).then((success) => {
-      if (success) {
-        props.dailyPlanRef?.refresh?.();
-        alert("成功加入行程！");
-      }
-    });
+  const success = itineraryRef.value?.addPlace(place, date);
+
+  if (success) {
+    emit("place-added", { place, date });
+
+    if (props.scheduleDetailRef?.refreshDailyPlan) {
+      props.scheduleDetailRef.refreshDailyPlan();
+    }
+
+    alert("成功加入行程！");
   }
 }
+
 
 const {
   categories,
@@ -460,7 +465,7 @@ function moveToCity(event) {
       (position) => {
         const center = new google.maps.LatLng(
           position.coords.latitude,
-          position.coords.longitude,
+          position.coords.longitude
         );
         map.value.setCenter(center);
         map.value.setZoom(15);
@@ -472,7 +477,7 @@ function moveToCity(event) {
       },
       () => {
         console.log("無法取得你的定位！");
-      },
+      }
     );
   }
 
@@ -616,7 +621,7 @@ function calculateRoute(origin, destination) {
       } else {
         alert("路線規劃失敗：" + status);
       }
-    },
+    }
   );
 }
 
@@ -676,22 +681,22 @@ function locateUser() {
     (error) => {
       isLocated.value = true;
       alert("無法取得你的定位資訊", error);
-    },
+    }
   );
 }
-// 這段還是引用不到，晚點再看
+
 function getPlaceIconUrl(types) {
-  if (types && types.length > 0) {
-    return `/icons/mapIcons/${types[0]}.svg`;
+  for (const type of types) {
+    return `src/assets/icons/mapIcons/${type}.svg`;
   }
-  return "/icons/mapIcons/default.svg";
+  return "src/assets/icons/mapIcons/default.svg";
 }
 
 watch(
   () => route.query.city,
   (newCity) => {
     selectedCityName.value = newCity || "none";
-  },
+  }
 );
 
 watch(selectedPlace, (newVal) => {
@@ -733,7 +738,7 @@ watch(
         location: map.value.getCenter(),
       });
     }
-  },
+  }
 );
 
 onMounted(async () => {
@@ -844,7 +849,7 @@ onMounted(async () => {
               selectedPlace.value = null;
               calculateRoute(
                 selectedMarkers[0].getPosition(),
-                selectedMarkers[1].getPosition(),
+                selectedMarkers[1].getPosition()
               );
             }
           } else {
@@ -859,7 +864,7 @@ onMounted(async () => {
     mapClickListener = google.maps.event.addListener(
       map.value,
       "click",
-      handleClickOutside,
+      handleClickOutside
     );
   } catch (err) {
     alert("Google Maps 載入失敗");
@@ -879,6 +884,7 @@ onUnmounted(() => {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
 .slide-fade-enter-active,
 .slide-fade-leave-active {
   transition: all 0.4s ease;
@@ -889,3 +895,4 @@ onUnmounted(() => {
   opacity: 0;
 }
 </style>
+

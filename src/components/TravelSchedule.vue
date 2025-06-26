@@ -130,14 +130,6 @@
         </button>
       </div>
     </form>
-    <!-- 新增成功，顯示前往編輯按鈕 -->
-    <div v-if="createdScheduleId" class="mt-6 text-right">
-      <RouterLink
-        :to="`/schedule/${createdScheduleId}`"
-        class="text-blue-600 hover:underline"
-        >查看並繼續編輯行程</RouterLink
-      >
-    </div>
   </div>
 </template>
 
@@ -266,7 +258,7 @@ const scheduleSubmit = async () => {
     const newId = res.data.schedule.id;
     createdScheduleId.value = newId;
 
-    alert("儲存成功，你可以點擊下方按鈕前往編輯");
+    alert("儲存成功，你可以關閉表單點擊行程進入編輯");
     isDirty.value = false;
 
     // 通知父元件做刷新
