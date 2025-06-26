@@ -2,7 +2,7 @@
   <Swiper
     :modules="modules"
     :slides-per-view="1.2"
-    :space-between="20"
+    :space-between="40"
     :loop="true"
     :centered-slides="true" 
     :autoplay="{ delay: 3000 }"
@@ -10,9 +10,9 @@
   >
     <SwiperSlide v-for="(block, index) in blocks" :key="index" >
       <section
-        class="mt-10 h-[500px] bg-gray-300 rounded-[3rem] shadow-inner flex items-center justify-center text-2xl font-bold"
+        class="mt-10 h-[550px] flex "
       >
-        {{ block.text }}
+        <img :src="block.img" alt="輪播圖片" class="w-full h-full object-cover rounded-[3rem]" loading="lazy" />
       </section>
     </SwiperSlide>
   </Swiper>
@@ -23,14 +23,17 @@ import { Swiper, SwiperSlide } from 'swiper/vue'
 import { Autoplay } from 'swiper/modules'
 import 'swiper/css'
 import 'swiper/css/autoplay'
+import img1 from '@/assets/HomePage/banner1.png'
+import img2 from '@/assets/HomePage/banner1.png'
+import img3 from '@/assets/HomePage/banner1.png'
+import img4 from '@/assets/HomePage/banner1.png'
 
 const modules = [Autoplay]
 const blocks = [
-  { text: '輪播區塊 1' },
-  { text: '輪播區塊 2' },
-  { text: '輪播區塊 3' },
-  { text: '輪播區塊 4' },
-  { text: '輪播區塊 5' },
+  { img: img1 },
+  { img: img2 },
+  { img: img3 },
+  { img: img4 },
 ]
 </script>
 

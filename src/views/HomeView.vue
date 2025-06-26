@@ -2,7 +2,7 @@
   <div class="homepage-bg overflow-x-hidden">
 
     <section class="min-h-screen  flex justify-center">
-      <!-- <transition name="fade-landing">
+      <transition name="fade-landing">
         <div class="landing fixed inset-0 bg-white text-gray-400 flex justify-center items-center" v-if="show">
           <div class="loading text-5xl tracking-[0.4em] whitespace-no-wrap" >
             <span style="--i: 0">T</span>
@@ -16,7 +16,7 @@
             <span style="--i: 8;; margin-right: -0.4em;">O</span>
           </div>
         </div>
-      </transition> -->
+      </transition>
       <div class="px-4 py-6 ">
         <div class="w-[80vw] mx-auto">
           <header
@@ -48,7 +48,7 @@
         </div>
         <div class="w-[100vw]">
           <HomeCarousel/>
-          <div class="w-[60vw] mx-auto -mt-16 z-10 relative">
+          <div class="w-[60vw] mx-auto -mt-6 z-10 relative">
             <section class="bg-gray-800/30  custom-frosted backdrop-blur-[30px] text-white rounded-4xl py-3 px-6 shadow-md">
               <div
                 class="flex flex-col md:flex-row md:items-center space-y-4 md:space-y-0 md:space-x-4"
@@ -195,10 +195,20 @@
 
     <section class="min-h-[500px] flex relative ">
       <h2 class="text-4xl font-bold text-lef ml-40 mt-30" data-aos="fade-up" data-aos-duration="1000">
-        TRIPFOLIO：<br>
-        Where your journey begins
+        <p class="text-5xl tracking-[15px]">TRIPFOLIO</p>
+        <p class="ml-30 mt-5 text-3xl font-medium tracking-wider"> Where your journey begins</p>
       </h2>
-      <div class="relative ml-auto mr-60">
+
+      <div class="relative mt-6 h-4">
+        <div data-aos="fade-up" class="absolute right-60 top-80 w-32 min-h-10 bg-black rounded-full flex items-center justify-center">
+          <p class="text-white">hsjdhfhdfkajhd</p>
+        </div>
+        <div data-aos="fade-up" data-aos-delay="300" class="absolute right-60 top-100 w-32 min-h-10 bg-black rounded-full flex items-center justify-center">
+          <p class="text-white">hsjdhfhdfkajhd</p>
+        </div>
+      </div>
+
+      <div class="relative ml-auto mr-50">
         <img :src="taiwan"  ref="mapImg" alt="台灣地圖" class="w-auto max-w-[500px] h-auto  " data-aos="fade-up" data-aos-duration="1000" />
         <img :src="marker1" v-show="showMarker1" alt="marker" class="absolute z-50 top-[18%] left-[40%] w-16 h-16 fade-in-down will-change: transform" />
         <img :src="marker2" v-show="showMarker2" alt="marker" class="absolute z-50 top-[30%] left-[60%] w-16 h-16 fade-in-down will-change: transform" />
@@ -208,7 +218,7 @@
     
     <section class="min-h-[600px] px-6 py-16">
       <!-- 標題區 -->
-      <h2 class="text-4xl font-bold text-center mb-20" data-aos="fade-up" data-aos-duration="1000" data-aos-anchor-placement="top-center">
+      <h2 class="text-4xl font-bold text-center mb-20 mt-10" data-aos="fade-up" data-aos-duration="1000" data-aos-anchor-placement="top-center">
         讓分享，成為彼此的路標
       </h2>
 
@@ -441,12 +451,12 @@ onUnmounted(() => {
 }
 
 .landing {
-  animation: fadeout 6s forwards;
+  animation: fadeout 3s forwards;
   z-index: 9999;
 }
 
 .loading span {
-  animation: blur 1.5s calc(var(--i) / 5 * 1s) alternate infinite;
+  animation: blur 1.5s calc(var(--i) / 5 * 1s) alternate;
 }
 
 .fade-in-down {
