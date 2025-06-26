@@ -4,23 +4,6 @@
       <div class="flex items-center space-x-4">
         <RouterLink to="/community/posts" class="text-xl font-bold text-gray-800">社群/貼文</RouterLink>
       </div>
-      <nav class="flex items-center space-x-6">
-        <a href="#" class="text-gray-600 hover:text-gray-900 flex items-center space-x-1">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
-          </a>
-        <a href="#" class="text-gray-600 hover:text-gray-900">探索</a>
-        <a href="#" class="text-gray-600 hover:text-gray-900">社群</a>
-        <a href="#" class="text-gray-600 hover:text-gray-900">關於我們</a>
-        <div class="relative group">
-          <button class="flex items-center text-gray-600 hover:text-gray-900 focus:outline-none">
-            地區
-            <svg class="ml-1 w-4 h-4 transform group-hover:rotate-180 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-          </button>
-          </div>
-        <a href="#" class="text-gray-600 hover:text-gray-900">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-          </a>
-      </nav>
       <div class="flex items-center">
         <a href="#" class="text-gray-600 hover:text-gray-900">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
