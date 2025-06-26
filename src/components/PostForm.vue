@@ -125,14 +125,12 @@ function handleImageUpload(e) {
 }
 
 // 假設這些函式已經存在於您的 script 中，因為 template 需要調用它們
-// 如果它們不存在，請將它們加入您的 script 裡
 const goBack = () => {
   router.back();
 };
 
 const nextStep = async () => {
   // 這裡假設 nextStep 會觸發 submitPost
-  // 如果需要不同的行為，請在 script 中修改 nextStep 邏輯
   await submitPost();
 };
 
