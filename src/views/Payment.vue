@@ -26,28 +26,38 @@
         </div>
 
         <div class="border-t border-gray-200 pt-6 mt-6">
-          <p class="text-lg font-semibold text-gray-700 mb-4">或使用信用卡付款</p>
-          <p v-if="dropinisReady" class="text-gray-600 mb-4 text-sm">
-            （測試用卡號： 4111 1111 1111 1111 ）
-          </p>
-          <div id="dropin-container" class="mb-6 border border-gray-300 rounded-lg p-2 bg-white min-h-[100px] flex items-center justify-center bg-gray-50 border-gray-200 p-4"></div>
-          <div class="flex flex-col space-y-4">
-            <button
-              @click="initDropin"
-              :disabled="braintreeLoading || linePayLoading"
-              v-if="!dropinisReady"
-              class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg text-lg transition duration-300 transform hover:scale-105 shadow-md disabled:opacity-60 disabled:cursor-not-allowed"
-            >
-              {{ braintreeLoading ? "載入中..." : "初始化信用卡付款" }}
-            </button>
-            <button
-              v-if="dropinisReady"
-              @click="submitBraintreePayment"
-              :disabled="braintreeLoading || linePayLoading"
-              class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg text-lg transition duration-300 transform hover:scale-105 shadow-md disabled:opacity-60 disabled:cursor-not-allowed"
-            >
-              確認信用卡付款
-            </button>
+          <button
+            @click="toggleCreditCardPayment"
+            v-if="!showCreditCardDetails"
+            class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg text-lg transition duration-300 transform hover:scale-105 shadow-md disabled:opacity-60 disabled:cursor-not-allowed"
+          >
+            使用信用卡付款
+          </button>
+
+          <div v-if="showCreditCardDetails">
+            <p class="text-lg font-semibold text-gray-700 mb-4">信用卡付款</p>
+            <p v-if="dropinisReady" class="text-gray-600 mb-4 text-sm">
+              （測試用卡號： 4111 1111 1111 1111 ）
+            </p>
+            <div id="dropin-container" class="mb-6 border border-gray-300 rounded-lg p-2 bg-white min-h-[100px] flex items-center justify-center bg-gray-50 border-gray-200 p-4"></div>
+            <div class="flex flex-col space-y-4">
+              <button
+                @click="initDropin"
+                :disabled="braintreeLoading || linePayLoading"
+                v-if="!dropinisReady"
+                class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg text-lg transition duration-300 transform hover:scale-105 shadow-md disabled:opacity-60 disabled:cursor-not-allowed"
+              >
+                {{ braintreeLoading ? "載入中..." : "初始化信用卡付款" }}
+              </button>
+              <button
+                v-if="dropinisReady"
+                @click="submitBraintreePayment"
+                :disabled="braintreeLoading || linePayLoading"
+                class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg text-lg transition duration-300 transform hover:scale-105 shadow-md disabled:opacity-60 disabled:cursor-not-allowed"
+              >
+                確認信用卡付款
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -69,6 +79,8 @@ const dropinInstance = ref(null);
 const dropinisReady = ref(false);
 const braintreeLoading = ref(false);
 const paymentAmount = ref("30");
+
+const showCreditCardDetails = ref(false);
 
 const getToken = () => localStorage.getItem('token');
 
@@ -206,6 +218,13 @@ const submitBraintreePayment = async () => {
     alert("信用卡付款失敗，請稍後再試。");
   } finally {
     braintreeLoading.value = false;
+  }
+};
+
+const toggleCreditCardPayment = () => {
+  showCreditCardDetails.value = !showCreditCardDetails.value;
+  if (showCreditCardDetails.value && !dropinInstance.value) {
+    initDropin();
   }
 };
 
