@@ -1,4 +1,5 @@
 <template>
+  <NaveBar class="absolute" />
   <Itinerary
     ref="itineraryRef"
     :trip-id="trip?.id"
@@ -69,64 +70,72 @@
   </div>
 
   <div ref="mapRef" class="w-screen h-screen m-0 p-0"></div>
-  <div
-    v-if="placeDetails.length"
-    class="absolute bottom-2 left-1/2 -translate-x-1/2 z-[3] w-[92%] max-w-screen-xl"
+  <button
+    class="absolute bottom-25 left-8 text-2xl w-12 h-12 rounded-full bg-gray-400/30 backdrop-blur-2xl"
+    @click="showCards = !showCards"
   >
+    📌
+  </button>
+  <transition name="slide-fade">
     <div
-      class="relative bg-white/80 backdrop-blur-lg rounded-2xl shadow-xl px-6 py-4"
+      v-show="showCards && placeDetails.length"
+      class="absolute bottom-2 left-1/2 -translate-x-1/2 z-[3] w-[70%] max-w-screen-xl"
     >
-      <button
-        @click="scrollLeft"
-        class="absolute left-0 top-1/2 -translate-y-1/2 z-20 bg-white/90 hover:bg-white shadow px-3 py-2 rounded-full"
-      >
-        ‹
-      </button>
-
-      <div
-        ref="cardContainer"
-        class="flex gap-4 overflow-x-auto scroll-smooth px-4 pr-6 scrollbar-hidden snap-x snap-mandatory"
-      >
-        <div
-          v-for="(place, index) in placeDetails"
-          :key="index"
-          @click="selectedPlace = place"
-          class="w-[70vw] sm:w-[250px] flex-shrink-0 bg-white rounded-xl shadow p-3 hover:shadow-md transition duration-200 cursor-pointer snap-start"
+      <div class="card-container-style relative rounded-2xl px-15 py-4">
+        <button
+          @click="scrollLeft"
+          class="absolute left-0 top-1/2 -translate-y-1/2 z-20 bg-white/90 hover:bg-white shadow px-3 py-2 rounded-full"
         >
-          <img
-            :src="place.photos?.[0]?.getUrl({ maxWidth: 800 }) || defaultImage"
-            @error="(e) => (e.target.src = defaultImage)"
-            alt="地點圖片"
-            class="w-full aspect-[3/2] object-cover rounded-md mb-2"
-          />
-          <h2 class="text-sm font-semibold truncate" :title="place.name">
-            {{ place.name }}
-          </h2>
-          <p
-            v-if="place.rating"
-            class="text-xs text-yellow-600 mt-1 whitespace-nowrap overflow-hidden text-ellipsis"
-          >
-            ⭐ {{ place.rating }} / {{ place.user_ratings_total }} 則評價
-          </p>
-        </div>
-        <div v-if="hasMoreResults" class="flex items-center justify-center">
-          <button
-            class="bg-gray-400 text-white py-2 px-4 rounded-full text-sm hover:bg-gray-700 whitespace-nowrap"
-            @click="loadNextPage"
-          >
-            更多
-          </button>
-        </div>
-      </div>
+          ‹
+        </button>
 
-      <button
-        @click="scrollRight"
-        class="absolute right-0 top-1/2 -translate-y-1/2 z-20 bg-white/90 hover:bg-white shadow px-3 py-2 rounded-full"
-      >
-        ›
-      </button>
+        <div
+          ref="cardContainer"
+          class="flex gap-4 overflow-x-auto scroll-smooth px-4 pr-6 scrollbar-hidden snap-x snap-mandatory"
+        >
+          <div
+            v-for="(place, index) in placeDetails"
+            :key="index"
+            @click="selectedPlace = place"
+            class="w-[70vw] sm:w-[250px] flex-shrink-0 bg- rounded-xl shadow p-3 hover:shadow-md transition duration-200 cursor-pointer snap-start card-style"
+          >
+            <img
+              :src="
+                place.photos?.[0]?.getUrl({ maxWidth: 800 }) || defaultImage
+              "
+              @error="(e) => (e.target.src = defaultImage)"
+              alt="地點圖片"
+              class="w-full aspect-[3/2] object-cover rounded-md mb-2"
+            />
+            <h2 class="text-sm font-semibold truncate" :title="place.name">
+              {{ place.name }}
+            </h2>
+            <p
+              v-if="place.rating"
+              class="text-xs text-yellow-600 mt-1 whitespace-nowrap overflow-hidden text-ellipsis"
+            >
+              ⭐ {{ place.rating }} / {{ place.user_ratings_total }} 則評價
+            </p>
+          </div>
+          <div v-if="hasMoreResults" class="flex items-center justify-center">
+            <button
+              class="bg-gray-400 text-white py-2 px-4 rounded-full text-sm hover:bg-gray-700 whitespace-nowrap"
+              @click="loadNextPage"
+            >
+              更多
+            </button>
+          </div>
+        </div>
+
+        <button
+          @click="scrollRight"
+          class="absolute right-0 top-1/2 -translate-y-1/2 z-20 bg-white/90 hover:bg-white shadow px-3 py-2 rounded-full"
+        >
+          ›
+        </button>
+      </div>
     </div>
-  </div>
+  </transition>
   <div
     v-if="selectedPlace"
     class="fixed inset-0 bg-black/50 flex items-center justify-center z-[4]"
@@ -234,26 +243,6 @@
       </div>
     </div>
   </aside>
-
-  <div
-    class="absolute bottom-10 left-5 bg-white/90 px-3 py-2 rounded-md shadow-md flex gap-2.5 items-center z-[1]"
-  >
-    <div v-if="result">
-      <p>兩點距離：{{ result.distance }}，預估時間：{{ result.duration }}</p>
-    </div>
-    <label class="flex items-center gap-2">
-      <span>選擇交通方式：</span>
-      <select
-        v-model="travelMode"
-        @change="recalculateRoute"
-        class="px-2 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-      >
-        <option value="DRIVING">🚗 開車</option>
-        <option value="WALKING">🚶‍♀️ 步行</option>
-        <option value="TRANSIT">🚇 大眾運輸</option>
-      </select>
-    </label>
-  </div>
 </template>
 
 <script setup>
@@ -265,6 +254,7 @@ import { cities } from "../constants/city";
 import { rawCategories, rawPlaceCategories } from "../constants/category";
 import { useCategoryMenu } from "../composable/useCategoryMenu";
 import { useMapSearch, SearchType } from "../composable/useMapSearch";
+import NavBar from "../components/NavBar.vue";
 
 const emit = defineEmits(["call-itinerary", "place-added"]);
 
@@ -302,6 +292,7 @@ const selectedPlacePhotoIndex = ref(0);
 const selectedCityName = ref(route.query.city || "none");
 
 const selectedMarkers = [];
+const showCards = ref(true);
 
 let markers = [];
 let service = null;
@@ -893,4 +884,15 @@ onUnmounted(() => {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+.slide-fade-enter-active,
+.slide-fade-leave-active {
+  transition: all 0.4s ease;
+}
+.slide-fade-enter-from,
+.slide-fade-leave-to {
+  transform: translateY(100%);
+  opacity: 0;
+}
 </style>
+
