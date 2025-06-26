@@ -1,19 +1,12 @@
 <template>
-
-<div class="w-full h-screen flex flex-col relative">
-  <div v-if="$route.path === '/'">
-        <RouterLink to="/map">景點地圖</RouterLink>
-        <RouterLink to="/signup">註冊</RouterLink>
-        <RouterLink to="/emailSettings">Email 通知</RouterLink>
-        <RouterLink to="/profile">會員資料修改</RouterLink>
-        <RouterLink to="/calendar">連結 Google Calendar</RouterLink>
-        <RouterLink to="/schedule">個人行程</RouterLink>
-        <RouterLink to="/login">登入頁面</RouterLink>
-        <RouterLink to="/activity">動態追蹤</RouterLink>
-  </div>
   <div class="relative">
+    <NavBar class="absolute top-5 left-1/2 w-[65%] -translate-x-1/2" />
     <RouterView />
-
   </div>
-</div> 
 </template>
+
+<script setup>
+import NavBar from "./components/NavBar.vue";
+</script>
+
+<style></style>

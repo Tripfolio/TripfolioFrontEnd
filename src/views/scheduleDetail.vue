@@ -188,9 +188,16 @@ watch(trip, (newTrip) => {
   }
 }, { deep: true });
 
+
+function refreshDailyPlan() {
+  // 呼叫 DailyPlan 的 refresh 方法
+  dailyPlanRef.value?.refresh?.();
+}
+
 // 給父層或地圖強制刷新 DailyPlan 用
 defineExpose({
-  dailyPlanRef,
+  refreshDailyPlan,
+  dailyPlanRef
 });
 
 
