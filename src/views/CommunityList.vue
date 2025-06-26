@@ -78,11 +78,14 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
+import { useRoute, useRouter } from "vue-router";
 import axios from "axios";
 import dayjs from "dayjs";
 import PostPopup from "../components/PostPopup.vue";
 
+const route = useRoute();
+const router = useRouter();
 const posts = ref([]);
 const token = localStorage.getItem("token");
 const showModal = ref(false);
@@ -176,7 +179,23 @@ const closeModal = () => {
 const openPostDetail = (post) => {
   selectedPost.value = post;
   showModal.value = true;
+  router.push("/community");
 };
+
+//動態追蹤用監聽網址變化
+watch(
+  () => route.query.postId,
+  (newPostId) => {
+    if (newPostId && posts.value.length) {
+      const foundPost = posts.value.find((p) => p.postId == newPostId);
+      if (foundPost) {
+        selectedPost.value = foundPost;
+        showModal.value = true;
+      }
+    }
+  },
+  { immediate: true },
+);
 
 onMounted(fetchPosts);
 </script>

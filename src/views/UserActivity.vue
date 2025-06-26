@@ -70,11 +70,13 @@ const fetchData = async () => {
         alert('請先登入會員')
         throw new Error('token 不存在')
     }
+
     const decoded = jwtDecode(token);
     const memberId = decoded.id;
+    const memberName = decoded.name;
 
     try {
-        //抓自己發過的行程
+        //篩選自己發過的行程
         const travelRes = await axios.get(`${import.meta.env.VITE_API_URL}/api/travelSchedule/user`,{
             headers: { Authorization: `Bearer ${token}`}
         })
@@ -94,21 +96,24 @@ const fetchData = async () => {
     }
 
     try {
-        //抓自己發過的貼文
-        const postRes = await axios.get(`${import.meta.env.VITE_API_URL}/api/community-post/me`,{
+        //篩選自己發過的貼文
+        const postRes = await axios.get(`${import.meta.env.VITE_API_URL}/api/community`,{
             headers: {Authorization: `Bearer ${token}`} 
         })
-        posts.value = postRes.data.posts.map(item => ({
-            id: item.postId,
-            title: item.scheduleTitle,
-            coverImage: item.coverURL
-        }));
+
+        posts.value = postRes.data.posts
+            .filter(item => item.memberId === decoded.id)
+            .map(item => ({
+                id: item.postId,
+                title: item.scheduleTitle,
+                coverImage: item.coverURL
+            }));
     } catch (err) {
         console.warn('取得貼文失敗', err)
     }
 
     try {
-            //抓自己收藏過的貼文
+            //篩選自己收藏過的貼文
         const collectRes = await axios.get(`${import.meta.env.VITE_API_URL}/api/favorites/user/${memberId}`, {
             headers: { Authorization: `Bearer ${token}` }
         });
@@ -127,7 +132,9 @@ onMounted(fetchData)
 watch(() => route.fullPath, fetchData)
 
 const goToTravel = id => router.push({ path: `/schedule/${id}`, query: { from: 'tracker' } })
-const goToPost = id => router.push(`/community/post/${id}`)
+const goToPost = (id) => {
+  router.push({ path: '/community', query: { postId: id } });
+};
 
 
 
