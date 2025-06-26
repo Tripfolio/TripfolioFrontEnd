@@ -132,16 +132,10 @@
     class="fixed inset-0 bg-black/50 flex items-center justify-center z-[4]"
     @click.self="selectedPlace = null"
   >
-    <div class="bg-white rounded-lg p-6 w-full max-w-md relative">
-      <h2 class="text-2xl font-bold mb-3">{{ selectedPlace.name }}</h2>
-      <p class="text-gray-600 text-sm mb-3">
-        {{ selectedPlace.formatted_address }}
-      </p>
-      <p v-if="selectedPlace.rating" class="text-yellow-600 mb-3">
-        ⭐ {{ selectedPlace.rating }}（共
-        {{ selectedPlace.user_ratings_total }} 則評價）
-      </p>
-      <div class="relative w-full aspect-[4/3]">
+    <div
+      class="solo-card-style w-full max-w-2xl p-3 border-2 border-white/30 shadow-[0_0_10px_1px_rgba(255,255,255,0.5)] bg-white/10 backdrop-blur-md flex rounded-lg relative gap-5"
+    >
+      <div class="relative">
         <button
           v-if="selectedPlace.photos && selectedPlace.photos.length > 1"
           @click.stop="
@@ -159,13 +153,13 @@
           :src="
             selectedPlace.photos && selectedPlace.photos.length
               ? selectedPlace.photos[selectedPlacePhotoIndex].getUrl({
-                  maxWidth: 800,
+                  maxWidth: 400,
                 })
               : defaultImage
           "
           @error="(e) => (e.target.src = defaultImage)"
           alt="地點圖片"
-          class="max-w-full aspect-[4/3] object-cover rounded-lg mt-2.5"
+          class="max-w-full aspect-[4/3] object-cover rounded-lg"
         />
         <button
           v-if="selectedPlace.photos && selectedPlace.photos.length > 1"
@@ -179,7 +173,25 @@
           ›
         </button>
       </div>
-      <button @click="callItinerary">🤍 加入行程</button>
+      <div class="mr-2.5">
+        <h2 class="text-2xl text-white mb-3 mt-10 break-words max-w-[20rem]">
+          {{ selectedPlace.name }}
+        </h2>
+        <p class="text-white text-sm mb-3">
+          {{ selectedPlace.formatted_address }}
+        </p>
+        <p v-if="selectedPlace.rating" class="text-yellow-600 mb-3">
+          ⭐ {{ selectedPlace.rating }}（共
+          {{ selectedPlace.user_ratings_total }} 則評價）
+        </p>
+
+        <button
+          @click="callItinerary"
+          class="absolute bottom-4 right-4 border px-4 py-1 rounded-2xl text-white"
+        >
+          加入行程+
+        </button>
+      </div>
     </div>
   </div>
 
@@ -352,7 +364,6 @@ function callItinerary() {
   }
 }
 
-
 const {
   categories,
   placeCategories,
@@ -474,7 +485,7 @@ function moveToCity(event) {
       (position) => {
         const center = new google.maps.LatLng(
           position.coords.latitude,
-          position.coords.longitude
+          position.coords.longitude,
         );
         map.value.setCenter(center);
         map.value.setZoom(15);
@@ -486,7 +497,7 @@ function moveToCity(event) {
       },
       () => {
         console.log("無法取得你的定位！");
-      }
+      },
     );
   }
 
@@ -630,7 +641,7 @@ function calculateRoute(origin, destination) {
       } else {
         alert("路線規劃失敗：" + status);
       }
-    }
+    },
   );
 }
 
@@ -690,7 +701,7 @@ function locateUser() {
     (error) => {
       isLocated.value = true;
       alert("無法取得你的定位資訊", error);
-    }
+    },
   );
 }
 
@@ -705,7 +716,7 @@ watch(
   () => route.query.city,
   (newCity) => {
     selectedCityName.value = newCity || "none";
-  }
+  },
 );
 
 watch(selectedPlace, (newVal) => {
@@ -747,7 +758,7 @@ watch(
         location: map.value.getCenter(),
       });
     }
-  }
+  },
 );
 
 onMounted(async () => {
@@ -858,7 +869,7 @@ onMounted(async () => {
               selectedPlace.value = null;
               calculateRoute(
                 selectedMarkers[0].getPosition(),
-                selectedMarkers[1].getPosition()
+                selectedMarkers[1].getPosition(),
               );
             }
           } else {
@@ -873,7 +884,7 @@ onMounted(async () => {
     mapClickListener = google.maps.event.addListener(
       map.value,
       "click",
-      handleClickOutside
+      handleClickOutside,
     );
   } catch (err) {
     alert("Google Maps 載入失敗");
