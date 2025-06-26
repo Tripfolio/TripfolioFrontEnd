@@ -23,6 +23,8 @@ const { defaultImage, tripId, selectedDate } = toRefs(props);
 const itineraryPlaces = ref([]);
 const API_URL = import.meta.env.VITE_API_URL;
 
+const trafficMap = ref({});
+
 onMounted(() => {
   loadItinerary();
   window.addEventListener("click", onClickOutside);
@@ -47,7 +49,7 @@ async function loadItinerary() {
     itineraryPlaces.value = res.data.places
       .filter(p => p.date === selectedDate.value)
       .sort((a, b) => a.arrivalHour - b.arrivalHour);
-
+    await fetchTrafficData(); //撈「交通資料」
     emit('refresh', itineraryPlaces.value);  // ← 這行通知父層
   } catch (error) {
     alert("載入行程失敗");
@@ -133,6 +135,8 @@ async function addPlace(place, date) {
     return false;
   }
   const photo = place.photos?.[0]?.getUrl({ maxWidth: 1000 }) || defaultImage.value;
+  const lat = place.geometry?.location?.lat?.();
+  const lng = place.geometry?.location?.lng?.();
 
   try {
     const res = await axios.post(`${API_URL}/api/itinerary/add-place`, {
@@ -141,6 +145,8 @@ async function addPlace(place, date) {
       name: place.name,
       address: typeof place.formatted_address === "object" ? place.formatted_address?.formatted_address : place.formatted_address,
       photo,
+      lat,
+      lng,
     });
     if (res.data.success) {
       await loadItinerary();
@@ -176,6 +182,24 @@ async function removePlace(p) {
 }
 
 
+//交通資料
+async function fetchTrafficData() {
+  try {
+    const res = await axios.get(`${API_URL}/api/traffic/get-all-traffic`, {
+      params: { itineraryId: tripId.value },
+    });
+    const map = {};
+    res.data.data.forEach(t => {
+      map[`${t.fromPlaceId}-${t.toPlaceId}`] = t;
+    });
+    trafficMap.value = map;
+  } catch (err) {
+    console.error("交通資料載入失敗", err);
+  }
+}
+
+
+
 defineExpose({
   addPlace,
   itineraryPlaces,
@@ -185,6 +209,7 @@ defineExpose({
   updateOrder,
   removePlace,
   formatTime,
+  trafficMap,
 });
 
 
