@@ -698,9 +698,11 @@ function locateUser() {
 
 function getPlaceIconUrl(types) {
   for (const type of types) {
-    return `src/assets/icons/mapIcons/${type}.svg`;
+    const path = `/mapIcons/${type}.svg`;
+    // 你也可以在這裡加上判斷是否這檔案存在（進階）
+    return path;
   }
-  return "src/assets/icons/mapIcons/default.svg";
+  return "/mapIcons/default.svg";
 }
 
 watch(
