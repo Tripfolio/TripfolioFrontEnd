@@ -178,17 +178,33 @@ const fetchPosts = async () => {
 const updatePost = (updatedPost) => {
   const index = posts.value.findIndex((p) => p.postId === updatedPost.postId);
   if (index !== -1) {
-    // 保留原有的互動欄位，只更新計數相關的欄位
-    posts.value[index] = {
-      ...posts.value[index],
-      commentCount: updatedPost.commentCount,
-      favoriteCount: updatedPost.favoriteCount,
-      // 保留其他可能更新的欄位
-      ...updatedPost,
-    };
+    // 只更新有值的欄位，避免覆蓋原有的計數
+    const updateData = { ...posts.value[index] };
+
+    // 只更新有值的計數欄位
+    if (updatedPost.commentCount !== undefined) {
+      updateData.commentCount = updatedPost.commentCount;
+    }
+    if (updatedPost.favoriteCount !== undefined) {
+      updateData.favoriteCount = updatedPost.favoriteCount;
+    }
+
+    // 更新其他欄位（如果有）
+    Object.keys(updatedPost).forEach((key) => {
+      if (
+        key !== "commentCount" &&
+        key !== "favoriteCount" &&
+        updatedPost[key] !== undefined
+      ) {
+        updateData[key] = updatedPost[key];
+      }
+    });
+
+    posts.value[index] = updateData;
+
     console.log(`更新貼文 ${updatedPost.postId} 的計數:`, {
-      commentCount: updatedPost.commentCount,
-      favoriteCount: updatedPost.favoriteCount,
+      commentCount: updateData.commentCount,
+      favoriteCount: updateData.favoriteCount,
     });
   }
 };

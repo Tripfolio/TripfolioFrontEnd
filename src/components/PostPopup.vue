@@ -15,8 +15,8 @@
       >
         <img
           :src="
-            post.coverURL ||
-            post.imageUrl ||
+            localPost.coverURL ||
+            localPost.imageUrl ||
             'https://picsum.photos/400/400?random'
           "
           alt="貼文照片"
@@ -33,14 +33,18 @@
           <div class="flex items-center flex-1">
             <img
               :src="
-                post.authorAvatar
-                || 'https://picsum.photos/30/30?random=4'
+                authorAvatar ||
+                localPost.authorAvatar ||
+                'https://picsum.photos/40/40?random=1'
               "
               class="avatar w-10 h-10 rounded-full mr-3"
+              @error="
+                $event.target.src = 'https://picsum.photos/40/40?random=1'
+              "
             />
             <div>
               <div class="font-semibold">
-                {{ post.authorName || "匿名使用者" }}
+                {{ localPost.authorName || "匿名使用者" }}
               </div>
               <div class="text-sm text-gray-600">
                 {{ scheduleTitle || "未命名行程" }}
@@ -60,20 +64,20 @@
           <!-- 貼文內容 -->
           <div class="post-body p-4 border-b">
             <p class="break-words whitespace-pre-wrap">
-              {{ post.content || "沒有內容" }}
+              {{ localPost.content || "沒有內容" }}
             </p>
           </div>
 
           <CommentSection
-            :post="post"
+            :post="localPost"
             @comment-added="handleCommentUpdate"
             class="overflow-scroll w-full"
           />
 
           <FavoriteButton
-            :postId="post.postId"
+            :postId="localPost.postId"
             :memberId="getCurrentUserId()"
-            :favoriteCount="post.favoriteCount"
+            :favoriteCount="localPost.favoriteCount"
             @favorite-toggled="handleFavoriteToggle"
             class="absolute bottom-5 right-10"
           />
@@ -115,6 +119,10 @@ const isSubmitting = ref(false);
 const isLoading = ref(false);
 const selectedPost = ref(null);
 const scheduleTitle = ref("未命名行程");
+const authorAvatar = ref("");
+
+// 本地 post 狀態，會隨著操作而更新
+const localPost = ref({ ...props.post });
 
 const close = () => {
   emit("close");
@@ -243,14 +251,15 @@ const getCurrentUserId = () => {
 
 const handleFavoriteToggle = (favoriteData) => {
   // 更新本地計數
-  if (favoriteData && favoriteData.postId === props.post.postId) {
-    const updatedPost = {
-      ...props.post,
+  if (favoriteData && favoriteData.postId === localPost.value.postId) {
+    // 更新本地狀態
+    localPost.value = {
+      ...localPost.value,
       favoriteCount: favoriteData.favoriteCount,
     };
 
     // 通知父組件更新
-    emit("update-post", updatedPost);
+    emit("update-post", localPost.value);
 
     console.log(`收藏計數更新: ${favoriteData.favoriteCount}`);
   }
@@ -258,14 +267,15 @@ const handleFavoriteToggle = (favoriteData) => {
 
 const handleCommentUpdate = (commentData) => {
   // 更新本地計數
-  if (commentData && commentData.postId === props.post.postId) {
-    const updatedPost = {
-      ...props.post,
+  if (commentData && commentData.postId === localPost.value.postId) {
+    // 更新本地狀態
+    localPost.value = {
+      ...localPost.value,
       commentCount: commentData.commentCount,
     };
 
     // 通知父組件更新
-    emit("update-post", updatedPost);
+    emit("update-post", localPost.value);
 
     console.log(`留言計數更新: ${commentData.commentCount}`);
   }
@@ -274,14 +284,26 @@ const handleCommentUpdate = (commentData) => {
 // 監聽 post 變化，重新獲取行程 title
 watch(
   () => props.post,
-  () => {
+  (newPost) => {
+    // 更新本地 post 狀態
+    localPost.value = { ...newPost };
     fetchScheduleTitle();
+    // 獲取發文者頭貼
+    if (newPost.memberId || newPost.authorId || newPost.userId) {
+      fetchAuthorAvatar(newPost.memberId || newPost.authorId || newPost.userId);
+    }
   },
   { immediate: true },
 );
 
 onMounted(() => {
   fetchScheduleTitle();
+  // 獲取發文者頭貼
+  if (props.post.memberId || props.post.authorId || props.post.userId) {
+    fetchAuthorAvatar(
+      props.post.memberId || props.post.authorId || props.post.userId,
+    );
+  }
 });
 </script>
 
