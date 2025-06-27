@@ -697,15 +697,10 @@ function locateUser() {
 
 function getPlaceIconUrl(types) {
   for (const type of types) {
-    const path = `/mapIcons/${type}.svg`;
-    // 你也可以在這裡加上判斷是否這檔案存在（進階）
-    return path;
-    const path = `/mapIcons/${type}.svg`;
-    return path;
+    return `/mapIcons/${type}.svg`;
   }
-  return "/mapIcons/default.svg";
+  return `/mapIcons/default.svg`;
 }
-
 
 watch(
   () => route.query.city,
