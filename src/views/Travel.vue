@@ -1,4 +1,20 @@
 <template>
+  <!-- Google Calendar通知 -->
+  <div class="relative">
+    <div v-if="googleCalendarMessage" :class="{
+      'fixed top-4 left-1/2 transform -translate-x-1/2 p-3 rounded-lg shadow-lg z-50 text-white': true,
+      'bg-blue-500': googleCalendarMessage.includes('正在建立行程') || googleCalendarMessage.includes('正在請求 Google 認證') || googleCalendarMessage.includes('Google 服務初始化中'),
+      'bg-green-500': googleCalendarMessage.includes('成功'),
+      'bg-red-500': !googleCalendarMessage.includes('成功') && !googleCalendarMessage.includes('正在建立行程') && !googleCalendarMessage.includes('正在請求 Google 認證') && !googleCalendarMessage.includes('Google 服務初始化中'),
+    }">
+      <p>{{ googleCalendarMessage }}</p>
+      <a v-if="googleCalendarEventLink" :href="googleCalendarEventLink" target="_blank" rel="noopener noreferrer" class="underline mt-1 block">
+        開啟 Google Calendar
+      </a>
+      <button @click="googleCalendarMessage = ''" class="absolute top-1 right-2 text-white text-xl">&times;</button>
+    </div>
+  </div>
+
   <div class="relative">
     <div class="flex h-screen">
       <!-- 左側：可放地圖或其他內容 -->
@@ -37,6 +53,22 @@
           </p>
           <p class="text-gray-500 text-sm mt-2">{{ item.description }}</p>
           <button @click.stop="deleteSchedule(item.id)" title="刪除行程" class="absolute bottom-2 right-2 text-gray-400 hover:text-red-500 text-xl">刪除行程</button>
+          <!-- Google Calendar button -->
+          <button 
+              @click.stop="handleAddToGoogleCalendar(item)" 
+              :disabled="googleCalendarLoading && currentProcessingTripId === item.id"
+              class="absolute bottom-2 left-2 text-gray-400 hover:text-blue-500 text-[12px] flex items-center">
+              <span v-if="googleCalendarLoading && currentProcessingTripId === item.id" class="flex items-center">
+                  <svg class="animate-spin -ml-1 mr-2 h-3 w-3 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  處理中...
+              </span>
+              <span v-else>
+                加入Google calendar
+              </span>
+            </button>
           </div>
         </div>
         <div v-else class="text-gray-400 text-center">尚未建立任何行程</div>
@@ -75,14 +107,14 @@
 
 
 <script setup>
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted, computed, watch } from 'vue';
 import { useRouter } from 'vue-router'
 import TravelSchedule from '@/components/TravelSchedule.vue';
 import axios from 'axios';
 import GoogleMapView from '@/views/GoogleMapView.vue';
 import ScheduleDetail from '@/views/scheduleDetail.vue';
 import { useTripStore } from '@/stores/tripStore';
-
+import { useGoogleCalendar } from '@/composable/useGoogleCalendar';
 
 const router = useRouter();
 const editingTripId = ref(null);
@@ -172,6 +204,32 @@ const handleCloseDetail = () => {
   tripStore.fetchTrips();
 };
 
+//Google calendar
+const { 
+  message: googleCalendarMessage, 
+  eventLink: googleCalendarEventLink, 
+  loading: googleCalendarLoading, 
+  authorizeAndCreateEvent 
+} = useGoogleCalendar();
+
+const currentProcessingTripId = ref(null);
+
+const handleAddToGoogleCalendar = async (tripItem) => {
+  currentProcessingTripId.value = tripItem.id;
+  await authorizeAndCreateEvent(tripItem);
+  currentProcessingTripId.value = null;
+};
+
+let messageTimeout = null;
+watch(googleCalendarMessage, (newVal) => {
+  if (newVal) {
+    clearTimeout(messageTimeout);
+    messageTimeout = setTimeout(() => {
+      googleCalendarMessage.value = '';
+      googleCalendarEventLink.value = '';
+    }, 5000); 
+  }
+});
 
 //刪除行程
 const deleteSchedule = async (id) => {
@@ -203,6 +261,9 @@ function callItinerary() {
 // 暴露方法給父元件使用
 defineExpose({
   refreshDailyPlan,
-  dailyPlanRef
+  dailyPlanRef,
+  googleCalendarMessage,
+  googleCalendarEventLink,
+  googleCalendarLoading,
 });
 </script>
