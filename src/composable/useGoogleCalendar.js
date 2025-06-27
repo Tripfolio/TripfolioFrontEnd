@@ -2,8 +2,8 @@ import { ref, onMounted } from 'vue';
 
 const CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 const API_KEY = import.meta.env.VITE_GOOGLE_API_KEY;
-const DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"];
-const SCOPES = "https://www.googleapis.com/auth/calendar.events";
+const DISCOVERY_DOCS = [import.meta.env.VITE_DISCOVERY_DOCS];
+const SCOPES = import.meta.env.VITE_SCOPES;
 
 const gapiRef = ref(null);
 const tokenClientRef = ref(null);
