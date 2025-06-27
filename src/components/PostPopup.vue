@@ -14,7 +14,11 @@
         class="post-image bg-[#0ff376] flex items-center justify-center w-[55%]"
       >
         <img
-          :src="post.coverURL"
+          :src="
+            localPost.coverURL ||
+            localPost.imageUrl ||
+            'https://picsum.photos/400/400?random'
+          "
           alt="貼文照片"
           class="w-full h-full object-cover"
         />
@@ -29,16 +33,21 @@
           <div class="flex items-center flex-1">
             <img
               :src="
-                post.authorAvatar || 'https://picsum.photos/400/300?random=4'
+                authorAvatar ||
+                localPost.authorAvatar ||
+                'https://picsum.photos/40/40?random=1'
               "
               class="avatar w-10 h-10 rounded-full mr-3"
+              @error="
+                $event.target.src = 'https://picsum.photos/40/40?random=1'
+              "
             />
             <div>
               <div class="font-semibold">
-                {{ post.authorName || "匿名使用者" }}
+                {{ localPost.authorName || "匿名使用者" }}
               </div>
               <div class="text-sm text-gray-600">
-                {{ post.scheduleTitle || "未命名行程" }}
+                {{ scheduleTitle || "未命名行程" }}
               </div>
             </div>
           </div>
@@ -55,15 +64,21 @@
           <!-- 貼文內容 -->
           <div class="post-body p-4 border-b">
             <p class="break-words whitespace-pre-wrap">
-              {{ post.content || "沒有內容" }}
+              {{ localPost.content || "沒有內容" }}
             </p>
           </div>
 
-          <CommentSection :post="post" class="overflow-scroll w-full" />
+          <CommentSection
+            :post="localPost"
+            @comment-added="handleCommentUpdate"
+            class="overflow-scroll w-full"
+          />
 
           <FavoriteButton
-            :postId="post.postId"
+            :postId="localPost.postId"
             :memberId="getCurrentUserId()"
+            :favoriteCount="localPost.favoriteCount"
+            @favorite-toggled="handleFavoriteToggle"
             class="absolute bottom-5 right-10"
           />
         </div>
@@ -102,6 +117,12 @@ const newComment = ref("");
 const liked = ref(false);
 const isSubmitting = ref(false);
 const isLoading = ref(false);
+const selectedPost = ref(null);
+const scheduleTitle = ref("未命名行程");
+const authorAvatar = ref("");
+
+// 本地 post 狀態，會隨著操作而更新
+const localPost = ref({ ...props.post });
 
 const close = () => {
   emit("close");
@@ -109,6 +130,34 @@ const close = () => {
 
 const toTravelPage = () => {
   console.log("跳轉到行程頁面");
+};
+
+// 獲取行程 title
+const fetchScheduleTitle = async () => {
+  console.log("fetchScheduleTitle 被調用");
+  console.log("props.post:", props.post);
+  console.log("props.post.title:", props.post.title);
+
+  if (props.post.title) {
+    try {
+      console.log(`正在獲取行程 ${props.post.title} 的標題`);
+      const res = await axios.get(
+        `${import.meta.env.VITE_API_URL}/api/travelSchedule/${props.post.title}`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        },
+      );
+      console.log("行程 API 回應:", res.data);
+      scheduleTitle.value = res.data.title || "未命名行程";
+      console.log("設置的 scheduleTitle:", scheduleTitle.value);
+    } catch (error) {
+      console.error("獲取行程標題失敗", error);
+      scheduleTitle.value = "未命名行程";
+    }
+  } else {
+    console.log("沒有 title，使用預設標題");
+    scheduleTitle.value = "未命名行程";
+  }
 };
 
 // 格式化時間
@@ -164,6 +213,29 @@ const formatTime = (timeString) => {
 //   }
 // };
 
+const refreshPost = async () => {
+  try {
+    // 嘗試獲取最新的貼文資訊
+    const res = await axios.get(
+      `${import.meta.env.VITE_API_URL}/api/allposts/${props.post.postId}`,
+    );
+
+    // 通知父組件更新列表中顯示的計數
+    emit("update-post", res.data.post || res.data);
+  } catch (error) {
+    console.error("更新貼文資訊失敗，嘗試手動更新計數", error);
+
+    // 如果 API 端點不存在，我們可以手動更新計數
+    // 這裡可以根據實際情況調整
+    const updatedPost = {
+      postId: props.post.postId,
+      commentCount: props.post.commentCount,
+      favoriteCount: props.post.favoriteCount,
+    };
+    emit("update-post", updatedPost);
+  }
+};
+
 const getCurrentUserId = () => {
   const token = localStorage.getItem("token");
   if (token) {
@@ -177,12 +249,62 @@ const getCurrentUserId = () => {
   return null;
 };
 
-// watch(
-//   () => post.authorName,
-//   (newVal) => {
-//     console.log('FavoriteButton 監聽到 memberName 變化:', newVal);
-//   }
-// );
+const handleFavoriteToggle = (favoriteData) => {
+  // 更新本地計數
+  if (favoriteData && favoriteData.postId === localPost.value.postId) {
+    // 更新本地狀態
+    localPost.value = {
+      ...localPost.value,
+      favoriteCount: favoriteData.favoriteCount,
+    };
+
+    // 通知父組件更新
+    emit("update-post", localPost.value);
+
+    console.log(`收藏計數更新: ${favoriteData.favoriteCount}`);
+  }
+};
+
+const handleCommentUpdate = (commentData) => {
+  // 更新本地計數
+  if (commentData && commentData.postId === localPost.value.postId) {
+    // 更新本地狀態
+    localPost.value = {
+      ...localPost.value,
+      commentCount: commentData.commentCount,
+    };
+
+    // 通知父組件更新
+    emit("update-post", localPost.value);
+
+    console.log(`留言計數更新: ${commentData.commentCount}`);
+  }
+};
+
+// 監聽 post 變化，重新獲取行程 title
+watch(
+  () => props.post,
+  (newPost) => {
+    // 更新本地 post 狀態
+    localPost.value = { ...newPost };
+    fetchScheduleTitle();
+    // 獲取發文者頭貼
+    if (newPost.memberId || newPost.authorId || newPost.userId) {
+      fetchAuthorAvatar(newPost.memberId || newPost.authorId || newPost.userId);
+    }
+  },
+  { immediate: true },
+);
+
+onMounted(() => {
+  fetchScheduleTitle();
+  // 獲取發文者頭貼
+  if (props.post.memberId || props.post.authorId || props.post.userId) {
+    fetchAuthorAvatar(
+      props.post.memberId || props.post.authorId || props.post.userId,
+    );
+  }
+});
 </script>
 
 <style scoped>
