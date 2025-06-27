@@ -1,5 +1,4 @@
 <template>
-  <NaveBar class="absolute" />
   <Itinerary
     ref="itineraryRef"
     :trip-id="trip?.id"
@@ -9,13 +8,13 @@
   />
 
   <div
-    class="navbar-style absolute top-22.5 right-35 -translate-x-1/2 z-[2] flex items-center gap-2.5 px-2 py-1 rounded-full"
+    class="navbar-style absolute top-7 right-0 -translate-x-1/2 z-[2] flex items-center gap-2.5 px-2 py-1 rounded-full"
   >
-    <div class="relative w-fit">
+    <div class="relative w-fit text-white/20">
       <select
         v-model="selectedCityName"
         @change="onCityChange($event)"
-        class="appearance-none bg-gray-500/80 backdrop-blur-4xl text-white text-sm py-1 pl-2 pr-3 rounded-full focus:outline-none hover:bg-gray-400 transition duration-200 cursor-pointer shadow-inner"
+        class="appearance-none navbar-style rounded-4xl text-sm py-1 pl-2 pr-3 focus:outline-none hover:bg-gray-400 transition duration-200 cursor-pointer shadow-inner"
       >
         <option value="none">當前</option>
         <option v-for="city in cities" :key="city.name" :value="city.name">
@@ -56,7 +55,7 @@
         type="text"
         v-model="searchQuery"
         placeholder="輸入地點"
-        class="w-[80%] rounded-full border-none text-white px-3 py-1.5 box-border text-base placeholder-white focus:outline-none"
+        class="w-[80%] rounded-full border-none px-3 py-1.5 box-border text-base placeholder-white focus:outline-none"
         ref="searchInput"
         @keyup.enter="searchPlace"
       />
@@ -97,7 +96,7 @@
             v-for="(place, index) in placeDetails"
             :key="index"
             @click="selectedPlace = place"
-            class="w-[70vw] sm:w-[250px] flex-shrink-0 bg- rounded-xl shadow p-3 hover:shadow-md transition duration-200 cursor-pointer snap-start card-style"
+            class="navbar-style w-[70vw] sm:w-[250px] max-w-[70%] flex-shrink-0 rounded-2xl transition duration-200 cursor-pointer snap-start"
           >
             <img
               :src="
@@ -105,14 +104,14 @@
               "
               @error="(e) => (e.target.src = defaultImage)"
               alt="地點圖片"
-              class="w-full aspect-[3/2] object-cover rounded-md mb-2"
+              class="w-full aspect-[3/2] object-cover rounded-md mb-2 h-30"
             />
-            <h2 class="text-sm font-semibold truncate" :title="place.name">
+            <h2 class="text-sm truncate text-white p-2" :title="place.name">
               {{ place.name }}
             </h2>
             <p
               v-if="place.rating"
-              class="text-xs text-yellow-600 mt-1 whitespace-nowrap overflow-hidden text-ellipsis"
+              class="text-xs text-yellow-00 mt-1 p-2 whitespace-nowrap overflow-hidden text-ellipsis"
             >
               ⭐ {{ place.rating }} / {{ place.user_ratings_total }} 則評價
             </p>
@@ -142,7 +141,7 @@
     @click.self="selectedPlace = null"
   >
     <div
-      class="solo-card-style w-full max-w-2xl p-3 border-2 border-white/30 shadow-[0_0_10px_1px_rgba(255,255,255,0.5)] bg-white/10 backdrop-blur-md flex rounded-lg relative gap-5"
+      class="solo-card-style w-full max-w-2xl p-3 border-2 border-white/30 shadow-[0_0_10px_1px_rgba(255,255,255,0.5)] bg-white/10 backdrop-blur-md flex rounded-4xl relative gap-5"
     >
       <div class="relative">
         <button
@@ -168,7 +167,7 @@
           "
           @error="(e) => (e.target.src = defaultImage)"
           alt="地點圖片"
-          class="max-w-full aspect-[4/3] object-cover rounded-lg"
+          class="max-w-full aspect-[4/3] object-cover rounded-2xl"
         />
         <button
           v-if="selectedPlace.photos && selectedPlace.photos.length > 1"
@@ -176,7 +175,7 @@
             selectedPlacePhotoIndex =
               (selectedPlacePhotoIndex + 1) % selectedPlace.photos.length
           "
-          class="absolute top-1/2 right-2 -translate-y-1/2 bg-black bg-opacity-40 text-white rounded-full w-8 h-8 flex items-center justify-center hover:bg-gray-700"
+          class="absolute top-1/2 right-2 -translate-y-1/2 bg-black bg-opacity-40 text-white flex justify-center hover:bg-gray-700"
           aria-label="下一張圖片"
         >
           ›
@@ -196,7 +195,7 @@
 
         <button
           @click="callItinerary"
-          class="absolute bottom-4 right-4 border px-4 py-1 rounded-2xl text-white"
+          class="absolute bottom-4 right-4 border px-4 py-1 rounded-2xl text-white cursor-pointer"
         >
           加入行程+
         </button>
@@ -205,7 +204,7 @@
   </div>
 
   <aside
-    class="w-20 p-4 space-y-2 bg-gray-400/30 fixed z-50 left-5 top-1/2 translate-y-[-50%] rounded-full shadow-4xl backdrop-blur-2xl"
+    class="navbar-style w-20 p-4 space-y-2 fixed z-50 left-5 top-1/2 translate-y-[-50%] rounded-full"
     ref="menuRef"
   >
     <button
@@ -908,5 +907,3 @@ onUnmounted(() => {
   opacity: 0;
 }
 </style>
-
-
