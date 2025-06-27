@@ -697,10 +697,10 @@ function locateUser() {
 
 function getPlaceIconUrl(types) {
   for (const type of types) {
-    const path = `/public/mapIcons/${type}.svg`;
+    const path = `mapIcons/${type}.svg`;
     return path;
   }
-  return "/public/mapIcons/default.svg";
+  return "mapIcons/default.svg";
 }
 
 
