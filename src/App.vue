@@ -9,7 +9,7 @@
     <!-- 下方 Navbar（地圖頁） -->
     <NavBar
       v-if="isMapPage"
-      class="absolute top-5 left-1/3 w-[35%] -translate-x-1/2 z-50"
+      class="absolute top-5 left-1/5 w-[35%] -translate-x-1/2 z-50"
     />
 
     <RouterView />
