@@ -35,4 +35,5 @@ TailwindCSS
 | 林芳綺 |[yanamint](https://github.com/yanamint)  || 加入<br>google calender|||切版|
 | 周子筠 |[yumi-chou](https://github.com/yumi-chou) | 地區篩選 | 交通方式<br>通勤時間 || |切版<br>設計規劃|
 | 許家瑜 |[Ninahsuuuuu](https://github.com/Ninahsuuuuu)|| 行程總覽 |動態追蹤| 資料變更 |行程功能元件串接 ||
-| 劉暄  | [pearl-liu-1203](https://github.com/pearl-liu-1203)|  | 行程頁面編輯 || 登入、註冊  ||
+| 劉暄  | [pearl-liu-1203](https://github.com/pearl-liu-1203)|  | 行程頁面編輯 || 登入、註冊  | LINE Pay |
+

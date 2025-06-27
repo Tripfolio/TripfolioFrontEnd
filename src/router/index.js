@@ -14,6 +14,8 @@ import Post from "@/components/PostForm.vue";
 import Community from "@/views/CommunityList.vue";
 import scheduleDetail from "@/views/scheduleDetail.vue";
 import Payment from "@/views/Payment.vue";
+import LinePaySuccess from '@/views/LinePaySuccess.vue';
+import LinePayFail from '@/views/LinePayFail.vue';
 
 const routes = [
   {
@@ -82,14 +84,19 @@ const routes = [
     component: scheduleDetail,
   },
   {
-    path: "/social",
-    name: "social",
-    component: SocialHomePage,
-  },
-  {
     path: "/payment",
     name: "payment",
     component: Payment,
+  },
+  {
+    path: '/linepay-success',
+    name: 'linepaysuccess',
+    component: LinePaySuccess,
+  },
+  {
+    path: '/linepay-fail',
+    name: 'linepayfail',
+    component: LinePayFail,
   },
 ];
 

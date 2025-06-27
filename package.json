@@ -16,6 +16,7 @@
     "@googlemaps/markerclusterer": "^2.5.3",
     "@tailwindcss/vite": "^4.1.6",
     "axios": "^1.9.0",
+    "cors": "^2.8.5",
     "braintree-web-drop-in": "^1.45.0",
     "dayjs": "^1.11.13",
     "jwt-decode": "^4.0.0",

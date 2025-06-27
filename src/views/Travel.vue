@@ -75,8 +75,8 @@
 
 
 <script setup>
-import { ref, onMounted, computed } from 'vue';
-import { useRouter } from 'vue-router'
+import { ref, onMounted, computed, watch } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
 import TravelSchedule from '@/components/TravelSchedule.vue';
 import axios from 'axios';
 import GoogleMapView from '@/views/GoogleMapView.vue';
@@ -85,6 +85,7 @@ import { useTripStore } from '@/stores/tripStore';
 
 
 const router = useRouter();
+const route = useRoute(); 
 const editingTripId = ref(null);
 const tripStore = useTripStore();
 const showForm = ref(false);
@@ -106,14 +107,18 @@ const selectedTrip = computed(() => {
 //取得會員是否為付費會員
 const fetchIsPremium = async () => {
   const token = localStorage.getItem('token');
-
+  if (!token) {
+    isPremium.value = false;
+    return;
+  }
   try {
     const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/profile`, {
       headers: { Authorization: `Bearer ${token}` },
     });
     isPremium.value = res.data.isPremium;
   } catch (err) {
-    // eslint-disable-next-line no-empty
+    console.error("Failed to fetch premium status:", err);
+    isPremium.value = false;
   }
 };
 
@@ -123,6 +128,13 @@ onMounted(() => {
   fetchIsPremium();
 });
 
+watch(() => route.query.paymentSuccess, (newValue) => {
+  if (newValue === 'true') {
+    console.log('Payment successful, fetching premium status again...');
+    fetchIsPremium();
+  }
+}, { immediate: true }); 
+
 
 //建立行程時檢查是否登入
 const handleOpenForm = () => {
@@ -131,7 +143,6 @@ const handleOpenForm = () => {
       alert('請先登入會員')
       return
     }
-    
     const count = tripStore.trips.length;
 
     if(isPremium.value || count < 1) {
