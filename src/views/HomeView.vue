@@ -126,7 +126,7 @@
       </div>
     </section>
 
-      <!-- <div v-if="placeDetails.length" class="w-full mx-auto">
+    <!-- <div v-if="placeDetails.length" class="w-full mx-auto">
         <div class="backdrop-blur-lg rounded-2xl shadow-xl px-6 py-4 space-y-3">
           <div
             v-for="(place, index) in placeDetails"
@@ -161,52 +161,79 @@
         </div>
       </div> -->
 
-    <section class="min-h-[500px] flex relative mt-24">
-      <h2 class="text-4xl font-bold ml-40 mt-30" data-aos="fade-up" data-aos-duration="1000">
-        <p class="text-5xl tracking-[15px]">TRIPFOLIO</p>
-        <p class="ml-30 mt-5 text-3xl font-medium tracking-wider"> Where your journey begins</p>
-      </h2>
+<section class="min-h-[500px] flex relative mt-20 mb-20 ">
+  <h2 class="text-4xl font-bold ml-50 mt-30" data-aos="fade-up" data-aos-duration="1000">
+    <p class="text-5xl tracking-[15px]">TRIPFOLIO</p>
+    <p class="mt-5 text-2xl font-medium tracking-wider whitespace-nowrap"> Where your journey begins</p>
+  </h2>
 
-      <div class="relative mt-6 h-4">
-        <div data-aos="fade-up" class="absolute right-60 top-80 w-50 min-h-10 bg-black rounded-full flex items-center justify-center">
-          <p class="text-white pt-3 pb-3 pl-5 pr-5">高自由度行程規劃</p>
-        </div>
-        <div data-aos="fade-up" data-aos-delay="300" class="absolute right-60 top-100 w-32 min-h-10 bg-black rounded-full flex items-center justify-center">
-          <p class="text-white">輕鬆篩選地點</p>
-        </div>
-      </div>
+  <div class="relative mt-6 h-4 ml-40 " data-aos="fade-up" data-aos-delay="300">
+    <div class="absolute right-60 top-70 min-h-10 bg-black rounded-full flex items-center justify-center">
+      <p class="text-white  py-2 px-5 text-md whitespace-nowrap">一站完成資訊蒐集</p>
+    </div>
+    <div class="absolute right-30 top-90 min-h-10 bg-black rounded-full flex items-center justify-center">
+      <p class="text-white py-2 px-5 text-lg whitespace-nowrap">簡單好上手</p>
+    </div>
+    <div class="absolute right-50 top-110 min-h-10 bg-black rounded-full flex items-center justify-center">
+      <p class="text-white py-2 px-5 text-shadow-sm whitespace-nowrap">快速排程</p>
+    </div>
+  </div>
 
-      <div class="relative ml-auto mr-50">
-        <img :src="taiwan"  ref="mapImg" alt="台灣地圖" class="w-auto max-w-[500px] h-auto  " data-aos="fade-up" data-aos-duration="1000" />
-        <img src="/mapIcons/amusement_park.svg" v-show="showMarker1" alt="marker" class="absolute z-30 top-[18%] left-[40%] w-16 h-16 fade-in-down will-change: transform" />
-        <img src="/mapIcons/restaurant.svg" v-show="showMarker2" alt="marker" class="absolute z-30 top-[30%] left-[60%] w-16 h-16 fade-in-down will-change: transform" />
-        <img src="/mapIcons/cafe.svg" v-show="showMarker3" alt="marker" class="absolute z-30 top-[50%] left-[30%] w-16 h-16 fade-in-down will-change: transform" />
-      </div>
-    </section>
-    
-    <section class="min-h-[500px] w-[85vw] relative mx-auto rounded-3xl bg-amber-800 mt-10">
+  <div class="relative ml-auto mr-50 ">
+    <img :src="taiwan" ref="mapImg" alt="台灣地圖" class="w-auto max-w-[500px] h-auto" data-aos="fade-up" data-aos-duration="1000" />
+    <img src="/mapIcons/amusement_park.svg" v-show="showMarker1" alt="marker" class="absolute z-30 top-[18%] left-[40%] w-16 h-16 fade-in-down will-change: transform" />
+    <img src="/mapIcons/restaurant.svg" v-show="showMarker2" alt="marker" class="absolute z-30 top-[30%] left-[60%] w-16 h-16 fade-in-down will-change: transform" />
+    <img src="/mapIcons/cafe.svg" v-show="showMarker3" alt="marker" class="absolute z-30 top-[50%] left-[30%] w-16 h-16 fade-in-down will-change: transform" />
+  </div>
+</section>
 
-      <div class="absolute inset-0 shadow-xl rounded-3xl overflow-hidden  z-0">
+    <section class="h-[500px] w-[85vw] flex items-center justify-between space-x-20 relative mx-auto rounded-3xl mt-10 mb-20">
+
+      <div class="absolute w-[50vw] h-full inset-0  shadow-xl rounded-3xl overflow-hidden z-0 ml-auto ">
         <img :src="map" class="w-full h-full object-cover" />
       </div>
 
-      <div class="relative z-10 py-16 flex items-center justify-between px-20 gap-50">
+      <div class="relative z-10 py-16 flex items-center px-20 gap-40">
+
+        <div>
+          <HomeSchedule />
+        </div>
+      
+        <div  class="ml-20">
+          <h2 class="text-4xl font-bold tracking-wider" data-aos="fade-right" data-aos-duration="2000">
+          高自由度行程規劃
+          </h2>
+          <p class="mt-5 ml-16 text-xl font-medium tracking-wider " data-aos="fade-left"  data-aos-duration="2000">
+          景點隨心拖曳排序 輕鬆管理你的旅程
+          </p>
+        </div>
+
+      </div>
+    </section>
+    
+    <!-- <section class="min-h-[500px] w-[85vw] relative mx-auto rounded-3xl mt-10">
+
+      <div class="absolute inset-0 shadow-xl rounded-3xl overflow-hidden z-0 ">
+        <img :src="map" class="w-full h-full object-cover" />
+      </div>
+
+      <div class="relative z-10 py-16 flex items-center px-20 gap-40">
 
         <div>
           <HomeSchedule />
         </div>
       
         <div>
-          <h2 class="text-5xl tracking-[0.3em] font-bold" data-aos="fade-right" data-aos-duration="3000">
-            TRIPFOLIO
+          <h2 class="text-4xl font-bold tracking-wider" data-aos="fade-right" data-aos-duration="2000">
+          高自由度行程規劃
           </h2>
-          <p class="mt-5 text-3xl font-medium tracking-wider" data-aos="fade-left"  data-aos-duration="3000">
-            Where your journey begins
+          <p class="mt-5 ml-16 text-xl font-medium tracking-wider " data-aos="fade-left"  data-aos-duration="2000">
+          景點隨心拖曳排序 輕鬆管理你的旅程
           </p>
         </div>
 
       </div>
-    </section>
+    </section> -->
 
     <section class="min-h-[600px] px-6 py-16">
 
@@ -259,15 +286,15 @@
           </div>
         </div>
       </div>
-
-      <div class="w-full flex justify-center z-50 ">
-        <input
-          type="image"
-          :src="btn"
-          class="w-80 mt-35 mb-15 cursor-pointer "
-          @click="scrollToTop">
-      </div>
     </section>
+
+    <div class="w-full flex justify-center z-50 ">
+      <input
+        type="image"
+        :src="btn"
+        class="w-80 mt-35 mb-15 cursor-pointer "
+        @click="scrollToTop">
+    </div>
 
     <section class="">
             <p class="mb-2">其他連結 我先放這</p>

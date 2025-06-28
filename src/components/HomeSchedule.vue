@@ -29,13 +29,16 @@ import { Autoplay } from 'swiper/modules'
 import 'swiper/css'
 import 'swiper/css/autoplay'
 import schedule1 from '@/assets/HomePage/schedule1.png'
+import schedule2 from '@/assets/HomePage/schedule2.png'
+import schedule3 from '@/assets/HomePage/schedule3.png'
+import schedule4 from '@/assets/HomePage/schedule4.png'
 
 
 const places = [
   {img: schedule1 },
-  {img: schedule1 },
-  {img: schedule1 },
-  {img: schedule1 },
+  {img: schedule2 },
+  {img: schedule3 },
+  {img: schedule4 },
 ]
 
 </script>
