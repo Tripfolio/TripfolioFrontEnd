@@ -6,7 +6,7 @@
           class="mt-10 bg-gray-300 rounded-[3rem] h-[300px] md:h-[400px] shadow-inner"
         >
           <section class="mt-10 p-6">
-            <p class="mb-2">其他連結 我先放這</p>
+            <p class="mb-2">{{ $t("welcome") }}</p>
             <div class="flex flex-wrap gap-4">
               <RouterLink to="/emailSettings" class="underline"
                 >Email 通知</RouterLink

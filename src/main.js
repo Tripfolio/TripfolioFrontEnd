@@ -6,6 +6,10 @@ import { createPinia } from "pinia";
 import App from "./App.vue";
 import router from "./router";
 
+// 語言
+import { createI18n } from "vue-i18n";
+import messages from "./locales/index.js";
+
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import {
@@ -41,13 +45,18 @@ library.add(
   faPaste,
   faCompass,
   faGlobe,
-  faUser
+  faUser,
 );
+
+const i18n = createI18n({
+  locale: "zh-TW",
+  messages,
+});
 
 const app = createApp(App);
 
 app.use(createPinia());
 app.use(router);
+app.use(i18n);
 app.component("FontAwesomeIcon", FontAwesomeIcon);
 app.mount("#app");
-

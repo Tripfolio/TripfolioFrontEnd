@@ -1,4 +1,8 @@
 <template>
+<!-- 這兩行是語言設定 -->
+  <button @click="locale = 'en'">English</button>
+  <button @click="locale = 'zh'">中文</button>
+
   <div class="relative">
     <!-- 上方 Navbar（非地圖頁） -->
     <NavBar
@@ -20,6 +24,10 @@ import NavBar from "./components/NavBar.vue";
 
 import { useRoute } from "vue-router";
 import { computed } from "vue";
+
+//這兩行也是語言設定
+import { useI18n } from 'vue-i18n'
+const { locale } = useI18n()
 
 const route = useRoute();
 
