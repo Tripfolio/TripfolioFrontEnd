@@ -1,7 +1,7 @@
 <template>
-  <div :class="isFromTracker ? 'p-6 w-full max-w-3xl mx-auto' : 'p-6 w-full grid lg:grid-cols-1 max-w-7xl mx-auto gap-6'">
+  <div :class="isFromTracker ? 'p-6 w-full max-w-3xl mx-auto' : 'px-0 py-6 w-full grid lg:grid-cols-1 max-w-7xl mx-auto gap-6'">
     <!-- 左側：行程總覽＋每日行程 -->
-    <div class="lg:col-span-2">
+    <div class="w-full max-w-5xl mx-auto">
       <!-- 行程總覽卡片 -->
       <TripOverview 
         v-if="trip" 
@@ -20,10 +20,10 @@
           v-for="(day, index) in trip.days" 
           :key="day" 
           @click="currentDayIndex = index"
-          class="px-4 py-1 rounded-full text-sm border"
+          class="px-5 py-1 rounded-full text-sm border"
           :class="currentDayIndex === index
-          ? 'bg-blue-600 text-white border-blue-600'
-          : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-100'">第{{ index + 1 }}天
+          ? 'bg-[#828282] text-white border-[#828282]'
+          : 'bg-white text-gray-700 border-gray-300 shadow-md shadow-black/30'">第{{ index + 1 }}天
         </button>
       </div>
       <!-- 每日計畫 -->
@@ -32,7 +32,7 @@
         :selected-trip="trip"
         :day-index="currentDayIndex"
         :itinerary-places="itineraryRef?.itineraryPlaces || []"
-        class="mt-6"
+        class="mt-6 w-full"
         ref="dailyPlanRef"
       />
     </div>

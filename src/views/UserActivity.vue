@@ -97,16 +97,16 @@ const fetchData = async () => {
 
     try {
         //篩選自己發過的貼文
-        const postRes = await axios.get(`${import.meta.env.VITE_API_URL}/api/community`,{
+        const postRes = await axios.get(`${import.meta.env.VITE_API_URL}/api/allposts?page=1&limit=100`,{
             headers: {Authorization: `Bearer ${token}`} 
         })
 
         posts.value = postRes.data.posts
-            .filter(item => item.memberId === decoded.id)
+            .filter(item => item.authorName === decoded.name)
             .map(item => ({
                 id: item.postId,
-                title: item.scheduleTitle,
-                coverImage: item.coverURL
+                title: item.title || '未命名貼文',
+                coverImage: item.imageUrl
             }));
     } catch (err) {
         console.warn('取得貼文失敗', err)
@@ -119,7 +119,7 @@ const fetchData = async () => {
         });
         collectedPosts.value = collectRes.data.map(item => ({
             id: item.postId,
-            title: item.postTitle,
+            title: item.title || item.content || '未命名貼文',
             postImage: item.postImageUrl
         }));
     } catch (err) {
