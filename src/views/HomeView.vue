@@ -128,7 +128,6 @@
       </div>
     </section>
 
-
       <!-- <div v-if="placeDetails.length" class="w-full mx-auto">
         <div class="backdrop-blur-lg rounded-2xl shadow-xl px-6 py-4 space-y-3">
           <div
@@ -165,7 +164,7 @@
       </div> -->
 
     <section class="min-h-[500px] flex relative mt-28">
-      <h2 class="text-4xl font-bold text-lef ml-40 mt-30" data-aos="fade-up" data-aos-duration="1000">
+      <h2 class="text-4xl font-bold ml-40 mt-30" data-aos="fade-up" data-aos-duration="1000">
         <p class="text-5xl tracking-[15px]">TRIPFOLIO</p>
         <p class="ml-30 mt-5 text-3xl font-medium tracking-wider"> Where your journey begins</p>
       </h2>
@@ -187,6 +186,23 @@
       </div>
     </section>
     
+    <section class="w-[80vw]">
+      <div class="py-16 flex items-center justify-between px-60 gap-10 relative ">
+          <img :src="map" class="absolute w-full h-full object-cover"/>
+          <div>
+            <HomeSchedule />
+          </div>
+          <div>
+            <h2 class="text-5xl tracking-[15px] font-bold" data-aos="fade-up" data-aos-duration="1000">
+              TRIPFOLIO
+            </h2>
+            <p class="mt-5 text-3xl font-medium tracking-wider">
+              Where your journey begins
+            </p>
+          </div> 
+      </div>
+    </section>
+
     <section class="min-h-[600px] px-6 py-16">
       <!-- 標題區 -->
       <h2 class="text-4xl font-bold text-center mb-20 mt-10" data-aos="fade-up" data-aos-duration="1000" data-aos-anchor-placement="top-center">
@@ -241,17 +257,12 @@
       </div>
 
       <div class="w-full flex justify-center z-50 ">
-        <button
-          @click="scrollToTop"
-          class="bg-black text-white pl-10 pr-10 pt-5 pb-5 rounded-full shadow-lg hover:bg-gray-400 transition-all duration-300 mt-35 mb-15 cursor-pointer"
-        >
-          Start Exploring With TRIPFOLIO 
-        </button>
+        <input
+          type="image"
+          :src="btn"
+          class="w-80 mt-35 mb-15 cursor-pointer "
+          @click="scrollToTop">
       </div>
-    </section>
-
-    <section class="min-h-[600px] px-6 py-16">
-      <HomeSchedule />
     </section>
 
     <section class="mt-10 p-6">
@@ -270,7 +281,6 @@
               <RouterLink to="/community">社群貼文</RouterLink>
             </div>
     </section>
-
   </div>
 </template>
 
@@ -290,6 +300,8 @@ import s2 from '../assets/HomePage/s2.png';
 import s3 from '../assets/HomePage/s3.png';
 import p1 from '../assets/HomePage/p1.png';
 import p2 from '../assets/HomePage/p2.png';
+import btn from '../assets/HomePage/btn.svg';
+import map from '../assets/HomePage/map.png';
 
 const show = ref(true)
 const showMarker1 = ref(false)
@@ -448,6 +460,14 @@ onUnmounted(() => {
 
 .fade-in-down {
   animation: fadeInDown 0.6s ease-out forwards;
+}
+
+.solo-card-style {
+  background-color: rgba(50, 50, 50, 0.3);
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  backdrop-filter: blur(27px);
 }
 
 
