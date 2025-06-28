@@ -142,10 +142,8 @@ import dayjs from "dayjs";
 const router = useRouter();
 import "vue-advanced-cropper/dist/style.css";
 
-/* global defineEmits */
 const emit = defineEmits(["close", "submitted"]);
 
-//狀態
 const file = ref(null);
 const title = ref("");
 const startDate = ref("");
@@ -159,18 +157,15 @@ const cropperRef = ref(null);
 const createdScheduleId = ref(null);
 const isLoading = ref(false);
 
-//預覽封面圖片
 const coverPreviewUrl = ref("");
 const defaultCover = "https://fakeimg.pl/800x400/?text=行程封面&font=noto";
 
 const fileInput = ref(null);
 
-//點上傳圖片按鈕時觸發Input
 const uploadFile = () => {
   fileInput.value.click();
 };
 
-//圖片一上傳進入裁切模式
 const handleFile = (event) => {
   file.value = event.target.files[0];
   if (file.value) {
@@ -179,7 +174,6 @@ const handleFile = (event) => {
   }
 };
 
-//處理裁切的圖
 const applyCrop = () => {
   const canvas = cropperRef.value?.getResult()?.canvas;
   if (canvas) {
@@ -191,7 +185,6 @@ const applyCrop = () => {
   }
 };
 
-//自動計算行程天數
 watch([startDate, endDate], () => {
   if (startDate.value && endDate.value) {
     const diff = dayjs(endDate.value).diff(dayjs(startDate.value), "day") + 1;
@@ -201,12 +194,10 @@ watch([startDate, endDate], () => {
   }
 });
 
-//監視表單欄位改變
 watch([title, startDate, endDate, description, file], () => {
   isDirty.value = true;
 });
 
-//點X確認是否離開
 const handleClose = () => {
   if (isDirty.value) {
     const confirmExit = confirm("您有尚未儲存的內容，確定要離開嗎?");
@@ -215,7 +206,6 @@ const handleClose = () => {
   emit("close");
 };
 
-//點取消清空表單
 const scheduleCancel = () => {
   file.value = null;
   coverPreviewUrl.value = "";
@@ -227,7 +217,6 @@ const scheduleCancel = () => {
   isDirty.value = false;
 };
 
-//點儲存打包成formData送到後端
 const scheduleSubmit = async () => {
   if (!title.value || !startDate.value || !endDate.value) {
     alert("請填寫行程名稱及行程開始/結束日期");
@@ -260,8 +249,6 @@ const scheduleSubmit = async () => {
 
     alert("儲存成功，你可以關閉表單點擊行程進入編輯");
     isDirty.value = false;
-
-    // 通知父元件做刷新
     emit("submitted", newId);
   } catch (err) {
     alert("儲存失敗，請稍後再試");

@@ -73,7 +73,7 @@
     </RouterLink>
 
     <div v-if="isLoggedIn" class="mt-8 p-6 bg-blue-50 rounded-lg shadow-md max-w-sm">
-      <p class="text-blue-700 font-semibold mb-4">您已成功登入</p>
+      <p class="text-blue-700 font-semibold mb-4">您已成功登入！</p>
       <button
         @click="logout"
         class="bg-red-500 text-white py-2 px-4 rounded-md shadow-sm hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition duration-150 ease-in-out"

@@ -1,6 +1,6 @@
 <template>
   <div class="comment-section">
-    <h4>留言區</h4>
+    <!-- <h4>留言區</h4> -->
 
     <div v-if="isLoading" class="text-center py-4">載入留言中...</div>
 
@@ -75,6 +75,8 @@ const props = defineProps({
   },
 });
 
+const emit = defineEmits(["comment-added"]);
+
 const newComment = ref("");
 const comments = ref([]);
 const isSubmitting = ref(false);
@@ -133,9 +135,19 @@ const submitComment = async (commentText) => {
       },
     );
     comments.value.unshift(response.data);
+
+    // 更新本地計數
+    const newCommentCount = (props.post.commentCount || 0) + 1;
+
+    // 發送詳細的更新資訊
+    emit("comment-added", {
+      postId: props.post.postId,
+      commentCount: newCommentCount,
+    });
+
     console.log("留言發表成功", response.data);
   } catch (error) {
-    console.error("留言發表失敗:", error);
+    console.error("留言發表失敗", error);
   } finally {
     isSubmitting.value = false;
   }
@@ -204,6 +216,15 @@ const deleteComment = async (commentId) => {
     comments.value = comments.value.filter(
       (comment) => comment.id !== commentId,
     );
+
+    // 更新本地計數
+    const newCommentCount = Math.max(0, (props.post.commentCount || 0) - 1);
+
+    // 發送詳細的更新資訊
+    emit("comment-added", {
+      postId: props.post.postId,
+      commentCount: newCommentCount,
+    });
 
     console.log("留言刪除成功");
   } catch (error) {

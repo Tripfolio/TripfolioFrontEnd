@@ -1,12 +1,12 @@
 <template>
-  <header class="frosted-style flex items-center rounded-full px-6 py-4">
+  <header class="navbar-style flex items-center rounded-full px-6 py-4">
     <div class="flex-none font-bold w-7 h-7">
       <router-link to="/" class="cursor-pointer block">
         <img :src="logo" alt="Logo" />
       </router-link>
     </div>
 
-    <nav class="flex-1 flex justify-center space-x-6 items-center text-gray-700">
+    <nav class="flex-1 flex justify-center space-x-6 items-center">
       <button class="flex items-center space-x-1 pr-5">
         <RouterLink to="/map">
           <font-awesome-icon :icon="['fas', 'compass']" />
@@ -24,7 +24,7 @@
       <slot name="mapSearch"></slot>
     </nav>
 
-    <div class="flex-none text-gray-700">
+    <div class="flex-none">
       <template v-if="isLoggedIn">
         <button @click="logout" class="underline">登出</button>
       </template>
@@ -41,7 +41,7 @@
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { jwtDecode } from 'jwt-decode'
-import logo from '../assets/icons/logoIcon/logo.svg'
+import logo from '../assets/icons/Logo/logo.svg'
 
 const TOKEN_NAME = 'user_token'
 const isLoggedIn = ref(false)
