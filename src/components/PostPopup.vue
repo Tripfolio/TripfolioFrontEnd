@@ -36,8 +36,9 @@
               <div class="font-semibold">
                 {{ localPost.authorName || "匿名使用者" }}
               </div>
-              <div class="text-sm">
-                {{ scheduleTitle || "未命名行程" }}
+
+              <div class="text-sm text-gray-600">
+                {{ scheduleTitle || "行程已刪除 ಥ_ಥ" }}
               </div>
             </div>
           </div>
@@ -100,6 +101,15 @@ const props = defineProps({
 });
 
 const emit = defineEmits(["close", "update-post"]);
+
+
+// const comments = ref([]);
+// const newComment = ref("");
+// const liked = ref(false);
+// const isSubmitting = ref(false);
+// const isLoading = ref(false);
+// const selectedPost = ref(null);
+
 const scheduleTitle = ref("未命名行程");
 const authorAvatar = ref("");
 
@@ -116,29 +126,25 @@ const toTravelPage = () => {
 
 // 獲取行程 title
 const fetchScheduleTitle = async () => {
-  console.log("fetchScheduleTitle 被調用");
-  console.log("props.post:", props.post);
-  console.log("props.post.title:", props.post.title);
 
   if (props.post.title) {
     try {
-      console.log(`正在獲取行程 ${props.post.title} 的標題`);
       const res = await axios.get(
         `${import.meta.env.VITE_API_URL}/api/travelSchedule/${props.post.title}`,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         },
       );
-      console.log("行程 API 回應:", res.data);
+
       scheduleTitle.value = res.data.title || "未命名行程";
-      console.log("設置的 scheduleTitle:", scheduleTitle.value);
+
     } catch (error) {
-      console.error("獲取行程標題失敗", error);
-      scheduleTitle.value = "未命名行程";
+
+      scheduleTitle.value = "行程已刪除 ಥ_ಥ";
     }
   } else {
-    console.log("沒有 title，使用預設標題");
-    scheduleTitle.value = "未命名行程";
+
+    scheduleTitle.value = "行程已刪除 ಥ_ಥ";
   }
 };
 
@@ -300,13 +306,13 @@ onMounted(() => {
   max-width: 90%;
   max-height: 90%;
 } */
-.post-info {
-  /* background-color: bisque;
+/* .post-info {
+  background-color: bisque;
   flex: 1;
   padding: 24px;
   display: flex;
-  flex-direction: column; */
-}
+  flex-direction: column; 
+} */
 .avatar {
   width: 40px;
   height: 40px;
@@ -331,3 +337,4 @@ onMounted(() => {
   flex: 1;
 } */
 </style>
+ 
