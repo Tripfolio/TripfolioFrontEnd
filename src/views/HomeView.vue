@@ -1,21 +1,19 @@
 <template>
   <div class="homepage-bg overflow-x-hidden">
-    <section class="min-h-screen  flex justify-center">
-      <transition name="fade-landing">
-        <div class="landing fixed inset-0 bg-white text-gray-400 flex justify-center items-center" v-if="show">
-          <div class="loading text-5xl tracking-[0.4em] whitespace-no-wrap" >
-            <span style="--i: 0">T</span>
-            <span style="--i: 1">R</span>
-            <span style="--i: 2">I</span>
-            <span style="--i: 3">P</span>
-            <span style="--i: 4">F</span>
-            <span style="--i: 5">O</span>
-            <span style="--i: 6">L</span>
-            <span style="--i: 7">I</span>
-            <span style="--i: 8;; margin-right: -0.4em;">O</span>
-          </div>
+    <section class="min-h-screen">
+      <div class="landing fixed inset-0 bg-white text-gray-400 flex justify-center items-center" v-if="show">
+        <div class="loading text-5xl tracking-[0.4em] whitespace-no-wrap" >
+          <span style="--i: 0">T</span>
+          <span style="--i: 1">R</span>
+          <span style="--i: 2">I</span>
+          <span style="--i: 3">P</span>
+          <span style="--i: 4">F</span>
+          <span style="--i: 5">O</span>
+          <span style="--i: 6">L</span>
+          <span style="--i: 7">I</span>
+          <span style="--i: 8;; margin-right: -0.4em;">O</span>
         </div>
-      </transition>
+      </div>
       <div class="w-[100vw]">
           <HomeCarousel/>
           <div class="w-[60vw] mx-auto mt-20 z-10 relative">
@@ -163,7 +161,7 @@
         </div>
       </div> -->
 
-    <section class="min-h-[500px] flex relative mt-28">
+    <section class="min-h-[500px] flex relative mt-24">
       <h2 class="text-4xl font-bold ml-40 mt-30" data-aos="fade-up" data-aos-duration="1000">
         <p class="text-5xl tracking-[15px]">TRIPFOLIO</p>
         <p class="ml-30 mt-5 text-3xl font-medium tracking-wider"> Where your journey begins</p>
@@ -186,31 +184,38 @@
       </div>
     </section>
     
-    <section class="w-[80vw]">
-      <div class="py-16 flex items-center justify-between px-60 gap-10 relative ">
-          <img :src="map" class="absolute w-full h-full object-cover"/>
-          <div>
-            <HomeSchedule />
-          </div>
-          <div>
-            <h2 class="text-5xl tracking-[15px] font-bold" data-aos="fade-up" data-aos-duration="1000">
-              TRIPFOLIO
-            </h2>
-            <p class="mt-5 text-3xl font-medium tracking-wider">
-              Where your journey begins
-            </p>
-          </div> 
+    <section class="min-h-[500px] w-[85vw] relative mx-auto rounded-3xl bg-amber-800 mt-10">
+
+      <div class="absolute inset-0 shadow-xl rounded-3xl overflow-hidden  z-0">
+        <img :src="map" class="w-full h-full object-cover" />
+      </div>
+
+      <div class="relative z-10 py-16 flex items-center justify-between px-20 gap-50">
+
+        <div>
+          <HomeSchedule />
+        </div>
+      
+        <div>
+          <h2 class="text-5xl tracking-[0.3em] font-bold" data-aos="fade-right" data-aos-duration="3000">
+            TRIPFOLIO
+          </h2>
+          <p class="mt-5 text-3xl font-medium tracking-wider" data-aos="fade-left"  data-aos-duration="3000">
+            Where your journey begins
+          </p>
+        </div>
+
       </div>
     </section>
 
     <section class="min-h-[600px] px-6 py-16">
-      <!-- 標題區 -->
+
       <h2 class="text-4xl font-bold text-center mb-20 mt-10" data-aos="fade-up" data-aos-duration="1000" data-aos-anchor-placement="top-center">
         讓分享，成為彼此的路標
       </h2>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-        <!-- 卡片 1 -->
+
         <div class="rounded-3xl bg-white shadow-md overflow-hidden" data-aos="fade-up" data-aos-delay="700">
           <div class="relative h-[300px] bg-gray-300">
             <img :src="s1" alt="行程圖" class="w-full h-full object-cover " loading="lazy"/>
@@ -225,7 +230,7 @@
           </div>
         </div>
 
-        <!-- 卡片 2 -->
+
         <div class="rounded-3xl bg-white shadow-md overflow-hidden" data-aos="fade-up" data-aos-delay="1000">
           <div class="relative h-[300px] bg-gray-300">
             <img :src="s2" alt="行程圖" class="w-full h-full object-cover" loading="lazy"/>
@@ -240,7 +245,6 @@
           </div>
         </div>
 
-        <!-- 卡片 3 -->
         <div class="rounded-3xl bg-white shadow-md overflow-hidden" data-aos="fade-up" data-aos-delay="1300">
           <div class="relative h-[300px] bg-gray-300">
             <img :src="s3" alt="行程圖" class="w-full h-full object-cover" loading="lazy" />
@@ -265,7 +269,7 @@
       </div>
     </section>
 
-    <section class="mt-10 p-6">
+    <section class="">
             <p class="mb-2">其他連結 我先放這</p>
             <div class="flex flex-wrap gap-4">
               <RouterLink to="/emailSettings" class="underline"
@@ -435,19 +439,6 @@ onUnmounted(() => {
   background-color: white;
 }
 
-
-.fade-landing-enter-active,
-.fade-landing-leave-active {
-  transition: opacity 0.5s;
-}
-.fade-landing-enter-from,
-.fade-landing-leave-to {
-  opacity: 0;
-}
-.fade-landing-enter-to,
-.fade-landing-leave-from {
-  opacity: 1;
-}
 
 .landing {
   animation: fadeout 3s forwards;
