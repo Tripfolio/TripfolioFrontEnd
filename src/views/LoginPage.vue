@@ -109,7 +109,6 @@ const login = async () => {
     showError.value = false;
     clearText();
     
-    // 觸發登入狀態改變事件，通知 NavBar 更新
     window.dispatchEvent(new Event("login-status-changed"));
     
     router.push("/");
@@ -129,7 +128,6 @@ const logout = async () => {
   isLoggedIn.value = false;
   clearText();
   
-  // 觸發登入狀態改變事件，通知 NavBar 更新
   window.dispatchEvent(new Event("login-status-changed"));
 };
 

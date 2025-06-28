@@ -20,10 +20,10 @@
           <span class="pl-2 no-underline">社群</span>
         </RouterLink>
       </button>
-      
+
       <slot name="mapSearch"> </slot>
     </nav>
-    <button @click="logout"></button>
+    <!-- <button @click="logout"></button> -->
     <div class="flex-none">
       <template v-if="!isLoggedIn">
         <RouterLink to="/signup" class="underline"
@@ -84,12 +84,12 @@ const checkLoginStatus = () => {
     userAvatar.value = "";
   }
 };
-const logout = () => {
-  localStorage.removeItem("token");
-  isLoggedIn.value = false;
+// const logout = () => {
+//   localStorage.removeItem("token");
+//   isLoggedIn.value = false;
 
-  router.push("/login");
-};
+//   router.push("/login");
+// };
 const fetchUserAvatar = async (userId) => {
   if (!userId) {
     return;
