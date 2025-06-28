@@ -1,9 +1,5 @@
 <template>
-<<<<<<< HEAD
-  <div :class="isFromTracker ? 'w-full max-w-3xl mx-auto bg-white rounded-xl shadow p-6' : 'w-full bg-white rounded-xl shadow p-6'">
-=======
   <div class="w-full rounded-xl px-6 pt-2 pb-6">
->>>>>>> a91cd7c3901d17d87d914efd0619b939a31b19f3
     <button
       @click="$emit('back-to-list')"
       class="mb-4 text-gray-600 hover:text-gray-800 flex items-center text-sm">
@@ -143,10 +139,6 @@ const props = defineProps({
     type: Object,
     required: true,
   },
-  isFromTracker: {
-    type: Boolean,
-    default: false
-  }
 });
 
 const emit = defineEmits([
