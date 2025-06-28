@@ -53,7 +53,7 @@
 
                   <div class="flex gap-2 mt-1">
                     <button @click="confirmTime(p)" class="text-green-300">更改</button>
-                    <button @click="cancelEditing(p)" class="text-red-300">✘ 取消</button>
+                    <button @click="cancelEditing(p)" class="text-red-300">取消</button>
                   </div>
                 </div>
               </div>
@@ -65,13 +65,13 @@
               <button @click.stop="toggleMenu(index)" class="button-list absolute right-0">
                 <font-awesome-icon
                   icon="ellipsis-h"
-                  class="p-1 text-white bg-cyan-800 rounded-full cursor-pointer absolute right-2 top-2"
+                  class="p-1 text-white bg-[#878787] rounded-full cursor-pointer absolute right-2 top-2"
                 />
               </button>
               <ul v-if="openMenuIndex === index" class="absolute right-0 mt-12 bg-white shadow rounded">
                 <li>
-                  <button @click="removePlace(p)" class="w-full text-left px-4 py-2 hover:bg-gray-100">
-                    🗑️ remove
+                  <button @click="removePlace(p)" class="px-3 py-1 bg-white text-black rounded hover:bg-gray-100 whitespace-nowrap">
+                    🗑️ 移除
                   </button>
                 </li>
               </ul>
