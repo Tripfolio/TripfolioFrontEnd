@@ -72,12 +72,19 @@
     0 2px 4px -1px rgba(0, 0, 0, 0.06),
     0 0 0 1px rgba(255, 255, 255, 0.1); /* 微光暈 */
 }
-/* .card-container-style {
-  background-color: rgba(255, 100, 100);
+
+.postform-style {
+  background-color: rgba(50, 50, 50, 0.6); /* 半透明深色背景 */
+  color: #fff;
+
+  /* 毛玻璃背景 */
+  backdrop-filter: blur(8px); /* 可略加強 */
+  -webkit-backdrop-filter: blur(8px);
+
+  /* 玻璃邊框 */
+  border: 1px solid rgba(255, 255, 255, 0.2); /* 半透明白邊 */
   box-shadow:
     0 4px 6px -1px rgba(0, 0, 0, 0.1),
-    0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  backdrop-filter: blur(4px);
-
-  box-shadow: 0 8px 10px rgba(0, 0, 0, 0.4);
-} */
+    0 2px 4px -1px rgba(0, 0, 0, 0.06),
+    0 0 0 1px rgba(255, 255, 255, 0.1); /* 微光暈 */
+}
