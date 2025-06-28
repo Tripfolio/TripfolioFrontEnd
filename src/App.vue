@@ -9,9 +9,8 @@
     <!-- 下方 Navbar（地圖頁） -->
     <NavBar
       v-if="isMapPage"
-      class="absolute top-5 left-[27%] w-[30%] -translate-x-1/2 z-50"
+      class="absolute top-5 left-1/2 w-[80%] -translate-x-1/2 z-50 md:left-[10%] md:w-[30%] md:translate-x-0"
     />
-
     <RouterView />
   </div>
 </template>
