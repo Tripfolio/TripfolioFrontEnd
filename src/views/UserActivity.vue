@@ -73,7 +73,7 @@ const fetchData = async () => {
 
     const decoded = jwtDecode(token);
     const memberId = decoded.id;
-    const memberName = decoded.name;
+    const username = decoded.name;
 
     try {
         //篩選自己發過的行程
@@ -100,9 +100,8 @@ const fetchData = async () => {
         const postRes = await axios.get(`${import.meta.env.VITE_API_URL}/api/allposts?page=1&limit=100`,{
             headers: {Authorization: `Bearer ${token}`} 
         })
-
         posts.value = postRes.data.posts
-            .filter(item => item.authorName === decoded.name)
+            .filter(item => item.id === memberId)
             .map(item => ({
                 id: item.postId,
                 title: item.title || '未命名貼文',
@@ -119,7 +118,7 @@ const fetchData = async () => {
         });
         collectedPosts.value = collectRes.data.map(item => ({
             id: item.postId,
-            title: item.title || item.content || '未命名貼文',
+            title: item.postTitle || '未命名貼文',
             postImage: item.postImageUrl
         }));
     } catch (err) {

@@ -2,7 +2,7 @@
   <div class="relative">
     <div class="flex flex-col lg:flex-row h-screen">
       <!-- 左側：可放地圖或其他內容 -->
-      <div class="h-[60%] lg:h-full lg:w-4/6 bg-[#c2c2c2] p-4 relative overflow-hidden">
+      <div class="h-[40%] lg:h-full lg:w-4/6 bg-[#c2c2c2] p-4 relative overflow-hidden">
         <div class="w-full h-full relative rounded-xl overflow-hidden">
           <GoogleMapView
             ref="mapRef"
@@ -18,7 +18,7 @@
       </div>
 
       <!-- 右側：行程列表區-->
-      <div class="flex-1 lg:w-2/6 h-[40%] lg:h-full overflow-y-auto bg-[#c2c2c2] sm:border-t lg:border-t-0">
+      <div class="flex-1 lg:w-2/6 h-[60%] lg:h-full overflow-y-auto bg-[#c2c2c2] sm:border-t lg:border-t-0">
         <div v-if="!editingTripId" class="fixed bottom-5 right-6 z-50">
           <button 
             @click="handleOpenForm" 

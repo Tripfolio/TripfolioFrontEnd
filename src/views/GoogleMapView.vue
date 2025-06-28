@@ -8,7 +8,7 @@
   />
 
   <div
-    class="navbar-style absolute top-7 right-0 -translate-x-1/2 z-[2] flex items-center gap-2.5 px-2 py-1 rounded-full"
+    class="search-bar navbar-style z-[2] flex items-center gap-2.5 px-2 py-1 rounded-full fixed bottom-25 right-0 -translate-x-1/2 w-[50%] justify-between flex-wrap md:absolute md:top-7 md:right-15 md:left-auto md:bottom-auto md:translate-x-0 md:w-auto md:flex-nowrap"
   >
     <div class="relative w-fit text-white/20">
       <select
@@ -37,20 +37,6 @@
       </svg>
     </div>
     <div class="relative w-[150px]">
-      <!-- <svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke-width="1.5"
-        stroke="currentColor"
-        class="absolute left-0 top-1/2 -translate-y-1/2 w-5 h-5 text-white pointer-events-none"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
-        />
-      </svg> -->
       <input
         type="text"
         v-model="searchQuery"
@@ -175,14 +161,16 @@
             selectedPlacePhotoIndex =
               (selectedPlacePhotoIndex + 1) % selectedPlace.photos.length
           "
-          class="absolute top-1/2 right-2 -translate-y-1/2 bg-black bg-opacity-40 text-white flex justify-center hover:bg-gray-700"
+          class="absolute top-1/2 right-2 -translate-y-1/2 bg-black bg-opacity-40 text-white flex rounded-full w-8 h-8 items-center justify-center hover:bg-gray-700"
           aria-label="下一張圖片"
         >
           ›
         </button>
       </div>
       <div class="mr-2.5">
-        <h2 class="text-2xl text-white mb-3 mt-10 break-words max-w-[20rem]">
+        <h2
+          class="text-2xl text-white mb-3 mt-5 break-words max-w-[20rem] truncate"
+        >
           {{ selectedPlace.name }}
         </h2>
         <p class="text-white text-sm mb-3">
@@ -204,7 +192,7 @@
   </div>
 
   <aside
-    class="navbar-style w-20 p-4 space-y-2 fixed z-50 left-5 top-1/2 translate-y-[-50%] rounded-full"
+    class="navbar-style fixed z-50 w-[90%] bottom-4 left-1/2 -translate-x-1/2 flex flex-row justify-around items-center gap-2 p-3 rounded-2xl md:top-1/2 md:left-5 md:translate-x-0 md:-translate-y-1/2 md:w-20 md:flex-col md:justify-start md:items-stretch md:gap-2 md:rounded-full"
     ref="menuRef"
   >
     <button
@@ -903,5 +891,7 @@ onUnmounted(() => {
 .slide-fade-leave-to {
   transform: translateY(100%);
   opacity: 0;
+}
+.search-bar {
 }
 </style>

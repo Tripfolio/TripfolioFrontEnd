@@ -225,15 +225,29 @@ const openPostDetail = (post) => {
 watch(
   () => route.query.postId,
   (newPostId) => {
-    if (newPostId && posts.value.length) {
+    if (!newPostId) {
+      closeModal();
+      return;
+    }
+
+    const tryOpen = () => {
       const foundPost = posts.value.find((p) => p.postId == newPostId);
       if (foundPost) {
         selectedPost.value = foundPost;
         showModal.value = true;
       }
+    };
+
+    if (posts.value.length) {
+      tryOpen();
+    } else {
+      // 沒資料時，強制呼叫 fetchPosts
+      fetchPosts().then(() => {
+        tryOpen();
+      });
     }
   },
-  { immediate: true },
+  { immediate: true }
 );
 
 onMounted(fetchPosts);
