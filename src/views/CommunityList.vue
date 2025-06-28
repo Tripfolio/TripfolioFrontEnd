@@ -1,106 +1,3 @@
-<template>
-  <div class="px-4 py-6 max-w-3xl mx-auto">
-    <h1 class="text-2xl font-bold mb-4">社群主頁</h1>
-
-    <!-- 貼文列表 -->
-    <div class="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-      <div
-        v-for="post in posts"
-        :key="post.postId"
-        class="bg-white rounded-[24px] overflow-hidden shadow hover:shadow-lg transition cursor-pointer flex flex-col"
-        @click="openPostDetail(post)"
-      >
-        <!-- Header -->
-        <div class="flex items-center gap-2 p-4">
-          <img
-            :src="post.authorAvatar || 'https://picsum.photos/36/36?random=1'"
-            :alt="post.authorName || 'User'"
-            class="w-9 h-9 rounded-full object-cover"
-            @error="$event.target.src = 'https://picsum.photos/36/36?random=1'"
-          />
-          <span class="text-sm font-semibold">{{
-            post.authorName || "User Name"
-          }}</span>
-        </div>
-
-        <!-- Image -->
-        <img
-          :src="
-            post.previewImage ||
-            post.coverURL ||
-            post.imageUrl ||
-            'https://picsum.photos/400/300?random'
-          "
-          alt="post image"
-          class="w-full aspect-square object-cover"
-        />
-
-        <!-- Footer -->
-        <div class="p-4 flex flex-col justify-between flex-grow">
-          <!-- <p class="text-gray-800 font-medium truncate">{{ post.content }}</p> -->
-          <div
-            class="mt-2 flex items-center justify-end text-gray-600 text-sm gap-4"
-          >
-            <div class="flex items-center gap-1">
-              <span>❤️</span>
-              <span>{{ post.favoriteCount || 0 }}</span>
-            </div>
-            <div class="flex items-center gap-1">
-              <span>💬</span>
-              <span>{{ post.commentCount || 0 }}</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div ref="scrollTrigger" class="h-10"></div>
-
-    <!-- Skeleton loading（載入中顯示） -->
-    <div
-      v-if="isLoading"
-      class="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
-    >
-      <div
-        v-for="n in 3"
-        :key="n"
-        class="animate-pulse border-none rounded-xl p-4 shadow"
-      >
-        <div class="w-full h-60 bg-gray-300 rounded-xl mb-3"></div>
-        <div class="h-4 bg-gray-300 rounded w-3/4 mb-2"></div>
-        <div class="h-3 bg-gray-300 rounded w-1/3 mb-1"></div>
-        <div class="h-3 bg-gray-300 rounded w-1/4"></div>
-      </div>
-    </div>
-
-    <div
-      v-if="!isLoading && posts.length === 0"
-      class="text-center text-gray-400 my-12"
-    >
-      尚無貼文，快來建立第一篇吧！
-    </div>
-
-    <div v-if="!hasMore && posts.length" class="text-center text-gray-400 my-4">
-      已載入所有貼文
-    </div>
-
-    <PostPopup
-      v-if="showModal"
-      :post="selectedPost"
-      :is-visible="showModal"
-      @close="closeModal"
-      @update-post="updatePost"
-    />
-
-    <button
-      class="fixed bottom-6 right-6 bg-blue-500 text-white px-5 py-3 rounded-full shadow-xl hover:bg-blue-600 transition"
-      @click="goToCreatePost"
-    >
-      建立貼文
-    </button>
-  </div>
-</template>
-
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from "vue";
 import axios from "axios";
@@ -252,3 +149,155 @@ onBeforeUnmount(() => {
 });
 console.log("communityList mounted");
 </script>
+
+<template>
+  <div class="homepage-bg min-h-screen w-full">
+    <div class="px-4 py-6 max-w-5xl mx-auto">
+      <!-- <h1 class="text-2xl font-bold mb-4">社群主頁</h1> -->
+      <!-- 貼文列表 -->
+      <div class="grid gap-4 grid-cols-1 sm:grid-cols-4 lg:grid-cols-4 mt-20">
+        <div
+          v-for="post in posts"
+          :key="post.postId"
+          class="navbar-style rounded-[24px] overflow-hidden shadow hover:shadow-lg transition cursor-pointer flex flex-col"
+          @click="openPostDetail(post)"
+        >
+          <!-- Header -->
+          <div class="flex items-center gap-2 p-2">
+            <img
+              :src="post.authorAvatar || 'https://picsum.photos/36/36?random=1'"
+              :alt="post.authorName || 'User'"
+              class="w-6 h-6 rounded-full object-cover"
+              @error="
+                $event.target.src = 'https://picsum.photos/36/36?random=1'
+              "
+            />
+            <span class="text-sm">{{ post.authorName || "User Name" }}</span>
+          </div>
+
+          <!-- Image -->
+          <img
+            :src="
+              post.previewImage ||
+              post.coverURL ||
+              post.imageUrl ||
+              'https://picsum.photos/400/300?random'
+            "
+            alt="post image"
+            class="w-full aspect-square object-cover"
+          />
+
+          <!-- Footer -->
+          <div class="p-4 flex flex-col justify-between flex-grow">
+            <p class="text-gray-800 font-medium truncate">{{ post.content }}</p>
+            <div
+              class="mt-2 flex items-center justify-end text-gray-600 text-sm gap-4"
+            >
+              <div class="flex items-center gap-1">
+                <span>❤️</span>
+                <span>{{ post.favoriteCount || 0 }}</span>
+              </div>
+              <div class="flex items-center gap-1">
+                <span>💬</span>
+                <span>{{ post.commentCount || 0 }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div ref="scrollTrigger" class="h-10"></div>
+
+      <!-- Skeleton loading（載入中顯示） -->
+      <div
+        v-if="isLoading"
+        class="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
+      >
+        <div
+          v-for="n in 3"
+          :key="n"
+          class="animate-pulse border-none rounded-xl p-4 shadow"
+        >
+          <div class="w-full h-60 bg-gray-300 rounded-xl mb-3"></div>
+          <div class="h-4 bg-gray-300 rounded w-3/4 mb-2"></div>
+          <div class="h-3 bg-gray-300 rounded w-1/3 mb-1"></div>
+          <div class="h-3 bg-gray-300 rounded w-1/4"></div>
+        </div>
+      </div>
+
+      <div
+        v-if="!isLoading && posts.length === 0"
+        class="text-center text-gray-400 my-12"
+      >
+        尚無貼文，快來建立第一篇吧！
+      </div>
+
+      <div
+        v-if="!hasMore && posts.length"
+        class="text-center text-gray-400 my-4"
+      >
+        已載入所有貼文
+      </div>
+
+      <PostPopup
+        v-if="showModal"
+        :post="selectedPost"
+        :is-visible="showModal"
+        @close="closeModal"
+        @update-post="updatePost"
+      />
+
+      <button
+        class="animated-gradient fixed bottom-6 right-6 text-4xl text-white px-5 py-3 rounded-full flex justify-center leading-none"
+        @click="goToCreatePost"
+      >
+        +
+      </button>
+    </div>
+  </div>
+</template>
+
+<style scoped>
+.homepage-bg {
+  background-image:
+    radial-gradient(#999 1px, transparent 1px),
+    linear-gradient(to right, rgba(0, 0, 0, 0.08) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.08) 1px, transparent 1px);
+  background-size:
+    40px 40px,
+    40px 40px,
+    40px 40px;
+  background-position:
+    20px 20px,
+    0px 0px,
+    0px 0px;
+  background-color: white;
+}
+
+.animated-gradient {
+  background: linear-gradient(
+    149.45deg,
+    #ff6a38 7.6%,
+    rgba(255, 56, 17, 0.22) 7.62%,
+    #ffb2b2 19.41%,
+    #e0d391 40.78%,
+    #c6d544 58.91%,
+    #9fd01e 65.23%,
+    #8fcb40 71.26%,
+    #009991 92.4%
+  );
+  background-size: 100% 100%;
+  animation: gradientMove 2s ease infinite;
+}
+@keyframes gradientMove {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+</style>

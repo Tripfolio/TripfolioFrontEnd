@@ -8,7 +8,7 @@
   />
 
   <div
-    class="navbar-style absolute top-7 right-0 -translate-x-1/2 z-[2] flex items-center gap-2.5 px-2 py-1 rounded-full"
+    class="navbar-style absolute top-7 right-15 z-[2] flex items-center gap-2.5 px-2 py-1 rounded-full"
   >
     <div class="relative w-fit text-white/20">
       <select
@@ -37,20 +37,6 @@
       </svg>
     </div>
     <div class="relative w-[150px]">
-      <!-- <svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke-width="1.5"
-        stroke="currentColor"
-        class="absolute left-0 top-1/2 -translate-y-1/2 w-5 h-5 text-white pointer-events-none"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
-        />
-      </svg> -->
       <input
         type="text"
         v-model="searchQuery"
@@ -175,7 +161,7 @@
             selectedPlacePhotoIndex =
               (selectedPlacePhotoIndex + 1) % selectedPlace.photos.length
           "
-          class="absolute top-1/2 right-2 -translate-y-1/2 bg-black bg-opacity-40 text-white flex justify-center hover:bg-gray-700"
+          class="absolute top-1/2 right-2 -translate-y-1/2 bg-black bg-opacity-40 text-white flex rounded-full w-8 h-8 items-center justify-center hover:bg-gray-700"
           aria-label="下一張圖片"
         >
           ›
