@@ -27,4 +27,6 @@ const router = useRouter();
 const goToPost = () => {
   router.push(`/post/${props.post.id}`); // 之後需改成實際路由
 };
+
+console.log(props.post);
 </script>
