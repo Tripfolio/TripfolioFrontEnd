@@ -8,7 +8,7 @@
 
     <nav class="flex-1 flex justify-center space-x-6 items-center">
       <button class="flex items-center space-x-1 pr-5">
-        <RouterLink to="/map" class="">
+        <RouterLink to="/schedule" class="">
           <font-awesome-icon :icon="['fas', 'compass']" />
           <span class="pl-2 no-underline">探索</span>
         </RouterLink>
@@ -50,6 +50,7 @@
 import { ref, onMounted, onUnmounted } from "vue";
 import axios from "axios";
 import logo from "../assets/icons/Logo/logo.svg";
+
 
 const isLoggedIn = ref(false);
 const userAvatar = ref("");
