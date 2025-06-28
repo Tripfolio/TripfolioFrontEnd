@@ -8,13 +8,13 @@
   />
 
   <div
-    class="absolute top-2.5 left-1/2 -translate-x-1/2 z-[2] flex items-center gap-2.5 bg-gray-400/95 px-2 py-1 rounded-full"
+    class="navbar-style absolute top-7 right-0 -translate-x-1/2 z-[2] flex items-center gap-2.5 px-2 py-1 rounded-full"
   >
-    <div class="relative w-fit">
+    <div class="relative w-fit text-white/20">
       <select
         v-model="selectedCityName"
         @change="onCityChange($event)"
-        class="appearance-none bg-gray-500/80 text-white text-sm py-2 pl-4 pr-10 rounded-full focus:outline-none hover:bg-gray-400 transition duration-200 cursor-pointer shadow-inner"
+        class="appearance-none navbar-style rounded-4xl text-sm py-1 pl-2 pr-3 focus:outline-none hover:bg-gray-400 transition duration-200 cursor-pointer shadow-inner"
       >
         <option value="none">當前</option>
         <option v-for="city in cities" :key="city.name" :value="city.name">
@@ -36,8 +36,8 @@
         />
       </svg>
     </div>
-    <div class="relative w-[300px]">
-      <svg
+    <div class="relative w-[150px]">
+      <!-- <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"
@@ -50,12 +50,12 @@
           stroke-linejoin="round"
           d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
         />
-      </svg>
+      </svg> -->
       <input
         type="text"
         v-model="searchQuery"
         placeholder="輸入地點"
-        class="w-full rounded-full border-none text-white px-7 py-1.5 box-border text-base placeholder-white focus:outline-none"
+        class="w-[80%] rounded-full border-none px-3 py-1.5 box-border text-base placeholder-white focus:outline-none"
         ref="searchInput"
         @keyup.enter="searchPlace"
       />
@@ -69,79 +69,81 @@
   </div>
 
   <div ref="mapRef" class="w-screen h-screen m-0 p-0"></div>
-  <div
-    v-if="placeDetails.length"
-    class="absolute bottom-2 left-1/2 -translate-x-1/2 z-[3] w-[92%] max-w-screen-xl"
+  <button
+    class="absolute bottom-25 left-8 text-2xl w-12 h-12 rounded-full bg-gray-400/30 backdrop-blur-2xl"
+    @click="showCards = !showCards"
   >
+    📌
+  </button>
+  <transition name="slide-fade">
     <div
-      class="relative bg-white/80 backdrop-blur-lg rounded-2xl shadow-xl px-6 py-4"
+      v-show="showCards && placeDetails.length"
+      class="absolute bottom-2 left-1/2 -translate-x-1/2 z-[3] w-[70%] max-w-screen-xl"
     >
-      <button
-        @click="scrollLeft"
-        class="absolute left-0 top-1/2 -translate-y-1/2 z-20 bg-white/90 hover:bg-white shadow px-3 py-2 rounded-full"
-      >
-        ‹
-      </button>
-
-      <div
-        ref="cardContainer"
-        class="flex gap-4 overflow-x-auto scroll-smooth px-4 pr-6 scrollbar-hidden snap-x snap-mandatory"
-      >
-        <div
-          v-for="(place, index) in placeDetails"
-          :key="index"
-          @click="selectedPlace = place"
-          class="w-[70vw] sm:w-[250px] flex-shrink-0 bg-white rounded-xl shadow p-3 hover:shadow-md transition duration-200 cursor-pointer snap-start"
+      <div class="card-container-style relative rounded-2xl px-15 py-4">
+        <button
+          @click="scrollLeft"
+          class="absolute left-0 top-1/2 -translate-y-1/2 z-20 bg-white/90 hover:bg-white shadow px-3 py-2 rounded-full"
         >
-          <img
-            :src="place.photos?.[0]?.getUrl({ maxWidth: 800 }) || defaultImage"
-            @error="(e) => (e.target.src = defaultImage)"
-            alt="地點圖片"
-            class="w-full aspect-[3/2] object-cover rounded-md mb-2"
-          />
-          <h2 class="text-sm font-semibold truncate" :title="place.name">
-            {{ place.name }}
-          </h2>
-          <p
-            v-if="place.rating"
-            class="text-xs text-yellow-600 mt-1 whitespace-nowrap overflow-hidden text-ellipsis"
-          >
-            ⭐ {{ place.rating }} / {{ place.user_ratings_total }} 則評價
-          </p>
-        </div>
-        <div v-if="hasMoreResults" class="flex items-center justify-center">
-          <button
-            class="bg-gray-400 text-white py-2 px-4 rounded-full text-sm hover:bg-gray-700 whitespace-nowrap"
-            @click="loadNextPage"
-          >
-            更多
-          </button>
-        </div>
-      </div>
+          ‹
+        </button>
 
-      <button
-        @click="scrollRight"
-        class="absolute right-0 top-1/2 -translate-y-1/2 z-20 bg-white/90 hover:bg-white shadow px-3 py-2 rounded-full"
-      >
-        ›
-      </button>
+        <div
+          ref="cardContainer"
+          class="flex gap-4 overflow-x-auto scroll-smooth px-4 pr-6 scrollbar-hidden snap-x snap-mandatory"
+        >
+          <div
+            v-for="(place, index) in placeDetails"
+            :key="index"
+            @click="selectedPlace = place"
+            class="navbar-style w-[70vw] sm:w-[250px] max-w-[70%] flex-shrink-0 rounded-2xl transition duration-200 cursor-pointer snap-start"
+          >
+            <img
+              :src="
+                place.photos?.[0]?.getUrl({ maxWidth: 800 }) || defaultImage
+              "
+              @error="(e) => (e.target.src = defaultImage)"
+              alt="地點圖片"
+              class="w-full aspect-[3/2] object-cover rounded-md mb-2 h-30"
+            />
+            <h2 class="text-sm truncate text-white p-2" :title="place.name">
+              {{ place.name }}
+            </h2>
+            <p
+              v-if="place.rating"
+              class="text-xs text-yellow-00 mt-1 p-2 whitespace-nowrap overflow-hidden text-ellipsis"
+            >
+              ⭐ {{ place.rating }} / {{ place.user_ratings_total }} 則評價
+            </p>
+          </div>
+          <div v-if="hasMoreResults" class="flex items-center justify-center">
+            <button
+              class="bg-gray-400 text-white py-2 px-4 rounded-full text-sm hover:bg-gray-700 whitespace-nowrap"
+              @click="loadNextPage"
+            >
+              更多
+            </button>
+          </div>
+        </div>
+
+        <button
+          @click="scrollRight"
+          class="absolute right-0 top-1/2 -translate-y-1/2 z-20 bg-white/90 hover:bg-white shadow px-3 py-2 rounded-full"
+        >
+          ›
+        </button>
+      </div>
     </div>
-  </div>
+  </transition>
   <div
     v-if="selectedPlace"
     class="fixed inset-0 bg-black/50 flex items-center justify-center z-[4]"
     @click.self="selectedPlace = null"
   >
-    <div class="bg-white rounded-lg p-6 w-full max-w-md relative">
-      <h2 class="text-2xl font-bold mb-3">{{ selectedPlace.name }}</h2>
-      <p class="text-gray-600 text-sm mb-3">
-        {{ selectedPlace.formatted_address }}
-      </p>
-      <p v-if="selectedPlace.rating" class="text-yellow-600 mb-3">
-        ⭐ {{ selectedPlace.rating }}（共
-        {{ selectedPlace.user_ratings_total }} 則評價）
-      </p>
-      <div class="relative w-full aspect-[4/3]">
+    <div
+      class="solo-card-style w-full max-w-2xl p-3 border-2 border-white/30 shadow-[0_0_10px_1px_rgba(255,255,255,0.5)] bg-white/10 backdrop-blur-md flex rounded-4xl relative gap-5"
+    >
+      <div class="relative">
         <button
           v-if="selectedPlace.photos && selectedPlace.photos.length > 1"
           @click.stop="
@@ -159,13 +161,13 @@
           :src="
             selectedPlace.photos && selectedPlace.photos.length
               ? selectedPlace.photos[selectedPlacePhotoIndex].getUrl({
-                  maxWidth: 800,
+                  maxWidth: 400,
                 })
               : defaultImage
           "
           @error="(e) => (e.target.src = defaultImage)"
           alt="地點圖片"
-          class="max-w-full aspect-[4/3] object-cover rounded-lg mt-2.5"
+          class="max-w-full aspect-[4/3] object-cover rounded-2xl"
         />
         <button
           v-if="selectedPlace.photos && selectedPlace.photos.length > 1"
@@ -173,18 +175,36 @@
             selectedPlacePhotoIndex =
               (selectedPlacePhotoIndex + 1) % selectedPlace.photos.length
           "
-          class="absolute top-1/2 right-2 -translate-y-1/2 bg-black bg-opacity-40 text-white rounded-full w-8 h-8 flex items-center justify-center hover:bg-gray-700"
+          class="absolute top-1/2 right-2 -translate-y-1/2 bg-black bg-opacity-40 text-white flex justify-center hover:bg-gray-700"
           aria-label="下一張圖片"
         >
           ›
         </button>
       </div>
-      <button @click="callItinerary">🤍 加入行程</button>
+      <div class="mr-2.5">
+        <h2 class="text-2xl text-white mb-3 mt-10 break-words max-w-[20rem]">
+          {{ selectedPlace.name }}
+        </h2>
+        <p class="text-white text-sm mb-3">
+          {{ selectedPlace.formatted_address }}
+        </p>
+        <p v-if="selectedPlace.rating" class="text-yellow-600 mb-3">
+          ⭐ {{ selectedPlace.rating }}（共
+          {{ selectedPlace.user_ratings_total }} 則評價）
+        </p>
+
+        <button
+          @click="callItinerary"
+          class="absolute bottom-4 right-4 border px-4 py-1 rounded-2xl text-white cursor-pointer"
+        >
+          加入行程+
+        </button>
+      </div>
     </div>
   </div>
 
   <aside
-    class="w-20 p-4 space-y-2 bg-gray-400/30 fixed z-50 left-5 top-1/2 translate-y-[-50%] rounded-full shadow-4xl backdrop-blur-2xl"
+    class="navbar-style w-20 p-4 space-y-2 fixed z-50 left-5 top-1/2 translate-y-[-50%] rounded-full"
     ref="menuRef"
   >
     <button
@@ -234,26 +254,6 @@
       </div>
     </div>
   </aside>
-
-  <div
-    class="absolute bottom-10 left-5 bg-white/90 px-3 py-2 rounded-md shadow-md flex gap-2.5 items-center z-[1]"
-  >
-    <div v-if="result">
-      <p>兩點距離：{{ result.distance }}，預估時間：{{ result.duration }}</p>
-    </div>
-    <label class="flex items-center gap-2">
-      <span>選擇交通方式：</span>
-      <select
-        v-model="travelMode"
-        @change="recalculateRoute"
-        class="px-2 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-      >
-        <option value="DRIVING">🚗 開車</option>
-        <option value="WALKING">🚶‍♀️ 步行</option>
-        <option value="TRANSIT">🚇 大眾運輸</option>
-      </select>
-    </label>
-  </div>
 </template>
 
 <script setup>
@@ -265,6 +265,7 @@ import { cities } from "../constants/city";
 import { rawCategories, rawPlaceCategories } from "../constants/category";
 import { useCategoryMenu } from "../composable/useCategoryMenu";
 import { useMapSearch, SearchType } from "../composable/useMapSearch";
+import NavBar from "../components/NavBar.vue";
 
 const emit = defineEmits(["call-itinerary", "place-added"]);
 
@@ -302,6 +303,7 @@ const selectedPlacePhotoIndex = ref(0);
 const selectedCityName = ref(route.query.city || "none");
 
 const selectedMarkers = [];
+const showCards = ref(true);
 
 let markers = [];
 let service = null;
@@ -351,7 +353,6 @@ function callItinerary() {
     alert("成功加入行程！");
   }
 }
-
 
 const {
   categories,
@@ -474,7 +475,7 @@ function moveToCity(event) {
       (position) => {
         const center = new google.maps.LatLng(
           position.coords.latitude,
-          position.coords.longitude
+          position.coords.longitude,
         );
         map.value.setCenter(center);
         map.value.setZoom(15);
@@ -486,7 +487,7 @@ function moveToCity(event) {
       },
       () => {
         console.log("無法取得你的定位！");
-      }
+      },
     );
   }
 
@@ -630,7 +631,7 @@ function calculateRoute(origin, destination) {
       } else {
         alert("路線規劃失敗：" + status);
       }
-    }
+    },
   );
 }
 
@@ -690,22 +691,22 @@ function locateUser() {
     (error) => {
       isLocated.value = true;
       alert("無法取得你的定位資訊", error);
-    }
+    },
   );
 }
 
 function getPlaceIconUrl(types) {
   for (const type of types) {
-    return `src/assets/icons/mapIcons/${type}.svg`;
+    return `/mapIcons/${type}.svg`;
   }
-  return "src/assets/icons/mapIcons/default.svg";
+  return `/mapIcons/default.svg`;
 }
 
 watch(
   () => route.query.city,
   (newCity) => {
     selectedCityName.value = newCity || "none";
-  }
+  },
 );
 
 watch(selectedPlace, (newVal) => {
@@ -747,7 +748,7 @@ watch(
         location: map.value.getCenter(),
       });
     }
-  }
+  },
 );
 
 onMounted(async () => {
@@ -858,7 +859,7 @@ onMounted(async () => {
               selectedPlace.value = null;
               calculateRoute(
                 selectedMarkers[0].getPosition(),
-                selectedMarkers[1].getPosition()
+                selectedMarkers[1].getPosition(),
               );
             }
           } else {
@@ -873,7 +874,7 @@ onMounted(async () => {
     mapClickListener = google.maps.event.addListener(
       map.value,
       "click",
-      handleClickOutside
+      handleClickOutside,
     );
   } catch (err) {
     alert("Google Maps 載入失敗");
@@ -892,5 +893,15 @@ onUnmounted(() => {
 .scrollbar-hidden {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+.slide-fade-enter-active,
+.slide-fade-leave-active {
+  transition: all 0.4s ease;
+}
+.slide-fade-enter-from,
+.slide-fade-leave-to {
+  transform: translateY(100%);
+  opacity: 0;
 }
 </style>

@@ -80,18 +80,33 @@ function handleImageUpload(e) {
 }
 
 async function submitPost() {
-  if (!selectedScheduleId.value || !content.value) {
-    alert("選擇行程並填寫內容!!");
-    return;
-  }
+  const selected = schedules.value.find(
+    (s) => s.id === selectedScheduleId.value,
+  );
+
   const formData = new FormData();
   formData.append("scheduleId", selectedScheduleId.value);
   formData.append("content", content.value);
+
+  // 添加行程 title
+  if (selected) {
+    formData.append("scheduleTitle", selected.title);
+  }
 
   if (imageFile.value) {
     formData.append("cover", imageFile.value);
   } else if (previewImage.value?.startsWith("https://")) {
     formData.append("coverURL", previewImage.value);
+  }
+
+  // 調試資訊
+  console.log("提交的資料:");
+  console.log("selectedScheduleId:", selectedScheduleId.value);
+  console.log("selected schedule:", selected);
+  console.log("scheduleTitle:", selected?.title);
+
+  for (let [key, value] of formData.entries()) {
+    console.log(`${key}:`, value);
   }
 
   try {
