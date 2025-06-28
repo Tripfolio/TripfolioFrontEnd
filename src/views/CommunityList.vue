@@ -134,29 +134,6 @@ const fetchPosts = async () => {
       hasMore.value = false;
     }
 
-    // 檢查 API 回應的資料結構
-    console.log("API 回應的原始資料:", fetched);
-    if (fetched.length > 0) {
-      console.log("第一個貼文的完整資料:", fetched[0]);
-      console.log("發文者相關欄位:", {
-        authorName: fetched[0].authorName,
-        authorAvatar: fetched[0].authorAvatar,
-        author: fetched[0].author,
-        user: fetched[0].user,
-        member: fetched[0].member,
-      });
-      console.log("行程相關欄位:", {
-        scheduleId: fetched[0].scheduleId,
-        scheduleTitle: fetched[0].scheduleTitle,
-        schedule: fetched[0].schedule,
-        travelScheduleId: fetched[0].travelScheduleId,
-        travelSchedule: fetched[0].travelSchedule,
-        tripId: fetched[0].tripId,
-        trip: fetched[0].trip,
-      });
-      console.log("所有欄位名稱:", Object.keys(fetched[0]));
-    }
-
     // append 並保留互動欄位
     posts.value.push(
       ...fetched.map((post) => ({

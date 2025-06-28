@@ -99,12 +99,6 @@ async function submitPost() {
     formData.append("coverURL", previewImage.value);
   }
 
-  // 調試資訊
-  console.log("提交的資料:");
-  console.log("selectedScheduleId:", selectedScheduleId.value);
-  console.log("selected schedule:", selected);
-  console.log("scheduleTitle:", selected?.title);
-
   for (let [key, value] of formData.entries()) {
     console.log(`${key}:`, value);
   }

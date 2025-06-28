@@ -108,6 +108,10 @@ const login = async () => {
     isLoggedIn.value = true;
     showError.value = false;
     clearText();
+    
+    // 觸發登入狀態改變事件，通知 NavBar 更新
+    window.dispatchEvent(new Event("login-status-changed"));
+    
     router.push("/");
   } catch (err) {
     showError.value = true;
@@ -124,6 +128,9 @@ const logout = async () => {
   localStorage.removeItem("memberId");
   isLoggedIn.value = false;
   clearText();
+  
+  // 觸發登入狀態改變事件，通知 NavBar 更新
+  window.dispatchEvent(new Event("login-status-changed"));
 };
 
 onMounted(() => {
