@@ -8,13 +8,13 @@
   />
 
   <div
-    class="absolute top-2.5 left-1/2 -translate-x-1/2 z-[2] flex items-center gap-2.5 bg-gray-400/95 px-2 py-1 rounded-full"
+    class="absolute top-12 left-1/2 -translate-x-1/2 z-[2] flex items-center gap-1 bg-gray-400/95 px-2 py-1 rounded-full w-[95%] max-w-md"
   >
     <div class="relative w-fit">
       <select
         v-model="selectedCityName"
         @change="onCityChange($event)"
-        class="appearance-none bg-gray-500/80 text-white text-sm py-2 pl-4 pr-10 rounded-full focus:outline-none hover:bg-gray-400 transition duration-200 cursor-pointer shadow-inner"
+        class="appearance-none bg-gray-500/80 text-white text-base sm:text-sm py-2 pl-4 pr-10 rounded-full focus:outline-none hover:bg-gray-400 transition duration-200 cursor-pointer shadow-inner"
       >
         <option value="none">當前</option>
         <option v-for="city in cities" :key="city.name" :value="city.name">
@@ -67,11 +67,10 @@
       </button>
     </div>
   </div>
-
-  <div ref="mapRef" class="w-screen h-screen m-0 p-0"></div>
+  <div ref="mapRef" class="w-full h-full m-0 p-0"></div>
   <div
     v-if="placeDetails.length"
-    class="absolute bottom-2 left-1/2 -translate-x-1/2 z-[3] w-[92%] max-w-screen-xl"
+    class="absolute top-[32%] sm:top-auto sm:bottom-24 left-1/2 -translate-x-1/2 z-[3] w-[92%] max-w-screen-xl"
   >
     <div
       class="relative bg-white/80 backdrop-blur-lg rounded-2xl shadow-xl px-6 py-4"
@@ -91,13 +90,13 @@
           v-for="(place, index) in placeDetails"
           :key="index"
           @click="selectedPlace = place"
-          class="w-[70vw] sm:w-[250px] flex-shrink-0 bg-white rounded-xl shadow p-3 hover:shadow-md transition duration-200 cursor-pointer snap-start"
+          class="w-[70vw] sm:w-[250px] flex-shrink-0 bg-white rounded-xl shadow p-2 hover:shadow-md transition duration-200 cursor-pointer snap-start"
         >
           <img
             :src="place.photos?.[0]?.getUrl({ maxWidth: 800 }) || defaultImage"
             @error="(e) => (e.target.src = defaultImage)"
             alt="地點圖片"
-            class="w-full aspect-[3/2] object-cover rounded-md mb-2"
+            class="w-full h-35 object-cover rounded-md mb-1"
           />
           <h2 class="text-sm font-semibold truncate" :title="place.name">
             {{ place.name }}
@@ -184,12 +183,12 @@
   </div>
 
   <aside
-    class="w-20 p-4 space-y-2 bg-gray-400/30 fixed z-50 left-5 top-1/2 translate-y-[-50%] rounded-full shadow-4xl backdrop-blur-2xl"
+    class="fixed z-50 left-3 sm:left-5 top-28 sm:top-20 bg-gray-400/30 backdrop-blur-2xl shadow-4xl rounded-full flex flex-col items-center space-y-1 sm:space-y-2 p-2 sm:p-4 w-10 sm:w-14"
     ref="menuRef"
   >
     <button
       @click="locateUser"
-      class="block w-full text-left bg-gray-500/80 hover:bg-gray-400 text-white px-4 py-2 rounded-full cursor-pointer shadow-inner"
+      class="flex justify-center items-center w-full bg-gray-500/80 hover:bg-gray-400 text-white px-3 py-2 text-sm rounded-full cursor-pointer shadow-inner"
     >
       ⚙︎
     </button>
@@ -197,7 +196,7 @@
       v-for="item in categories"
       :key="item.type"
       @click="searchByCategory(item.type)"
-      class="block w-full text-left px-3 py-2 rounded hover:bg-blue-100"
+      class="flex justify-center items-center w-full px-3 py-2 rounded hover:bg-blue-100"
     >
       {{ item.label }}
     </button>
@@ -236,7 +235,7 @@
   </aside>
 
   <div
-    class="absolute bottom-10 left-5 bg-white/90 px-3 py-2 rounded-md shadow-md flex gap-2.5 items-center z-[1]"
+    class="absolute bottom-10 left-5 bg-white/90 px-3 py-2 rounded-md shadow-md flex flex-col sm:flex-row gap-2 items-center z-[1] w-[90%] max-w-md"
   >
     <div v-if="result">
       <p>兩點距離：{{ result.distance }}，預估時間：{{ result.duration }}</p>

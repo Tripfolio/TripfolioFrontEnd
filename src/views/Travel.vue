@@ -1,8 +1,8 @@
 <template>
   <div class="relative">
-    <div class="flex h-screen">
+    <div class="flex flex-col lg:flex-row h-screen">
       <!-- 左側：可放地圖或其他內容 -->
-      <div class="w-4/6 bg-gray-50 p-4 h-full relative overflow-hidden">
+      <div class="h-[60%] lg:h-full lg:w-4/6 bg-[#c2c2c2] p-4 relative overflow-hidden">
         <div class="w-full h-full relative rounded-xl overflow-hidden">
           <GoogleMapView
             ref="mapRef"
@@ -17,26 +17,33 @@
         </div>
       </div>
 
-      <!-- 右側：行程列表區 -->
-      <div class="w-2/6 h-full overflow-y-auto bg-white p-4 border-l">
-        <div class="flex justify-end mb-4">
-          <button @click="handleOpenForm" class="bg-blue-500 hover:bg-blue-400 text-white px-4 py-2 rounded-lg shadow">建立行程</button>
+      <!-- 右側：行程列表區-->
+      <div class="flex-1 lg:w-2/6 h-[40%] lg:h-full overflow-y-auto bg-[#c2c2c2] sm:border-t lg:border-t-0">
+        <div v-if="!editingTripId" class="fixed bottom-5 right-6 z-50">
+          <button 
+            @click="handleOpenForm" 
+            class="bg-gray-500 hover:bg-[#828282] text-white text-xl px-10 py-3 rounded-full shadow-md shadow-black/40"
+          >
+            建立行程
+          </button>
         </div>
 
       <!-- 行程卡片列表 -->
-      <div v-if="!editingTripId">
-        <div v-if="tripStore.trips.length > 0" class="space-y-4">
+      <div v-if="!editingTripId" class="p-7">
+        <div v-if="tripStore.trips.length > 0" class="mt-2 space-y-4">
           <div 
             v-for="item in tripStore.trips" 
             :key="item.id" @click="editingTripId = item.id" 
-            class="bg-white rounded-xl shadow p-4 relative cursor-pointer hover:ring-2 hover:ring-blue-300 transition">
+            class="bg-[#828282] rounded-xl shadow-md shadow-black/40 verflow-hidden relative cursor-pointer hover:ring-2 hover:ring-gray-400 transition">
           <img :src="item.coverURL || 'https://placehold.co/600x300?text=封面圖'" class="w-full h-60 object-cover rounded-xl mb-3" alt="行程封面照"/>
-          <h2 class="text-xl font-bold mb-1">{{ item.title }}</h2>
-          <p class="text-gray-600 text-sm">
-            {{ item.startDate }} - {{ item.endDate }}
-          </p>
-          <p class="text-gray-500 text-sm mt-2">{{ item.description }}</p>
-          <button @click.stop="deleteSchedule(item.id)" title="刪除行程" class="absolute bottom-2 right-2 text-gray-400 hover:text-red-500 text-xl">刪除行程</button>
+          <div class="px-5">
+            <h2 class="text-xl text-white font-bold mb-1">{{ item.title }}</h2>
+            <p class="text-white text-m">
+              {{ item.startDate }} - {{ item.endDate }}
+            </p>
+            <p class="text-white text-m mt-2">{{ item.description }}</p>
+          </div>
+          <button @click.stop="deleteSchedule(item.id)" title="刪除行程" class="absolute bottom-2 right-2 text-white hover:text-red-500 text-xl">刪除行程</button>
           </div>
         </div>
         <div v-else class="text-gray-400 text-center">尚未建立任何行程</div>
@@ -52,16 +59,17 @@
       />
       </div>
     </div>
+
     <!-- 彈出建立行程表單 -->
-    <div v-if="showForm" class="fixed inset-0 bg-white/50 backdrop-blur-sm flex items-center justify-center z-50">
-      <div class="bg-white w-full max-w-xl rounded-2xl p-6 shadow-lg relative">
+    <div v-if="showForm" class="fixed inset-0 bg-white/50 backdrop-blur-sm flex items-center justify-center z-50 overflow-auto p-4">
+      <div>
         <TravelSchedule @close="handleCloseForm" />
       </div>
     </div>
 
     <!-- 付款提醒Modal -->
-    <div v-if="showPayModal" class="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50">
-      <div class="bg-white rounded-2xl shadow-xl max-w-md w-full p-6 text-center">
+    <div v-if="showPayModal" class="fixed inset-0 bg-white/50 backdrop-blur-sm flex items-center justify-center z-50 overflow-auto p-4">
+      <div class="bg-white w-full max-w-xl rounded-2xl p-6 shadow-lg relative">
         <h2 class="text-xl font-bold mb-2">升級成付費會員</h2>
         <p class="text-gray-600 mb-6">免費會員僅可建立一筆行程，若要建立更多行程，請升級為付費會員。</p>
         <div class="flex justify-center gap-4">
