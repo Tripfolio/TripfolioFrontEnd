@@ -5,7 +5,7 @@
       class="mb-4 text-gray-600 hover:text-gray-800 flex items-center text-sm"
     >
       <font-awesome-icon :icon="['fas', 'arrow-left']" class="w-4 h-4 mr-1" />
-      返回行程總覽
+      {{ $t('tripOverview.back') }}
     </button>
     <div class="bg-white rounded-lg shadow-md overflow-hidden p-4 mb-6">
       <div class="relative w-full h-56 rounded-md mb-4 group overflow-hidden">
@@ -20,7 +20,7 @@
           v-else
           class="w-full h-full bg-gray-200 flex items-center justify-center text-gray-500"
         >
-          無封面圖片
+          {{ $t('tripOverview.noCover') }}
         </div>
 
         <label
@@ -28,7 +28,7 @@
           class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center text-white text-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 cursor-pointer"
         >
           <font-awesome-icon :icon="['fas', 'camera']" class="w-6 h-6 mr-2" />
-          更改封面
+          {{ $t('tripOverview.changeCover') }}
         </label>
         <input
           type="file"
@@ -51,7 +51,7 @@
             class="ml-2 text-gray-500 text-lg"
           />
           <span v-if="titleSaved" class="ml-2 text-green-500 text-sm"
-            >已儲存</span
+            >{{ $t('tripOverview.saved') }}</span
           >
         </h2>
         <input
@@ -79,22 +79,22 @@
             :min="editableStartDate"
             class="border px-2 py-1 rounded text-sm"
           />
-          <span>(共 {{ tripDays }} 天)</span>
+          <span>{{ $t('tripOverview.totalDays', { days: tripDays }) }}</span>
           <span v-if="dateSaved" class="text-green-500 text-sm ml-2"
-            >已儲存</span
+            >{{ $t('tripOverview.saved') }}</span
           >
         </div>
         <div class="flex items-center text-gray-500 mb-4">
-          <span class="text-sm">筆記：</span>
+          <span class="text-sm">{{ $t('tripOverview.notes') }}</span>
           <textarea
             v-model="editableNotes"
             @blur="saveNotes"
             class="flex-grow ml-2 p-2 border border-gray-300 rounded-md text-sm resize-y min-h-[60px] text-gray-800"
-            placeholder="點擊這裡新增或編輯行程筆記..."
+            :placeholder="$t('tripOverview.notesPlaceholder')"
           >
           </textarea>
           <span v-if="noteSaved" class="ml-2 text-green-500 text-sm"
-            >已儲存</span
+            >{{ $t('tripOverview.saved') }}</span
           >
         </div>
       </div>
@@ -114,14 +114,14 @@
         />
         <div class="flex justify-end gap-2 mt-4">
           <button @click="cancelCrop" class="bg-gray-300 px-4 py-2 rounded">
-            取消
+            {{ $t('tripOverview.cancel') }}
           </button>
           <button
             type="button"
             @click="applyCrop"
             class="bg-blue-500 text-white px-4 py-2 rounded"
           >
-            裁切
+            {{ $t('tripOverview.crop') }}
           </button>
         </div>
       </div>
@@ -134,6 +134,9 @@ import { ref, defineProps, watch, computed } from "vue";
 import { Cropper } from "vue-advanced-cropper";
 import "vue-advanced-cropper/dist/style.css";
 import dayjs from "dayjs";
+import { useI18n } from "vue-i18n";
+
+const { t } = useI18n();
 
 const props = defineProps({
   trip: {

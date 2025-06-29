@@ -5,7 +5,7 @@
       class="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition"
       :disabled="loading"
     >
-      {{ loading ? "處理中..." : "登入 Google 並建立行程" }}
+      {{ loading ? t('googleCalendar.loading') : t('googleCalendar.loginButton') }}
     </button>
 
     <div
@@ -24,7 +24,7 @@
           <button
             class="bg-blue-500 text-white py-1 px-4 rounded hover:bg-blue-600 transition"
           >
-            開啟 Google Calendar
+            {{ t('googleCalendar.openCalendar') }}
           </button>
         </a>
         <button
@@ -36,7 +36,7 @@
             size="xs"
             class="icon-text-color"
           />
-          複製連結
+          {{ t('googleCalendar.copyLink') }}
         </button>
       </div>
     </div>
@@ -45,6 +45,8 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
+import { useI18n } from "vue-i18n";
+const { t } = useI18n();
 
 const message = ref("");
 const eventLink = ref("");
@@ -80,7 +82,7 @@ onMounted(() => {
 function initializeGapiClient() {
   if (!CLIENT_ID || !API_KEY) {
     console.error("缺少 CLIENT_ID 或 API_KEY");
-    message.value = "缺少 CLIENT_ID 或 API_KEY，請檢查環境變數";
+    message.value = t('googleCalendar.missingEnv');
     return;
   }
 
@@ -95,13 +97,13 @@ function initializeGapiClient() {
     })
     .catch((err) => {
       console.error("GAPI 初始化失敗", err);
-      message.value = "Google API 初始化失敗：" + err.message;
+      message.value = t('googleCalendar.initFailed', { error: err.message });
     });
 }
 
 function handleAuthClick() {
   if (!gapiInitialized) {
-    alert("Google API 尚未初始化完成，請稍後再試");
+    alert(t('googleCalendar.apiNotReady'));
     return;
   }
 
@@ -111,11 +113,10 @@ function handleAuthClick() {
       scope: SCOPES,
       callback: (resp) => {
         if (resp.error) {
-          message.value = "認證失敗：" + resp.error;
-          console.error("OAuth 認證錯誤", resp);
+          message.value = t('googleCalendar.authFailed', { error: resp.error });
           return;
         }
-        message.value = "認證成功！建立行程中...";
+        message.value = t('googleCalendar.authSuccess');
         createTestEvent();
       },
     });
@@ -132,7 +133,7 @@ function createTestEvent() {
   const endDate = new Date("2025-08-01T11:00:00+08:00");
 
   // 時區 ISO 格式
-  createEvent("測試行程", startDate.toISOString(), endDate.toISOString());
+  createEvent(t('googleCalendar.testEventTitle'), startDate.toISOString(), endDate.toISOString());
 }
 
 function createEvent(summary, startDateTime, endDateTime) {
@@ -154,13 +155,13 @@ function createEvent(summary, startDateTime, endDateTime) {
       resource: event,
     })
     .then((response) => {
-      message.value = "成功建立行程：";
+      message.value = t('googleCalendar.createSuccess');
       eventLink.value = response.result.htmlLink;
       isLink.value = true;
       console.log("行程建立成功", response);
     })
     .catch((error) => {
-      message.value = "建立行程錯誤：" + error.message;
+      message.value = t('googleCalendar.createError', { error: error.message });
       console.error("建立行程失敗", error);
     });
 }
@@ -169,8 +170,7 @@ function copyLink() {
   if (eventLink.value) {
     navigator.clipboard
       .writeText(eventLink.value)
-      .then(() => alert("連結已複製！"))
-      .catch((err) => alert("失敗：" + err));
-  }
-}
+      .then(() => alert(t('googleCalendar.copySuccess')))
+      .catch((err) => alert(t('googleCalendar.copyFailed', { error: err })));
+}}
 </script>

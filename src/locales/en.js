@@ -1,4 +1,339 @@
 export default {
-  welcome: "Welcome to Tripfolio",
-  //...
+  global: {
+    welcome: "Welcome to Tripfolio",
+    current: "Current",
+    searchPlaceholder: "Enter a place",
+    searchButton: "Search",
+    loadMore: "Load more",
+    userNameFallback: "User",
+  },
+  navbar: {
+    explore: "Explore",
+    community: "Community",
+    profileEdit: "Edit Profile",
+    login: "Login",
+    signup: "Sign Up",
+  },
+  homepage: {
+    emailNotice: "Email Notifications",
+    connectCalendar: "Connect Google Calendar",
+    schedule: "My Schedule",
+    communityTab: "Community Posts",
+  },
+  community: {
+    noPosts: "No posts yet. Be the first to create one!",
+    allLoaded: "All posts loaded",
+    loadPostsError: "Failed to load posts",
+    goToCreatePost: "Create Post",
+  },
+  emailNotify: {
+    title: "Email Notification Settings",
+    loading: "Loading...",
+    save: "Save Settings",
+    onLogin: "Login Successful",
+    onLoginfail: "Abnormal Login Attempt",
+    onComment: "Commented on Post",
+    onBookmark: "Bookmarked Your Post",
+    notLoggedInLoad: "Not logged in. Cannot load preferences.",
+    loadFailed: "Failed to load preferences.",
+    notLoggedInSave: "Not logged in. Cannot save preferences.",
+    success: "Preferences updated!",
+    saveFailed: "Save failed. Please try again later.",
+  },
+  errors: {
+    unauthorized: "Unauthorized access",
+    network: "Network error. Please try again.",
+    unknown: "Something went wrong. Please try again later.",
+  },
+  tripInvite: {
+    loading: "Loading...",
+    invalidLink: "This link is expired or invalid.",
+    loadError: "Unable to load trip information.",
+    ownerLabel: "Owner",
+    editorPermission: "Editor Access",
+    viewerPermission: "Viewer Access",
+    alreadyJoined: "You are already a collaborator!",
+    joinButton: "Join Collaboration",
+    joinFailed: "Failed to join. Please try again later."
+  },
+  googleCalendar: {
+    loading: "Processing...",
+    loginButton: "Sign in with Google and create event",
+    openCalendar: "Open Google Calendar",
+    copyLink: "Copy Link",
+    missingEnv: "Missing CLIENT_ID or API_KEY. Check environment variables.",
+    initFailed: "Google API initialization failed: {error}",
+    apiNotReady: "Google API is not ready yet. Please try again later.",
+    authFailed: "Authentication failed: {error}",
+    authSuccess: "Authentication successful! Creating event...",
+    testEventTitle: "Test Event",
+    createSuccess: "Event created successfully:",
+    createError: "Error creating event: {error}",
+    copySuccess: "Link copied!",
+    copyFailed: "Copy failed: {error}"
+  },
+  googleMap: {
+    current: "Current",
+    searchPlaceholder: "Enter a place",
+    searchButton: "Search",
+    loadMore: "Load more",
+    addToItinerary: "Add to Itinerary +",
+    prevImage: "Previous Image",
+    nextImage: "Next Image",
+    selectPlaceDate: "Please select a place and date",
+    addSuccess: "Successfully added to itinerary!",
+    getLocationFailed: "Failed to get your location!",
+    notFound: "No places found!",
+    routeFailed: "Route planning failed: {status}",
+    mapNotReady: "Map is not ready yet. Please try again later.",
+    notSupported: "Your browser does not support geolocation.",
+    getLocationError: "Unable to get your location: ",
+    getDetailError: "Failed to get place details: ",
+    loadFailed: "Failed to load Google Maps",
+    reviewCount: "({count} reviews)",
+    yourLocation: "Your Location",
+    getDetailError: 'Failed to get place details: ',
+    nonPlaceClicked: 'Clicked on a non-place area',
+  },
+  linePay: {
+    failTitle: "Payment Failed",
+    failDescription: "Sorry, your payment was not successful. Please try again later or contact customer service.",
+    failBackButton: "Return to Payment Page",
+    successTitle: "Payment Successful",
+    successDescription: "Thank you for your purchase! Your payment has been processed successfully.",
+    successBackButton: "Back to Itinerary Editor",
+  },
+  login: {
+    title: "Login Page",
+    emailPlaceholder: "Enter your email",
+    passwordPlaceholder: "Enter your password",
+    errorEmpty: "Please enter email and password",
+    errorFailed: "Login failed. Please check your email and password",
+    buttonLogin: "Login",
+    buttonRegister: "Register",
+    buttonLogout: "Logout",
+    loggedIn: "You are logged in",
+  },
+  memberProfile: {
+    title: 'Edit Profile',
+    avatar: {
+      change: 'Change Avatar',
+      save: 'Save Avatar'
+    },
+    form: {
+      name: 'Name',
+      namePlaceholder: 'Enter your name',
+      gender: 'Gender',
+      male: 'Male',
+      female: 'Female',
+      phone: 'Phone Number',
+      phonePlaceholder: 'Enter your phone number',
+      phoneError: 'Invalid phone format. Example: 0912345678',
+      birthday: 'Birthday',
+      save: 'Save Profile'
+    },
+    password: {
+      title: 'Change Password',
+      old: 'Old Password',
+      new: 'New Password',
+      confirm: 'Confirm New Password',
+      submit: 'Submit Password Change',
+      hint: 'At least 8 characters, including letters and numbers',
+      minLength: 'Password must be at least 8 characters',
+      mustContainLetter: 'Password must contain letters',
+      mustContainNumber: 'Password must contain numbers',
+      cannotBeSameAsName: 'Password cannot be the same as your name'
+    }
+  },
+  scheduleDetail: {
+    dayLabel: 'Day {index}',
+    loadFailed: 'Failed to load schedule',
+    coverUpdateSuccess: 'Cover updated successfully!',
+    coverUpdateFailed: 'Failed to update cover',
+    titleUpdateFailed: 'Failed to update title',
+    dateUpdateFailed: 'Failed to update dates',
+    notesUpdateFailed: 'Failed to update notes'
+  },
+  payment: {
+    title: 'Upgrade to Premium Membership',
+    description: 'Only NT${amount} to unlock unlimited plans!',
+    isPremiumNotice: 'You are already a premium member. Thank you for your support!',
+    linePayLoading: 'Generating LINE Pay link, please wait...',
+    linePayButton: 'Proceed with LINE Pay',
+    creditCardButton: 'Pay with Credit Card',
+    creditCardTitle: 'Credit Card Payment',
+    testCardHint: '(Test card: 4111 1111 1111 1111)',
+    loading: 'Loading...',
+    initCreditCard: 'Initialize Credit Card Payment',
+    confirmCreditCard: 'Confirm Credit Card Payment',
+    error: {
+      checkStatusFail: 'Failed to check membership status'
+    },
+    alert: {
+      loginRequired: 'Please log in to proceed with payment.',
+      linePayLinkFail: 'Unable to get LINE Pay link, please try again later.',
+      linePayInitFail: 'LINE Pay initialization failed, please check your connection or try again later.',
+      clientTokenFail: 'Unable to retrieve credit card Client Token, please try again later.',
+      creditCardLoadFail: 'Failed to load credit card payment interface, please try again later.',
+      creditCardNotReady: 'Credit card payment interface is not ready.',
+      paymentSuccess: 'Payment successful! Amount: NT${amount}\nTransaction ID: ${txnId}',
+      paymentFail: 'Payment failed: ${message}',
+      creditCardFail: 'Credit card payment failed, please try again later.',
+      unknownError: 'Unknown error'
+    }
+  },
+  signUp: {
+    title: 'Sign Up',
+    form: {
+      namePlaceholder: 'Your name',
+      emailPlaceholder: 'Enter your email',
+      passwordPlaceholder: 'Enter your password',
+      submit: 'Sign Up',
+      toLogin: 'Already a member? Log in'
+    },
+    error: {
+      generalFail: 'Registration failed. Please try again later.'
+    }
+  },
+  travel: {
+    createTrip: 'Create Trip',
+    deleteTrip: 'Delete Trip',
+    noTrips: 'No trips created yet',
+    upgradeTitle: 'Upgrade to Premium',
+    upgradeDescription: 'Free members can only create one trip. Upgrade to Premium to create more.',
+    goToPayment: 'Go to Payment',
+    cancel: 'Cancel',
+    alert: {
+      loginRequired: 'Please log in first',
+      confirmDelete: 'Are you sure you want to delete this trip?',
+      deleteSuccess: 'Deleted successfully',
+      deleteFail: 'Failed to delete, please try again later'
+  }
+  },
+  addComment: {
+    placeholder: 'Write your comment...',
+    sending: 'Sending...',
+    submit: 'Post Comment'
+  },
+  commentSection: {
+    loading: 'Loading comments...',
+    noComments: 'No comments yet. Be the first!',
+    anonymous: 'Anonymous User',
+    deleting: 'Deleting...'
+  },
+  commentSection: {
+    loading: 'Loading comments...',
+    anonymous: 'Anonymous',
+    deleting: 'Deleting...',
+    noComments: 'No comments yet. Be the first!',
+    justNow: 'Just now',
+    minutesAgo: '{minutes} minutes ago',
+    hoursAgo: '{hours} hours ago',
+    confirmDelete: 'Are you sure you want to delete this comment?',
+    noPermission: 'You do not have permission to delete this comment',
+    notFound: 'Comment does not exist or has been deleted',
+    deleteFail: 'Failed to delete. Please try again later'
+  },
+  common: {
+    reviews: 'reviews',
+  },
+  dailyPlan: {
+    arrive: 'Arrive',
+    confirm: 'Confirm',
+    cancel: 'Cancel',
+    remove: 'Delete',
+    noPlaces: 'No places added yet',
+    selectTrip: 'Please select a trip and date from the sidebar to view the daily plan.',
+    sortFail: 'Failed to update sorting'
+  },
+  itinerary: {
+    loadFail: 'Failed to load itinerary',
+    conflict: 'Another place has the same time!',
+    updateTimeFail: 'Failed to update time',
+    sortFail: 'Failed to update sorting',
+    selectPlaceDate: 'Please select a place and date',
+    alreadyAdded: 'This place has already been added',
+    addFail: 'Add failed',
+    addPlaceFail: 'Failed to add place',
+    deleteFail: 'Delete failed'
+  },
+  navbar: {
+    explore: 'Explore',
+    community: 'Community'
+  },
+  postCard: {
+    author: 'Author'
+  },
+  postForm: {
+    selectSchedule: 'Select Schedule',
+    cover: 'Post Cover',
+    content: 'Post Content',
+    submit: 'Submit Post',
+    fetchFail: 'Unable to fetch',
+    invalidFile: 'Unsupported format or file too large. Please upload JPG, PNG, or WebP. Max 3MB',
+    success: 'Post published successfully',
+    submitFail: 'Failed to publish post. Please try again later!'
+  },
+  postPopup: {
+    anonymous: 'Anonymous',
+    scheduleDeleted: 'Schedule deleted ಥ_ಥ',
+    noContent: 'No content',
+    scheduleReference: 'View Schedule'
+  },
+  shareTrip: {
+    invite: 'Invite Collaborators',
+    editor: 'Can Edit',
+    viewer: 'View Only',
+    qrHint: 'Scan the QR code to view this trip on your phone',
+    copyLink: 'Copy Link',
+    members: 'Collaborators',
+    alertLinkUpdated: 'Invitation link updated',
+    alertLinkFail: 'Failed to generate link.',
+    alertCopied: 'Link copied!',
+    alertCopyFail: 'Copy failed',
+    alertFetchMembersFail: 'Failed to fetch members.',
+    alertChangeFail: 'Failed to change permission',
+    alertConfirmRemove: 'Are you sure you want to remove {name}?',
+    alertRemoveFail: 'Failed to remove'
+  },
+  traffic: {
+    selectTransport: '— Select Transportation —',
+    driving: '🚗 Driving',
+    walking: '🚶‍♂️ Walking',
+    transit: '🚇 Transit',
+    alertFail: 'Failed to load traffic info, please try again later'
+  },
+  travelSchedule: {
+    title: 'Trip Settings',
+    uploadImage: 'Upload Image',
+    cancel: 'Cancel',
+    crop: 'Crop',
+    name: 'Trip Name',
+    namePlaceholder: 'Give your trip a name⸜(*ˊᗜˋ*)⸝',
+    date: 'Trip Dates',
+    totalDays: '{days} days',
+    descLabel: 'Trip Description (optional)',
+    descPlaceholder: 'Briefly describe your trip~(ﾉ˶>ᗜ​<˵)ﾉ',
+    saving: 'Saving...',
+    create: 'Create',
+    alertFill: 'Please fill in trip name and start/end dates',
+    alertSuccess: 'Saved successfully. You can close the form and edit the trip.',
+    alertFail: 'Save failed, please try again later',
+    confirmExit: 'You have unsaved changes. Are you sure you want to leave?',
+  },
+  tripList: {
+    title: 'My Trips',
+    noData: 'No trip data yet!',
+    noCover: 'No cover image',
+    totalDays: '{days} days',
+  },
+  tripOverview: {
+    back: 'Back to Trip Overview',
+    noCover: 'No cover image',
+    changeCover: 'Change Cover',
+    saved: 'Saved',
+    totalDays: '({days} days)',
+    notes: 'Notes:',
+    notesPlaceholder: 'Click here to add or edit trip notes...'
+  }
 };

@@ -9,16 +9,16 @@
             <p class="mb-2">{{ $t("welcome") }}</p>
             <div class="flex flex-wrap gap-4">
               <RouterLink to="/emailSettings" class="underline"
-                >Email 通知</RouterLink
+                >{{ $t("emailNotice") }}</RouterLink
               >
               <RouterLink to="/profile" class="underline"
-                >會員資料修改</RouterLink
+                >{{ $t("profileEdit") }}</RouterLink
               >
               <RouterLink to="/calendar" class="underline"
-                >連結 Google Calendar</RouterLink
+                >{{ $t("connectCalendar") }}</RouterLink
               >
-              <RouterLink to="/schedule" class="underline">個人行程</RouterLink>
-              <RouterLink to="/community">社群貼文</RouterLink>
+              <RouterLink to="/schedule" class="underline">>{{ $t("schedule") }}</RouterLink>
+              <RouterLink to="/community">{{ $t("community") }}</RouterLink>
             </div>
           </section>
         </section>
@@ -34,7 +34,7 @@
                 @change="onCityChange($event)"
                 class="appearance-none bg-gray-500/80 text-white text-sm py-2 pl-4 pr-10 rounded-full focus:outline-none hover:bg-gray-400 transition duration-200 cursor-pointer shadow-inner"
               >
-                <option value="none">當前</option>
+                <option value="none">{{ $t("current") }}</option>
                 <option
                   v-for="city in cities"
                   :key="city.name"
@@ -75,7 +75,7 @@
               <input
                 type="text"
                 v-model="searchQuery"
-                placeholder="輸入地點"
+                placeholder="$t('searchPlaceholder')"
                 class="w-full rounded-full border-none text-white px-9 py-1.5 box-border text-base placeholder-white focus:outline-none"
                 ref="searchInput"
                 @keyup.enter="searchPlace"
@@ -84,7 +84,7 @@
                 @click.prevent="searchPlace"
                 class="absolute right-2 top-1/2 -translate-y-1/2 bg-gray-800 px-2.5 py-1.5 rounded-full border-none cursor-pointer text-xs text-white"
               >
-                搜尋
+                >{{ $t("searchButton") }}
               </button>
             </div>
           </div>
@@ -146,7 +146,7 @@
             {{ place.name }}
           </h2>
           <p v-if="place.rating" class="text-sm text-yellow-600 mt-1">
-            ⭐ {{ place.rating }} / {{ place.user_ratings_total }} 則評價
+            ⭐ {{ place.rating }} / {{ place.user_ratings_total }} {{ $t('common.reviews') }}
           </p>
           <p
             v-if="place.formatted_address"
@@ -160,7 +160,7 @@
             class="bg-gray-500 text-white py-2 px-6 rounded-full text-sm hover:bg-gray-700"
             @click="loadNextPage"
           >
-            載入更多
+            {{ $t("loadMore") }}
           </button>
         </div>
       </div>
@@ -174,6 +174,8 @@ import { RouterLink, useRouter, useRoute } from "vue-router";
 import { cities } from "../constants/city";
 import { rawCategories, rawPlaceCategories } from "../constants/category";
 import { useCategoryMenu } from "../composable/useCategoryMenu";
+import { useI18n } from "vue-i18n";
+const { t } = useI18n();
 
 const {
   categories,

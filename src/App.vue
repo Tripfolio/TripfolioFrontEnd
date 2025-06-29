@@ -2,6 +2,8 @@
 <!-- 這兩行是語言設定 -->
   <button @click="locale = 'en'">English</button>
   <button @click="locale = 'zh'">中文</button>
+  <button @click="locale.value = 'ja'">日本語</button>
+  <button @click="locale.value = 'ko'">한국어</button>
 
   <div class="relative">
     <!-- 上方 Navbar（非地圖頁） -->

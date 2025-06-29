@@ -34,11 +34,11 @@
             />
             <div>
               <div class="font-semibold">
-                {{ localPost.authorName || "匿名使用者" }}
+                {{ localPost.authorName || $t('postPopup.anonymous') }}
               </div>
 
               <div class="text-sm text-gray-600">
-                {{ scheduleTitle || "行程已刪除 ಥ_ಥ" }}
+                {{ scheduleTitle || $t('postPopup.scheduleDeleted') }}
               </div>
             </div>
           </div>
@@ -46,7 +46,7 @@
             class="cursor-pointer bg-blue-500 hover:bg-blue-600 px-3 py-1 rounded transition-colors"
             @click="toTravelPage"
           >
-            <p class="text-white text-sm">行程參考</p>
+            <p class="text-white text-sm">{{ $t('postPopup.scheduleReference') }}</p>
           </button>
         </div>
 
@@ -55,7 +55,7 @@
           <!-- 貼文內容 -->
           <div class="post-body p-4 border-b">
             <p class="break-words whitespace-pre-wrap">
-              {{ localPost.content || "沒有內容" }}
+              {{ localPost.content || $t('postPopup.noContent') }}
             </p>
           </div>
 
@@ -83,6 +83,8 @@ import { ref, onMounted, watch } from "vue";
 import axios from "axios";
 import CommentSection from "../components/CommentSection.vue";
 import FavoriteButton from "../components/FavoriteButton.vue";
+import { useI18n } from "vue-i18n";
+const { t } = useI18n();
 
 const props = defineProps({
   post: {

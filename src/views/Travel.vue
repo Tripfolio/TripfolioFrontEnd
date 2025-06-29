@@ -24,7 +24,7 @@
             @click="handleOpenForm"
             class="bg-blue-500 hover:bg-blue-400 text-white px-4 py-2 rounded-lg shadow"
           >
-            建立行程
+            {{ $t('travel.createTrip') }}
           </button>
         </div>
 
@@ -54,11 +54,11 @@
                 title="刪除行程"
                 class="absolute bottom-2 right-2 text-gray-400 hover:text-red-500 text-xl"
               >
-                刪除行程
+                {{ $t('travel.deleteTrip') }}
               </button>
             </div>
           </div>
-          <div v-else class="text-gray-400 text-center">尚未建立任何行程</div>
+          <div v-else class="text-gray-400 text-center">{{ $t('travel.noTrips') }}</div>
         </div>
 
         <!-- 編輯行程 -->
@@ -89,22 +89,22 @@
       <div
         class="bg-white rounded-2xl shadow-xl max-w-md w-full p-6 text-center"
       >
-        <h2 class="text-xl font-bold mb-2">升級成付費會員</h2>
+        <h2 class="text-xl font-bold mb-2">{{ $t('travel.upgradeTitle') }}</h2>
         <p class="text-gray-600 mb-6">
-          免費會員僅可建立一筆行程，若要建立更多行程，請升級為付費會員。
+          {{ $t('travel.upgradeDescription') }}
         </p>
         <div class="flex justify-center gap-4">
           <button
             @click="goToPay"
             class="bg-green-500 hover:bg-green-400 text-white px-4 py-2 rounded"
           >
-            前往付款
+            {{ $t('travel.goToPayment') }}
           </button>
           <button
             @click="showPayModal = false"
             class="px-4 py-2 border rounded text-gray-600 hover:bg-gray-100"
           >
-            取消
+            {{ $t('travel.cancel') }}
           </button>
         </div>
       </div>
@@ -179,7 +179,7 @@ watch(() => route.query.paymentSuccess, (newValue) => {
 const handleOpenForm = () => {
     const token = localStorage.getItem('token');
     if(!token) {
-      alert('請先登入會員')
+      alert(t('travel.alert.loginRequired'))
       return
     }
     const count = tripStore.trips.length;
@@ -224,7 +224,7 @@ const handleCloseDetail = () => {
 
 //刪除行程
 const deleteSchedule = async (id) => {
-  const confirmed = confirm("確定刪除這個行程嗎?");
+  const confirmed = confirm(t('travel.alert.confirmDelete')) ;
   if (!confirmed) return;
 
   const token = localStorage.getItem("token");
@@ -238,9 +238,9 @@ const deleteSchedule = async (id) => {
     );
 
     tripStore.trips = tripStore.trips.filter((s) => s.id !== id);
-    alert("刪除成功");
+    alert(t('travel.alert.deleteSuccess'));
   } catch (err) {
-    alert("刪除失敗，請稍後再試");
+    alert(t('travel.alert.deleteFail'));
   }
 };
 

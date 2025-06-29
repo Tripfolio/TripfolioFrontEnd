@@ -22,7 +22,7 @@
                     class="px-4 py-1 rounded-full text-sm border"
                     :class="currentDayIndex === index
                     ? 'bg-blue-600 text-white border-blue-600'
-                    : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-100'">第{{ index + 1 }}天
+                    : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-100'"> {{ $t('scheduleDetail.dayLabel', { index: index + 1 }) }}
                 </button>
             </div>
             <!-- 每日計畫 -->
@@ -57,6 +57,8 @@ import TripOverview from '../components/TripOverview.vue';
 import DailyPlan from '../components/DailyPlan.vue';
 import Itinerary from '../components/Itinerary.vue';
 import { generateDaysArray } from '../stores/tripStore';
+import { useI18n } from "vue-i18n";
+const { t } = useI18n();
 
 const props = defineProps({
   tripId: [String, Number],
@@ -90,7 +92,7 @@ const fetchTrip = async () => {
     trip.value = tripData;
     tripLoaded.value = true;
   } catch (err) {
-    alert('無法載入行程');
+    alert(t('scheduleDetail.loadFailed'));
     router.push('/schedule');
   }
 };
@@ -120,9 +122,9 @@ const updateCover = async (blob) => {
             trip.value.coverURL = res.data.coverURL
             coverTimestamp.value = Date.now()
         }
-    alert('封面已成功更新！');
+    alert(t('scheduleDetail.coverUpdateSuccess'));
     } catch (err) {
-    alert('封面更新失敗');
+    alert(t('scheduleDetail.coverUpdateFailed'));
   }
 };
 
@@ -134,7 +136,7 @@ const updateTitle = async (newTitle) => {
     )
     trip.value.title = newTitle
     } catch (err) {
-        alert('標題更新失敗')
+        alert(t('scheduleDetail.titleUpdateFailed'))
     }
 };
 
@@ -157,7 +159,7 @@ const updateDates = async ({ startDate, endDate }) => {
             currentDayIndex.value = 0;
         }
     } catch (err) {
-        alert('更新日期失敗')
+        alert(t('scheduleDetail.dateUpdateFailed'))
     }
 };
 
@@ -170,7 +172,7 @@ const updateNotes = async (newNotes) => {
     )
     trip.value.description = newNotes
     } catch (err) {
-        alert('筆記更新失敗')
+        alert(t('scheduleDetail.notesUpdateFailed'))
     }
 }
 

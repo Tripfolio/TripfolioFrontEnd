@@ -5,10 +5,10 @@
     @change="getTravelInfo"
     class="w-36 px-3 py-1 border-2 border-gray-500 rounded-full text-base"
   >
-    <option value="NONE">— 選交通方式 —</option>
-    <option value="DRIVING">🚗 開車</option>
-    <option value="WALKING">🚶‍♂️ 步行</option>
-    <option value="TRANSIT">🚇 大眾運輸</option>
+    <option value="NONE">—{{ $t('traffic.selectTransport') }}—</option>
+    <option value="DRIVING">{{ $t('traffic.driving') }}</option>
+    <option value="WALKING">{{ $t('traffic.walking') }}</option>
+    <option value="TRANSIT">{{ $t('traffic.transit') }}</option>
   </select>
 
   <div class="flex items-center gap-1 text-base whitespace-nowrap">
@@ -20,8 +20,10 @@
 
 
 <script setup>
-import { ref, watch } from 'vue'
-import axios from 'axios'
+import { ref, watch } from 'vue';
+import axios from 'axios';
+import { useI18n } from "vue-i18n";
+const { t } = useI18n();
 
 const API_URL = import.meta.env.VITE_API_URL
 
@@ -113,7 +115,7 @@ async function getTravelInfo () {
 
   } catch (err) {
     console.error('取得/儲存交通資料失敗：', err)
-    alert('讀取交通資訊失敗，請稍後再試')
+    alert(t('traffic.alertFail'))
   }
 }
 </script> 

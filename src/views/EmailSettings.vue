@@ -1,7 +1,7 @@
 <template>
   <div class="p-4 max-w-xl mx-auto">
-    <h2 class="text-xl font-bold mb-4">Email 通知設定</h2>
-    <div v-if="loading">載入中...</div>
+    <h2 class="text-xl font-bold mb-4">{{ t("emailNotify.loading") }}</h2>
+    <div v-if="loading">{{ t("emailNotify.loading") }}</div>
     <div v-else>
       <div
         v-for="(_value, key) in preferences"
@@ -15,7 +15,7 @@
         @click="savePreferences"
         class="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
       >
-        儲存設定
+        {{ t("emailNotify.save") }}
       </button>
     </div>
   </div>
@@ -24,6 +24,8 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import axios from "axios";
+import { useI18n } from "vue-i18n"
+const { t } = useI18n()
 
 const preferences = ref({
   onLogin: true,
@@ -33,10 +35,10 @@ const preferences = ref({
 });
 
 const labels = {
-  onLogin: "登入成功",
-  onLoginfail: "帳號登入異常",
-  onComment: "貼文被留言",
-  onBookmark: "貼文被收藏",
+  onLogin: t("emailNotify.onLogin"),
+  onLoginfail: t("emailNotify.onLoginfail"),
+  onComment: t("emailNotify.onComment"),
+  onBookmark: t("emailNotify.onBookmark"),
 };
 
 const loading = ref(false);
@@ -47,7 +49,7 @@ const fetchPreferences = async () => {
     const token = localStorage.getItem("token");
 
     if (!token) {
-      alert("尚未登入，無法載入偏好設定。");
+      alert(t("emailNotify.notLoggedInLoad"));
       return; // 提早結束
     }
 
@@ -61,7 +63,7 @@ const fetchPreferences = async () => {
     );
     preferences.value = data;
   } catch (err) {
-    alert("載入偏好設定失敗。");
+    alert(t("emailNotify.loadFailed"));
   } finally {
     loading.value = false;
   }
@@ -72,7 +74,7 @@ const savePreferences = async () => {
     const token = localStorage.getItem("token");
 
     if (!token) {
-      alert("尚未登入，無法儲存設定。");
+      alert(t("emailNotify.notLoggedInSave"));
       return;
     }
 
@@ -85,9 +87,9 @@ const savePreferences = async () => {
         },
       },
     );
-    alert("偏好設定已更新！");
+    alert(t("emailNotify.success"));
   } catch (err) {
-    alert("儲存失敗，請稍後再試。");
+    alert(t("emailNotify.saveFailed"));
   }
 };
 

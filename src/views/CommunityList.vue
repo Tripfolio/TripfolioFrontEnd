@@ -4,6 +4,8 @@ import axios from "axios";
 import dayjs from "dayjs";
 import { useRouter } from "vue-router";
 import PostPopup from "../components/PostPopup.vue";
+import { useI18n } from "vue-i18n";
+const { t } = useI18n();
 
 const posts = ref([]);
 const page = ref(1);
@@ -43,7 +45,7 @@ const fetchPosts = async () => {
     page.value++;
     console.log(posts.value);
   } catch (err) {
-    alert("載入貼文失敗");
+    alert(t("community.loadPostsError"));
   } finally {
     isLoading.value = false;
   }
@@ -149,7 +151,7 @@ console.log("communityList mounted");
                 $event.target.src = 'https://picsum.photos/36/36?random=1'
               "
             />
-            <span class="text-sm">{{ post.authorName || "User Name" }}</span>
+            <span class="text-sm">{{ post.authorName || t('global.userNameFallback') }}</span>
           </div>
 
           <!-- Image -->
@@ -176,7 +178,7 @@ console.log("communityList mounted");
               </div>
               <div class="flex items-center gap-1">
                 <span>💬</span>
-                <span>{{ post.commentCount || 0 }}</span>
+                <span>{{ t("noPosts") }}</span>
               </div>
             </div>
           </div>
@@ -206,14 +208,14 @@ console.log("communityList mounted");
         v-if="!isLoading && posts.length === 0"
         class="text-center text-gray-400 my-12"
       >
-        尚無貼文，快來建立第一篇吧！
+        {{ t('community.noPosts') }}
       </div>
 
       <div
         v-if="!hasMore && posts.length"
         class="text-center text-gray-400 my-4"
       >
-        已載入所有貼文
+        {{ t('community.allLoaded') }}
       </div>
 
       <PostPopup

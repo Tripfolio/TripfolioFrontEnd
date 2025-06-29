@@ -1,13 +1,13 @@
 <template>
   <div>
     <div class="flex justify-between items-center mb-6">
-      <h2 class="text-2xl font-bold text-gray-800">我的行程</h2>
+      <h2 class="text-2xl font-bold text-gray-800">{{ $t('tripList.title') }}</h2>
     </div>
     <div
       v-if="trips.length === 0"
       class="text-center text-gray-500 py-10 text-base"
     >
-      <p class="mb-4">還沒有任何行程資料！</p>
+      <p class="mb-4">{{ $t('tripList.noData') }}</p>
     </div>
     <ul class="space-y-4">
       <li
@@ -26,13 +26,12 @@
           v-else
           class="w-full h-40 bg-gray-200 flex items-center justify-center text-gray-500 text-sm"
         >
-          無封面圖片
+          {{ $t('tripList.noCover') }}
         </div>
         <div class="p-4">
           <h3 class="font-bold text-lg text-gray-800 mb-1">{{ trip.title }}</h3>
           <p class="text-gray-600 text-sm">
-            {{ trip.startDate }} ~ {{ trip.endDate }} (共
-            {{ trip.days.length }} 天)
+            {{ trip.startDate }} ~ {{ trip.endDate }} ({{ $t('tripList.totalDays', { days: trip.days.length }) }})
           </p>
         </div>
       </li>
@@ -42,6 +41,8 @@
 
 <script setup>
 import { defineProps, defineEmits } from "vue";
+import { useI18n } from "vue-i18n";
+const { t } = useI18n();
 
 defineProps({
   trips: {

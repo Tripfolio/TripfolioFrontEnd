@@ -1,6 +1,6 @@
 <template>
   <div class="profile p-4 max-w-md mx-auto">
-    <h2 class="text-xl font-bold mb-4">資料修改</h2>
+    <h2 class="text-xl font-bold mb-4">{{ $t('memberProfile.title') }}</h2>
 
     <div class="flex flex-col items-center mb-4">
       <div class="relative w-40 h-40">
@@ -13,7 +13,7 @@
         <label
           for="avatar-upload"
           class="avatar-upload absolute bottom-2 right-2 bg-white border border-gray-300 rounded-full p-2 cursor-pointer hover:bg-gray-100 shadow-md"
-          title="更換大頭貼"
+          :title="$t('memberProfile.avatar.change')"
           ><font-awesome-icon :icon="['fas', 'pen-to-square']"
         /></label>
         <input
@@ -36,54 +36,54 @@
         class="w-40 h-40 rounded-full"
       />
       <button @click="saveAvatar" class="w-24 bg-sky-500/50 mt-2">
-        儲存大頭貼
+        {{ $t('memberProfile.avatar.save') }}
       </button>
     </div>
 
     <form @submit.prevent="saveProfile">
-      <span>名稱：</span>
+      <span>{{ $t('memberProfile.form.name') }}</span>
       <input
         type="text"
         v-model="profileData.name"
-        placeholder="名稱"
+        :placeholder="$t('memberProfile.form.namePlaceholder')"
         class="border-2 border-solid"
       />
-      <span>性別：</span>
+      <span>{{ $t('memberProfile.form.gender') }}</span>
       <select
         name=""
         id=""
         v-model="profileData.gender"
         class="border-2 border-solid"
       >
-        <option value="male">男</option>
-        <option value="female">女</option>
+        <option value="male">{{ $t('memberProfile.form.male') }}</option>
+        <option value="female">{{ $t('memberProfile.form.female') }}</option>
       </select>
       <div>
-        <span>手機號碼：</span>
+        <span>{{ $t('memberProfile.form.phone') }}</span>
         <input
           type="tel"
           v-model="profileData.phone"
-          placeholder="手機號碼"
+          :placeholder="$t('memberProfile.form.phonePlaceholder')"
           class="border-2 border-solid"
         />
         <p v-if="phoneError" style="color: red">{{ phoneError }}</p>
       </div>
-      <span>生日：</span>
+      <span>{{ $t('memberProfile.form.birthday') }}</span>
       <input
         type="date"
         v-model="profileData.birthday"
         class="border-2 border-solid"
       />
-      <button type="submit" class="w-24 bg-sky-500/50">儲存會員資料</button>
+      <button type="submit" class="w-24 bg-sky-500/50">{{ $t('memberProfile.form.save') }}</button>
     </form>
 
-    <h2>密碼修改</h2>
+    <h2>{{ $t('memberProfile.password.title') }}</h2>
     <form @submit.prevent="changePassword">
       <div>
         <input
           :type="showOld ? 'text' : 'password'"
           v-model="passwordData.oldPassword"
-          placeholder="舊密碼"
+          :placeholder="$t('memberProfile.password.old')"
           class="border-2 border-solid"
         />
         <span @click="showOld = !showOld">
@@ -94,27 +94,27 @@
         <input
           :type="showNew ? 'text' : 'password'"
           v-model="passwordData.newPassword"
-          placeholder="新密碼"
+          :placeholder="$t('memberProfile.password.new')"
           class="border-2 border-solid"
         />
         <span @click="showNew = !showNew">
           <font-awesome-icon :icon="showNew ? 'fa-eye-slash' : 'fa-eye'" />
         </span>
-        <p>需輸入8位以上字元，密碼需包含數字+英文</p>
+        <p>	{{ $t('memberProfile.password.hint') }}</p>
         <p v-if="passwordError" style="color: red">{{ passwordError }}</p>
       </div>
       <div>
         <input
           :type="showConfirm ? 'text' : 'password'"
           v-model="passwordData.confirmPassword"
-          placeholder="再次輸入新密碼"
+          :placeholder="$t('memberProfile.password.confirm')" 
           class="border-2 border-solid"
         />
         <span @click="showConfirm = !showConfirm">
           <font-awesome-icon :icon="showConfirm ? 'fa-eye-slash' : 'fa-eye'" />
         </span>
       </div>
-      <button type="submit" class="w-24 bg-sky-500/50">送出修改密碼</button>
+      <button type="submit" class="w-24 bg-sky-500/50">{{ $t('memberProfile.password.submit') }}</button>
     </form>
   </div>
 </template>
@@ -125,6 +125,8 @@ import axios from "axios";
 import { Cropper } from "vue-advanced-cropper";
 import "vue-advanced-cropper/dist/style.css";
 import dayjs from "dayjs";
+import { useI18n } from "vue-i18n";
+const { t } = useI18n();
 
 //確認會員token
 const token = localStorage.getItem("token");
@@ -228,7 +230,7 @@ watch(
   (newPhone) => {
     const phoneNumber = /^09\d{8}$/;
     if (!phoneNumber.test(newPhone)) {
-      phoneError.value = "手機格式錯誤，範例：0912345678";
+      phoneError.value = t('memberProfile.form.phoneError');
     } else {
       phoneError.value = "";
     }
@@ -275,13 +277,13 @@ watch(
     const isSameAsName = newPwd === profileData.value.name;
 
     if (!hasMinLength) {
-      passwordError.value = "密碼至少需8個字元";
+      passwordError.value = t('memberProfile.password.minLength');
     } else if (!hasLetter) {
-      passwordError.value = "密碼需包含英文字母";
+      passwordError.value = t('memberProfile.password.mustContainLetter');
     } else if (!hasNumber) {
-      passwordError.value = "密碼需包含數字";
+      passwordError.value = t('memberProfile.password.mustContainNumber');
     } else if (isSameAsName) {
-      passwordError.value = "密碼不可與姓名相同";
+      passwordError.value = t('memberProfile.password.cannotBeSameAsName');
     } else {
       passwordError.value = "";
     }

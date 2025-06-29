@@ -1,6 +1,6 @@
 <template>
   <main class="pl-[100px] pt-[100px]">
-    <h1 class="text-2xl font-bold mb-6">登入頁面</h1>
+    <h1 class="text-2xl font-bold mb-6">{{ $t('login.title') }}</h1>
 
     <div
       v-if="showError"
@@ -21,7 +21,7 @@
           v-model="email"
           type="email"
           id="email"
-          placeholder="請輸入電子郵件"
+          :placeholder="$t('login.emailPlaceholder')"
           required
           class="mb-5 block w-[300px] rounded-md border border-gray-300 shadow-sm p-2"
         />
@@ -32,7 +32,7 @@
           v-model="password"
           type="password"
           id="password"
-          placeholder="請輸入密碼"
+          :placeholder="$t('login.passwordPlaceholder')"
           required
           class="mb-5 block w-[300px] rounded-md border border-gray-300 shadow-sm p-2"
         />
@@ -43,7 +43,7 @@
           type="submit"
           class="w-[100px] bg-blue-200 text-black py-2 rounded transition"
         >
-          登入
+          {{ $t('login.buttonLogin') }}
         </button>
       </div>
     </form>
@@ -52,17 +52,17 @@
       <button
         class="w-[100px] text-black py-2 rounded transition hover:text-[#0d4a87]"
       >
-        我要註冊
+        {{ $t('login.buttonRegister') }} 
       </button>
     </RouterLink>
 
     <div v-if="isLoggedIn" class="mt-6">
-      <p class="text-blue-600 font-semibold mb-4">您已登入</p>
+      <p class="text-blue-600 font-semibold mb-4">{{ $t('login.loggedIn') }}</p>
       <button
         @click="logout"
         class="bg-blue-200 text-black py-2 px-4 rounded transition"
       >
-        登出
+        {{ $t('login.buttonLogout') }}
       </button>
     </div>
   </main>
@@ -73,6 +73,8 @@ import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
+import { useI18n } from "vue-i18n";
+const { t } = useI18n();
 
 const router = useRouter();
 const TOKEN_NAME = "token";

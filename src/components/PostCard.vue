@@ -9,7 +9,7 @@
       class="w-full h-60 object-cover rounded-xl mb-3"
     />
     <h2 class="text-lg font-semibold">{{ post.title }}</h2>
-    <p class="text-sm text-gray-500">發文者：{{ post.authorName }}</p>
+    <p class="text-sm text-gray-500">{{ $t('postCard.author') }}：{{ post.authorName }}{{ post.authorName }}</p>
     <div class="text-sm text-gray-600 mt-1">
       💬 {{ post.commentCount }}　❤️ {{ post.favoriteCount }}
     </div>
@@ -18,6 +18,9 @@
 
 <script setup>
 import { useRouter } from "vue-router";
+import { useI18n } from "vue-i18n";
+const { t } = useI18n();
+
 const props = defineProps({
   post: Object,
 });

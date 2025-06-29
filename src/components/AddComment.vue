@@ -2,7 +2,7 @@
   <div class="add-comment flex items-center gap-2">
     <input
       v-model="input"
-      placeholder="寫下你的留言..."
+      :placeholder="$t('addComment.placeholder')"
       rows="1"
       class="comment-input"
       :disabled="isSubmitting"
@@ -12,13 +12,15 @@
       :disabled="!input.trim() || isSubmitting"
       class="submit-btn whitespace-nowrap"
     >
-      {{ isSubmitting ? "送出中..." : "發表留言" }}
+      {{ isSubmitting ? $t('addComment.sending') : $t('addComment.submit') }}
     </button>
   </div>
 </template>
 
 <script setup>
 import { ref, watch } from "vue";
+import { useI18n } from "vue-i18n";
+const { t } = useI18n();
 
 const props = defineProps({
   isSubmitting: Boolean,

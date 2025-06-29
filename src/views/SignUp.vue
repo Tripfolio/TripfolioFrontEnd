@@ -1,5 +1,5 @@
 <template>
-  <h2 class="text-center text-xl font-semibold mb-4">註冊頁面</h2>
+  <h2 class="text-center text-xl font-semibold mb-4">{{ $t('signUp.title') }}</h2>
 
   <div v-if="showError" class="space-y-2 w-[300px] mx-auto">
     <div
@@ -28,19 +28,19 @@
   >
     <input
       v-model="name"
-      placeholder="該怎麼稱呼您"
+      :placeholder="$t('signUp.form.namePlaceholder')"  
       class="p-[8px] text-[14px] border border-[#aaa] rounded"
     />
     <input
       v-model="email"
       type="email"
-      placeholder="請輸入電子郵件"
+      :placeholder="$t('signUp.form.emailPlaceholder')"
       class="p-[8px] text-[14px] border border-[#aaa] rounded"
     />
     <input
       v-model="password"
       type="password"
-      placeholder="請輸入密碼"
+      :placeholder="$t('signUp.form.passwordPlaceholder')"
       class="p-[8px] text-[14px] border border-[#aaa] rounded"
     />
 
@@ -48,14 +48,14 @@
       type="submit"
       class="p-[10px] bg-[#2894FF] text-white border-0 rounded cursor-pointer hover:bg-[#46A3FF]"
     >
-      註冊
+      {{ $t('signUp.form.submit') }}
     </button>
 
     <RouterLink to="/login">
       <button
         class="w-[100px] text-black py-2 rounded transition hover:text-[#0d4a87]"
       >
-        有會員走這裡
+        {{ $t('signUp.form.toLogin') }} 
       </button>
     </RouterLink>
   </form>
@@ -112,7 +112,7 @@ const signUp = async () => {
     if (Array.isArray(err.response?.data?.errors)) {
       errorMessages.value = err.response.data.errors;
     } else {
-      errorMessages.value = ["註冊失敗，請稍後重試"];
+      errorMessages.value = [t('signUp.error.generalFail')];;
     }
   }
 };

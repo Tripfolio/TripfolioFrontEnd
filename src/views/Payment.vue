@@ -1,19 +1,19 @@
 <template>
   <div class="min-h-screen flex items-center justify-center bg-gray-100 p-4">
     <div class="bg-white p-8 rounded-xl shadow-lg text-center max-w-md w-full">
-      <h1 class="text-3xl font-bold mb-6 text-gray-800">升級為付費會員</h1>
+      <h1 class="text-3xl font-bold mb-6 text-gray-800">{{ $t('payment.title') }}</h1>
       <p class="mb-6 text-lg text-gray-600">
-        僅需支付 <span class="font-semibold text-xl text-green-600">NT${{ paymentAmount }}</span> 元，即可建立更多行程！
+        {{ $t('payment.description', { amount: paymentAmount }) }}
       </p>
 
       <div v-if="isPremium" class="text-blue-600 font-medium text-lg mb-8 p-4 bg-blue-50 rounded-lg border border-blue-200">
-        您已經是付費會員！感謝您的支持。
+        {{ $t('payment.isPremiumNotice') }}
       </div>
 
       <div v-else>
         <div class="mb-6">
           <div v-if="linePayLoading" class="text-green-500 font-medium mb-4">
-            LINE Pay 付款連結生成中，請稍候...
+            {{ $t('payment.linePayLoading') }}
           </div>
           <button
             v-if="!linePayLoading"
@@ -21,7 +21,7 @@
             :disabled="braintreeLoading"
             class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg text-lg transition duration-300 transform hover:scale-105 shadow-md disabled:opacity-60 disabled:cursor-not-allowed"
           >
-            前往 LINE Pay 付款
+            {{ $t('payment.linePayButton') }}
           </button>
         </div>
 
@@ -31,13 +31,13 @@
             v-if="!showCreditCardDetails"
             class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg text-lg transition duration-300 transform hover:scale-105 shadow-md disabled:opacity-60 disabled:cursor-not-allowed"
           >
-            使用信用卡付款
+            {{ $t('payment.creditCardButton') }}
           </button>
 
           <div v-if="showCreditCardDetails">
-            <p class="text-lg font-semibold text-gray-700 mb-4">信用卡付款</p>
+            <p class="text-lg font-semibold text-gray-700 mb-4">{{ $t('payment.creditCardTitle') }}</p>
             <p v-if="dropinisReady" class="text-gray-600 mb-4 text-sm">
-              （測試用卡號： 4111 1111 1111 1111 ）
+              {{ $t('payment.testCardHint') }}
             </p>
             <div id="dropin-container" class="mb-6 border border-gray-300 rounded-lg p-2 bg-white min-h-[100px] flex items-center justify-center bg-gray-50 border-gray-200 p-4"></div>
             <div class="flex flex-col space-y-4">
@@ -47,7 +47,7 @@
                 v-if="!dropinisReady"
                 class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg text-lg transition duration-300 transform hover:scale-105 shadow-md disabled:opacity-60 disabled:cursor-not-allowed"
               >
-                {{ braintreeLoading ? "載入中..." : "初始化信用卡付款" }}
+                {{ braintreeLoading ? {{ $t('payment.loading') }} : {{ $t('payment.initCreditCard') }} }}
               </button>
               <button
                 v-if="dropinisReady"
@@ -55,7 +55,7 @@
                 :disabled="braintreeLoading || linePayLoading"
                 class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg text-lg transition duration-300 transform hover:scale-105 shadow-md disabled:opacity-60 disabled:cursor-not-allowed"
               >
-                確認信用卡付款
+                {{ $t('payment.confirmCreditCard') }} 
               </button>
             </div>
           </div>
@@ -70,6 +70,8 @@ import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import axios from 'axios';
 import dropin from 'braintree-web-drop-in';
+import { useI18n } from "vue-i18n";
+const { t } = useI18n();
 const router = useRouter();
 
 const linePayLoading = ref(false);
@@ -96,7 +98,7 @@ const checkPremium = async () => {
     });
     isPremium.value = res.data?.isPremium;
   } catch (err) {
-    console.error('檢查會員狀態失敗:', err);
+    console.error(t('payment.error.checkStatusFail'), err);
     isPremium.value = false;
   }
 };
@@ -104,7 +106,7 @@ const checkPremium = async () => {
 const handleLinePay = async () => {
   const token = getToken();
   if (!token) {
-    alert('請先登入才能進行付款。');
+    alert(t('payment.alert.loginRequired')); 
     return;
   }
   linePayLoading.value = true;
@@ -121,11 +123,11 @@ const handleLinePay = async () => {
     if (res.data && res.data.url) {
       window.location.href = res.data.url;
     } else {
-      alert('無法獲取 Line Pay 付款連結，請稍後再試。');
+      alert(t('payment.alert.linePayLinkFail'));
     }
   } catch (err) {
     console.error('LINE Pay 初始化失敗:', err);
-    alert('LINE Pay 付款初始化失敗，請檢查網路連線或稍後再試。');
+    alert(t('payment.alert.linePayInitFail'));
   } finally {
     linePayLoading.value = false;
   }
@@ -135,7 +137,7 @@ const initDropin = async () => {
   braintreeLoading.value = true;
   const token = getToken();
   if (!token) {
-      alert('請先登入才能進行付款。');
+      alert(t('payment.alert.loginRequired'));
       braintreeLoading.value = false;
       return;
   }
@@ -163,14 +165,14 @@ const initDropin = async () => {
           dropinisReady.value = true;
         } else {
           console.error('Braintree Drop-in 初始化失敗:', err);
-          alert('信用卡付款介面載入失敗，請稍後再試。');
+          alert(t('payment.alert.creditCardLoadFail'));
         }
         braintreeLoading.value = false;
       },
     );
   } catch (err) {
     console.error('獲取 Braintree Client Token 失敗:', err);
-    alert('無法獲取信用卡付款 Client Token，請檢查網路連線或稍後再試。');
+    alert(t('payment.alert.clientTokenFail'));
     braintreeLoading.value = false;
   }
 };
@@ -178,11 +180,11 @@ const initDropin = async () => {
 const submitBraintreePayment = async () => {
   const token = getToken();
   if (!token) {
-      alert('請先登入才能進行付款。');
+      alert(t('payment.alert.loginRequired'));
       return;
   }
   if (!dropinInstance.value) {
-    alert('信用卡付款介面未準備好。');
+    alertalert(t('payment.alert.creditCardNotReady'))
     return;
   }
 
@@ -207,15 +209,15 @@ const submitBraintreePayment = async () => {
     if (result.data.success) {
       const amountPaid = result.data.transaction.amount;
       const txnId = result.data.transaction.id;
-      alert(`付款成功！金額：NT$${amountPaid}\n交易編號：${txnId}`);
+      alert(t('payment.alert.paymentSuccess', { amount: amountPaid, txnId }));
       isPremium.value = true;
       router.push("/schedule");
     } else {
-      alert("付款失敗：" + (result.data.message || '未知錯誤'));
+      alert(t('payment.alert.paymentFail', { message: result.data.message || t("payment.alert.unknownError") }));
     }
   } catch (err) {
     console.error('信用卡付款失敗:', err);
-    alert("信用卡付款失敗，請稍後再試。");
+    alert(t('payment.alert.creditCardFail'));
   } finally {
     braintreeLoading.value = false;
   }

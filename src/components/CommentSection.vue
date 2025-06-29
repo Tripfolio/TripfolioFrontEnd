@@ -2,7 +2,7 @@
   <div class="comment-section">
     <!-- <h4>留言區</h4> -->
 
-    <div v-if="isLoading" class="text-center py-4">載入留言中...</div>
+    <div v-if="isLoading" class="text-center py-4">{{ $t('commentSection.loading') }}</div>
 
     <!-- 現有留言 -->
     <div v-else-if="comments.length > 0" class="comments-list overflow-y-auto">
@@ -14,11 +14,11 @@
               comment.userAvatar ||
               'https://picsum.photos/40/40?random=1'
             "
-            :alt="comment.author?.name || comment.userName || '匿名使用者'"
+            :alt="comment.author?.name || comment.userName || {{ comment.author?.name || comment.userName || $t('commentSection.anonymous') }}"
             class="avatar"
           />
           <span class="author-name">
-            {{ comment.author?.name || comment.userName || "匿名使用者" }}
+            {{ comment.author?.name || comment.userName || {{ comment.author?.name || comment.userName || $t('commentSection.anonymous') }} }}
           </span>
           <span class="comment-time">{{ formatTime(comment.createdAt) }}</span>
         </div>
@@ -29,13 +29,13 @@
           class="delete-btn"
           :disabled="isDeletingComment === comment.id"
         >
-          {{ isDeletingComment === comment.id ? "刪除中..." : "🗑️" }}
+          {{ isDeletingComment === comment.id ? $t('commentSection.deleting') : "🗑️" }}
         </button>
       </div>
     </div>
 
     <div v-else class="text-center py-4">
-      還沒有留言，成為第一個留言的人吧！
+      {{ $t('commentSection.noComments') }}
     </div>
 
     <AddComment
@@ -50,6 +50,8 @@
 import { ref, onMounted } from "vue";
 import axios from "axios";
 import AddComment from "../components/AddComment.vue";
+import { useI18n } from "vue-i18n";
+const { t } = useI18n();
 
 const props = defineProps({
   post: {
@@ -118,9 +120,9 @@ const formatTime = (timeString) => {
   const now = new Date();
   const diff = now - date;
 
-  if (diff < 60000) return "剛剛";
-  if (diff < 3600000) return `${Math.floor(diff / 60000)}分鐘前`;
-  if (diff < 86400000) return `${Math.floor(diff / 3600000)}小時前`;
+  if (diff < 60000) return t('commentSection.justNow');
+  if (diff < 3600000) return t('commentSection.minutesAgo', { minutes: Math.floor(diff / 60000) });
+  if (diff < 86400000) return t('commentSection.hoursAgo', { hours: Math.floor(diff / 3600000) });
 
   return date.toLocaleDateString("zh-TW");
 };
@@ -153,7 +155,7 @@ const canDeleteComment = (comment) => {
 };
 
 const deleteComment = async (commentId) => {
-  if (!confirm("確定要刪除這則留言嗎？")) {
+  if (!confirm(t('commentSection.confirmDelete'))) {
     return;
   }
 
@@ -190,15 +192,15 @@ const deleteComment = async (commentId) => {
     console.error("刪除留言失敗:", error);
 
     if (error.response?.status === 403) {
-      alert("您沒有權限刪除此留言");
+      alert(t('commentSection.noPermission'));
     } else if (error.response?.status === 404) {
-      alert("留言不存在或已被刪除");
+      alert(t('commentSection.notFound')  );
       // 從本地陣列中移除不存在的留言
       comments.value = comments.value.filter(
         (comment) => comment.id !== commentId,
       );
     } else {
-      alert("刪除失敗，請稍後再試");
+      alert(t('commentSection.deleteFail'));
     }
   }
 };
