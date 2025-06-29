@@ -1,7 +1,7 @@
 <template>
   <div class="homepage-bg overflow-x-hidden">
     <section class="min-h-screen">
-      <div class="landing fixed inset-0 bg-white text-gray-400 flex justify-center items-center" v-if="show">
+      <div class="landing fixed inset-0 bg-white text-gray-500 flex justify-center items-center" v-if="show">
         <div class="loading text-5xl tracking-[0.4em] whitespace-no-wrap" >
           <span style="--i: 0">T</span>
           <span style="--i: 1">R</span>
@@ -17,7 +17,7 @@
       <div class="w-[100vw]">
           <HomeCarousel/>
           <div class="w-[60vw] mx-auto mt-20 z-10 relative">
-            <section class="bg-gray-800/30  custom-frosted backdrop-blur-[30px] text-white rounded-4xl py-3 px-6 shadow-md">
+            <section class="bg-gray-800/30 navbar-style backdrop-blur-[10px] text-white rounded-4xl py-3 px-6 shadow-md">
               <div
                 class="flex flex-col md:flex-row md:items-center space-y-4 md:space-y-0 md:space-x-4"
               >
@@ -25,7 +25,7 @@
                   <select
                     :value="route.query.city || 'none'"
                     @change="onCityChange($event)"
-                    class="appearance-none bg-gray-500/80 text-white text-sm py-2 pl-4 pr-10 rounded-full focus:outline-none hover:bg-gray-400 transition duration-200 cursor-pointer shadow-inner"
+                    class="appearance-none bg-gray-800/80 text-white text-sm py-2 pl-4 pr-10 rounded-full focus:outline-none hover:bg-gray-400 transition duration-200 cursor-pointer shadow-inner"
                   >
                     <option value="none">當前</option>
                     <option
@@ -93,7 +93,7 @@
                 <div class="relative" ref="menuRef">
                   <button
                     @click="showCustomCategory = !showCustomCategory"
-                    class="block w-full text-left px-3 py-2 rounded hover:bg-green-100 text-green-700 font-semibold left-3.5"
+                    class="block w-full text-left px-3 py-2 rounded hover:bg-gray-600 text-white font-semibold left-3.5"
                   >
                     + others
                   </button>
@@ -383,39 +383,25 @@ const scrollToTop = () => {
   })
 }
 
-onMounted(async () => {
+onMounted(() => {
   document.addEventListener("click", handleClickOutside);
 
   setTimeout(() => {
-    show.value = false  
-  }, 5000);
+    show.value = false;
+  }, 3000);
 
-  AOS.init({ once: false, duration: 1000,});
+  AOS.init({ once: false, duration: 500 });
 
-  const observer = new IntersectionObserver(
-    (entries) => {
-      if (entries[0].isIntersecting) {
-        setTimeout(() => {
-          showMarker1.value = true
-        }, 1000)
-        setTimeout(() => {
-          showMarker2.value = true
-        }, 1500)
-        setTimeout(() => {
-          showMarker3.value = true
-        }, 2000)
-      } else {
-        showMarker1.value = false
-        showMarker2.value = false
-        showMarker3.value = false
-      }
-    },
-    {
-      threshold: 0.4,
+  const observer = new IntersectionObserver((entries) => {
+    if (entries[0].isIntersecting && !showMarker1.value) {
+      showMarker1.value = true;
+      setTimeout(() => (showMarker2.value = true), 500);
+      setTimeout(() => (showMarker3.value = true), 1000);
     }
-  )
+  }, { threshold: 0.4 });
+
   if (mapImg.value) {
-    observer.observe(mapImg.value)
+    observer.observe(mapImg.value);
   }
 });
 
@@ -425,24 +411,6 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
-
-.homepage-bg {
-  background-image:
-    radial-gradient(#999 1px, transparent 1px),
-    linear-gradient(to right, rgba(0, 0, 0, 0.08) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(0, 0, 0, 0.08) 1px, transparent 1px);
-  background-size:
-    40px 40px,
-    40px 40px,
-    40px 40px;
-  background-position:
-    20px 20px,
-    0px 0px,
-    0px 0px;
-  background-color: white;
-}
-
-
 .landing {
   animation: fadeout 3s forwards;
   z-index: 9999;
