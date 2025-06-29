@@ -173,6 +173,11 @@ watch(() => currentDay.value?.date, () => {
   refresh();
 });
 
+// 監聽變化時重新載入
+
+watch(() => selectedTrip.value, () => {
+  refresh();
+}, { deep: true });
 
 function toggleMenu(index) {
   openMenuIndex.value = openMenuIndex.value === index ? null : index;

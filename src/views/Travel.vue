@@ -56,6 +56,7 @@
           :selected-date="selectedTrip?.days?.[currentDayIndex]?.date"
           ref="scheduleDetailRef"
           @back="handleCloseDetail"
+          @day-changed="currentDayIndex = $event"
       />
       </div>
     </div>

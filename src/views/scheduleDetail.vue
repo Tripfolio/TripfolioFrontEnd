@@ -19,7 +19,7 @@
         <button 
           v-for="(day, index) in trip.days" 
           :key="day" 
-          @click="currentDayIndex = index"
+          @click="changeDay(index)"
           class="px-5 py-1 rounded-full text-sm border"
           :class="currentDayIndex === index
           ? 'bg-[#828282] text-white border-[#828282]'
@@ -44,6 +44,7 @@
         :trip-id="trip.id" 
         :selected-date="trip.days[currentDayIndex].date"
         :default-image="'/images/default.jpg'"
+        @refresh="handleItineraryRefresh"
         ref="itineraryRef"
       />
     </div>
@@ -180,12 +181,24 @@ const updateNotes = async (newNotes) => {
     }
 }
 
+function handleItineraryRefresh() {
+  fetchTrip();
+  refreshDailyPlan();
+}
+
+
 watch(trip, (newTrip) => {
   if (Array.isArray(newTrip?.days) && newTrip.days.length > 0) {
-    currentDayIndex.value = 0;
+    if (currentDayIndex.value === null || currentDayIndex.value >= newTrip.days.length) {
+      currentDayIndex.value = 0;
+    }
   }
 }, { deep: true });
 
+function changeDay(index) {
+  currentDayIndex.value = index;
+  emit('day-changed', index);  // 通知父層 Travel.vue
+}
 
 function refreshDailyPlan() {
   // 呼叫 DailyPlan 的 refresh 方法
@@ -195,7 +208,8 @@ function refreshDailyPlan() {
 // 給父層或地圖強制刷新 DailyPlan 用
 defineExpose({
   refreshDailyPlan,
-  dailyPlanRef
+  dailyPlanRef,
+  fetchTrip
 });
 
 

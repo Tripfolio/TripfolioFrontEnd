@@ -338,6 +338,10 @@ function callItinerary() {
       props.scheduleDetailRef.refreshDailyPlan();
     }
 
+    if (props.scheduleDetailRef?.fetchTrip) {
+      props.scheduleDetailRef.fetchTrip();   // 保證 trip.days 最新
+    }
+
     alert("成功加入行程！");
   }
 }
