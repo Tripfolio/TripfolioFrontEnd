@@ -164,18 +164,18 @@
     <section class="min-h-[500px] flex flex-col sm:flex-row relative mt-20 mb-20 ">
       <h2 class="text-3xl sm:text-4xl font-bold ml-10 sm:ml-50 mt-10 sm:mt-30" data-aos="fade-up" data-aos-duration="1000">
         <p class="text-4xl sm:text-5xl tracking-[8px] sm:tracking-[15px]">TRIPFOLIO</p>
-        <p class="mt-5 text-xl sm:text-2xl font-medium tracking-wide sm:tracking-wider whitespace-nowrap"> Where your journey begins</p>
+        <p class="mt-1 text-xl sm:text-2xl font-medium tracking-wide sm:tracking-wider whitespace-nowrap"> Where your journey begins</p>
       </h2>
     
-      <div class="relative mt-6 h-4 ml-10 sm:ml-20" data-aos="fade-up" data-aos-delay="300">
-        <div class="absolute right-20 sm:right-60 top-20 sm:top-70 min-h-10 bg-black rounded-full flex items-center justify-center">
-          <p class="text-white py-2 px-4 sm:px-5 text-lg   whitespace-nowrap">一站完成資訊蒐集</p>
+      <div class="relative mt-15 sm:mt-6 h-4 ml-10 sm:ml-20 " data-aos="fade-up" data-aos-delay="300">
+        <div class="static sm:absolute sm:right-60  sm:top-70 min-h-5 max-w-[200px]  bg-black rounded-full flex items-center justify-center mb-3">
+          <p class="text-white py-1 sm:py-2 px-3 sm:px-5 text-md sm:text-lg whitespace-nowrap">一站完成資訊蒐集</p>
         </div>
-        <div class="absolute right-10 sm:right-30  top-40 sm:top-90 min-h-10 bg-black rounded-full flex items-center justify-center">
-          <p class="text-white py-2 px-4 sm:px-5 text-lg  whitespace-nowrap">快速排程</p>
+        <div class="static sm:absolute sm:right-30  sm:top-90 min-h-5 max-w-[150px] ml-20 bg-black rounded-full flex items-center justify-center mb-3">
+          <p class="text-white py-1 sm:py-2 px-3 sm:px-5 text-md sm:text-lg whitespace-nowrap">快速排程</p>
         </div>
-        <div class="absolute right-20 sm:right-50 top-60 sm:top-110 min-h-10 bg-black rounded-full flex items-center justify-center">
-          <p class="text-white py-2 px-4 sm:px-5 text-lg text-shadow-sm whitespace-nowrap">與好友共編</p>
+        <div class="static sm:absolute sm:right-50 sm:top-110 min-h-5 max-w-[150px] bg-black rounded-full flex items-center justify-center mb-3">
+          <p class="text-white py-1 sm:py-2 px-3 sm:px-5 text-md  sm:text-lg text-shadow-sm whitespace-nowrap">與好友共編</p>
         </div>
       </div>
     
@@ -186,14 +186,14 @@
         <img src="/mapIcons/cafe.svg" v-show="showMarker3" alt="marker" class="absolute z-30 top-[50%] left-[30%] w-12 sm:w-16 h-12 sm:h-16 fade-in-down will-change-transform" loading="lazy" />
       </div>
     </section>
-
-    <section class="h-auto sm:h-[500px] w-[90vw] flex flex-col sm:flex-row items-center justify-between space-y-10 sm:space-y-0 sm:space-x-20 relative mx-auto rounded-3xl mt-10 mb-20">
+    
+    <section class="h-auto sm:h-[500px] w-[90vw] flex flex-col sm:flex-row items-center justify-between space-y-10 sm:space-y-0 sm:space-x-20 relative mx-auto rounded-3xl mt-10 mb-20 ">
     
       <div class="absolute w-full sm:w-[50vw] h-full inset-0 shadow-xl rounded-3xl overflow-hidden z-0 ml-auto ">
         <img :src="map" class="w-full h-full object-cover" />
       </div>
     
-      <div class="relative z-10 py-10 sm:py-16 flex flex-col sm:flex-row items-center px-6 sm:px-20 gap-10 sm:gap-40">
+      <div class="relative z-10 py-10 sm:py-16 flex flex-col-reverse sm:flex-row items-center px-6 sm:px-20 gap-10 sm:gap-40">
       
         <div>
           <HomeSchedule />
@@ -237,7 +237,7 @@
 
     <section class="min-h-[600px] px-6 py-16">
 
-      <h2 class="text-4xl font-bold text-center mb-20 mt-10" data-aos="fade-up" data-aos-duration="1000" data-aos-anchor-placement="top-center">
+      <h2 class="text-3xl sm:text-4xl font-bold text-center mb-20 mt-10" data-aos="fade-up" data-aos-duration="1000" data-aos-anchor-placement="top-center">
         讓分享，成為彼此的路標
       </h2>
 
