@@ -161,53 +161,53 @@
         </div>
       </div> -->
 
-<section class="min-h-[500px] flex relative mt-20 mb-20 ">
-  <h2 class="text-4xl font-bold ml-50 mt-30" data-aos="fade-up" data-aos-duration="1000">
-    <p class="text-5xl tracking-[15px]">TRIPFOLIO</p>
-    <p class="mt-5 text-2xl font-medium tracking-wider whitespace-nowrap"> Where your journey begins</p>
-  </h2>
+    <section class="min-h-[500px] flex flex-col sm:flex-row relative mt-20 mb-20 ">
+      <h2 class="text-3xl sm:text-4xl font-bold ml-10 sm:ml-50 mt-10 sm:mt-30" data-aos="fade-up" data-aos-duration="1000">
+        <p class="text-4xl sm:text-5xl tracking-[8px] sm:tracking-[15px]">TRIPFOLIO</p>
+        <p class="mt-5 text-xl sm:text-2xl font-medium tracking-wide sm:tracking-wider whitespace-nowrap"> Where your journey begins</p>
+      </h2>
+    
+      <div class="relative mt-6 h-4 ml-10 sm:ml-20" data-aos="fade-up" data-aos-delay="300">
+        <div class="absolute right-20 sm:right-60 top-20 sm:top-70 min-h-10 bg-black rounded-full flex items-center justify-center">
+          <p class="text-white py-2 px-4 sm:px-5 text-lg   whitespace-nowrap">一站完成資訊蒐集</p>
+        </div>
+        <div class="absolute right-10 sm:right-30  top-40 sm:top-90 min-h-10 bg-black rounded-full flex items-center justify-center">
+          <p class="text-white py-2 px-4 sm:px-5 text-lg  whitespace-nowrap">快速排程</p>
+        </div>
+        <div class="absolute right-20 sm:right-50 top-60 sm:top-110 min-h-10 bg-black rounded-full flex items-center justify-center">
+          <p class="text-white py-2 px-4 sm:px-5 text-lg text-shadow-sm whitespace-nowrap">與好友共編</p>
+        </div>
+      </div>
+    
+      <div class="relative ml-auto mr-10 sm:mr-50 mt-10 sm:mt-0">
+        <img :src="taiwan" ref="mapImg" alt="台灣地圖" class="w-full sm:w-auto max-w-full sm:max-w-[500px] h-auto" data-aos="fade-up" data-aos-duration="1000" loading="lazy" />
+        <img src="/mapIcons/amusement_park.svg" v-show="showMarker1" alt="marker" class="absolute z-30 top-[18%] left-[40%] w-12 sm:w-16 h-12 sm:h-16 fade-in-down will-change-transform" loading="lazy" />
+        <img src="/mapIcons/restaurant.svg" v-show="showMarker2" alt="marker" class="absolute z-30 top-[30%] left-[60%] w-12 sm:w-16 h-12 sm:h-16 fade-in-down will-change-transform" loading="lazy" />
+        <img src="/mapIcons/cafe.svg" v-show="showMarker3" alt="marker" class="absolute z-30 top-[50%] left-[30%] w-12 sm:w-16 h-12 sm:h-16 fade-in-down will-change-transform" loading="lazy" />
+      </div>
+    </section>
 
-  <div class="relative mt-6 h-4 ml-40 " data-aos="fade-up" data-aos-delay="300">
-    <div class="absolute right-60 top-70 min-h-10 bg-black rounded-full flex items-center justify-center">
-      <p class="text-white  py-2 px-5 text-md whitespace-nowrap">一站完成資訊蒐集</p>
-    </div>
-    <div class="absolute right-30 top-90 min-h-10 bg-black rounded-full flex items-center justify-center">
-      <p class="text-white py-2 px-5 text-lg whitespace-nowrap">簡單好上手</p>
-    </div>
-    <div class="absolute right-50 top-110 min-h-10 bg-black rounded-full flex items-center justify-center">
-      <p class="text-white py-2 px-5 text-shadow-sm whitespace-nowrap">快速排程</p>
-    </div>
-  </div>
-
-  <div class="relative ml-auto mr-50 ">
-    <img :src="taiwan" ref="mapImg" alt="台灣地圖" class="w-auto max-w-[500px] h-auto" data-aos="fade-up" data-aos-duration="1000" />
-    <img src="/mapIcons/amusement_park.svg" v-show="showMarker1" alt="marker" class="absolute z-30 top-[18%] left-[40%] w-16 h-16 fade-in-down will-change: transform" />
-    <img src="/mapIcons/restaurant.svg" v-show="showMarker2" alt="marker" class="absolute z-30 top-[30%] left-[60%] w-16 h-16 fade-in-down will-change: transform" />
-    <img src="/mapIcons/cafe.svg" v-show="showMarker3" alt="marker" class="absolute z-30 top-[50%] left-[30%] w-16 h-16 fade-in-down will-change: transform" />
-  </div>
-</section>
-
-    <section class="h-[500px] w-[85vw] flex items-center justify-between space-x-20 relative mx-auto rounded-3xl mt-10 mb-20">
-
-      <div class="absolute w-[50vw] h-full inset-0  shadow-xl rounded-3xl overflow-hidden z-0 ml-auto ">
+    <section class="h-auto sm:h-[500px] w-[90vw] flex flex-col sm:flex-row items-center justify-between space-y-10 sm:space-y-0 sm:space-x-20 relative mx-auto rounded-3xl mt-10 mb-20">
+    
+      <div class="absolute w-full sm:w-[50vw] h-full inset-0 shadow-xl rounded-3xl overflow-hidden z-0 ml-auto ">
         <img :src="map" class="w-full h-full object-cover" />
       </div>
-
-      <div class="relative z-10 py-16 flex items-center px-20 gap-40">
-
+    
+      <div class="relative z-10 py-10 sm:py-16 flex flex-col sm:flex-row items-center px-6 sm:px-20 gap-10 sm:gap-40">
+      
         <div>
           <HomeSchedule />
         </div>
       
-        <div  class="ml-20">
-          <h2 class="text-4xl font-bold tracking-wider" data-aos="fade-right" data-aos-duration="2000">
-          高自由度行程規劃
+        <div class="ml-0 sm:ml-20">
+          <h2 class="text-3xl sm:text-4xl font-bold tracking-wide sm:tracking-wider" data-aos="fade-right" data-aos-duration="2000">
+            高自由度行程規劃
           </h2>
-          <p class="mt-5 ml-16 text-xl font-medium tracking-wider " data-aos="fade-left"  data-aos-duration="2000">
-          景點隨心拖曳排序 輕鬆管理你的旅程
+          <p class="mt-5 ml-8 sm:ml-16 text-lg sm:text-xl font-medium tracking-wide sm:tracking-wider" data-aos="fade-left" data-aos-duration="2000">
+            景點隨心拖曳排序 輕鬆管理你的旅程
           </p>
         </div>
-
+      
       </div>
     </section>
     
