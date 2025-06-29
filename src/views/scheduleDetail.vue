@@ -19,7 +19,7 @@
         <button 
           v-for="(day, index) in trip.days" 
           :key="day" 
-          @click="currentDayIndex = index"
+          @click="changeDay(index)"
           class="px-5 py-1 rounded-full text-sm border"
           :class="currentDayIndex === index
           ? 'bg-[#828282] text-white border-[#828282]'
@@ -195,6 +195,10 @@ watch(trip, (newTrip) => {
   }
 }, { deep: true });
 
+function changeDay(index) {
+  currentDayIndex.value = index;
+  emit('day-changed', index);  // 通知父層 Travel.vue
+}
 
 function refreshDailyPlan() {
   // 呼叫 DailyPlan 的 refresh 方法
