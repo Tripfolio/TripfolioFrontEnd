@@ -44,6 +44,7 @@
         :trip-id="trip.id" 
         :selected-date="trip.days[currentDayIndex].date"
         :default-image="'/images/default.jpg'"
+        @refresh="handleItineraryRefresh"
         ref="itineraryRef"
       />
     </div>
@@ -180,9 +181,17 @@ const updateNotes = async (newNotes) => {
     }
 }
 
+function handleItineraryRefresh() {
+  fetchTrip();
+  refreshDailyPlan();
+}
+
+
 watch(trip, (newTrip) => {
   if (Array.isArray(newTrip?.days) && newTrip.days.length > 0) {
-    currentDayIndex.value = 0;
+    if (currentDayIndex.value === null || currentDayIndex.value >= newTrip.days.length) {
+      currentDayIndex.value = 0;
+    }
   }
 }, { deep: true });
 
@@ -195,7 +204,8 @@ function refreshDailyPlan() {
 // 給父層或地圖強制刷新 DailyPlan 用
 defineExpose({
   refreshDailyPlan,
-  dailyPlanRef
+  dailyPlanRef,
+  fetchTrip
 });
 
 
