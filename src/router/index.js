@@ -52,7 +52,7 @@ const routes = [
     component: EmailSettings,
   },
   {
-    path: "/GetInvite",
+    path: "/share/:token",
     name: "GetInvite",
     component: GetInvite,
   },

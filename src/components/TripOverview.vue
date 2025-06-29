@@ -24,6 +24,7 @@
         </div>
 
         <label
+          v-if="canEdit"
           for="cover-upload"
           class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center text-white text-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 cursor-pointer"
         >
@@ -42,7 +43,7 @@
       <div class="px-2">
         <h2
           v-if="!isTitleEditing"
-          @click="isTitleEditing = true"
+          @click="canEdit ? (isTitleEditing = true) : alert('您沒有編輯權限')"
           class="text-2xl font-bold text-gray-900 mb-2 cursor-pointer hover:text-gray-700"
         >
           {{ trip.title }}
@@ -69,6 +70,7 @@
             type="date"
             v-model="editableStartDate"
             @blur="saveDates"
+            :disabled="!canEdit"
             class="border px-2 py-1 rounded text-sm"
           />
           <span>-</span>
@@ -76,6 +78,7 @@
             type="date"
             v-model="editableEndDate"
             @blur="saveDates"
+            :disabled="!canEdit"
             :min="editableStartDate"
             class="border px-2 py-1 rounded text-sm"
           />
@@ -89,6 +92,7 @@
           <textarea
             v-model="editableNotes"
             @blur="saveNotes"
+            :readonly="!canEdit"
             class="flex-grow ml-2 p-2 border border-gray-300 rounded-md text-sm resize-y min-h-[60px] text-gray-800"
             placeholder="點擊這裡新增或編輯行程筆記..."
           >
@@ -140,6 +144,10 @@ const props = defineProps({
     type: Object,
     required: true,
   },
+  role: {
+    type: String,
+    default: "viewer", // 🔒 權限控制
+  },
 });
 
 const emit = defineEmits([
@@ -149,6 +157,12 @@ const emit = defineEmits([
   "update-notes",
   "update-dates",
 ]);
+
+// 🔒 權限控制：定義是否能編輯
+const canEdit = computed(
+  () => props.role === "owner" || props.role === "editor",
+);
+const isViewer = computed(() => props.role === "viewer");
 
 const editableTitle = ref(props.trip.title);
 const editableNotes = ref(props.trip.description || "");
@@ -193,6 +207,10 @@ const tripDays = computed(() => {
 });
 
 const handleCoverUpload = (event) => {
+  if (!canEdit.value) {
+    alert("您沒有權限更改封面");
+    return;
+  }
   const file = event.target.files[0];
   if (file) {
     const reader = new FileReader();
@@ -242,6 +260,7 @@ const cancelCrop = () => {
 
 //儲存名稱
 const saveTitle = () => {
+  if (!canEdit.value) return;
   if (editableTitle.value !== props.trip.title) {
     emit("update-title", editableTitle.value);
     titleSaved.value = true;
@@ -252,6 +271,7 @@ const saveTitle = () => {
 
 //儲存日期
 const saveDates = () => {
+  if (!canEdit.value) return;
   if (
     editableStartDate.value !== props.trip.startDate ||
     editableEndDate.value !== props.trip.endDate
@@ -267,6 +287,7 @@ const saveDates = () => {
 
 //儲存筆記
 const saveNotes = () => {
+  if (!canEdit.value) return;
   if (editableNotes.value !== props.trip.description) {
     emit("update-notes", editableNotes.value);
     noteSaved.value = true;
