@@ -4,7 +4,6 @@ import HomeView from "@/views/HomeView.vue";
 import SignUp from "@/views/SignUp.vue";
 import LoginPage from "@/views/LoginPage.vue";
 import GoogleMapView from "@/views/GoogleMapView.vue";
-import MemberProfile from "@/views/MemberProfile.vue";
 import GoogleCalendar from "@/views/GoogleCalendar.vue";
 import EmailSettings from "@/views/EmailSettings.vue";
 import Travel from "@/views/Travel.vue";
@@ -15,6 +14,7 @@ import scheduleDetail from "@/views/scheduleDetail.vue";
 import Payment from "@/views/Payment.vue";
 import LinePaySuccess from '@/views/LinePaySuccess.vue';
 import LinePayFail from '@/views/LinePayFail.vue';
+import MemberHub from "@/views/MemberHub.vue";
 
 const routes = [
   {
@@ -41,11 +41,6 @@ const routes = [
     path: "/calendar",
     name: "calendar",
     component: GoogleCalendar,
-  },
-  {
-    path: "/profile",
-    name: "profile",
-    component: MemberProfile,
   },
   {
     path: "/emailSettings",
@@ -91,6 +86,11 @@ const routes = [
     path: '/linepay-fail',
     name: 'linepayfail',
     component: LinePayFail,
+  },
+  {
+    path: "/memberHub",
+    name: "memberHub",
+    component: MemberHub,
   },
 ];
 
