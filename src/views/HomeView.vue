@@ -93,7 +93,7 @@
                 <div class="relative" ref="menuRef">
                   <button
                     @click="showCustomCategory = !showCustomCategory"
-                    class="block w-full text-left px-3 py-2 rounded hover:bg-gray-600 text-white font-semibold left-3.5"
+                    class="block w-full text-left px-3 py-2 rounded-full hover:bg-gray-600 text-white font-semibold left-3.5"
                   >
                     + others
                   </button>
@@ -161,25 +161,25 @@
         </div>
       </div> -->
 
-    <section class="min-h-[500px] flex flex-col sm:flex-row relative mt-20 mb-20 ">
-      <h2 class="text-3xl sm:text-4xl font-bold ml-10 sm:ml-50 mt-10 sm:mt-30" data-aos="fade-up" data-aos-duration="1000">
-        <p class="text-4xl sm:text-5xl tracking-[8px] sm:tracking-[15px]">TRIPFOLIO</p>
-        <p class="mt-1 text-xl sm:text-2xl font-medium tracking-wide sm:tracking-wider whitespace-nowrap"> Where your journey begins</p>
+    <section class="min-h-[500px] flex flex-col sm:flex-row relative mt-10 mb-20 ">
+      <h2 class=" ml-10 sm:ml-50 mt-10 sm:mt-30" data-aos="fade-up" data-aos-duration="1000">
+        <p class="text-3xl sm:text-5xl font-bold tracking-[1px] sm:tracking-[4px] mb-4">探索你的地圖</p>
+        <p class="mt-1 text-lg sm:text-2xl font-medium tracking-wide sm:tracking-wider whitespace-nowrap"> 標記景點留下足跡，每段旅程都是值得收藏的人生篇章</p>
       </h2>
     
-      <div class="relative mt-15 sm:mt-6 h-4 ml-10 sm:ml-20 " data-aos="fade-up" data-aos-delay="300">
-        <div class="static sm:absolute sm:right-60  sm:top-70 min-h-5 max-w-[200px]  bg-black rounded-full flex items-center justify-center mb-3">
-          <p class="text-white py-1 sm:py-2 px-3 sm:px-5 text-md sm:text-lg whitespace-nowrap">一站完成資訊蒐集</p>
+      <div class="relative mt-15 sm:mt-6" data-aos="fade-up" data-aos-delay="300">
+        <div class="static sm:absolute sm:right-100  sm:top-70 min-h-5 max-w-[200px]  bg-black rounded-full flex items-center justify-center mb-3 ml-10">
+          <p class="text-white py-1 sm:py-2 px-3 sm:px-5 text-md sm:text-lg whitespace-nowrap">一站式完成資訊蒐集</p>
         </div>
-        <div class="static sm:absolute sm:right-30  sm:top-90 min-h-5 max-w-[150px] ml-20 bg-black rounded-full flex items-center justify-center mb-3">
+        <div class="static sm:absolute sm:right-70  sm:top-90 min-h-5 max-w-[150px] ml-20 bg-black rounded-full flex items-center justify-center mb-3 ml-60">
           <p class="text-white py-1 sm:py-2 px-3 sm:px-5 text-md sm:text-lg whitespace-nowrap">快速排程</p>
         </div>
-        <div class="static sm:absolute sm:right-50 sm:top-110 min-h-5 max-w-[150px] bg-black rounded-full flex items-center justify-center mb-3">
+        <div class="static sm:absolute sm:right-90 sm:top-110 min-h-5 max-w-[150px] bg-black rounded-full flex items-center justify-center mb-3 ml-30">
           <p class="text-white py-1 sm:py-2 px-3 sm:px-5 text-md  sm:text-lg text-shadow-sm whitespace-nowrap">與好友共編</p>
         </div>
       </div>
     
-      <div class="relative ml-auto mr-10 sm:mr-50 mt-10 sm:mt-0">
+      <div class="relative ml-auto mr-auto sm:mr-50">
         <img :src="taiwan" ref="mapImg" alt="台灣地圖" class="w-full sm:w-auto max-w-full sm:max-w-[500px] h-auto" data-aos="fade-up" data-aos-duration="1000" loading="lazy" />
         <img src="/mapIcons/amusement_park.svg" v-show="showMarker1" alt="marker" class="absolute z-30 top-[18%] left-[40%] w-12 sm:w-16 h-12 sm:h-16 fade-in-down will-change-transform" loading="lazy" />
         <img src="/mapIcons/restaurant.svg" v-show="showMarker2" alt="marker" class="absolute z-30 top-[30%] left-[60%] w-12 sm:w-16 h-12 sm:h-16 fade-in-down will-change-transform" loading="lazy" />
@@ -268,7 +268,7 @@
       <input
         type="image"
         :src="btn"
-        class="w-80 mt-35 mb-15 cursor-pointer "
+        class="w-80 mt-25 mb-15 cursor-pointer "
         @click="scrollToTop">
     </div>
 
