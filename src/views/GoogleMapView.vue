@@ -8,7 +8,7 @@
   />
 
   <div
-    class="navbar-style absolute top-7 right-0 -translate-x-1/2 z-[2] flex items-center gap-2.5 px-2 py-1 rounded-full"
+    class="search-bar navbar-style z-[2] flex items-center gap-2.5 px-2 py-1 rounded-full fixed left-1/2 -translate-x-1/2 top-[11%] w-[85%] min-w-[220px] max-w-[350px] justify-between flex-wrap md:absolute md:top-7 md:right-15 md:left-auto md:bottom-auto md:translate-x-0 md:w-auto md:flex-nowrap"
   >
     <div class="relative w-fit text-white/20">
       <select
@@ -37,20 +37,6 @@
       </svg>
     </div>
     <div class="relative w-[150px]">
-      <!-- <svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke-width="1.5"
-        stroke="currentColor"
-        class="absolute left-0 top-1/2 -translate-y-1/2 w-5 h-5 text-white pointer-events-none"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
-        />
-      </svg> -->
       <input
         type="text"
         v-model="searchQuery"
@@ -70,7 +56,7 @@
 
   <div ref="mapRef" class="w-screen h-screen m-0 p-0"></div>
   <button
-    class="absolute bottom-25 left-8 text-2xl w-12 h-12 rounded-full bg-gray-400/30 backdrop-blur-2xl"
+    class="absolute bottom-25 left-8 text-2xl w-12 h-12 rounded-full bg-gray-400/30 backdrop-blur-2xl hidden sm:block"
     @click="showCards = !showCards"
   >
     📌
@@ -78,7 +64,7 @@
   <transition name="slide-fade">
     <div
       v-show="showCards && placeDetails.length"
-      class="absolute bottom-2 left-1/2 -translate-x-1/2 z-[3] w-[70%] max-w-screen-xl"
+      class="absolute bottom-2 left-1/2 -translate-x-1/2 z-[3] w-[70%] max-w-screen-xl hidden sm:block"
     >
       <div class="card-container-style relative rounded-2xl px-15 py-4">
         <button
@@ -137,7 +123,7 @@
   </transition>
   <div
     v-if="selectedPlace"
-    class="fixed inset-0 bg-black/50 flex items-center justify-center z-[4]"
+    class="fixed inset-0 bg-black/50 flex items-center justify-center z-[60]"
     @click.self="selectedPlace = null"
   >
     <div
@@ -175,14 +161,16 @@
             selectedPlacePhotoIndex =
               (selectedPlacePhotoIndex + 1) % selectedPlace.photos.length
           "
-          class="absolute top-1/2 right-2 -translate-y-1/2 bg-black bg-opacity-40 text-white flex justify-center hover:bg-gray-700"
+          class="absolute top-1/2 right-2 -translate-y-1/2 bg-black bg-opacity-40 text-white flex rounded-full w-8 h-8 items-center justify-center hover:bg-gray-700"
           aria-label="下一張圖片"
         >
           ›
         </button>
       </div>
       <div class="mr-2.5">
-        <h2 class="text-2xl text-white mb-3 mt-10 break-words max-w-[20rem]">
+        <h2
+          class="text-2xl text-white mb-3 mt-5 break-words max-w-[20rem] truncate"
+        >
           {{ selectedPlace.name }}
         </h2>
         <p class="text-white text-sm mb-3">
@@ -204,7 +192,7 @@
   </div>
 
   <aside
-    class="navbar-style w-20 p-4 space-y-2 fixed z-50 left-5 top-1/2 translate-y-[-50%] rounded-full"
+    class="navbar-style fixed z-50 left-1/2 -translate-x-1/2 top-[50%] w-[85%] max-w-[350px] flex flex-row justify-around items-center gap-2 p-3 rounded-2xl md:top-1/2 md:left-5 md:translate-x-0 md:-translate-y-1/2 md:flex-col md:justify-start md:items-stretch md:gap-2 md:rounded-full md:w-18 md:h-auto md:min-h-[300px]"
     ref="menuRef"
   >
     <button
@@ -903,5 +891,7 @@ onUnmounted(() => {
 .slide-fade-leave-to {
   transform: translateY(100%);
   opacity: 0;
+}
+.search-bar {
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div class="add-comment flex bg-[#d2e8b8]">
+  <div class="add-comment flex items-center gap-2">
     <input
       v-model="input"
       placeholder="寫下你的留言..."
@@ -10,7 +10,7 @@
     <button
       @click="handleSubmit"
       :disabled="!input.trim() || isSubmitting"
-      class="submit-btn"
+      class="submit-btn whitespace-nowrap"
     >
       {{ isSubmitting ? "送出中..." : "發表留言" }}
     </button>
@@ -40,10 +40,11 @@ const handleSubmit = () => {
   margin-top: 16px;
 }
 .comment-input {
-  width: 100%;
+  width: 80%;
+  height: 80%;
   padding: 8px 12px;
   border: 1px solid #ddd;
-  border-radius: 4px;
+  border-radius: 14px;
   resize: vertical;
   font-family: inherit;
 }
@@ -52,11 +53,9 @@ const handleSubmit = () => {
   border-color: #007bff;
 }
 .submit-btn {
-  margin-top: 8px;
-  padding: 8px 16px;
+  padding: 4px 8px;
   background-color: #007bff;
   color: white;
-  border: none;
   border-radius: 4px;
   cursor: pointer;
   transition: background-color 0.2s;
@@ -64,8 +63,7 @@ const handleSubmit = () => {
 .submit-btn:hover:not(:disabled) {
   background-color: #0056b3;
 }
-.submit-btn:disabled {
+/* .submit-btn:disabled {
   background-color: #ccc;
-  cursor: not-allowed;
-}
+} */
 </style>

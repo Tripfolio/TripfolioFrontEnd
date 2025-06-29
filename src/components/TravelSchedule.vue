@@ -1,5 +1,5 @@
 <template>
-  <div class="relative max-w-xl mx-auto p-4 border rounded bg-white">
+  <div class="relative max-w-xl mx-auto p-5 rounded bg-[#878787]/60 shadow-md shadow-black/40 text-white h-[710px] w-[450px] scale-[0.75] sm:scale-100">
     <button
       type="button"
       @click="handleClose"
@@ -9,21 +9,21 @@
     </button>
     <form
       @submit.prevent="scheduleSubmit"
-      class="space-y-4 p-4 rounded max-w-xl mx-auto"
+      class="space-y-4 p-2 rounded max-w-xl mx-auto"
     >
       <span class="text-2xl font-bold">行程設定</span>
 
       <div class="relative">
         <img
           :src="coverPreviewUrl || defaultCover"
-          class="w-full h-48 object-cover rounded-xl shadow"
+          class="w-full h-48 object-cover rounded-xl shadow-md shadow-black/10"
           alt="封面圖片"
         />
         <div class="absolute op-0 right-0 size-40">
           <button
             type="button"
             @click="uploadFile"
-            class="bg-white px-3 py-1 rounded-full shadow flex items-center gap-1"
+            class="bg-white px-3 py-1 rounded-full shadow flex items-center gap-1 text-[#878787]"
           >
             <font-awesome-icon :icon="['fas', 'pen-to-square']" />上傳圖片
           </button>
@@ -60,7 +60,7 @@
             <button
               type="button"
               @click="applyCrop"
-              class="bg-blue-500 text-white px-4 py-2 rounded"
+              class="bg-[#878787] hover:bg-[#c2c2c2] text-white px-4 py-2 rounded"
             >
               裁切
             </button>
@@ -75,35 +75,43 @@
         <input
           type="text"
           v-model="title"
-          class="border p-2 w-full rounded"
+          class="border p-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-gray-500"
           placeholder="幫行程取個名字⸜(*ˊᗜˋ*)⸝"
         />
       </div>
 
       <div>
-        <label class="block mb-1"
-          >行程日期<span class="text-red-500">*</span></label
-        >
-        <div>
-          <input type="date" v-model="startDate" class="border p-2 rounded" />
-          <span> - </span>
+      <label class="block mb-1">行程日期<span class="text-red-500">*</span></label>
+
+      <div class="flex flex-col sm:flex-row gap-2 items-center">
+        <div class="relative w-full sm:w-auto flex-1 min-w-[140px]">
+          <input
+            type="date"
+            v-model="startDate"
+            class="border p-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-gray-500"
+          />
+        </div>
+        <span class="hidden sm:inline">-</span>
+        <div class="relative w-full sm:w-auto flex-1 min-w-[140px]">
           <input
             type="date"
             v-model="endDate"
             :min="startDate"
-            class="border p-2 rounded"
+            class="border p-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-gray-500"
           />
-          <span v-if="days > 0" class="text-sm text-gray-500 mt-1">
-            共 {{ days }} 天</span
-          >
         </div>
       </div>
+
+      <span v-if="days > 0" class="text-sm text-[#828282] mt-1 block">
+        共 {{ days }} 天
+      </span>
+    </div>
 
       <div>
         <label class="block mb-1">行程描述(可選填)</label>
         <textarea
           v-model="description"
-          class="border p-2 w-full h-24 rounded"
+          class="p-2 h-24 border p-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-gray-500"
           placeholder="請簡單記錄一下自己的行程吧~(ﾉ˶>ᗜ​<˵)ﾉ"
         ></textarea>
       </div>
@@ -119,7 +127,7 @@
         <button
           type="submit"
           :disabled="isLoading"
-          class="bg-blue-400 hover:bg-blue-300 text-white px-4 py-2 rounded"
+          class="bg-[#878787] hover:bg-[#c2c2c2] text-white px-4 py-2 rounded"
         >
           <span v-if="isLoading" class="flex items-center gap-2">
             儲存中...<span

@@ -3,7 +3,7 @@
   <select
     v-model="selectedMode"
     @change="getTravelInfo"
-    class="w-36 px-3 py-1 border-2 border-gray-500 rounded-full text-base"
+    class="w-36 px-3 py-1 border-2 border-gray-500 rounded-full text-base bg-white text-[#212121] focus:outline-none focus:ring-2 focus:ring-gray-400"
   >
     <option value="NONE">— 選交通方式 —</option>
     <option value="DRIVING">🚗 開車</option>

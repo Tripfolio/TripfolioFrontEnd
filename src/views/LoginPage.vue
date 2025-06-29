@@ -127,7 +127,8 @@ const login = async () => {
     isLoggedIn.value = true;
     showError.value = false;
     clearText();
-    router.push('/');
+    window.dispatchEvent(new Event("login-status-changed"));
+    router.push("/");
   } catch (err) {
     showError.value = true;
 
@@ -144,6 +145,18 @@ const handleGoogleLogin = () => {
   window.location.href = `${import.meta.env.VITE_API_URL}/auth/google`;
 };
 
+const logout = async () => {
+  const token = localStorage.getItem(TOKEN_NAME);
+  if (!token) return;
+
+  localStorage.removeItem(TOKEN_NAME);
+  localStorage.removeItem("memberId");
+  isLoggedIn.value = false;
+  clearText();
+  
+  window.dispatchEvent(new Event("login-status-changed"));
+  router.push("/login");
+};
 
 onMounted(() => {
   initializeAuth(router);
@@ -181,5 +194,4 @@ onMounted(() => {
     isLoggedIn.value = false;
   }
 });
-
 </script>

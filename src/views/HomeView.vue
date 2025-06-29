@@ -244,7 +244,7 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
-.homepage-bg {
+/* .homepage-bg {
   background-image:
     radial-gradient(#999 1px, transparent 1px),
     linear-gradient(to right, rgba(0, 0, 0, 0.08) 1px, transparent 1px),
@@ -258,5 +258,5 @@ onUnmounted(() => {
     0px 0px,
     0px 0px;
   background-color: white;
-}
+} */
 </style>

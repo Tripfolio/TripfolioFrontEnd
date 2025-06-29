@@ -8,7 +8,7 @@
 
     <nav class="flex-1 flex justify-center space-x-6 items-center">
       <button class="flex items-center space-x-1 pr-5">
-        <RouterLink to="/map">
+        <RouterLink to="/schedule" class="">
           <font-awesome-icon :icon="['fas', 'compass']" />
           <span class="pl-2 no-underline">探索</span>
         </RouterLink>
@@ -25,53 +25,98 @@
     </nav>
 
     <div class="flex-none">
-      <template v-if="isLoggedIn">
-        <button @click="logout" class="underline">登出</button>
+      <template v-if="!isLoggedIn">
+        <RouterLink to="/signup" class="underline"
+          ><font-awesome-icon :icon="['fas', 'user']"
+        /></RouterLink>
       </template>
+
       <template v-else>
-        <RouterLink to="/signup" class="underline">註冊</RouterLink>
-        |
-        <RouterLink to="/login" class="underline">登入</RouterLink>
+        <RouterLink to="/profile" class="flex items-center">
+          <img
+            :src="userAvatar || 'https://picsum.photos/32/32?random=1'"
+            :alt="會員頭貼"
+            class="w-8 h-8 rounded-full object-cover shadow-sm hover:scale-110 transition-transform"
+            @error="$event.target.src = 'https://picsum.photos/32/32?random=1'"
+          />
+        </RouterLink>
       </template>
     </div>
   </header>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
-import { jwtDecode } from 'jwt-decode'
-import logo from '../assets/icons/Logo/logo.svg'
+import { ref, onMounted, onUnmounted } from "vue";
+import axios from "axios";
+import logo from "../assets/icons/Logo/logo.svg";
 
-const TOKEN_NAME = 'user_token'
-const isLoggedIn = ref(false)
-const router = useRouter()
+const isLoggedIn = ref(false);
+const userAvatar = ref("");
 
-const checkAuth = () => {
-  const token = localStorage.getItem(TOKEN_NAME)
-  if (!token) {
-    isLoggedIn.value = false
-    return
+const checkLoginStatus = () => {
+  const token = localStorage.getItem("token");
+  if (token) {
+    try {
+      const payload = JSON.parse(atob(token.split(".")[1]));
+      const currentTime = Date.now() / 1000;
+
+      if (payload.exp && payload.exp < currentTime) {
+        localStorage.removeItem("token");
+        isLoggedIn.value = false;
+        userAvatar.value = "";
+        return;
+      }
+
+      isLoggedIn.value = true;
+      const userId = payload.id || payload.userId || payload.memberId;
+
+      if (userId) {
+        fetchUserAvatar(userId);
+      }
+    } catch (error) {
+      localStorage.removeItem("token");
+      isLoggedIn.value = false;
+      userAvatar.value = "";
+    }
+  } else {
+    isLoggedIn.value = false;
+    userAvatar.value = "";
   }
+};
 
+const fetchUserAvatar = async (userId) => {
+  if (!userId) {
+    return;
+  }
   try {
-    const payload = jwtDecode(token)
-    const now = Math.floor(Date.now() / 1000)
-    isLoggedIn.value = payload.exp > now
-  } catch {
-    isLoggedIn.value = false
-  }
-}
+    const response = await axios.get(
+      `${import.meta.env.VITE_API_URL}/api/profile`,
+      {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      }
+    );
 
-const logout = () => {
-  localStorage.removeItem(TOKEN_NAME)
-  localStorage.removeItem('memberId')
-  isLoggedIn.value = false
-  router.push('/login')
-}
+    userAvatar.value =
+      response.data.avatar || "https://picsum.photos/32/32?random=1";
+  } catch (error) {
+    userAvatar.value = "https://picsum.photos/32/32?random=1";
+  }
+};
+
+const handleStorageChange = (e) => {
+  if (e.key === "token") {
+    checkLoginStatus();
+  }
+};
 
 onMounted(() => {
-  checkAuth()
-  window.addEventListener('storage', checkAuth)
-})
+  checkLoginStatus();
+  window.addEventListener("storage", handleStorageChange);
+  window.addEventListener("login-status-changed", checkLoginStatus);
+});
+
+onUnmounted(() => {
+  window.removeEventListener("storage", handleStorageChange);
+  window.removeEventListener("login-status-changed", checkLoginStatus);
+});
 </script>

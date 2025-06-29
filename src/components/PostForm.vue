@@ -1,20 +1,69 @@
 <template>
-  <div class="post-form">
-    <label>選擇行程</label>
-    <select v-model="selectedScheduleId" @change="onScheduleChange">
-      <option v-for="s in schedules" :key="s.id" :value="s.id">
-        {{ s.title }}
-      </option>
-    </select>
+  <div
+    class="homepage-bg min-h-screen w-full flex items-center justify-center relative overflow-hidden"
+  >
+    <!-- 背景動畫層 -->
+    <div class="animated-gradient absolute inset-0 -z-10"></div>
 
-    <label>貼文主圖</label>
-    <input type="file" accept="image/*" @change="handleImageUpload" />
-    <img v-if="previewImage" :src="previewImage" alt="預覽" width="200" />
+    <!-- 表單區 -->
+    <div
+      class="postform-style mt-30 shadow-xl p-8 rounded-3xl w-full max-w-xl flex flex-col gap-6"
+    >
+      <!-- 行程選擇 -->
+      <div>
+        <label class="block text-lg font-medium mb-2 text-center"
+          >選擇行程</label
+        >
+        <select
+          v-model="selectedScheduleId"
+          @change="onScheduleChange"
+          class="w-full px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400"
+        >
+          <option v-for="s in schedules" :key="s.id" :value="s.id">
+            {{ s.title }}
+          </option>
+        </select>
+      </div>
 
-    <label>貼文內容</label>
-    <textarea v-model="content" rows="5" />
+      <!-- 主圖上傳 -->
+      <div>
+        <label class="block text-lg font-medium mb-2">貼文主圖</label>
+        <input
+          type="file"
+          accept="image/*"
+          @change="handleImageUpload"
+          class="w-full"
+        />
+        <div
+          class="mt-3 rounded-xl shadow-md w-full max-w-xs h-48 overflow-hidden flex items-center justify-center"
+        >
+          <img
+            v-if="previewImage"
+            :src="previewImage"
+            alt="預覽"
+            class="object-cover w-full h-full"
+          />
+        </div>
+      </div>
 
-    <button @click="submitPost">送出貼文</button>
+      <!-- 內容 -->
+      <div>
+        <label class="block text-lg font-medium mb-2">貼文內容</label>
+        <textarea
+          v-model="content"
+          rows="5"
+          class="w-full px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 resize-none"
+        />
+      </div>
+
+      <!-- 送出 -->
+      <button
+        @click="submitPost"
+        class="mt-4 px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-full transition"
+      >
+        送出貼文
+      </button>
+    </div>
   </div>
 </template>
 
@@ -99,12 +148,6 @@ async function submitPost() {
     formData.append("coverURL", previewImage.value);
   }
 
-  // 調試資訊
-  console.log("提交的資料:");
-  console.log("selectedScheduleId:", selectedScheduleId.value);
-  console.log("selected schedule:", selected);
-  console.log("scheduleTitle:", selected?.title);
-
   for (let [key, value] of formData.entries()) {
     console.log(`${key}:`, value);
   }
@@ -127,3 +170,33 @@ async function submitPost() {
   }
 }
 </script>
+
+<style scoped>
+.animated-gradient {
+  background: linear-gradient(
+    149.45deg,
+    #ff6a38 7.6%,
+    rgba(255, 56, 17, 0.22) 7.62%,
+    #ffb2b2 19.41%,
+    #e0d391 40.78%,
+    #c6d544 58.91%,
+    #9fd01e 65.23%,
+    #8fcb40 71.26%,
+    #009991 92.4%
+  );
+  background-size: 400% 400%;
+  animation: gradientMove 15s ease infinite;
+}
+
+@keyframes gradientMove {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+</style>

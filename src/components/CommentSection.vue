@@ -34,31 +34,14 @@
       </div>
     </div>
 
-    <div v-else class="text-center py-4 text-gray-500">
+    <div v-else class="text-center py-4">
       還沒有留言，成為第一個留言的人吧！
     </div>
 
-    <!-- 新增留言表單 -->
-    <!-- <div class="add-comment">
-      <input
-        v-model="newComment"
-        placeholder="寫下你的留言..."
-        rows="1"
-        class="comment-input"
-        :disabled="isSubmitting"
-      ></input>
-      <button
-        @click="submitComment"
-        :disabled="!newComment.trim() || isSubmitting"
-        class="submit-btn"
-      >
-        {{ isSubmitting ? "送出中..." : "發表留言" }}
-      </button>
-    </div> -->
     <AddComment
       :isSubmitting="isSubmitting"
       @submit="submitComment"
-      class="absolute bottom-0"
+      class="absolute bottom-0 my-5 mx-10"
     />
   </div>
 </template>
@@ -99,30 +82,6 @@ const getCurrentUserId = () => {
   return null;
 };
 
-// const submitComment = async () => {
-//   if (!newComment.value.trim()) return;
-
-//   isSubmitting.value = true;
-
-//   try {
-//     const response = await axios.post(
-//       `${import.meta.env.VITE_API_URL}/api/post/${props.post.postId}/comments`,
-//       {
-//         content: newComment.value.trim(),
-//         memberId: getCurrentUserId(),
-//       }
-//     );
-
-//     // 成功後更新留言列表（加到頂部）
-//     comments.value.unshift(response.data);
-//     newComment.value = "";
-//     console.log("留言發表成功", response.data);
-//   } catch (error) {
-//     console.error("留言發表失敗:", error);
-//   } finally {
-//     isSubmitting.value = false;
-//   }
-// };
 const submitComment = async (commentText) => {
   if (!commentText.trim()) return;
   isSubmitting.value = true;
