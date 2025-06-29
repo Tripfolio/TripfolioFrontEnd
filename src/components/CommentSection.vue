@@ -43,7 +43,7 @@
     <AddComment
       :isSubmitting="isSubmitting"
       @submit="submitComment"
-      class="mt-4"
+      class="mt-4 w-[90%]"
     />
   </div>
 </template>
@@ -61,8 +61,6 @@ const props = defineProps({
 });
 
 const emit = defineEmits(["comment-added"]);
-
-const newComment = ref("");
 const comments = ref([]);
 const isSubmitting = ref(false);
 const isLoading = ref(false);
@@ -265,7 +263,6 @@ onMounted(() => {
 
 .comment-time {
   font-size: 12px;
-  color: #666;
 }
 
 .comment-content {

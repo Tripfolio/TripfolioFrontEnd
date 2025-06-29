@@ -1,11 +1,11 @@
 <template>
   <div class="popup-overlay" @click.self="close">
     <div
-      class="popup-content flex flex-col md:flex-row relative max-h-[90vh] max-w-[100vw] overflow-hidden rounded-2xl"
+      class="popup-content flex flex-col md:flex-row relative max-h-[90vh] max-w-[100vw] overflow-y-auto rounded-2xl"
     >
       <!-- 左側圖片：手機版為上方 -->
       <div
-        class="w-full md:w-[55%] h-64 md:h-auto overflow-hidden rounded-tl-2xl md:rounded-tl-2xl md:rounded-bl-2xl"
+        class="w-full md:w-[55%] h-64 flex-shrink-0 md:h-auto overflow-hidden rounded-tl-2xl md:rounded-tl-2xl md:rounded-bl-2xl"
       >
         <img
           :src="
@@ -62,7 +62,7 @@
           <CommentSection
             :post="localPost"
             @comment-added="handleCommentUpdate"
-            class="overflow-auto w-[90%] max-h-[200px] md:max-h-none md:w-full"
+            class="overflow-auto w-full max-h-[200px]"
           />
 
           <FavoriteButton
@@ -70,7 +70,7 @@
             :memberId="getCurrentUserId()"
             :favoriteCount="localPost.favoriteCount"
             @favorite-toggled="handleFavoriteToggle"
-            class="absolute bottom-5 right-5"
+            class="absolute bottom-5 right-5 sm:bottom-6"
           />
         </div>
       </div>
