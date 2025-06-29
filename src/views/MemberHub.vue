@@ -36,9 +36,6 @@
               {{ tab.label }}
             </button>
           </div>
-          <button class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg transition-colors">
-            開通 AI
-          </button>
         </div>
         
         <!--卡片顯示區-->
@@ -49,14 +46,13 @@
                 <img :src="travel.coverURL" @error="e => e.target.src = 'https://via.placeholder.com/400x200?text=No+Image'" class="w-full h-60 object-cover rounded-t-lg" alt="行程預覽圖"/>
                 <div class="absolute inset-0 bg-black bg-opacity-20 flex flex-col justify-end p-4 opacity-0 group-hover:opacity-100 transition-opacity">
                   <div class="flex justify-end gap-2">
-                    <button class="w-8 h-8 rounded-full bg-gray-800 bg-opacity-70 flex items-center justify-center hover:bg-opacity-100">⋯</button>
-                    <button class="w-8 h-8 rounded-full bg-gray-800 bg-opacity-70 flex items-center justify-center hover:bg-opacity-100">🔗</button>
+                    <!-- <button class="w-8 h-8 rounded-full bg-gray-800 bg-opacity-70 flex items-center justify-center hover:bg-opacity-100">⋯</button>
+                    <button class="w-8 h-8 rounded-full bg-gray-800 bg-opacity-70 flex items-center justify-center hover:bg-opacity-100">🔗</button> -->
                   </div>
                 </div>
               </div>
               <div class="p-4">
                 <div class="font-semibold text-lg">{{ travel.title }}</div>
-                <div class="text-sm text-gray-400">{{ travel.startDate }} ~ {{ travel.endDate }}</div>
               </div>
             </div>
           </div>
@@ -73,7 +69,7 @@
 
           <!-- 我收藏的貼文 -->
           <div v-else-if="activeTab === 'collected'" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div v-for="post in collectedPosts" :key="collected.id" @click="goToPost(collected.id)" class="bg-gray-600 rounded-xl overflow-hidden cursor-pointer group">
+            <div v-for="collected in collectedPosts" :key="collected.id" @click="goToPost(collected.id)" class="bg-gray-600 rounded-xl overflow-hidden cursor-pointer group">
               <img :src="collected.postImage" class="w-full h-60 object-cover rounded-t-lg" alt="貼文預覽圖" />
               <div class="p-4">
                 <div class="font-semibold text-lg">{{ collected.title }}</div>
@@ -83,7 +79,7 @@
           <div v-else-if="activeTab === 'notifications'">
             <div class="bg-gray-600 rounded-xl p-8 text-center">
               <h3 class="text-xl font-semibold mb-4">通知設定</h3>
-              <p class="text-gray-400">email通知設定選項。</p>
+              <p class="text-gray-400">通知設定</p>
             </div>
           </div>
         </div>
@@ -95,6 +91,7 @@
 <script setup>
 import { ref, onMounted, watch } from 'vue';
 import { useRouter,useRoute } from 'vue-router';
+import { jwtDecode } from "jwt-decode";
 import axios from 'axios';
 
 const router = useRouter()
@@ -118,61 +115,55 @@ const fetchData = async () => {
   //       alert('請先登入會員')
   //       throw new Error('token 不存在')
   //   }
+
   //   const decoded = jwtDecode(token);
   //   const memberId = decoded.id;
+  //   const username = decoded.name;
 
   try {
-      //抓自己發過的行程
-      const travelRes = await axios.get(`${import.meta.env.VITE_API_URL}/api/schedules/member/${memberId}`)
-      travels.value = travelRes.data.map(item => ({
-          id: item.id,
-          title: item.title,
-          startDate: item.startDate?.slice(0, 10),
-          endDate: item.endDate?.slice(0, 10),
-          coverUrl: item.coverURL
+    //篩選自己發過的行程
+    const postRes = await axios.get(`${import.meta.env.VITE_API_URL}/api/travelSchedule/user`,{
+      headers: { Authorization: `Bearer ${token}`}
+    })
+    posts.value = postRes.data.posts
+      .filter(item => item.id === memberId)
+      .map(item => ({
+        id: item.id,
+        title: item.title || '未命名貼文',
+        coverImage: item.imageUrl
       }));
   } catch (err) {
-      alert('取得行程失敗', err);
+      console.warn('取得貼文失敗', err);
       travels.value = [
-          { id: 1, title: '沖繩海島慢活之旅', startDate: '2025-07-10', endDate: '2025-07-15', coverUrl: 'https://images.unsplash.com/photo-1662381523885-914182622e12?q=80&w=735&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' },
-          { id: 2, title: '京都楓葉古寺巡禮', startDate: '2025-11-20', endDate: '2025-11-25', coverUrl: 'https://images.unsplash.com/photo-1545569341-9eb8b30979d9?w=500&q=80' },
-          { id: 3, title: '探索冰島極光', startDate: '2026-01-05', endDate: '2026-01-12', coverUrl: 'https://plus.unsplash.com/premium_photo-1661926694528-a833cc729d54?q=80&w=1472&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' },
+        { id: 1, title: '沖繩海島慢活之旅', startDate: '2025-07-10', endDate: '2025-07-15', coverUrl: 'https://images.unsplash.com/photo-1662381523885-914182622e12?q=80&w=735&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' },
+        { id: 2, title: '京都楓葉古寺巡禮', startDate: '2025-11-20', endDate: '2025-11-25', coverUrl: 'https://images.unsplash.com/photo-1545569341-9eb8b30979d9?w=500&q=80' },
+        { id: 3, title: '探索冰島極光', startDate: '2026-01-05', endDate: '2026-01-12', coverUrl: 'https://plus.unsplash.com/premium_photo-1661926694528-a833cc729d54?q=80&w=1472&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' },
       ];
   }
 
-    //     抓自己發過的貼文(先用假資料合併後再改掉註解)
-    	// try {
-        // const postRes = await axios.get(`${API_BASE_URL}/api/members/${memberId}/posts`)
-        // posts.value = postRes.data.map(item => ({
-        //     id: item.id,
-        //     title: item.title,
-        //     postImage: item.post_image // Or adjust based on actual API response field
-        // }));
-    		//} catch (err) {
-        //		console.warn('Failed to fetch user-created posts (can be ignored, will be replaced with real data after database merge)', err)
-    		//	}
+  try {
+    //篩選自己收藏過的貼文
+    const collectRes = await axios.get(`${import.meta.env.VITE_API_URL}/api/favorites/user/${memberId}`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    collectedPosts.value = collectRes.data.map(item => ({
+      id: item.postId,
+      title: item.postTitle || '未命名貼文',
+      postImage: item.postImageUrl
+    }));
+  } catch (err) {
+    console.warn('抓貼文失效', err)
+  }
+};
 
-    		//try {
-			  //     抓自己收藏過的貼文(先用假資料合併後再改掉註解)
-        // const collectRes = await axios.get(`${API_BASE_URL}/api/members/${memberId}/collections`)
-        // collectedPosts.value = collectRes.data.map(item => ({
-        //     id: item.id,
-        //     title: item.title,
-        //     postImage: item.post_image // Or adjust based on actual API response field
-        // }));
-				//    } catch (err) {
-				//        console.warn('Failed to fetch collected posts (can be ignored, will be replaced with real data after database merge)', err)
-				//    }
-				};
-
-//初次載入抓一次
+//初始化與返回頁面重新載入
 onMounted(fetchData)
-
-//每次切換回來這頁也要抓一次（確保資料有更新）
 watch(() => route.fullPath, fetchData)
 
-const goToTravel = id => router.push(`/travel/${id}`)
-const goToPost = id => router.push(`/community/post/${id}`) 
+const goToTravel = id => router.push({ path: `/schedule/${id}`, query: { from: 'tracker' } })
+const goToPost = (id) => {
+  router.push({ path: '/community', query: { postId: id } });
+};
 
 
 const user = ref({
