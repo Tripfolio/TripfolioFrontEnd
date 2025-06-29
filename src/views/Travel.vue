@@ -74,51 +74,55 @@
             <div v-else class="text-gray-400 text-center">尚未建立任何行程</div>
           </div>
 
+          <!-- 編輯行程 -->
           <ScheduleDetail
             v-else
             :trip-id="editingTripId"
             :selected-date="selectedTrip?.days?.[currentDayIndex]?.date"
             ref="scheduleDetailRef"
             @back="handleCloseDetail"
+            @day-changed="currentDayIndex = $event"
             class="w-[50%] lg:w-full"
           />
         </div>
       </div>
-    </div>
 
-    <!-- 彈出建立行程表單 -->
-    <div
-      v-if="showForm"
-      class="fixed inset-0 backdrop-blur-sm flex items-center justify-center z-50 overflow-auto p-4"
-    >
-      <div>
-        <TravelSchedule @close="handleCloseForm" />
+      <!-- 彈出建立行程表單 -->
+      <div
+        v-if="showForm"
+        class="fixed inset-0 backdrop-blur-sm flex items-center justify-center z-50 overflow-auto p-4"
+      >
+        <div>
+          <TravelSchedule @close="handleCloseForm" />
+        </div>
       </div>
-    </div>
 
-    <!-- 付款提醒Modal -->
-    <div
-      v-if="showPayModal"
-      class="fixed inset-0 bg-white/50 backdrop-blur-sm flex items-center justify-center z-50 overflow-auto p-4"
-    >
-      <div class="bg-white w-full max-w-xl rounded-2xl p-6 shadow-lg relative">
-        <h2 class="text-xl font-bold mb-2">升級成付費會員</h2>
-        <p class="text-gray-600 mb-6">
-          免費會員僅可建立一筆行程，若要建立更多行程，請升級為付費會員。
-        </p>
-        <div class="flex justify-center gap-4">
-          <button
-            @click="goToPay"
-            class="bg-green-500 hover:bg-green-400 text-white px-4 py-2 rounded"
-          >
-            前往付款
-          </button>
-          <button
-            @click="showPayModal = false"
-            class="px-4 py-2 border rounded text-gray-600 hover:bg-gray-100"
-          >
-            取消
-          </button>
+      <!-- 付款提醒Modal -->
+      <div
+        v-if="showPayModal"
+        class="fixed inset-0 bg-white/50 backdrop-blur-sm flex items-center justify-center z-50 overflow-auto p-4"
+      >
+        <div
+          class="bg-white w-full max-w-xl rounded-2xl p-6 shadow-lg relative"
+        >
+          <h2 class="text-xl font-bold mb-2">升級成付費會員</h2>
+          <p class="text-gray-600 mb-6">
+            免費會員僅可建立一筆行程，若要建立更多行程，請升級為付費會員。
+          </p>
+          <div class="flex justify-center gap-4">
+            <button
+              @click="goToPay"
+              class="bg-green-500 hover:bg-green-400 text-white px-4 py-2 rounded"
+            >
+              前往付款
+            </button>
+            <button
+              @click="showPayModal = false"
+              class="px-4 py-2 border rounded text-gray-600 hover:bg-gray-100"
+            >
+              取消
+            </button>
+          </div>
         </div>
       </div>
     </div>
