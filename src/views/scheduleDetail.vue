@@ -1,57 +1,58 @@
 <template>
-    <div class="p-6 w-full">
-        <!-- 左側：行程總覽＋每日行程 -->
-        <div class="lg:col-span-2">
-            <!-- 行程總覽卡片 -->
-            <TripOverview 
-                v-if="trip" 
-                :trip="trip"
-                :cover-timestamp="coverTimestamp"
-                @back-to-list="goBack"
-                @update-cover="updateCover"
-                @update-title="updateTitle"
-                @update-notes="updateNotes"
-                @update-dates="updateDates"
-            />
-            <!-- 日期切換按鈕 -->
-            <div v-if="trip && trip.days?.length" class="flex gap-2 mt-4 flex-wrap">
-                <button 
-                    v-for="(day, index) in trip.days" 
-                    :key="day" 
-                    @click="currentDayIndex = index"
-                    class="px-4 py-1 rounded-full text-sm border"
-                    :class="currentDayIndex === index
-                    ? 'bg-blue-600 text-white border-blue-600'
-                    : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-100'">第{{ index + 1 }}天
-                </button>
-            </div>
-            <!-- 每日計畫 -->
-            <DailyPlan
-                v-if="trip && currentDayIndex !== null"
-                :selected-trip="trip"
-                :day-index="currentDayIndex"
-                :itinerary-places="itineraryRef?.itineraryPlaces || []"
-                class="mt-6"
-                ref="dailyPlanRef"
-            />
-        </div>
-
-        <!-- 右側：景點清單 -->
-        <div class="lg:col-span-1">
-            <Itinerary 
-                v-if="tripLoaded && trip?.id && currentDayIndex !== null" 
-                :trip-id="trip.id" 
-                :selected-date="trip.days[currentDayIndex].date"
-                :default-image="'/images/default.jpg'"
-                ref="itineraryRef"
-            />
-        </div>
+  <div :class="isFromTracker ? 'p-6 w-full max-w-3xl mx-auto' : 'px-0 py-6 w-full grid lg:grid-cols-1 max-w-7xl mx-auto gap-6'">
+    <!-- 左側：行程總覽＋每日行程 -->
+    <div class="w-full max-w-5xl mx-auto">
+      <!-- 行程總覽卡片 -->
+      <TripOverview 
+        v-if="trip" 
+        :trip="trip"
+        :cover-timestamp="coverTimestamp"
+        :is-from-tracker="isFromTracker"
+        @back-to-list="goBack"
+        @update-cover="updateCover"
+        @update-title="updateTitle"
+        @update-notes="updateNotes"
+        @update-dates="updateDates"
+        />
+      <!-- 日期切換按鈕 -->
+      <div v-if="trip && trip.days?.length" class="flex gap-2 mt-4 flex-wrap">
+        <button 
+          v-for="(day, index) in trip.days" 
+          :key="day" 
+          @click="currentDayIndex = index"
+          class="px-5 py-1 rounded-full text-sm border"
+          :class="currentDayIndex === index
+          ? 'bg-[#828282] text-white border-[#828282]'
+          : 'bg-white text-gray-700 border-gray-300 shadow-md shadow-black/30'">第{{ index + 1 }}天
+        </button>
+      </div>
+      <!-- 每日計畫 -->
+      <DailyPlan
+        v-if="trip && currentDayIndex !== null"
+        :selected-trip="trip"
+        :day-index="currentDayIndex"
+        :itinerary-places="itineraryRef?.itineraryPlaces || []"
+        class="mt-6 w-full"
+        ref="dailyPlanRef"
+      />
     </div>
+
+    <!-- 右側：景點清單 -->
+    <div class="lg:col-span-1">
+      <Itinerary 
+        v-if="tripLoaded && trip?.id && currentDayIndex !== null" 
+        :trip-id="trip.id" 
+        :selected-date="trip.days[currentDayIndex].date"
+        :default-image="'/images/default.jpg'"
+        ref="itineraryRef"
+      />
+    </div>
+  </div>
 </template>
 
 <script setup>
-import { ref, watch, onMounted } from 'vue';
-import { useRouter } from 'vue-router';
+import { ref, computed, watch, onMounted } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 import axios from 'axios';
 import TripOverview from '../components/TripOverview.vue';
 import DailyPlan from '../components/DailyPlan.vue';
@@ -72,6 +73,11 @@ const itineraryRef = ref(null);
 const dailyPlanRef = ref(null);
 
 const token = localStorage.getItem('token');
+
+//會員動態頁面用
+const route = useRoute();
+const isFromTracker = computed(() => route.query.from === 'tracker');
+
 
 //返回行程列表
 const goBack = () => {
