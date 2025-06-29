@@ -1,6 +1,6 @@
 <template>
   <div v-if="selectedTrip && currentDay" class="w-full max-w-xl mx-auto">
-    <h2 class="text-xl font-bold mb-4">{{ currentDay.date }}</h2>
+    <h2 class="text-xl font-bold mb-4 ml-13">{{ currentDay.date }}</h2>
 
     <Itinerary
       ref="itineraryRef"

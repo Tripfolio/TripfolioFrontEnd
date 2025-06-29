@@ -1,5 +1,7 @@
 <template>
-  <div class="relative max-w-xl mx-auto p-5 rounded bg-[#878787]/60 shadow-md shadow-black/40 text-white h-[710px] w-[450px] scale-[0.75] sm:scale-100">
+  <div
+    class="relative max-w-xl mx-auto p-5 rounded-2xl bg-[#878787]/60 shadow-md shadow-black/40 text-white h-[710px] w-[450px] scale-[0.75] sm:scale-100"
+  >
     <button
       type="button"
       @click="handleClose"
@@ -81,31 +83,33 @@
       </div>
 
       <div>
-      <label class="block mb-1">行程日期<span class="text-red-500">*</span></label>
+        <label class="block mb-1"
+          >行程日期<span class="text-red-500">*</span></label
+        >
 
-      <div class="flex flex-col sm:flex-row gap-2 items-center">
-        <div class="relative w-full sm:w-auto flex-1 min-w-[140px]">
-          <input
-            type="date"
-            v-model="startDate"
-            class="border p-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-gray-500"
-          />
+        <div class="flex flex-col sm:flex-row gap-2 items-center">
+          <div class="relative w-full sm:w-auto flex-1 min-w-[140px]">
+            <input
+              type="date"
+              v-model="startDate"
+              class="border p-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-gray-500"
+            />
+          </div>
+          <span class="hidden sm:inline">-</span>
+          <div class="relative w-full sm:w-auto flex-1 min-w-[140px]">
+            <input
+              type="date"
+              v-model="endDate"
+              :min="startDate"
+              class="border p-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-gray-500"
+            />
+          </div>
         </div>
-        <span class="hidden sm:inline">-</span>
-        <div class="relative w-full sm:w-auto flex-1 min-w-[140px]">
-          <input
-            type="date"
-            v-model="endDate"
-            :min="startDate"
-            class="border p-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-gray-500"
-          />
-        </div>
+
+        <span v-if="days > 0" class="text-sm text-[#828282] mt-1 block">
+          共 {{ days }} 天
+        </span>
       </div>
-
-      <span v-if="days > 0" class="text-sm text-[#828282] mt-1 block">
-        共 {{ days }} 天
-      </span>
-    </div>
 
       <div>
         <label class="block mb-1">行程描述(可選填)</label>
