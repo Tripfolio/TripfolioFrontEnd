@@ -19,8 +19,10 @@
             <div>
               <h1 class="text-3xl font-bold">{{ user.name }}</h1>
               <div class="flex gap-4 mt-2 text-gray-400 justify-center sm:justify-start">
-                <a href="#" class="hover:text-white">編輯</a>
-                <a href="#" class="hover:text-white">登出</a>
+                <!-- 編輯按鈕觸發模態視窗顯示 -->
+                <a href="#" @click.prevent="showMemberProfileModal = true" class="hover:text-white flex items-center gap-1 transition-colors duration-200">
+                  <font-awesome-icon :icon="['fas', 'pen-to-square']" /> 編輯
+                </a>
               </div>
             </div>
             <div class="hidden sm:block w-px h-16 bg-gray-500"></div>
