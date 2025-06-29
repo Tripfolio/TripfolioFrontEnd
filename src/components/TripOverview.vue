@@ -2,36 +2,43 @@
   <div class="w-full rounded-xl px-6 pt-2 pb-6">
     <button
       @click="$emit('back-to-list')"
-      class="mb-4 text-gray-600 hover:text-gray-800 flex items-center text-sm">
+      class="mb-4 text-gray-600 hover:text-gray-800 flex items-center text-sm"
+    >
       <font-awesome-icon :icon="['fas', 'arrow-left']" class="w-4 h-4 mr-1" />
       返回行程總覽
     </button>
 
-    <div class="w-full max-w-5xl mx-auto bg-[#828282] rounded-lg shadow-md shadow-black/40 overflow-hidden mb-6">
-      <div class="relative w-full h-56 overflow-hidden group">
+    <div
+      class="w-full max-w-[480px] mx-auto bg-[#828282] rounded-lg shadow-md shadow-black/40 overflow-hidden mb-6"
+    >
+      <div class="relative aspect-[3/2] overflow-hidden">
         <img
           v-if="trip.coverURL"
           :src="computedCoverURL"
           :key="computedCoverURL"
           alt="行程封面"
-          class="w-full h-full object-cover"
+          class="w-full h-auto max-h-60 sm:max-h-80 object-cover rounded-xl"
         />
         <div
           v-else
-          class="w-full h-full bg-gray-200 flex items-center justify-center text-gray-500">
+          class="w-full h-full bg-gray-200 flex items-center justify-center text-gray-500"
+        >
           無封面圖片
         </div>
 
-        <div class="absolute inset-0 bg-black/30 flex flex-col justify-end p-4 text-white">
+        <div
+          class="absolute inset-0 bg-black/30 flex flex-col justify-end p-4 text-white"
+        >
           <div class="flex items-center">
             <h2
               v-if="!isTitleEditing"
               @click="isTitleEditing = true"
-              class="text-xl font-bold cursor-pointer hover:text-gray-300">
+              class="text-xl font-bold cursor-pointer hover:text-gray-300"
+            >
               {{ trip.title }}
               <font-awesome-icon
-              :icon="['fas', 'pen-to-square']"
-              class="ml-2 text-white text-lg"
+                :icon="['fas', 'pen-to-square']"
+                class="ml-2 text-white text-lg"
               />
               <span v-if="titleSaved" class="ml-2 text-yellow-500 text-sm">
                 已儲存
@@ -70,9 +77,10 @@
 
         <label
           for="cover-upload"
-          class="absolute top-2 right-2 w-150 h-30 flex items-center justify-center text-white text-base px-4 py-2 rounded cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity duration-300 gap-1">
-            <font-awesome-icon :icon="['fas', 'camera']" class="w-5 h-5" />
-            更改封面
+          class="absolute top-2 right-2 w-150 h-30 flex items-center justify-center text-white text-base px-4 py-2 rounded cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity duration-300 gap-1"
+        >
+          <font-awesome-icon :icon="['fas', 'camera']" class="w-5 h-5" />
+          更改封面
         </label>
         <input
           type="file"
@@ -89,7 +97,8 @@
             v-model="editableNotes"
             @blur="saveNotes"
             class="flex-grow ml-2 p-2 border border-gray-300 rounded-md text-sm resize-y min-h-[60px] text-white focus:outline-none focus:ring-2 focus:ring-gray-400"
-            placeholder="點擊這裡新增或編輯行程筆記...">
+            placeholder="點擊這裡新增或編輯行程筆記..."
+          >
           </textarea>
           <span v-if="noteSaved" class="ml-2 text-yellow-500 text-sm">
             已儲存

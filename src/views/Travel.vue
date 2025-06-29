@@ -1,9 +1,9 @@
 <template>
-  <div class="relative">
+  <div class="homepage-bg relative">
     <div class="flex flex-col lg:flex-row h-screen">
       <!-- 左側：可放地圖或其他內容 -->
-      <div class="h-[55%] lg:h-full lg:w-4/6 bg-[#c2c2c2] p-4 relative overflow-hidden">
-        <div class="w-full h-full relative rounded-xl overflow-hidden">
+      <div class="h-[55%] lg:h-full lg:w-4/6 relative overflow-hidden">
+        <div class="w-full h-full relative overflow-hidden">
           <GoogleMapView
             ref="mapRef"
             :trip="selectedTrip"
@@ -13,84 +13,124 @@
             :schedule-detail-ref="scheduleDetailRef"
             :default-image="defaultImage"
             @place-added="handlePlaceAdded"
-            />
+          />
         </div>
       </div>
 
       <!-- 右側：行程列表區-->
-      <div class="flex-1 lg:w-2/6 h-[45%] lg:h-full overflow-y-auto bg-[#c2c2c2] sm:border-t lg:border-t-0">
+      <div class="flex-1 lg:w-2/6 h-[45%] lg:h-full overflow-y-auto">
         <div v-if="!editingTripId" class="fixed bottom-5 right-6 z-50">
-          <button 
-            @click="handleOpenForm" 
+          <button
+            @click="handleOpenForm"
             class="bg-gray-500 hover:bg-[#828282] text-white text-xl px-10 py-3 rounded-full shadow-md shadow-black/40"
           >
             建立行程
           </button>
         </div>
 
-      <!-- 行程卡片列表 -->
-      <div v-if="!editingTripId" class="p-7">
-        <div v-if="tripStore.trips.length > 0" class="mt-2 space-y-4">
-          <div 
-            v-for="item in tripStore.trips" 
-            :key="item.id" @click="editingTripId = item.id" 
-            class="bg-[#828282] rounded-xl shadow-md shadow-black/40 verflow-hidden relative cursor-pointer hover:ring-2 hover:ring-gray-400 transition">
-          <img :src="item.coverURL || 'https://placehold.co/600x300?text=封面圖'" class="w-full h-60 object-cover rounded-xl mb-3" alt="行程封面照"/>
-          <div class="px-5">
-            <h2 class="text-xl text-white font-bold mb-1">{{ item.title }}</h2>
-            <p class="text-white text-m">
-              {{ item.startDate }} - {{ item.endDate }}
-            </p>
-            <p class="text-white text-m mt-2">{{ item.description }}</p>
+        <!-- 行程卡片列表 -->
+        <div>
+          <div
+            v-if="!editingTripId"
+            class="travel-card-style rounded-2xl p-7 m-5"
+          >
+            <div
+              v-if="tripStore.trips.length > 0"
+              class="solo-card-style mt-2 space-y-4 rounded-xl"
+            >
+              <div
+                v-for="item in tripStore.trips"
+                :key="item.id"
+                @click="editingTripId = item.id"
+                class="rounded-2xl shadow-md shadow-black/40 verflow-hidden relative cursor-pointer hover:ring-2 hover:ring-gray-400 transition"
+              >
+                <img
+                  :src="
+                    item.coverURL || 'https://placehold.co/600x300?text=封面圖'
+                  "
+                  class="w-full h-60 object-cover rounded-tl-xl rounded-tr-xl mb-3"
+                  alt="行程封面照"
+                />
+                <div class="px-5">
+                  <h2 class="text-xl text-white font-bold mb-1">
+                    {{ item.title }}
+                  </h2>
+                  <p class="text-white text-m">
+                    {{ item.startDate }} - {{ item.endDate }}
+                  </p>
+                  <p class="text-white text-m mt-2">{{ item.description }}</p>
+                </div>
+                <button
+                  @click.stop="deleteSchedule(item.id)"
+                  title="刪除行程"
+                  class="absolute bottom-2 right-2 text-white hover:text-red-500 text-xl"
+                >
+                  刪除行程
+                </button>
+              </div>
+            </div>
+            <div v-else class="text-gray-400 text-center">尚未建立任何行程</div>
           </div>
-          <button @click.stop="deleteSchedule(item.id)" title="刪除行程" class="absolute bottom-2 right-2 text-white hover:text-red-500 text-xl">刪除行程</button>
-          </div>
-        </div>
-        <div v-else class="text-gray-400 text-center">尚未建立任何行程</div>
-      </div>
 
-      <!-- 編輯行程 -->
-      <ScheduleDetail 
-          v-else 
-          :trip-id="editingTripId" 
-          :selected-date="selectedTrip?.days?.[currentDayIndex]?.date"
-          ref="scheduleDetailRef"
-          @back="handleCloseDetail"
-      />
+          <ScheduleDetail
+            v-else
+            :trip-id="editingTripId"
+            :selected-date="selectedTrip?.days?.[currentDayIndex]?.date"
+            ref="scheduleDetailRef"
+            @back="handleCloseDetail"
+            class="w-[50%] lg:w-full"
+          />
+        </div>
       </div>
     </div>
 
     <!-- 彈出建立行程表單 -->
-    <div v-if="showForm" class="fixed inset-0 bg-white/50 backdrop-blur-sm flex items-center justify-center z-50 overflow-auto p-4">
+    <div
+      v-if="showForm"
+      class="fixed inset-0 backdrop-blur-sm flex items-center justify-center z-50 overflow-auto p-4"
+    >
       <div>
         <TravelSchedule @close="handleCloseForm" />
       </div>
     </div>
 
     <!-- 付款提醒Modal -->
-    <div v-if="showPayModal" class="fixed inset-0 bg-white/50 backdrop-blur-sm flex items-center justify-center z-50 overflow-auto p-4">
+    <div
+      v-if="showPayModal"
+      class="fixed inset-0 bg-white/50 backdrop-blur-sm flex items-center justify-center z-50 overflow-auto p-4"
+    >
       <div class="bg-white w-full max-w-xl rounded-2xl p-6 shadow-lg relative">
         <h2 class="text-xl font-bold mb-2">升級成付費會員</h2>
-        <p class="text-gray-600 mb-6">免費會員僅可建立一筆行程，若要建立更多行程，請升級為付費會員。</p>
+        <p class="text-gray-600 mb-6">
+          免費會員僅可建立一筆行程，若要建立更多行程，請升級為付費會員。
+        </p>
         <div class="flex justify-center gap-4">
-          <button @click="goToPay" class="bg-green-500 hover:bg-green-400 text-white px-4 py-2 rounded">前往付款</button>
-          <button @click="showPayModal = false" class="px-4 py-2 border rounded text-gray-600 hover:bg-gray-100">取消</button>
+          <button
+            @click="goToPay"
+            class="bg-green-500 hover:bg-green-400 text-white px-4 py-2 rounded"
+          >
+            前往付款
+          </button>
+          <button
+            @click="showPayModal = false"
+            class="px-4 py-2 border rounded text-gray-600 hover:bg-gray-100"
+          >
+            取消
+          </button>
         </div>
       </div>
     </div>
   </div>
 </template>
 
-
 <script setup>
-import { ref, onMounted, computed } from 'vue';
-import { useRouter } from 'vue-router'
-import TravelSchedule from '@/components/TravelSchedule.vue';
-import axios from 'axios';
-import GoogleMapView from '@/views/GoogleMapView.vue';
-import ScheduleDetail from '@/views/scheduleDetail.vue';
-import { useTripStore } from '@/stores/tripStore';
-
+import { ref, onMounted, computed } from "vue";
+import { useRouter } from "vue-router";
+import TravelSchedule from "@/components/TravelSchedule.vue";
+import axios from "axios";
+import GoogleMapView from "@/views/GoogleMapView.vue";
+import ScheduleDetail from "@/views/scheduleDetail.vue";
+import { useTripStore } from "@/stores/tripStore";
 
 const router = useRouter();
 const editingTripId = ref(null);
@@ -101,19 +141,18 @@ const showPayModal = ref(false);
 const selectedPlace = ref(null);
 const defaultImage = "https://picsum.photos/1000?image";
 const currentDayIndex = ref(0);
-const itineraryRef = ref(null)
+const itineraryRef = ref(null);
 const dailyPlanRef = ref(null);
 const mapRef = ref(null);
 const scheduleDetailRef = ref(null);
 
 const selectedTrip = computed(() => {
-  return tripStore.trips.find(t => t.id === editingTripId.value);
+  return tripStore.trips.find((t) => t.id === editingTripId.value);
 });
-
 
 //取得會員是否為付費會員
 const fetchIsPremium = async () => {
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem("token");
 
   try {
     const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/profile`, {
@@ -131,28 +170,27 @@ onMounted(() => {
   fetchIsPremium();
 });
 
-
 //建立行程時檢查是否登入
 const handleOpenForm = () => {
-    const token = localStorage.getItem('token');
-    if(!token) {
-      alert('請先登入會員')
-      return
-    }
-    
-    const count = tripStore.trips.length;
+  const token = localStorage.getItem("token");
+  if (!token) {
+    alert("請先登入會員");
+    return;
+  }
 
-    if(isPremium.value || count < 1) {
-      showForm.value = true;
-    } else {
-      showPayModal.value = true;
-    }
+  const count = tripStore.trips.length;
+
+  if (isPremium.value || count < 1) {
+    showForm.value = true;
+  } else {
+    showPayModal.value = true;
+  }
 };
 
 const goToPay = () => {
   showPayModal.value = false;
-  router.push('/payment');
-}
+  router.push("/payment");
+};
 
 //事件處理函式
 function handlePlaceAdded() {
@@ -166,10 +204,9 @@ function refreshDailyPlan() {
   dailyPlanRef.value?.refresh?.();
 }
 
-
 //表單關閉後刷新行程列表
 const handleCloseForm = () => {
-  showForm.value = false
+  showForm.value = false;
   tripStore.fetchTrips();
   fetchIsPremium();
 };
@@ -180,23 +217,25 @@ const handleCloseDetail = () => {
   tripStore.fetchTrips();
 };
 
-
 //刪除行程
 const deleteSchedule = async (id) => {
-  const confirmed = confirm("確定刪除這個行程嗎?")
-  if(!confirmed) return
+  const confirmed = confirm("確定刪除這個行程嗎?");
+  if (!confirmed) return;
 
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem("token");
 
-  try{
-    await axios.delete(`${import.meta.env.VITE_API_URL}/api/travelSchedule/${id}`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+  try {
+    await axios.delete(
+      `${import.meta.env.VITE_API_URL}/api/travelSchedule/${id}`,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      },
+    );
 
     tripStore.trips = tripStore.trips.filter((s) => s.id !== id);
-    alert("刪除成功")
+    alert("刪除成功");
   } catch (err) {
-    alert("刪除失敗，請稍後再試")
+    alert("刪除失敗，請稍後再試");
   }
 };
 
@@ -211,6 +250,6 @@ function callItinerary() {
 // 暴露方法給父元件使用
 defineExpose({
   refreshDailyPlan,
-  dailyPlanRef
+  dailyPlanRef,
 });
 </script>
