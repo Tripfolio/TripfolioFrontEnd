@@ -2,7 +2,9 @@
   <div class="homepage-bg relative">
     <div class="flex flex-col lg:flex-row h-screen">
       <!-- 左側：可放地圖或其他內容 -->
-      <div class="h-[70%] lg:h-full lg:w-4/6 relative overflow-hidden">
+      <div
+        class="h-[65%] lg:h-full lg:w-4/6 relative overflow-hidden mb-2 shadow-2xl"
+      >
         <div class="w-full h-full relative overflow-hidden">
           <GoogleMapView
             ref="mapRef"
@@ -22,20 +24,7 @@
         <div v-if="!editingTripId" class="fixed bottom-5 right-6 z-50">
           <button
             @click="handleOpenForm"
-            class="bg-gray-500 hover:bg-[#828282] text-white text-xl px-10 py-3 rounded-full shadow-md shadow-black/40 cursor-pointer"
-            style="
-              background: linear-gradient(
-                149.45deg,
-                #ff6a38 7.6%,
-                rgba(255, 56, 17, 0.22) 7.62%,
-                #ffb2b2 19.41%,
-                #e0d391 40.78%,
-                #c6d544 58.91%,
-                #9fd01e 65.23%,
-                #8fcb40 71.26%,
-                #009991 92.4%
-              );
-            "
+            class="animated-gradient-modern text-white text-xl px-10 py-3 rounded-full shadow-md shadow-black/40 cursor-pointer bg-gradient-trip hover:bg-gradient-trip-hover"
           >
             建立行程
           </button>
@@ -76,7 +65,7 @@
                 <button
                   @click.stop="deleteSchedule(item.id)"
                   title="刪除行程"
-                  class="absolute bottom-2 right-2 text-white hover:text-red-500 text-xl"
+                  class="absolute bottom-2 right-2 text-gray-600 bg-white px-2 rounded-2xl hover:text-red-500 text-md"
                 >
                   刪除行程
                 </button>
@@ -266,3 +255,5 @@ defineExpose({
   dailyPlanRef,
 });
 </script>
+
+<style scoped></style>

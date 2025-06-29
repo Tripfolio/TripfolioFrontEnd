@@ -80,3 +80,46 @@
     0 2px 4px -1px rgba(0, 0, 0, 0.06),
     0 0 0 1px rgba(255, 255, 255, 0.1); /* 微光暈 */
 }
+.animated-gradient-modern {
+  background: linear-gradient(
+    149.45deg,
+    #ff6a38 7.6%,
+    rgba(255, 56, 17, 0.22) 7.62%,
+    #ffb2b2 19.41%,
+    #e0d391 40.78%,
+    #c6d544 58.91%,
+    #9fd01e 65.23%,
+    #8fcb40 71.26%,
+    #009991 92.4%
+  );
+
+  background-size: 300% 300%;
+  animation: modernGradientFlow 7s ease infinite;
+  color: white;
+  padding: 0.75rem 2.5rem;
+  font-size: 1.125rem;
+  border: none;
+  border-radius: 9999px;
+  backdrop-filter: blur(8px) brightness(1.1);
+  box-shadow: 0 6px 20px rgba(30, 60, 114, 0.4);
+  transition:
+    transform 0.3s,
+    box-shadow 0.3s;
+}
+
+.animated-gradient-modern:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 10px 28px rgba(30, 60, 114, 0.5);
+}
+
+@keyframes modernGradientFlow {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}

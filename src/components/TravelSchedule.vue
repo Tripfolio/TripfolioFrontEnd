@@ -115,7 +115,7 @@
         <label class="block mb-1">行程描述(可選填)</label>
         <textarea
           v-model="description"
-          class="p-2 h-24 border p-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-gray-500"
+          class="p-2 h-24 border w-full rounded focus:outline-none focus:ring-2 focus:ring-gray-500"
           placeholder="請簡單記錄一下自己的行程吧~(ﾉ˶>ᗜ​<˵)ﾉ"
         ></textarea>
       </div>
