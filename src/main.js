@@ -1,4 +1,3 @@
-
 import "./assets/main.css";
 
 import { createApp } from "vue";
@@ -24,6 +23,7 @@ import {
   faPaste,
   faCompass,
   faGlobe,
+  faUser,
 } from "@fortawesome/free-solid-svg-icons";
 
 library.add(
@@ -41,6 +41,7 @@ library.add(
   faPaste,
   faCompass,
   faGlobe,
+  faUser
 );
 
 const app = createApp(App);

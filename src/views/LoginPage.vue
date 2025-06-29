@@ -108,6 +108,9 @@ const login = async () => {
     isLoggedIn.value = true;
     showError.value = false;
     clearText();
+    
+    window.dispatchEvent(new Event("login-status-changed"));
+    
     router.push("/");
   } catch (err) {
     showError.value = true;
@@ -124,6 +127,8 @@ const logout = async () => {
   localStorage.removeItem("memberId");
   isLoggedIn.value = false;
   clearText();
+  
+  window.dispatchEvent(new Event("login-status-changed"));
 };
 
 onMounted(() => {

@@ -210,30 +210,6 @@
       
       </div>
     </section>
-    
-    <!-- <section class="min-h-[500px] w-[85vw] relative mx-auto rounded-3xl mt-10">
-
-      <div class="absolute inset-0 shadow-xl rounded-3xl overflow-hidden z-0 ">
-        <img :src="map" class="w-full h-full object-cover" />
-      </div>
-
-      <div class="relative z-10 py-16 flex items-center px-20 gap-40">
-
-        <div>
-          <HomeSchedule />
-        </div>
-      
-        <div>
-          <h2 class="text-4xl font-bold tracking-wider" data-aos="fade-right" data-aos-duration="2000">
-          高自由度行程規劃
-          </h2>
-          <p class="mt-5 ml-16 text-xl font-medium tracking-wider " data-aos="fade-left"  data-aos-duration="2000">
-          景點隨心拖曳排序 輕鬆管理你的旅程
-          </p>
-        </div>
-
-      </div>
-    </section> -->
 
     <section class="min-h-[600px] px-6 py-16">
 

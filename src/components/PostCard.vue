@@ -25,6 +25,8 @@ const props = defineProps({
 const router = useRouter();
 
 const goToPost = () => {
-  router.push(`/post/${props.post.id}`); // 之後需改成實際路由
+  router.push(`/post/${props.post.id}`);
 };
+
+console.log(props.post);
 </script>
