@@ -2,7 +2,7 @@
   <Swiper
   direction="vertical"
   :modules="[Autoplay]" 
-  :autoplay="{ delay: 2500 }"
+  :autoplay="{ delay: 1000 }"
   :loop="true"
   :centeredSlides="true"
   slidesPerView="auto"
