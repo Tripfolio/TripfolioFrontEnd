@@ -22,15 +22,17 @@
           </span>
           <span class="comment-time">{{ formatTime(comment.createdAt) }}</span>
         </div>
-        <p class="comment-content">{{ comment.content }}</p>
-        <button
-          v-if="canDeleteComment(comment)"
-          @click="deleteComment(comment.id)"
-          class="delete-btn"
-          :disabled="isDeletingComment === comment.id"
-        >
-          {{ isDeletingComment === comment.id ? "刪除中..." : "🗑️" }}
-        </button>
+        <div class="flex justify-between">
+          <p class="comment-content">{{ comment.content }}</p>
+          <button
+            v-if="canDeleteComment(comment)"
+            @click="deleteComment(comment.id)"
+            class="delete-btn"
+            :disabled="isDeletingComment === comment.id"
+          >
+            {{ isDeletingComment === comment.id ? "刪除中..." : "🗑️" }}
+          </button>
+        </div>
       </div>
     </div>
 
@@ -41,7 +43,7 @@
     <AddComment
       :isSubmitting="isSubmitting"
       @submit="submitComment"
-      class="absolute bottom-0 my-5 mx-10"
+      class="mt-4"
     />
   </div>
 </template>
@@ -209,10 +211,33 @@ onMounted(() => {
 </script>
 
 <style scoped>
+@media (max-width: 640px) {
+  .comment-header {
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+
+  .comment-time {
+    width: 100%;
+    margin-left: 40px; /* avatar 寬度對齊 */
+  }
+
+  .submit-btn {
+    width: 100%;
+  }
+}
 .comment-section {
   padding: 16px;
+  display: flex;
+  flex-direction: column;
+  max-height: 100%;
 }
 
+.comments-list {
+  max-height: 300px;
+  overflow-y: auto;
+  margin-bottom: 1rem;
+}
 .comment-item {
   margin-bottom: 16px;
   padding-bottom: 12px;

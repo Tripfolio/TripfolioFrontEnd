@@ -1,9 +1,11 @@
 <template>
   <div class="popup-overlay" @click.self="close">
-    <div class="popup-content flex relative">
-      <!-- 左側圖片 -->
+    <div
+      class="popup-content flex flex-col md:flex-row relative max-h-[90vh] max-w-[100vw] overflow-hidden rounded-2xl"
+    >
+      <!-- 左側圖片：手機版為上方 -->
       <div
-        class="justify-center w-[55%] overflow-hidden rounded-tl-2xl rounded-bl-2xl"
+        class="w-full md:w-[55%] h-64 md:h-auto overflow-hidden rounded-tl-2xl md:rounded-tl-2xl md:rounded-bl-2xl"
       >
         <img
           :src="
@@ -16,10 +18,10 @@
         />
       </div>
 
-      <!-- 右側內容 -->
-      <div class="post-info w-[45%] flex flex-col">
+      <!-- 右側內容：手機版為下方 -->
+      <div class="post-info w-full md:w-[50%] flex flex-col">
         <!-- 貼文標題 -->
-        <div class="post-header h-20 flex justify-between items-center px-4">
+        <div class="post-header h-15 flex justify-between items-center px-4">
           <div class="flex items-center flex-1">
             <img
               :src="
@@ -36,8 +38,7 @@
               <div class="font-semibold">
                 {{ localPost.authorName || "匿名使用者" }}
               </div>
-
-              <div class="text-sm text-gray-600">
+              <div class="text-sm">
                 {{ scheduleTitle || "行程已刪除 ಥ_ಥ" }}
               </div>
             </div>
@@ -51,8 +52,7 @@
         </div>
 
         <!-- 內容與留言區域 -->
-        <div class="flex-1 flex flex-col overflow-hidden">
-          <!-- 貼文內容 -->
+        <div class="flex-1 flex flex-col overflow-hidden relative">
           <div class="post-body p-4 border-b">
             <p class="break-words whitespace-pre-wrap">
               {{ localPost.content || "沒有內容" }}
@@ -62,7 +62,7 @@
           <CommentSection
             :post="localPost"
             @comment-added="handleCommentUpdate"
-            class="overflow-scroll w-full"
+            class="overflow-auto w-[90%] max-h-[200px] md:max-h-none md:w-full"
           />
 
           <FavoriteButton
@@ -70,7 +70,7 @@
             :memberId="getCurrentUserId()"
             :favoriteCount="localPost.favoriteCount"
             @favorite-toggled="handleFavoriteToggle"
-            class="absolute bottom-5 right-10"
+            class="absolute bottom-5 right-5"
           />
         </div>
       </div>
@@ -102,14 +102,6 @@ const props = defineProps({
 
 const emit = defineEmits(["close", "update-post"]);
 
-
-// const comments = ref([]);
-// const newComment = ref("");
-// const liked = ref(false);
-// const isSubmitting = ref(false);
-// const isLoading = ref(false);
-// const selectedPost = ref(null);
-
 const scheduleTitle = ref("未命名行程");
 const authorAvatar = ref("");
 
@@ -126,7 +118,6 @@ const toTravelPage = () => {
 
 // 獲取行程 title
 const fetchScheduleTitle = async () => {
-
   if (props.post.title) {
     try {
       const res = await axios.get(
@@ -137,13 +128,10 @@ const fetchScheduleTitle = async () => {
       );
 
       scheduleTitle.value = res.data.title || "未命名行程";
-
     } catch (error) {
-
       scheduleTitle.value = "行程已刪除 ಥ_ಥ";
     }
   } else {
-
     scheduleTitle.value = "行程已刪除 ಥ_ಥ";
   }
 };
@@ -288,7 +276,6 @@ onMounted(() => {
   /* display: flex; */
   width: 70%;
   height: 70%;
-  border-radius: 2%;
 }
 /* .post-header {
   width: 100%;
@@ -337,4 +324,3 @@ onMounted(() => {
   flex: 1;
 } */
 </style>
- 
