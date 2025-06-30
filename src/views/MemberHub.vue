@@ -119,7 +119,7 @@ const fetchData = async () => {
   const token = localStorage.getItem('token')
     if(!token) {
         alert('請先登入會員')
-        router.push('/login')
+        router.push({ path: '/login', query: { redirect: route.fullPath } });
     }
 
     const decoded = jwtDecode(token);

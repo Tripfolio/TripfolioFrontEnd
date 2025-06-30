@@ -135,7 +135,6 @@ import dayjs from "dayjs";
 
 const emit = defineEmits(['close-modal']);
 
-確認會員token
 const token = localStorage.getItem("token");
 if (!token) {
   alert("請先登入會員");
