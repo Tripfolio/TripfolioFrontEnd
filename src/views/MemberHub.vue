@@ -97,6 +97,7 @@ import { ref, onMounted, watch } from 'vue';
 import { useRouter,useRoute } from 'vue-router';
 import { jwtDecode } from "jwt-decode";
 import axios from 'axios';
+// import MemberProfile from "../components/MemberProfile.vue";
 
 const router = useRouter()
 const route = useRoute()
@@ -158,7 +159,19 @@ const fetchData = async () => {
   } catch (err) {
     console.warn('抓貼文失效', err)
   }
+  
+  // 獲取使用者基本資料
+  const userRes = await axios.get(`${import.meta.env.VITE_API_URL}/api/profile`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  user.value.name = userRes.data.name || '未設定名稱';
+  user.value.avatar = userRes.data.avatar || ''; // 更新頭像 URL
 };
+
+
+
 
 //初始化與返回頁面重新載入
 onMounted(fetchData)
@@ -170,10 +183,6 @@ const goToPost = (id) => {
 };
 
 
-const user = ref({
-  name: 'yourName',
-  bio: '這裡放自介',
-});
 </script>
 
 <style scoped>
