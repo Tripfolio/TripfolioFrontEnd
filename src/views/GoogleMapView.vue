@@ -8,7 +8,7 @@
   />
 
   <div
-    class="search-bar navbar-style z-[2] flex items-center gap-2.5 px-2 py-1 rounded-full fixed bottom-25 right-0 -translate-x-1/2 w-[50%] justify-between flex-wrap md:absolute md:top-7 md:right-15 md:left-auto md:bottom-auto md:translate-x-0 md:w-auto md:flex-nowrap"
+    class="navbar-style z-[2] flex items-center gap-2.5 px-2 py-1 rounded-full fixed left-1/2 -translate-x-1/2 top-[12%] w-[55%] min-w-[220px] max-w-[350px] justify-between flex-wrap md:absolute md:top-7 md:right-15 md:left-auto md:bottom-auto md:translate-x-0 md:w-auto md:flex-nowrap"
   >
     <div class="relative w-fit text-white/20">
       <select
@@ -56,7 +56,7 @@
 
   <div ref="mapRef" class="w-screen h-screen m-0 p-0"></div>
   <button
-    class="absolute bottom-25 left-8 text-2xl w-12 h-12 rounded-full bg-gray-400/30 backdrop-blur-2xl"
+    class="absolute bottom-25 left-8 text-2xl w-12 h-12 rounded-full bg-gray-400/30 backdrop-blur-2xl hidden sm:block"
     @click="showCards = !showCards"
   >
     📌
@@ -64,7 +64,7 @@
   <transition name="slide-fade">
     <div
       v-show="showCards && placeDetails.length"
-      class="absolute bottom-2 left-1/2 -translate-x-1/2 z-[3] w-[70%] max-w-screen-xl"
+      class="absolute bottom-2 left-1/2 -translate-x-1/2 z-[3] w-[70%] max-w-screen-xl hidden sm:block"
     >
       <div class="card-container-style relative rounded-2xl px-15 py-4">
         <button
@@ -123,7 +123,7 @@
   </transition>
   <div
     v-if="selectedPlace"
-    class="fixed inset-0 bg-black/50 flex items-center justify-center z-[4]"
+    class="fixed inset-0 bg-black/50 flex items-center justify-center z-[60]"
     @click.self="selectedPlace = null"
   >
     <div
@@ -192,7 +192,7 @@
   </div>
 
   <aside
-    class="navbar-style fixed z-50 w-[90%] bottom-4 left-1/2 -translate-x-1/2 flex flex-row justify-around items-center gap-2 p-3 rounded-2xl md:top-1/2 md:left-5 md:translate-x-0 md:-translate-y-1/2 md:w-20 md:flex-col md:justify-start md:items-stretch md:gap-2 md:rounded-full"
+    class="navbar-style fixed z-50 left-1/2 -translate-x-1/2 bottom-[38%] w-[85%] max-w-[350px] flex flex-row justify-around items-center gap-2 p-3 rounded-2xl md:top-1/2 md:left-5 md:translate-x-0 md:-translate-y-1/2 md:flex-col md:justify-start md:items-stretch md:gap-2 md:rounded-full md:w-18 md:h-auto md:min-h-[300px]"
     ref="menuRef"
   >
     <button
@@ -336,6 +336,10 @@ function callItinerary() {
 
     if (props.scheduleDetailRef?.refreshDailyPlan) {
       props.scheduleDetailRef.refreshDailyPlan();
+    }
+
+    if (props.scheduleDetailRef?.fetchTrip) {
+      props.scheduleDetailRef.fetchTrip();   // 保證 trip.days 最新
     }
 
     alert("成功加入行程！");
@@ -891,7 +895,5 @@ onUnmounted(() => {
 .slide-fade-leave-to {
   transform: translateY(100%);
   opacity: 0;
-}
-.search-bar {
 }
 </style>
