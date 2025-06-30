@@ -1,5 +1,7 @@
 <template>
-  <div class="relative max-w-xl mx-auto p-4 border rounded bg-white">
+  <div
+    class="relative max-w-xl mx-auto p-5 rounded-2xl bg-[#878787]/60 shadow-md shadow-black/40 text-white h-[710px] w-[450px] scale-[0.75] sm:scale-100"
+  >
     <button
       type="button"
       @click="handleClose"
@@ -9,21 +11,21 @@
     </button>
     <form
       @submit.prevent="scheduleSubmit"
-      class="space-y-4 p-4 rounded max-w-xl mx-auto"
+      class="space-y-4 p-2 rounded max-w-xl mx-auto"
     >
       <span class="text-2xl font-bold">行程設定</span>
 
       <div class="relative">
         <img
           :src="coverPreviewUrl || defaultCover"
-          class="w-full h-48 object-cover rounded-xl shadow"
+          class="w-full h-48 object-cover rounded-xl shadow-md shadow-black/10"
           alt="封面圖片"
         />
         <div class="absolute op-0 right-0 size-40">
           <button
             type="button"
             @click="uploadFile"
-            class="bg-white px-3 py-1 rounded-full shadow flex items-center gap-1"
+            class="bg-white px-3 py-1 rounded-full shadow flex items-center gap-1 text-[#878787]"
           >
             <font-awesome-icon :icon="['fas', 'pen-to-square']" />上傳圖片
           </button>
@@ -60,7 +62,7 @@
             <button
               type="button"
               @click="applyCrop"
-              class="bg-blue-500 text-white px-4 py-2 rounded"
+              class="bg-[#878787] hover:bg-[#c2c2c2] text-white px-4 py-2 rounded"
             >
               裁切
             </button>
@@ -75,7 +77,7 @@
         <input
           type="text"
           v-model="title"
-          class="border p-2 w-full rounded"
+          class="border p-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-gray-500"
           placeholder="幫行程取個名字⸜(*ˊᗜˋ*)⸝"
         />
       </div>
@@ -84,26 +86,36 @@
         <label class="block mb-1"
           >行程日期<span class="text-red-500">*</span></label
         >
-        <div>
-          <input type="date" v-model="startDate" class="border p-2 rounded" />
-          <span> - </span>
-          <input
-            type="date"
-            v-model="endDate"
-            :min="startDate"
-            class="border p-2 rounded"
-          />
-          <span v-if="days > 0" class="text-sm text-gray-500 mt-1">
-            共 {{ days }} 天</span
-          >
+
+        <div class="flex flex-col sm:flex-row gap-2 items-center">
+          <div class="relative w-full sm:w-auto flex-1 min-w-[140px]">
+            <input
+              type="date"
+              v-model="startDate"
+              class="border p-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-gray-500"
+            />
+          </div>
+          <span class="hidden sm:inline">-</span>
+          <div class="relative w-full sm:w-auto flex-1 min-w-[140px]">
+            <input
+              type="date"
+              v-model="endDate"
+              :min="startDate"
+              class="border p-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-gray-500"
+            />
+          </div>
         </div>
+
+        <span v-if="days > 0" class="text-sm text-[#828282] mt-1 block">
+          共 {{ days }} 天
+        </span>
       </div>
 
       <div>
         <label class="block mb-1">行程描述(可選填)</label>
         <textarea
           v-model="description"
-          class="border p-2 w-full h-24 rounded"
+          class="p-2 h-24 border w-full rounded focus:outline-none focus:ring-2 focus:ring-gray-500"
           placeholder="請簡單記錄一下自己的行程吧~(ﾉ˶>ᗜ​<˵)ﾉ"
         ></textarea>
       </div>
@@ -119,7 +131,7 @@
         <button
           type="submit"
           :disabled="isLoading"
-          class="bg-blue-400 hover:bg-blue-300 text-white px-4 py-2 rounded"
+          class="bg-[#878787] hover:bg-[#c2c2c2] text-white px-4 py-2 rounded"
         >
           <span v-if="isLoading" class="flex items-center gap-2">
             儲存中...<span
@@ -130,14 +142,6 @@
         </button>
       </div>
     </form>
-    <!-- 新增成功，顯示前往編輯按鈕 -->
-    <div v-if="createdScheduleId" class="mt-6 text-right">
-      <RouterLink
-        :to="`/schedule/${createdScheduleId}`"
-        class="text-blue-600 hover:underline"
-        >查看並繼續編輯行程</RouterLink
-      >
-    </div>
   </div>
 </template>
 
@@ -150,10 +154,8 @@ import dayjs from "dayjs";
 const router = useRouter();
 import "vue-advanced-cropper/dist/style.css";
 
-/* global defineEmits */
 const emit = defineEmits(["close", "submitted"]);
 
-//狀態
 const file = ref(null);
 const title = ref("");
 const startDate = ref("");
@@ -167,18 +169,15 @@ const cropperRef = ref(null);
 const createdScheduleId = ref(null);
 const isLoading = ref(false);
 
-//預覽封面圖片
 const coverPreviewUrl = ref("");
 const defaultCover = "https://fakeimg.pl/800x400/?text=行程封面&font=noto";
 
 const fileInput = ref(null);
 
-//點上傳圖片按鈕時觸發Input
 const uploadFile = () => {
   fileInput.value.click();
 };
 
-//圖片一上傳進入裁切模式
 const handleFile = (event) => {
   file.value = event.target.files[0];
   if (file.value) {
@@ -187,7 +186,6 @@ const handleFile = (event) => {
   }
 };
 
-//處理裁切的圖
 const applyCrop = () => {
   const canvas = cropperRef.value?.getResult()?.canvas;
   if (canvas) {
@@ -199,7 +197,6 @@ const applyCrop = () => {
   }
 };
 
-//自動計算行程天數
 watch([startDate, endDate], () => {
   if (startDate.value && endDate.value) {
     const diff = dayjs(endDate.value).diff(dayjs(startDate.value), "day") + 1;
@@ -209,12 +206,10 @@ watch([startDate, endDate], () => {
   }
 });
 
-//監視表單欄位改變
 watch([title, startDate, endDate, description, file], () => {
   isDirty.value = true;
 });
 
-//點X確認是否離開
 const handleClose = () => {
   if (isDirty.value) {
     const confirmExit = confirm("您有尚未儲存的內容，確定要離開嗎?");
@@ -223,7 +218,6 @@ const handleClose = () => {
   emit("close");
 };
 
-//點取消清空表單
 const scheduleCancel = () => {
   file.value = null;
   coverPreviewUrl.value = "";
@@ -235,7 +229,6 @@ const scheduleCancel = () => {
   isDirty.value = false;
 };
 
-//點儲存打包成formData送到後端
 const scheduleSubmit = async () => {
   if (!title.value || !startDate.value || !endDate.value) {
     alert("請填寫行程名稱及行程開始/結束日期");
@@ -266,10 +259,8 @@ const scheduleSubmit = async () => {
     const newId = res.data.schedule.id;
     createdScheduleId.value = newId;
 
-    alert("儲存成功，你可以點擊下方按鈕前往編輯");
+    alert("儲存成功，你可以關閉表單點擊行程進入編輯");
     isDirty.value = false;
-
-    // 通知父元件做刷新
     emit("submitted", newId);
   } catch (err) {
     alert("儲存失敗，請稍後再試");
