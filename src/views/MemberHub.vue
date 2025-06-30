@@ -1,14 +1,9 @@
 <template>
   <div class="bg-white min-h-screen p-4 sm:p-8 flex flex-col items-center">
-    <main class="w-full max-w-4xl bg-[#686868] text-white rounded-2xl shadow-lg overflow-hidden">
+    <main class="w-full max-w-4xl bg-[#686868] text-white rounded-2xl shadow-lg overflow-hidden transition-all duration-300">
 
       <div class="bg-[#A2A2A2] text-white shadow-md p-4 flex justify-between items-center">
         <h2 class="text-2xl font-bold">會員中心</h2>
-        <div class="w-8 h-8 rounded-full bg-gray-500 flex items-center justify-center text-gray-300">
-          <div class="flex flex-col sm:flex-row items-center gap-6 mb-6">
-            <img class="w-24 h-24 rounded-full border-2 border-blye-200 object-cover" src="https://images.unsplash.com/photo-1529570058547-733204bf87e5?q=80&w=1362&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="使用者頭像">
-          </div>  
-        </div>
       </div>
       
       <!-- 自我介紹 -->
@@ -19,8 +14,8 @@
             <div>
               <h1 class="text-3xl font-bold">{{ user.name }}</h1>
               <div class="flex gap-4 mt-2 text-gray-400 justify-center sm:justify-start">
-                <!-- 編輯按鈕觸發模態視窗顯示 -->
-                <a href="#" @click.prevent="showMemberProfileModal = true" class="hover:text-white flex items-center gap-1 transition-colors duration-200">
+                <!-- 編輯按鈕視窗顯示 -->
+                <a href="#" @click.prevent="showMemberProfile = true" class="hover:text-white flex items-center gap-1 transition-colors duration-200">
                   <font-awesome-icon :icon="['fas', 'pen-to-square']" /> 編輯
                 </a>
               </div>
@@ -87,8 +82,15 @@
         </div>
       </div>
     </main>
+    <!-- MemberProfile -->
+    <div v-if="showMemberProfile" class="fixed inset-0 bg-opacity-60 backdrop-blur-xs flex items-center justify-center z-50 overflow-auto p-4">
+      <div>
+        <MemberProfile @close-modal="showMemberProfile = false" />
+      </div>
+    </div>
   </div>
 </template>
+
 
 <script setup>
 import { ref, onMounted, watch } from 'vue';
@@ -175,36 +177,6 @@ const user = ref({
 </script>
 
 <style scoped>
-.nav-convex-effect {
-		background-color: #A2A2A2;
-    box-shadow:
-      /* 整體外凸陰影 (浮起效果) */
-      -6px -6px 12px rgba(255, 255, 255, 0.2),  /* 左上 */
-      6px 6px 12px rgba(0, 0, 0, 0.3),           /* 右下 */
-      -3px 0px 6px rgba(0, 0, 0, 0.1),           /* 左側 */
-  
-      /* Neumorphism 紋理 */
-      inset 1.5px 1.5px 4px rgba(0, 0, 0, 0.1),     
-      inset -1.5px -1.5px 4px rgba(255, 255, 255, 0.1); 
-  
-    transition: all 0.2s ease-in-out; 
-  }
-  
-  
-  /* .nav-convex-effect:hover { 
-    box-shadow:
-      /* hover 時整體外凸陰影微調 */
-      -4px -4px 8px rgba(255, 255, 255, 0.15),
-      4px 4px 8px rgba(0, 0, 0, 0.25),
-      -1.5px 0px 4px rgba(0, 0, 0, 0.08),
-  
-      /* hover 時表面陰影紋理微調 
-      inset 1px 1px 3px rgba(0, 0, 0, 0.08),
-      inset -1px -1px 3px rgba(255, 255, 255, 0.08);
-  
-    transform: translateY(1px); 
-  } */
-	
 	.main-convex-effect {
 		/* background-color: #A2A2A2; */
 		box-shadow:
