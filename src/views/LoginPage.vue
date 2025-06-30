@@ -28,7 +28,7 @@
           type="submit"
           class="p-3 bg-white text-black rounded-lg font-bold hover:bg-blue-200 transition-colors duration-200"
         >
-          LOGIN
+          Login
         </button>
 
         <button
@@ -41,7 +41,7 @@
 
         <div class="relative flex items-center my-4">
           <div class="flex-grow border-t border-gray-500"></div>
-          <span class="flex-shrink mx-4 text-gray-400">Or sign in with</span>
+          <span class="flex-shrink mx-4 text-gray-600">Or sign in with</span>
           <div class="flex-grow border-t border-gray-500"></div>
         </div>
 
@@ -57,11 +57,9 @@
 
     <div v-if="showError" class="space-y-2 w-full max-w-sm mt-4">
       <div
-        v-for="(msg, index) in errorMessage"
-        :key="index"
-        class="flex items-start bg-red-800 text-white border border-red-700 px-4 py-3 rounded-md text-sm">
+        class="flex items-center bg-red-800 text-white border border-red-700 px-4 py-3 rounded-md text-sm">
         <font-awesome-icon icon="exclamation-triangle" class="mr-2 mt-0.5 text-red-400" />
-        <span>{{ msg }}</span>
+        <span>{{ errorMessage }}</span>
       </div>
     </div>
 
