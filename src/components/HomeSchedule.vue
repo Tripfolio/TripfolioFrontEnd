@@ -5,9 +5,9 @@
   :autoplay="{ delay: 1000 }"
   :loop="true"
   :centeredSlides="true"
-  slidesPerView="auto"
+  slidesPerView="3"
   class="w-[300px] h-[450px]"
-  :spaceBetween="-50" 
+  :spaceBetween="20" 
 >
     <SwiperSlide
       v-for="(place, index) in places"
@@ -32,6 +32,7 @@ import schedule1 from '@/assets/HomePage/schedule1.png'
 import schedule2 from '@/assets/HomePage/schedule2.png'
 import schedule3 from '@/assets/HomePage/schedule3.png'
 import schedule4 from '@/assets/HomePage/schedule4.png'
+import schedule5 from '@/assets/HomePage/schedule5.png'
 
 
 const places = [
@@ -39,6 +40,7 @@ const places = [
   {img: schedule2 },
   {img: schedule3 },
   {img: schedule4 },
+  {img: schedule5 },
 ]
 
 </script>

@@ -158,7 +158,7 @@
         <img :src="map" class="w-full h-full object-cover" />
       </div>
     
-      <div class="relative z-10 py-10 sm:py-16 flex flex-col-reverse sm:flex-row items-center px-6 sm:px-20 gap-10 sm:gap-40">
+      <div class="relative  z-10 py-10 sm:py-16 flex flex-col-reverse sm:flex-row items-center px-6 sm:px-20 gap-10 sm:gap-40">
       
         <div>
           <HomeSchedule />
@@ -172,8 +172,8 @@
             景點隨心拖曳排序 輕鬆管理你的旅程
           </p>
         </div>
-      
       </div>
+
     </section>
 
     <section class="min-h-[600px] px-6 py-16">
