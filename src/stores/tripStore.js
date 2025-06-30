@@ -47,7 +47,9 @@ export const useTripStore = defineStore("trip", () => {
         {
           headers: { Authorization: `Bearer ${token}` },
         },
+        { withCredentials: true },
       );
+      console.log("API Response:", response);
 
       const scheduleData =
         response.data && Array.isArray(response.data.schedules)
@@ -65,6 +67,7 @@ export const useTripStore = defineStore("trip", () => {
       }
     } catch (err) {
       error.value = err.message || "獲取行程失敗";
+      console.error("Fetch error:", error);
     } finally {
       isLoading.value = false;
     }

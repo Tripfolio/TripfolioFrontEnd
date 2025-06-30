@@ -128,6 +128,8 @@ const sharedUsers = ref([]);
 const isOwner = ref(false);
 
 const generateShareLink = async () => {
+  const token = localStorage.getItem("token");
+  console.log("發送的 Token:", token);
   try {
     isLoading.value = true;
     const res = await axios.post(
@@ -135,9 +137,15 @@ const generateShareLink = async () => {
       {
         permission: selectedPermission.value,
       },
-      { withCredentials: true },
+      {
+        headers: { Authorization: `Bearer ${token}` },
+        withCredentials: true,
+      },
     );
-
+    const data = {
+      permission: selectedPermission.value, // 檢查 permission
+    };
+    console.log("發送的資料:", data);
     shareUrl.value = res.data.shareUrl;
     expiresAt.value = res.data.expiresAt;
 
@@ -152,10 +160,12 @@ const generateShareLink = async () => {
 };
 
 const fetchSharedUsers = async () => {
+  const token = localStorage.getItem("token");
   try {
     const res = await axios.get(
       `${import.meta.env.VITE_API_URL}/api/tripShares/list/${props.tripId}`,
       {
+        headers: { Authorization: `Bearer ${token}` },
         withCredentials: true,
       },
     );
@@ -167,11 +177,19 @@ const fetchSharedUsers = async () => {
 };
 
 const updatePermission = async (targetUserId, newRole) => {
+  const token = localStorage.getItem("token");
   try {
     await axios.patch(
       `${import.meta.env.VITE_API_URL}/api/tripShares/permission`,
-      { targetUserId, tripId: props.tripId, newRole },
-      { withCredentials: true },
+      {
+        targetUserId,
+        tripId: props.tripId,
+        newRole,
+      },
+      {
+        headers: { Authorization: `Bearer ${token}` },
+        withCredentials: true,
+      },
     );
     alert("權限已更新");
   } catch (err) {
@@ -182,12 +200,13 @@ const updatePermission = async (targetUserId, newRole) => {
 
 const removeUser = async (targetUserId) => {
   if (!confirm("確定要取消共享這位使用者嗎？")) return;
-
+  const token = localStorage.getItem("token");
   try {
     await axios.delete(
       `${import.meta.env.VITE_API_URL}/api/tripShares/${targetUserId}/${props.tripId}`,
       {
-        withCredentials: true,
+        headers: { Authorization: `Bearer ${token}` },
+        withCredentials: true, // 放在 config 裡
       },
     );
     sharedUsers.value = sharedUsers.value.filter((u) => u.id !== targetUserId);

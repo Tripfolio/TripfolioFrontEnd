@@ -16,14 +16,15 @@ const token = route.params.token;
 const checkShareToken = async () => {
   try {
     const res = await axios.get(
-      `${import.meta.env.VITE_API_URL}/api/tripShares/${token}`,
+      `${import.meta.env.VITE_API_URL}/api/tripShares/check/${token}`,
       {
+        headers: { Authorization: `Bearer ${token}` },
         withCredentials: true,
       },
     );
 
     const tripId = res.data.tripId;
-    router.replace(`${import.meta.env.VITE_API_URL}/schedule/${tripId}`); //需確認路由
+    router.replace(`/schedule/${tripId}`); //需確認路由
   } catch (err) {
     if (err.response?.status === 403) {
       alert("此分享連結已過期");
