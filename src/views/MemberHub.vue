@@ -114,17 +114,17 @@ const tabs = [
     { key: 'notifications', label: '通知設定' }, 
 ]
 
-//確認會員token (切版完開啟註解)
+//確認會員token
 const fetchData = async () => {
-  // const token = localStorage.getItem('token')
-  //   if(!token) {
-  //       alert('請先登入會員')
-  //       throw new Error('token 不存在')
-  //   }
+  const token = localStorage.getItem('token')
+    if(!token) {
+        alert('請先登入會員')
+        router.push('/login')
+    }
 
-  //   const decoded = jwtDecode(token);
-  //   const memberId = decoded.id;
-  //   const username = decoded.name;
+    const decoded = jwtDecode(token);
+    const memberId = decoded.id;
+    const username = decoded.name;
 
   try {
     //篩選自己發過的行程
@@ -140,11 +140,11 @@ const fetchData = async () => {
       }));
   } catch (err) {
       console.warn('取得貼文失敗', err);
-      travels.value = [
-        { id: 1, title: '沖繩海島慢活之旅', startDate: '2025-07-10', endDate: '2025-07-15', coverUrl: 'https://images.unsplash.com/photo-1662381523885-914182622e12?q=80&w=735&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' },
-        { id: 2, title: '京都楓葉古寺巡禮', startDate: '2025-11-20', endDate: '2025-11-25', coverUrl: 'https://images.unsplash.com/photo-1545569341-9eb8b30979d9?w=500&q=80' },
-        { id: 3, title: '探索冰島極光', startDate: '2026-01-05', endDate: '2026-01-12', coverUrl: 'https://plus.unsplash.com/premium_photo-1661926694528-a833cc729d54?q=80&w=1472&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' },
-      ];
+      // travels.value = [
+        // { id: 1, title: '沖繩海島慢活之旅', startDate: '2025-07-10', endDate: '2025-07-15', coverUrl: 'https://images.unsplash.com/photo-1662381523885-914182622e12?q=80&w=735&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' },
+        // { id: 2, title: '京都楓葉古寺巡禮', startDate: '2025-11-20', endDate: '2025-11-25', coverUrl: 'https://images.unsplash.com/photo-1545569341-9eb8b30979d9?w=500&q=80' },
+        // { id: 3, title: '探索冰島極光', startDate: '2026-01-05', endDate: '2026-01-12', coverUrl: 'https://plus.unsplash.com/premium_photo-1661926694528-a833cc729d54?q=80&w=1472&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' },
+      // ];
   }
 
   try {
