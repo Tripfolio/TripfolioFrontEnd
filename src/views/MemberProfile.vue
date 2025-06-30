@@ -1,5 +1,5 @@
 <template>
-  <div class="profile p-4 max-w-md mx-auto bg-amber-700">
+  <div class="solo-card-style rounded-2xl p-4 max-w-md mx-auto">
     <h2 class="text-xl font-bold mb-4">資料修改</h2>
 
     <div class="flex flex-col items-center mb-4">

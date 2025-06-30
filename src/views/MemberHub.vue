@@ -17,6 +17,8 @@
               @click.prevent="showMemberProfile = true"
               >編輯</a
             >
+            <hr />
+            <a class="text-gray" href="#" @click.prevent="goToLogin">登出</a>
           </div>
         </section>
 
@@ -148,6 +150,11 @@ const goToTravel = (id) =>
 
 const goToPost = (id) =>
   router.push({ path: "/community", query: { postId: id } });
+
+const goToLogin = () => {
+  localStorage.removeItem("token");
+  router.push("/login");
+};
 </script>
 
 <style scoped>

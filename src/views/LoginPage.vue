@@ -1,6 +1,6 @@
 <template>
-  <main class="pl-[100px] pt-[100px]">
-    <h1 class="text-2xl font-bold mb-6">登入頁面</h1>
+  <main class="solo-card-style mt-25 w-1/2 mx-auto">
+    <h1 class="text-2xl font-bold mb-6 text-center">登入頁面</h1>
 
     <div
       v-if="showError"
@@ -15,7 +15,11 @@
       </span>
     </div>
 
-    <form v-if="!isLoggedIn" @submit.prevent="login" class="space-y-6">
+    <form
+      v-if="!isLoggedIn"
+      @submit.prevent="login"
+      class="space-y-6 flex flex-col justify-center items-center"
+    >
       <div>
         <input
           v-model="email"
@@ -46,15 +50,12 @@
           登入
         </button>
       </div>
+      <RouterLink to="/signup">
+        <button class="text-black py-2 rounded transition hover:text-[#0d4a87]">
+          我要註冊
+        </button>
+      </RouterLink>
     </form>
-
-    <RouterLink to="/signup">
-      <button
-        class="w-[100px] text-black py-2 rounded transition hover:text-[#0d4a87]"
-      >
-        我要註冊
-      </button>
-    </RouterLink>
 
     <div v-if="isLoggedIn" class="mt-6">
       <p class="text-blue-600 font-semibold mb-4">您已登入</p>
@@ -108,9 +109,9 @@ const login = async () => {
     isLoggedIn.value = true;
     showError.value = false;
     clearText();
-    
+
     window.dispatchEvent(new Event("login-status-changed"));
-    
+
     router.push("/");
   } catch (err) {
     showError.value = true;
@@ -127,7 +128,7 @@ const logout = async () => {
   localStorage.removeItem("memberId");
   isLoggedIn.value = false;
   clearText();
-  
+
   window.dispatchEvent(new Event("login-status-changed"));
 };
 
