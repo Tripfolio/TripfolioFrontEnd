@@ -4,7 +4,6 @@ import HomeView from "@/views/HomeView.vue";
 import SignUp from "@/views/SignUp.vue";
 import LoginPage from "@/views/LoginPage.vue";
 import GoogleMapView from "@/views/GoogleMapView.vue";
-import MemberProfile from "@/views/MemberProfile.vue";
 import GoogleCalendar from "@/views/GoogleCalendar.vue";
 import EmailSettings from "@/views/EmailSettings.vue";
 import Travel from "@/views/Travel.vue";
@@ -13,8 +12,10 @@ import Post from "@/components/PostForm.vue";
 import Community from "@/views/CommunityList.vue";
 import scheduleDetail from "@/views/scheduleDetail.vue";
 import Payment from "@/views/Payment.vue";
-import LinePaySuccess from '@/views/LinePaySuccess.vue';
-import LinePayFail from '@/views/LinePayFail.vue';
+import LinePaySuccess from "@/views/LinePaySuccess.vue";
+import LinePayFail from "@/views/LinePayFail.vue";
+import MemberProfile from "@/views/MemberProfile.vue";
+import MemberHub from "@/views/MemberHub.vue";
 
 const routes = [
   {
@@ -45,7 +46,7 @@ const routes = [
   {
     path: "/profile",
     name: "profile",
-    component: MemberProfile,
+    component: MemberHub,
   },
   {
     path: "/emailSettings",
@@ -83,13 +84,13 @@ const routes = [
     component: Payment,
   },
   {
-    path: '/linepay-success',
-    name: 'linepaysuccess',
+    path: "/linepay-success",
+    name: "linepaysuccess",
     component: LinePaySuccess,
   },
   {
-    path: '/linepay-fail',
-    name: 'linepayfail',
+    path: "/linepay-fail",
+    name: "linepayfail",
     component: LinePayFail,
   },
 ];
