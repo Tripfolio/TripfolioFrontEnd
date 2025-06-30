@@ -126,41 +126,6 @@
       </div>
     </section>
 
-    <!-- <div v-if="placeDetails.length" class="w-full mx-auto">
-        <div class="backdrop-blur-lg rounded-2xl shadow-xl px-6 py-4 space-y-3">
-          <div
-            v-for="(place, index) in placeDetails"
-            :key="index"
-            @click="selectedPlace = place"
-            class="p-3 rounded-xl bg-white shadow hover:shadow-md transition duration-200 cursor-pointer"
-          >
-            <h2
-              class="text-base font-semibold text-gray-800 truncate"
-              :title="place.name"
-            >
-              {{ place.name }}
-            </h2>
-            <p v-if="place.rating" class="text-sm text-yellow-600 mt-1">
-              ⭐ {{ place.rating }} / {{ place.user_ratings_total }} 則評價
-            </p>
-            <p
-              v-if="place.formatted_address"
-              class="text-sm text-gray-500 mt-1 truncate"
-            >
-              📍 {{ place.formatted_address }}
-            </p>
-          </div>
-          <div v-if="hasMoreResults" class="flex justify-center pt-4">
-            <button
-              class="bg-gray-500 text-white py-2 px-6 rounded-full text-sm hover:bg-gray-700"
-              @click="loadNextPage"
-            >
-              載入更多
-            </button>
-          </div>
-        </div>
-      </div> -->
-
     <section class="min-h-[500px] flex flex-col sm:flex-row relative mt-10 mb-20 ">
       <h2 class=" ml-10 sm:ml-50 mt-10 sm:mt-30" data-aos="fade-up" data-aos-duration="1000">
         <p class="text-3xl sm:text-5xl font-bold tracking-[1px] sm:tracking-[4px] mb-4">探索你的地圖</p>
@@ -171,10 +136,10 @@
         <div class="static sm:absolute sm:right-100  sm:top-70 min-h-5 max-w-[200px]  bg-black rounded-full flex items-center justify-center mb-3 ml-10">
           <p class="text-white py-1 sm:py-2 px-3 sm:px-5 text-md sm:text-lg whitespace-nowrap">一站式完成資訊蒐集</p>
         </div>
-        <div class="static sm:absolute sm:right-70  sm:top-90 min-h-5 max-w-[150px] ml-20 bg-black rounded-full flex items-center justify-center mb-3 ml-60">
+        <div class="static sm:absolute sm:right-70  sm:top-90 min-h-5 max-w-[150px]  bg-black rounded-full flex items-center justify-center mb-3 ml-40">
           <p class="text-white py-1 sm:py-2 px-3 sm:px-5 text-md sm:text-lg whitespace-nowrap">快速排程</p>
         </div>
-        <div class="static sm:absolute sm:right-90 sm:top-110 min-h-5 max-w-[150px] bg-black rounded-full flex items-center justify-center mb-3 ml-30">
+        <div class="static sm:absolute sm:right-90 sm:top-110 min-h-5 max-w-[150px] bg-black rounded-full flex items-center justify-center mb-3 ml-20">
           <p class="text-white py-1 sm:py-2 px-3 sm:px-5 text-md  sm:text-lg text-shadow-sm whitespace-nowrap">與好友共編</p>
         </div>
       </div>
@@ -272,7 +237,7 @@
         @click="scrollToTop">
     </div>
 
-    <section class="">
+    <!-- <section class="">
             <p class="mb-2">其他連結 我先放這</p>
             <div class="flex flex-wrap gap-4">
               <RouterLink to="/emailSettings" class="underline"
@@ -287,7 +252,7 @@
               <RouterLink to="/schedule" class="underline">個人行程</RouterLink>
               <RouterLink to="/community">社群貼文</RouterLink>
             </div>
-    </section>
+    </section> -->
   </div>
 </template>
 
@@ -332,7 +297,6 @@ const router = useRouter();
 
 const searchQuery = ref("");
 const searchInput = ref(null);
-// const placeDetails = ref([]);
 const hasMoreResults = ref(false);
 const selectedPlace = ref(null);
 const selectedCityName = ref("none");
