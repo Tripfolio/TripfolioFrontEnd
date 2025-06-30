@@ -1,5 +1,5 @@
 <template>
-  <div class="profile p-4 max-w-md mx-auto">
+  <div class="profile p-4 max-w-md mx-auto bg-amber-700">
     <h2 class="text-xl font-bold mb-4">資料修改</h2>
 
     <div class="flex flex-col items-center mb-4">
@@ -120,11 +120,16 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted } from "vue";
+import { ref, watch, onMounted, defineEmits } from "vue";
 import axios from "axios";
 import { Cropper } from "vue-advanced-cropper";
 import "vue-advanced-cropper/dist/style.css";
 import dayjs from "dayjs";
+
+const emit = defineEmits(["close-modal"]);
+function closeModal() {
+  emit("close-modal");
+}
 
 //確認會員token
 const token = localStorage.getItem("token");
