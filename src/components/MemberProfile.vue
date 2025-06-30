@@ -50,7 +50,7 @@
         </div>
       </div>
 
-      <form @submit.prevent="saveProfile" class="space-y-4 mb-8">
+      <form @submit.prevent="saveProfile" class="space-y-4">
           <div class="w-65 mx-auto">
             <label for="name" class="block text-white text-sm font-semibold mb-1 ml-4">姓名</label>
             <input
@@ -61,7 +61,7 @@
               class="w-full px-4 py-3 rounded-full bg-gray-700 bg-opacity-70 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200"
             />
           </div>
-          <!-- 手機號碼 -->
+          
           <div class="w-65 mx-auto">
             <label for="phone" class="block text-white text-sm font-semibold mb-1 ml-4">手機</label>
             <input
@@ -128,51 +128,50 @@
 
 <script setup>
 import { ref, watch, onMounted } from "vue";
-// import axios from "axios";
+import axios from "axios";
 import { Cropper } from "vue-advanced-cropper";
 import "vue-advanced-cropper/dist/style.css";
-// import dayjs from "dayjs";
+import dayjs from "dayjs";
 
 const emit = defineEmits(['close-modal']);
 
-//確認會員token
-// const token = localStorage.getItem("token");
-// if (!token) {
-//   alert("請先登入會員");
-//   throw new Error("token 不存在");
-// }
+確認會員token
+const token = localStorage.getItem("token");
+if (!token) {
+  alert("請先登入會員");
+  throw new Error("token 不存在");
+}
 
 const profileData = ref({
-  name: "模擬使用者名稱", // 提供假名稱
-  gender: "male", // 提供假性別
-  phone: "0987654321", // 提供假手機號碼
-  birthday: "1995-05-20", // 提供假生日
-  avatar: "https://images.unsplash.com/photo-1529570058547-733204bf87e5?q=80&w"
+  name: "", 
+  gender: "", 
+  phone: "", 
+  birthday: "", 
+  avatar: ""
 });
 
 //元件掛載時載入會員資料
-// onMounted(async () => {
-//   try {
-//     const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/profile`, {
-//       headers: {
-//         Authorization: `Bearer ${token}`,
-//       },
-//     });
-//     const data = res.data;
+onMounted(async () => {
+  try {
+    const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/profile`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    const data = res.data;
 
-//     //生日時區
-//     if (data.birthday) {
-//       data.birthday = dayjs(data.birthday).format("YYYY-MM-DD");
-//     }
+    //生日時區
+    if (data.birthday) {
+      data.birthday = dayjs(data.birthday).format("YYYY-MM-DD");
+    }
 
-//     profileData.value = {
-//       ...data,
-//       avatar: data.avatar || "",
-//     };
-//   } catch (error) {
-//     // eslint-disable-next-line no-empty
-//   }
-// });
+    profileData.value = {
+      ...data,
+      avatar: data.avatar || "",
+    };
+  } catch (error) {
+  }
+});
 
 const avatarFile = ref(null);
 const previewUrl = ref(profileData.value.avatar);
@@ -197,41 +196,37 @@ const saveAvatar = async () => {
   }
 
   canvas.toBlob(async (blob) => {
-    // const formData = new FormData();
-    // formData.append("avatar", blob, avatarFile.value.name);
+    const formData = new FormData();
+    formData.append("avatar", blob, avatarFile.value.name);
 
-    // try {
-    //   await axios.post(
-    //     `${import.meta.env.VITE_API_URL}/api/profile/upload-avatar`,
-    //     formData,
-    //     {
-    //       headers: {
-    //         Authorization: `Bearer ${token}`,
-    //       },
-    //     },
-    //   );
-    //   alert("大頭貼上傳成功");
+    try {
+      await axios.post(
+        `${import.meta.env.VITE_API_URL}/api/profile/upload-avatar`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+      alert("大頭貼上傳成功");
 
-    //   const profileRes = await axios.get(
-    //     `${import.meta.env.VITE_API_URL}/api/profile`,
-    //     {
-    //       headers: {
-    //         Authorization: `Bearer ${token}`,
-    //       },
-    //     },
-    //   );
-      // profileData.value = profileRes.data;
-      // previewUrl.value = "";
-      // profileData.value.avatar = "";
-      // showCropper.value = false;
-    // } catch (err) {
-    //   alert("上傳失敗");
-    // }
-    // 模擬成功邏輯：更新頭像並關閉裁剪器
-    console.log("模擬：大頭貼上傳成功");
-    profileData.value.avatar = previewUrl.value; // 將預覽的圖片設定為新的頭像
-    showCropper.value = false;
-    // previewUrl.value = ""; // 如果您希望在保存後清除預覽，可以取消註解這行
+      const profileRes = await axios.get(
+        `${import.meta.env.VITE_API_URL}/api/profile`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+      profileData.value = profileRes.data;
+      previewUrl.value = "";
+      profileData.value.avatar = "";
+      showCropper.value = false;
+      emit('close-modal'); // 成功後關閉
+    } catch (err) {
+      alert("上傳失敗");
+    }
   }, "image/jpeg");
 };
 
@@ -252,23 +247,22 @@ watch(
 
 //儲存會員資料送去資料庫
 const saveProfile = async () => {
-//   try {
-//     const res = await axios.put(
-//       `${import.meta.env.VITE_API_URL}/api/profile`,
-//       profileData.value,
-//       {
-//         headers: {
-//           Authorization: `Bearer ${token}`,
-//         },
-//       },
-//     );
-//     alert("儲存成功");
-//     profileData.value = res.data;
-        emit('close-modal');
-//   } catch (err) {
-//     alert("儲存失敗");
-//   }
-  emit('close-modal');
+  try {
+    const res = await axios.put(
+      `${import.meta.env.VITE_API_URL}/api/profile`,
+      profileData.value,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+    alert("儲存成功");
+    profileData.value = res.data;
+    emit('close-modal');
+  } catch (err) {
+    alert("儲存失敗");
+  }
 };
 
 const passwordData = ref({
@@ -324,30 +318,27 @@ const changePassword = async () => {
     return;
   }
 
-  // try {
-  //   await axios.put(
-  //     `${import.meta.env.VITE_API_URL}/api/profile/users/password`,
-  //     {
-  //       oldPassword: passwordData.value.oldPassword,
-  //       newPassword: passwordData.value.newPassword,
-  //     },
-  //     {
-  //       headers: { Authorization: `Bearer ${token}` },
-  //     },
-  //   );
-  //   alert("密碼修改成功");
+  try {
+    await axios.put(
+      `${import.meta.env.VITE_API_URL}/api/profile/users/password`,
+      {
+        oldPassword: passwordData.value.oldPassword,
+        newPassword: passwordData.value.newPassword,
+      },
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      },
+    );
+    alert("密碼修改成功");
 
-  //   passwordData.value.oldPassword = "";
-  //   passwordData.value.newPassword = "";
-  //   passwordData.value.confirmPassword = "";
-  // } catch (err) {
-  //   const errorMessage = err.response?.data?.error || "舊密碼錯誤";
-  //   alert(errorMessage);
-  // }
+    passwordData.value.oldPassword = "";
+    passwordData.value.newPassword = "";
+    passwordData.value.confirmPassword = "";
+  } catch (err) {
+    const errorMessage = err.response?.data?.error || "舊密碼錯誤";
+    alert(errorMessage);
+  }
 };
 
 </script>
 
-<style scoped>
-
-</style>
