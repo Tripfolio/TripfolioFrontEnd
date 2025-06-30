@@ -1,0 +1,4 @@
+[build]
+  command = "npm rebuild esbuild && npm run build"
+  publish = "dist"
+git 
