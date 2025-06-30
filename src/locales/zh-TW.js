@@ -19,6 +19,7 @@ export default {
     connectCalendar: "連結 Google Calendar",
     schedule: "個人行程",
     communityTab: "社群貼文",
+    profileEdit: "會員資料修改",
   },
   community: {
     noPosts: "尚無貼文，快來建立第一篇吧！",
@@ -92,8 +93,7 @@ export default {
     loadFailed: "Google Maps 載入失敗",
     reviewCount: "（共 {count} 則評價）",
     yourLocation: "你的位置",
-    getDetailError: '取得地點詳細失敗：',
-    nonPlaceClicked: '點擊了非地點的區域',
+    nonPlaceClicked: "點擊了非地點的區域",
   },
   linePay: {
     failTitle: "付款失敗",
@@ -224,19 +224,6 @@ export default {
     anonymous: '匿名使用者',
     deleting: '刪除中...'
   },
-  commentSection: {
-    loading: '載入留言中...',
-    anonymous: '匿名使用者',
-    deleting: '刪除中...',
-    noComments: '還沒有留言，成為第一個留言的人吧！',
-    justNow: '剛剛',
-    minutesAgo: '{minutes} 分鐘前',
-    hoursAgo: '{hours} 小時前',
-    confirmDelete: '確定要刪除這則留言嗎？',
-    noPermission: '您沒有權限刪除此留言',
-    notFound: '留言不存在或已被刪除',
-    deleteFail: '刪除失敗，請稍後再試'
-  },
   dailyPlan: {
     arrive: '抵達',
     confirm: '更改',
@@ -276,7 +263,7 @@ export default {
   },
   postPopup: {
     anonymous: '匿名使用者',
-    scheduleDeleted: '行程已刪除 ಥ_ಥ',
+    scheduleDeleted: '行程已刪除',
     noContent: '沒有內容',
     scheduleReference: '行程參考'
   },
@@ -336,5 +323,4 @@ export default {
     notes: '筆記：',
     notesPlaceholder: '點擊這裡新增或編輯行程筆記...'
   }
-
 };

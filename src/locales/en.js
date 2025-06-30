@@ -19,6 +19,7 @@ export default {
     connectCalendar: "Connect Google Calendar",
     schedule: "My Schedule",
     communityTab: "Community Posts",
+    profileEdit: "Edit Profile",
   },
   community: {
     noPosts: "No posts yet. Be the first to create one!",
@@ -54,7 +55,7 @@ export default {
     viewerPermission: "Viewer Access",
     alreadyJoined: "You are already a collaborator!",
     joinButton: "Join Collaboration",
-    joinFailed: "Failed to join. Please try again later."
+    joinFailed: "Failed to join. Please try again later.",
   },
   googleCalendar: {
     loading: "Processing...",
@@ -70,7 +71,7 @@ export default {
     createSuccess: "Event created successfully:",
     createError: "Error creating event: {error}",
     copySuccess: "Link copied!",
-    copyFailed: "Copy failed: {error}"
+    copyFailed: "Copy failed: {error}",
   },
   googleMap: {
     current: "Current",
@@ -92,8 +93,7 @@ export default {
     loadFailed: "Failed to load Google Maps",
     reviewCount: "({count} reviews)",
     yourLocation: "Your Location",
-    getDetailError: 'Failed to get place details: ',
-    nonPlaceClicked: 'Clicked on a non-place area',
+    nonPlaceClicked: "Clicked on a non-place area",
   },
   linePay: {
     failTitle: "Payment Failed",
@@ -118,7 +118,7 @@ export default {
     title: 'Edit Profile',
     avatar: {
       change: 'Change Avatar',
-      save: 'Save Avatar'
+      save: 'Save Avatar',
     },
     form: {
       name: 'Name',
@@ -130,7 +130,7 @@ export default {
       phonePlaceholder: 'Enter your phone number',
       phoneError: 'Invalid phone format. Example: 0912345678',
       birthday: 'Birthday',
-      save: 'Save Profile'
+      save: 'Save Profile',
     },
     password: {
       title: 'Change Password',
@@ -142,8 +142,8 @@ export default {
       minLength: 'Password must be at least 8 characters',
       mustContainLetter: 'Password must contain letters',
       mustContainNumber: 'Password must contain numbers',
-      cannotBeSameAsName: 'Password cannot be the same as your name'
-    }
+      cannotBeSameAsName: 'Password cannot be the same as your name',
+    },
   },
   scheduleDetail: {
     dayLabel: 'Day {index}',
@@ -152,7 +152,7 @@ export default {
     coverUpdateFailed: 'Failed to update cover',
     titleUpdateFailed: 'Failed to update title',
     dateUpdateFailed: 'Failed to update dates',
-    notesUpdateFailed: 'Failed to update notes'
+    notesUpdateFailed: 'Failed to update notes',
   },
   payment: {
     title: 'Upgrade to Premium Membership',
@@ -167,7 +167,7 @@ export default {
     initCreditCard: 'Initialize Credit Card Payment',
     confirmCreditCard: 'Confirm Credit Card Payment',
     error: {
-      checkStatusFail: 'Failed to check membership status'
+      checkStatusFail: 'Failed to check membership status',
     },
     alert: {
       loginRequired: 'Please log in to proceed with payment.',
@@ -179,8 +179,8 @@ export default {
       paymentSuccess: 'Payment successful! Amount: NT${amount}\nTransaction ID: ${txnId}',
       paymentFail: 'Payment failed: ${message}',
       creditCardFail: 'Credit card payment failed, please try again later.',
-      unknownError: 'Unknown error'
-    }
+      unknownError: 'Unknown error',
+    },
   },
   signUp: {
     title: 'Sign Up',
@@ -189,11 +189,11 @@ export default {
       emailPlaceholder: 'Enter your email',
       passwordPlaceholder: 'Enter your password',
       submit: 'Sign Up',
-      toLogin: 'Already a member? Log in'
+      toLogin: 'Already a member? Log in',
     },
     error: {
-      generalFail: 'Registration failed. Please try again later.'
-    }
+      generalFail: 'Registration failed. Please try again later.',
+    },
   },
   travel: {
     createTrip: 'Create Trip',
@@ -207,32 +207,26 @@ export default {
       loginRequired: 'Please log in first',
       confirmDelete: 'Are you sure you want to delete this trip?',
       deleteSuccess: 'Deleted successfully',
-      deleteFail: 'Failed to delete, please try again later'
-  }
+      deleteFail: 'Failed to delete, please try again later',
+    },
   },
   addComment: {
     placeholder: 'Write your comment...',
     sending: 'Sending...',
-    submit: 'Post Comment'
+    submit: 'Post Comment',
   },
   commentSection: {
     loading: 'Loading comments...',
     noComments: 'No comments yet. Be the first!',
     anonymous: 'Anonymous User',
-    deleting: 'Deleting...'
-  },
-  commentSection: {
-    loading: 'Loading comments...',
-    anonymous: 'Anonymous',
     deleting: 'Deleting...',
-    noComments: 'No comments yet. Be the first!',
     justNow: 'Just now',
     minutesAgo: '{minutes} minutes ago',
     hoursAgo: '{hours} hours ago',
     confirmDelete: 'Are you sure you want to delete this comment?',
     noPermission: 'You do not have permission to delete this comment',
     notFound: 'Comment does not exist or has been deleted',
-    deleteFail: 'Failed to delete. Please try again later'
+    deleteFail: 'Failed to delete. Please try again later',
   },
   common: {
     reviews: 'reviews',
@@ -244,7 +238,7 @@ export default {
     remove: 'Delete',
     noPlaces: 'No places added yet',
     selectTrip: 'Please select a trip and date from the sidebar to view the daily plan.',
-    sortFail: 'Failed to update sorting'
+    sortFail: 'Failed to update sorting',
   },
   itinerary: {
     loadFail: 'Failed to load itinerary',
@@ -255,14 +249,10 @@ export default {
     alreadyAdded: 'This place has already been added',
     addFail: 'Add failed',
     addPlaceFail: 'Failed to add place',
-    deleteFail: 'Delete failed'
-  },
-  navbar: {
-    explore: 'Explore',
-    community: 'Community'
+    deleteFail: 'Delete failed',
   },
   postCard: {
-    author: 'Author'
+    author: 'Author',
   },
   postForm: {
     selectSchedule: 'Select Schedule',
@@ -272,13 +262,13 @@ export default {
     fetchFail: 'Unable to fetch',
     invalidFile: 'Unsupported format or file too large. Please upload JPG, PNG, or WebP. Max 3MB',
     success: 'Post published successfully',
-    submitFail: 'Failed to publish post. Please try again later!'
+    submitFail: 'Failed to publish post. Please try again later!',
   },
   postPopup: {
     anonymous: 'Anonymous',
     scheduleDeleted: 'Schedule deleted ಥ_ಥ',
     noContent: 'No content',
-    scheduleReference: 'View Schedule'
+    scheduleReference: 'View Schedule',
   },
   shareTrip: {
     invite: 'Invite Collaborators',
@@ -294,14 +284,14 @@ export default {
     alertFetchMembersFail: 'Failed to fetch members.',
     alertChangeFail: 'Failed to change permission',
     alertConfirmRemove: 'Are you sure you want to remove {name}?',
-    alertRemoveFail: 'Failed to remove'
+    alertRemoveFail: 'Failed to remove',
   },
   traffic: {
     selectTransport: '— Select Transportation —',
     driving: '🚗 Driving',
     walking: '🚶‍♂️ Walking',
     transit: '🚇 Transit',
-    alertFail: 'Failed to load traffic info, please try again later'
+    alertFail: 'Failed to load traffic info, please try again later',
   },
   travelSchedule: {
     title: 'Trip Settings',
@@ -334,6 +324,6 @@ export default {
     saved: 'Saved',
     totalDays: '({days} days)',
     notes: 'Notes:',
-    notesPlaceholder: 'Click here to add or edit trip notes...'
-  }
+    notesPlaceholder: 'Click here to add or edit trip notes...',
+  },
 };

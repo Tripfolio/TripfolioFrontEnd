@@ -121,6 +121,9 @@ import axios from 'axios';
 import GoogleMapView from '@/views/GoogleMapView.vue';
 import ScheduleDetail from '@/views/scheduleDetail.vue';
 import { useTripStore } from '@/stores/tripStore';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 const router = useRouter();
 const route = useRoute(); 

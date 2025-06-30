@@ -202,7 +202,7 @@ watch([title, startDate, endDate, description, file], () => {
 
 const handleClose = () => {
   if (isDirty.value) {
-    const confirmExit = const confirmExit = confirm(t('travelSchedule.confirmExit'));;
+    const confirmExit = confirm(t('travelSchedule.confirmExit'));;
     if (!confirmExit) return;
   }
   emit("close");

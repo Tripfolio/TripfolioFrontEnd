@@ -65,6 +65,9 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import axios from "axios";
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 const name = ref("");
 const email = ref("");
@@ -112,7 +115,7 @@ const signUp = async () => {
     if (Array.isArray(err.response?.data?.errors)) {
       errorMessages.value = err.response.data.errors;
     } else {
-      errorMessages.value = [t('signUp.error.generalFail')];;
+      errorMessages.value = [t('signUp.error.generalFail')];
     }
   }
 };

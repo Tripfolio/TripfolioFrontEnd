@@ -19,6 +19,7 @@ export default {
     connectCalendar: "Google 캘린더 연결",
     schedule: "내 일정",
     communityTab: "커뮤니티 게시물",
+    profileEdit: "회원 자료 수정",
   },
   community: {
     noPosts: "아직 게시물이 없습니다. 첫 번째 게시물을 작성해보세요!",
@@ -54,7 +55,7 @@ export default {
     viewerPermission: "보기 권한",
     alreadyJoined: "이미 공동 편집자입니다!",
     joinButton: "공동 편집 참여",
-    joinFailed: "참여 실패. 나중에 다시 시도해주세요."
+    joinFailed: "참여 실패. 나중에 다시 시도해주세요.",
   },
   googleCalendar: {
     loading: "처리 중...",
@@ -70,9 +71,8 @@ export default {
     createSuccess: "일정을 성공적으로 생성했습니다:",
     createError: "일정 생성 오류: {error}",
     copySuccess: "링크가 복사되었습니다!",
-    copyFailed: "복사 실패: {error}"
+    copyFailed: "복사 실패: {error}",
   },
-
   googleMap: {
     current: "현재 위치",
     searchPlaceholder: "장소 입력",
@@ -93,8 +93,7 @@ export default {
     loadFailed: "Google Maps 로드 실패",
     reviewCount: "({count}개의 리뷰)",
     yourLocation: "내 위치",
-    getDetailError: '장소 세부 정보 가져오기 실패: ',
-    nonPlaceClicked: '장소가 아닌 영역을 클릭했습니다',
+    nonPlaceClicked: "장소가 아닌 영역을 클릭했습니다",
   },
   common: {
     reviews: '개의 평가',
@@ -122,7 +121,7 @@ export default {
     title: '프로필 수정',
     avatar: {
       change: '아바타 변경',
-      save: '아바타 저장'
+      save: '아바타 저장',
     },
     form: {
       name: '이름',
@@ -134,7 +133,7 @@ export default {
       phonePlaceholder: '전화번호를 입력하세요',
       phoneError: '전화번호 형식이 올바르지 않습니다. 예: 0912345678',
       birthday: '생일',
-      save: '회원 정보 저장'
+      save: '회원 정보 저장',
     },
     password: {
       title: '비밀번호 변경',
@@ -146,8 +145,8 @@ export default {
       minLength: '비밀번호는 최소 8자 이상이어야 합니다',
       mustContainLetter: '비밀번호에 영문을 포함해야 합니다',
       mustContainNumber: '비밀번호에 숫자를 포함해야 합니다',
-      cannotBeSameAsName: '비밀번호는 이름과 같을 수 없습니다'
-    }
+      cannotBeSameAsName: '비밀번호는 이름과 같을 수 없습니다',
+    },
   },
   scheduleDetail: {
     dayLabel: '{index}일째',
@@ -156,7 +155,7 @@ export default {
     coverUpdateFailed: '커버 업데이트 실패',
     titleUpdateFailed: '제목 업데이트 실패',
     dateUpdateFailed: '날짜 업데이트 실패',
-    notesUpdateFailed: '메모 업데이트 실패'
+    notesUpdateFailed: '메모 업데이트 실패',
   },
   payment: {
     title: '프리미엄 회원으로 업그레이드',
@@ -171,7 +170,7 @@ export default {
     initCreditCard: '신용카드 결제 초기화',
     confirmCreditCard: '신용카드 결제 확인',
     error: {
-      checkStatusFail: '회원 상태 확인 실패'
+      checkStatusFail: '회원 상태 확인 실패',
     },
     alert: {
       loginRequired: '결제를 진행하려면 먼저 로그인해주세요.',
@@ -183,8 +182,8 @@ export default {
       paymentSuccess: '결제 성공! 금액: NT${amount}\n거래 ID: ${txnId}',
       paymentFail: '결제 실패: ${message}',
       creditCardFail: '신용카드 결제 실패. 나중에 다시 시도해주세요.',
-      unknownError: '알 수 없는 오류'
-    }
+      unknownError: '알 수 없는 오류',
+    },
   },
   signUp: {
     title: '회원가입 페이지',
@@ -193,11 +192,11 @@ export default {
       emailPlaceholder: '이메일을 입력해주세요',
       passwordPlaceholder: '비밀번호를 입력해주세요',
       submit: '회원가입',
-      toLogin: '이미 회원이신가요? 로그인'
+      toLogin: '이미 회원이신가요? 로그인',
     },
     error: {
-      generalFail: '회원가입에 실패했습니다. 잠시 후 다시 시도해주세요.'
-    }
+      generalFail: '회원가입에 실패했습니다. 잠시 후 다시 시도해주세요.',
+    },
   },
   travel: {
     createTrip: '여행 일정 만들기',
@@ -211,41 +210,28 @@ export default {
       loginRequired: '먼저 로그인해주세요',
       confirmDelete: '이 일정을 삭제하시겠습니까?',
       deleteSuccess: '삭제되었습니다',
-      deleteFail: '삭제 실패. 나중에 다시 시도해주세요'
-  }
+      deleteFail: '삭제 실패. 나중에 다시 시도해주세요',
+    },
   },
   addComment: {
     placeholder: '댓글을 작성하세요...',
     sending: '전송 중...',
-    submit: '댓글 작성'
+    submit: '댓글 작성',
   },
   commentSection: {
     loading: '댓글 불러오는 중...',
     noComments: '아직 댓글이 없습니다. 첫 번째 댓글을 작성해보세요!',
     anonymous: '익명 사용자',
-    deleting: '삭제 중...'
-  },
-  commentSection: {
-    loading: '댓글 불러오는 중...',
-    anonymous: '익명 사용자',
     deleting: '삭제 중...',
-    noComments: '아직 댓글이 없습니다. 첫 댓글을 남겨보세요!',
-    justNow: '방금',
-    minutesAgo: '{minutes}분 전',
-    hoursAgo: '{hours}시간 전',
-    confirmDelete: '이 댓글을 삭제하시겠습니까?',
-    noPermission: '이 댓글을 삭제할 권한이 없습니다',
-    notFound: '댓글이 존재하지 않거나 삭제되었습니다',
-    deleteFail: '삭제 실패. 나중에 다시 시도해주세요'
   },
-dailyPlan: {
+  dailyPlan: {
     arrive: '도착',
     confirm: '변경',
     cancel: '취소',
     remove: '삭제',
     noPlaces: '아직 추가된 장소가 없습니다',
     selectTrip: '사이드바에서 여행과 날짜를 선택하여 일일 계획을 확인하세요.',
-    sortFail: '정렬 업데이트 실패'
+    sortFail: '정렬 업데이트 실패',
   },
   itinerary: {
     loadFail: '일정을 불러오지 못했습니다',
@@ -256,14 +242,14 @@ dailyPlan: {
     alreadyAdded: '이미 추가된 장소입니다',
     addFail: '추가 실패',
     addPlaceFail: '장소 추가 실패',
-    deleteFail: '삭제 실패'
+    deleteFail: '삭제 실패',
   },
   navbar: {
     explore: '탐색',
-    community: '커뮤니티'
+    community: '커뮤니티',
   },
   postCard: {
-    author: '작성자'
+    author: '작성자',
   },
   postForm: {
     selectSchedule: '일정을 선택하세요',
@@ -273,13 +259,13 @@ dailyPlan: {
     fetchFail: '가져올 수 없습니다',
     invalidFile: '지원되지 않는 형식 또는 파일이 너무 큽니다. JPG, PNG 또는 WebP를 업로드하세요. 최대 3MB',
     success: '게시 성공',
-    submitFail: '게시 실패. 잠시 후 다시 시도해주세요!'
+    submitFail: '게시 실패. 잠시 후 다시 시도해주세요!',
   },
   postPopup: {
     anonymous: '익명 사용자',
-    scheduleDeleted: '일정이 삭제되었습니다 ಥ_ಥ',
+    scheduleDeleted: '일정이 삭제되었습니다',
     noContent: '내용이 없습니다',
-    scheduleReference: '일정 보기'
+    scheduleReference: '일정 보기',
   },
   shareTrip: {
     invite: '공동 편집 초대',
@@ -295,14 +281,14 @@ dailyPlan: {
     alertFetchMembersFail: '멤버 가져오기 실패.',
     alertChangeFail: '권한 변경 실패',
     alertConfirmRemove: '{name} 님을 제거하시겠습니까?',
-    alertRemoveFail: '제거 실패'
+    alertRemoveFail: '제거 실패',
   },
   traffic: {
     selectTransport: '— 교통수단 선택 —',
     driving: '🚗 자동차',
     walking: '🚶‍♂️ 도보',
     transit: '🚇 대중교통',
-    alertFail: '교통 정보를 불러오지 못했습니다. 나중에 다시 시도하세요'
+    alertFail: '교통 정보를 불러오지 못했습니다. 나중에 다시 시도하세요',
   },
   travelSchedule: {
     title: '여행 일정 설정',
@@ -335,6 +321,6 @@ dailyPlan: {
     saved: '저장됨',
     totalDays: '(총 {days}일)',
     notes: '메모:',
-    notesPlaceholder: '여기를 클릭해 메모를 추가하거나 편집하세요...'
-  }
+    notesPlaceholder: '여기를 클릭해 메모를 추가하거나 편집하세요...',
+  },
 };

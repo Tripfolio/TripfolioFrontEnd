@@ -19,6 +19,7 @@ export default {
     connectCalendar: "Googleカレンダーと連携",
     schedule: "マイプラン",
     communityTab: "コミュニティ投稿",
+    profileEdit: "プロフィール編集",
   },
   community: {
     noPosts: "まだ投稿がありません。最初の投稿を作成しましょう！",
@@ -54,7 +55,7 @@ export default {
     viewerPermission: "閲覧権限",
     alreadyJoined: "すでに共同編集者です！",
     joinButton: "共同編集に参加",
-    joinFailed: "参加に失敗しました。後で再試行してください。"
+    joinFailed: "参加に失敗しました。後で再試行してください。",
   },
   googleCalendar: {
     loading: "処理中...",
@@ -70,9 +71,8 @@ export default {
     createSuccess: "イベントを作成しました：",
     createError: "イベント作成エラー：{error}",
     copySuccess: "リンクをコピーしました！",
-    copyFailed: "コピーに失敗しました：{error}"
-},
-
+    copyFailed: "コピーに失敗しました：{error}",
+  },
   googleMap: {
     current: "現在地",
     searchPlaceholder: "場所を入力",
@@ -93,8 +93,7 @@ export default {
     loadFailed: "Googleマップの読み込みに失敗しました",
     reviewCount: "（{count} 件のレビュー）",
     yourLocation: "あなたの位置",
-    getDetailError: '場所の詳細取得に失敗：',
-    nonPlaceClicked: '場所以外をクリックしました',
+    nonPlaceClicked: "場所以外をクリックしました",
   },
   linePay: {
     failTitle: "支払い失敗",
@@ -119,7 +118,7 @@ export default {
     title: 'プロフィール編集',
     avatar: {
       change: 'アバターを変更',
-      save: 'アバターを保存'
+      save: 'アバターを保存',
     },
     form: {
       name: '名前',
@@ -131,7 +130,7 @@ export default {
       phonePlaceholder: '電話番号を入力してください',
       phoneError: '電話番号の形式が間違っています。例：0912345678',
       birthday: '誕生日',
-      save: 'プロフィールを保存'
+      save: 'プロフィールを保存',
     },
     password: {
       title: 'パスワード変更',
@@ -143,8 +142,8 @@ export default {
       minLength: 'パスワードは8文字以上である必要があります',
       mustContainLetter: 'パスワードには英字を含めてください',
       mustContainNumber: 'パスワードには数字を含めてください',
-      cannotBeSameAsName: 'パスワードは名前と同じにできません'
-    }
+      cannotBeSameAsName: 'パスワードは名前と同じにできません',
+    },
   },
   scheduleDetail: {
     dayLabel: '第{index}日目',
@@ -153,7 +152,7 @@ export default {
     coverUpdateFailed: 'カバーの更新に失敗しました',
     titleUpdateFailed: 'タイトルの更新に失敗しました',
     dateUpdateFailed: '日付の更新に失敗しました',
-    notesUpdateFailed: 'メモの更新に失敗しました'
+    notesUpdateFailed: 'メモの更新に失敗しました',
   },
   payment: {
     title: '有料会員にアップグレード',
@@ -168,7 +167,7 @@ export default {
     initCreditCard: 'クレジットカード決済を初期化',
     confirmCreditCard: 'クレジットカード決済を確認',
     error: {
-      checkStatusFail: '会員ステータスの確認に失敗しました'
+      checkStatusFail: '会員ステータスの確認に失敗しました',
     },
     alert: {
       loginRequired: '支払いを行うにはログインしてください。',
@@ -180,8 +179,8 @@ export default {
       paymentSuccess: '支払い成功！金額：NT${amount}\n取引ID：${txnId}',
       paymentFail: '支払い失敗：${message}',
       creditCardFail: 'クレジットカード決済に失敗しました。後でもう一度お試しください。',
-      unknownError: '不明なエラー'
-    }
+      unknownError: '不明なエラー',
+    },
   },
   signUp: {
     title: '登録ページ',
@@ -190,13 +189,13 @@ export default {
       emailPlaceholder: 'メールアドレスを入力してください',
       passwordPlaceholder: 'パスワードを入力してください',
       submit: '登録する',
-      toLogin: '会員の方はこちら'
+      toLogin: '会員の方はこちら',
     },
     error: {
-      generalFail: '登録に失敗しました。後でもう一度お試しください。'
-    }
+      generalFail: '登録に失敗しました。後でもう一度お試しください。',
+    },
   },
-   common: {
+  common: {
     reviews: '件の評価',
   },
   travel: {
@@ -207,46 +206,39 @@ export default {
     upgradeDescription: '無料会員は1つの行程のみ作成できます。複数の行程を作成するにはプレミアムにアップグレードしてください。',
     goToPayment: '支払いに進む',
     cancel: 'キャンセル',
-    confirmExit: '未保存の内容があります。離れてもよろしいですか？',
     alert: {
       loginRequired: 'まずログインしてください',
       confirmDelete: 'この行程を削除してもよろしいですか？',
       deleteSuccess: '削除しました',
-      deleteFail: '削除に失敗しました。後でもう一度お試しください'
-  }
+      deleteFail: '削除に失敗しました。後でもう一度お試しください',
+    },
   },
   addComment: {
     placeholder: 'コメントを入力...',
     sending: '送信中...',
-    submit: 'コメントを投稿'
+    submit: 'コメントを投稿',
   },
   commentSection: {
     loading: 'コメントを読み込み中...',
     noComments: 'まだコメントはありません。最初のコメントをしましょう！',
     anonymous: '匿名ユーザー',
-    deleting: '削除中...'
-  },
-  commentSection: {
-    loading: 'コメントを読み込み中...',
-    anonymous: '匿名ユーザー',
     deleting: '削除中...',
-    noComments: 'まだコメントはありません。最初のコメントを残しましょう！',
     justNow: 'たった今',
     minutesAgo: '{minutes}分前',
     hoursAgo: '{hours}時間前',
     confirmDelete: 'このコメントを削除してもよろしいですか？',
     noPermission: 'このコメントを削除する権限がありません',
     notFound: 'コメントが存在しないか、すでに削除されました',
-    deleteFail: '削除に失敗しました。後でもう一度お試しください'
+    deleteFail: '削除に失敗しました。後でもう一度お試しください',
   },
-dailyPlan: {
+  dailyPlan: {
     arrive: '到着',
     confirm: '変更',
     cancel: 'キャンセル',
     remove: '削除',
     noPlaces: 'まだスポットが追加されていません',
     selectTrip: '右側のサイドバーから旅行と日付を選択して日別計画を表示してください。',
-    sortFail: '並べ替えの更新に失敗しました'
+    sortFail: '並べ替えの更新に失敗しました',
   },
   itinerary: {
     loadFail: '行程の読み込みに失敗しました',
@@ -257,14 +249,14 @@ dailyPlan: {
     alreadyAdded: 'このスポットはすでに追加されています',
     addFail: '追加に失敗しました',
     addPlaceFail: 'スポットの追加に失敗しました',
-    deleteFail: '削除に失敗しました'
+    deleteFail: '削除に失敗しました',
   },
   navbar: {
     explore: '探索',
-    community: 'コミュニティ'
+    community: 'コミュニティ',
   },
   postCard: {
-    author: '投稿者'
+    author: '投稿者',
   },
   postForm: {
     selectSchedule: '行程を選択',
@@ -274,13 +266,13 @@ dailyPlan: {
     fetchFail: '取得できません',
     invalidFile: '対応していない形式、またはファイルが大きすぎます。JPG、PNG、WebPをアップロードしてください。最大3MB',
     success: '投稿が成功しました',
-    submitFail: '投稿に失敗しました。しばらくしてから再試行してください！'
+    submitFail: '投稿に失敗しました。しばらくしてから再試行してください！',
   },
   postPopup: {
     anonymous: '匿名ユーザー',
     scheduleDeleted: '行程は削除されました ಥ_ಥ',
     noContent: '内容がありません',
-    scheduleReference: '行程を見る'
+    scheduleReference: '行程を見る',
   },
   shareTrip: {
     invite: '共同編集を招待',
@@ -296,14 +288,14 @@ dailyPlan: {
     alertFetchMembersFail: 'メンバーの取得に失敗しました。',
     alertChangeFail: '権限の変更に失敗しました',
     alertConfirmRemove: '{name} を削除してもよろしいですか？',
-    alertRemoveFail: '削除に失敗しました'
+    alertRemoveFail: '削除に失敗しました',
   },
   traffic: {
     selectTransport: '— 交通手段を選択 —',
     driving: '🚗 車',
     walking: '🚶‍♂️ 徒歩',
     transit: '🚇 公共交通',
-    alertFail: '交通情報の読み込みに失敗しました。後で再試行してください'
+    alertFail: '交通情報の読み込みに失敗しました。後で再試行してください',
   },
   travelSchedule: {
     title: '行程設定',
@@ -320,7 +312,7 @@ dailyPlan: {
     create: '作成',
     alertFill: '行程名と開始/終了日を入力してください',
     alertSuccess: '保存成功。フォームを閉じて行程を編集できます。',
-    alertFail: '保存に失敗しました。後でもう一度試してください'
+    alertFail: '保存に失敗しました。後でもう一度試してください',
   },
   tripList: {
     title: '私の行程',
@@ -335,7 +327,6 @@ dailyPlan: {
     saved: '保存済み',
     totalDays: '（全 {days} 日間）',
     notes: 'メモ：',
-    notesPlaceholder: 'ここをクリックしてメモを追加・編集...'
-  }
+    notesPlaceholder: 'ここをクリックしてメモを追加・編集...',
+  },
 };
-

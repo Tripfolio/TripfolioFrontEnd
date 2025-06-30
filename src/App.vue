@@ -1,9 +1,9 @@
 <template>
-<!-- 這兩行是語言設定 -->
-  <button @click="locale = 'en'">English</button>
-  <button @click="locale = 'zh'">中文</button>
-  <button @click="locale.value = 'ja'">日本語</button>
-  <button @click="locale.value = 'ko'">한국어</button>
+  <!-- 這兩行是語言設定 -->
+  <button @click="changeLanguage('en')">English</button>
+  <button @click="changeLanguage('zh')">中文</button>
+  <button @click="changeLanguage('ja')">日本語</button>
+  <button @click="changeLanguage('ko')">한국어</button>
 
   <div class="relative">
     <!-- 上方 Navbar（非地圖頁） -->
@@ -34,6 +34,11 @@ const { locale } = useI18n()
 const route = useRoute();
 
 const isMapPage = computed(() => route.path === "/schedule");
+
+// 切換語言的方法
+function changeLanguage(lang) {
+  locale.value = lang; // 修改語言為指定的語言
+}
 </script>
 
 <style scoped>

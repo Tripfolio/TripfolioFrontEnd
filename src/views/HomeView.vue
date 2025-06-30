@@ -6,19 +6,21 @@
           class="mt-10 bg-gray-300 rounded-[3rem] h-[300px] md:h-[400px] shadow-inner"
         >
           <section class="mt-10 p-6">
-            <p class="mb-2">{{ $t("welcome") }}</p>
+            <p class="mb-2">{{ $t("global.welcome") }}</p>
             <div class="flex flex-wrap gap-4">
               <RouterLink to="/emailSettings" class="underline"
-                >{{ $t("emailNotice") }}</RouterLink
+                >{{ $t("homepage.emailNotice") }}</RouterLink
               >
               <RouterLink to="/profile" class="underline"
-                >{{ $t("profileEdit") }}</RouterLink
+                >{{ $t("homepage.profileEdit") }}</RouterLink
               >
               <RouterLink to="/calendar" class="underline"
-                >{{ $t("connectCalendar") }}</RouterLink
+                >{{ $t("homepage.connectCalendar") }}</RouterLink
               >
-              <RouterLink to="/schedule" class="underline">>{{ $t("schedule") }}</RouterLink>
-              <RouterLink to="/community">{{ $t("community") }}</RouterLink>
+              <RouterLink to="/schedule" class="underline"
+                >{{ $t("homepage.schedule") }}</RouterLink
+              >
+              <RouterLink to="/community">{{ $t("navbar.community") }}</RouterLink>
             </div>
           </section>
         </section>
@@ -34,7 +36,7 @@
                 @change="onCityChange($event)"
                 class="appearance-none bg-gray-500/80 text-white text-sm py-2 pl-4 pr-10 rounded-full focus:outline-none hover:bg-gray-400 transition duration-200 cursor-pointer shadow-inner"
               >
-                <option value="none">{{ $t("current") }}</option>
+                <option value="none">{{ $t("googleMap.current") }}</option>
                 <option
                   v-for="city in cities"
                   :key="city.name"
@@ -75,7 +77,7 @@
               <input
                 type="text"
                 v-model="searchQuery"
-                placeholder="$t('searchPlaceholder')"
+                :placeholder="$t('googleMap.searchPlaceholder')"
                 class="w-full rounded-full border-none text-white px-9 py-1.5 box-border text-base placeholder-white focus:outline-none"
                 ref="searchInput"
                 @keyup.enter="searchPlace"
@@ -84,7 +86,7 @@
                 @click.prevent="searchPlace"
                 class="absolute right-2 top-1/2 -translate-y-1/2 bg-gray-800 px-2.5 py-1.5 rounded-full border-none cursor-pointer text-xs text-white"
               >
-                >{{ $t("searchButton") }}
+                {{ $t("googleMap.searchButton") }}
               </button>
             </div>
           </div>
@@ -160,7 +162,7 @@
             class="bg-gray-500 text-white py-2 px-6 rounded-full text-sm hover:bg-gray-700"
             @click="loadNextPage"
           >
-            {{ $t("loadMore") }}
+            {{ $t("googleMap.loadMore") }}
           </button>
         </div>
       </div>

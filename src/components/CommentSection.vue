@@ -14,11 +14,11 @@
               comment.userAvatar ||
               'https://picsum.photos/40/40?random=1'
             "
-            :alt="comment.author?.name || comment.userName || {{ comment.author?.name || comment.userName || $t('commentSection.anonymous') }}"
+            :alt="comment.author?.name || comment.userName || $t('commentSection.anonymous')"
             class="avatar"
           />
           <span class="author-name">
-            {{ comment.author?.name || comment.userName || {{ comment.author?.name || comment.userName || $t('commentSection.anonymous') }} }}
+            {{ comment.author?.name || comment.userName || $t('commentSection.anonymous') }}
           </span>
           <span class="comment-time">{{ formatTime(comment.createdAt) }}</span>
         </div>

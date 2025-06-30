@@ -40,7 +40,7 @@
       <input
         type="text"
         v-model="searchQuery"
-        :placeholder="t('googleMap.searchPlaceholder')"
+        :placeholder="$t('googleMap.searchPlaceholder')"
         class="w-[80%] rounded-full border-none px-3 py-1.5 box-border text-base placeholder-white focus:outline-none"
         ref="searchInput"
         @keyup.enter="searchPlace"
