@@ -126,7 +126,7 @@
       </div>
     </section>
 
-    <section class="min-h-[500px] flex flex-col sm:flex-row relative mt-10 mb-20 ">
+    <section class="min-h-[600px] flex flex-col sm:flex-row relative mt-10 mb-20 ">
       <h2 class=" ml-10 sm:ml-50 mt-10 sm:mt-30" data-aos="fade-up" data-aos-duration="1000">
         <p class="text-3xl sm:text-5xl font-bold tracking-[1px] sm:tracking-[4px] mb-4">探索你的地圖</p>
         <p class="mt-1 text-lg sm:text-2xl font-medium tracking-wide sm:tracking-wider whitespace-nowrap"> 標記景點留下足跡，每段旅程都是值得收藏的人生篇章</p>
@@ -152,27 +152,27 @@
       </div>
     </section>
     
-    <section class="h-auto sm:h-[500px] w-[90vw] flex flex-col sm:flex-row items-center justify-between space-y-10 sm:space-y-0 sm:space-x-20 relative mx-auto rounded-3xl mt-10 mb-20 ">
-    
-      <div class="absolute w-full sm:w-[50vw] h-full inset-0 shadow-xl rounded-3xl overflow-hidden z-0 ml-auto ">
-        <img :src="map" class="w-full h-full object-cover" />
+    <section class="h-auto sm:h-[500px] w-[80vw] flex flex-col sm:flex-row items-center space-y-10 sm:space-y-0 sm:space-x-0 relative mx-auto rounded-3xl my-10">
+      
+      <div class="relative hidden sm:block z-10 py-10 sm:pl-6 flex-col-reverse sm:flex-row items-center px-6 sm:px-20">
+        <HomeSchedule />
       </div>
-    
-      <div class="relative z-10 py-10 sm:py-16 flex flex-col-reverse sm:flex-row items-center px-6 sm:px-20 gap-10 sm:gap-40">
-      
-        <div>
-          <HomeSchedule />
-        </div>
-      
-        <div class="ml-0 sm:ml-20">
+
+      <div class="relative w-full  min-h-[700px] sm:min-h-[300px] h-full inset-0 shadow-xl rounded-3xl overflow-hidden z-0 ml-auto ">
+        <img :src="map" class="w-full h-full object-cover absolute z-0" />
+              
+        <div class="absolute mt-20 ml-10 sm:ml-20 sm:mt-50 z-40 ">
           <h2 class="text-3xl sm:text-4xl font-bold tracking-wide sm:tracking-wider" data-aos="fade-right" data-aos-duration="2000">
             高自由度行程規劃
           </h2>
           <p class="mt-5 ml-8 sm:ml-16 text-lg sm:text-xl font-medium tracking-wide sm:tracking-wider" data-aos="fade-left" data-aos-duration="2000">
             景點隨心拖曳排序 輕鬆管理你的旅程
           </p>
-        </div>
-      
+         </div>
+          <div class="block sm:hidden absolute top-50 left-12 ">
+            <HomeSchedule />
+          </div>
+       
       </div>
     </section>
 
