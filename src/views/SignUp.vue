@@ -1,13 +1,12 @@
 <template>
-  <div class="homepage-bg relative">
-    <div class="mt-30">
-      <h2 class="text-center text-xl font-semibold mb-4">註冊頁面</h2>
-
+  <div class="homepage-bg min-h-screen relative">
+    <div class="w-1/2 py-5 absolute top-100 left-1/2 -translate-1/2 rounded-2xl bg-black/35 shadow-2xl h-[400px] min-w-[400px]">
+      <h2 class="text-lg font-bold mb-8 text-center text-white">註冊</h2>
       <div v-if="showError" class="space-y-2 w-[300px] mx-auto">
         <div
           v-for="(msg, index) in errorMessages"
           :key="index"
-          class="flex items-start bg-red-100 text-red-800 border border-red-200 px-4 py-3 rounded-md text-sm"
+          class="flex items-start bg-red-100 text-ed-800 border border-red-200 px-4 py-3 rounded-md text-sm"
         >
           <font-awesome-icon
             icon="exclamation-triangle"
@@ -25,39 +24,39 @@
       </div>
 
       <form
-        class="flex flex-col gap-[10px] w-[300px] mx-auto mt-2"
+        class="space-y-6 flex flex-col justify-center items-center"
         @submit.prevent="signUp"
       >
         <input
           v-model="name"
           placeholder="該怎麼稱呼您"
-          class="p-[8px] text-[14px] border border-[#aaa] rounded"
+          class="mb-5 block w-[300px] text-white rounded-md border border-gray-300 shadow-sm p-2"
         />
         <input
           v-model="email"
           type="email"
           placeholder="請輸入電子郵件"
-          class="p-[8px] text-[14px] border border-[#aaa] rounded"
+          class="mb-5 block w-[300px] text-white rounded-md border border-gray-300 shadow-sm p-2"
         />
         <input
           v-model="password"
           type="password"
           placeholder="請輸入密碼"
-          class="p-[8px] text-[14px] border border-[#aaa] rounded"
+          class="mb-5 block w-[300px] text-white  rounded-md border border-gray-300 shadow-sm p-2"
         />
 
         <button
           type="submit"
-          class="p-[10px] bg-[#2894FF] text-white border-0 rounded cursor-pointer hover:bg-[#46A3FF]"
+          class="w-[100px] bg-black/50 text-white py-2 rounded-full transition mx-auto cursor-pointer mt-4"
         >
           註冊
         </button>
 
         <RouterLink to="/login">
           <button
-            class="w-[100px] text-black py-2 rounded transition hover:text-[#0d4a87]"
+            class="text-[#4d4d4d] py-2 transition hover:text-[#ffffff]"
           >
-            有會員走這裡
+            已有帳號？登入
           </button>
         </RouterLink>
       </form>
