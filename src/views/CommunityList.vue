@@ -1,8 +1,8 @@
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from "vue";
+import { ref, onMounted, onBeforeUnmount, watch } from "vue";
 import axios from "axios";
 import dayjs from "dayjs";
-import { useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import PostPopup from "../components/PostPopup.vue";
 
 const posts = ref([]);
@@ -11,6 +11,7 @@ const limit = 15;
 const isLoading = ref(false);
 const hasMore = ref(true);
 const scrollTrigger = ref(null);
+const route = useRoute();
 const router = useRouter();
 const token = localStorage.getItem("token");
 const showModal = ref(false);
@@ -113,6 +114,32 @@ const initObserver = () => {
     observer.observe(scrollTrigger.value);
   }
 };
+
+//動態追蹤用
+watch(
+  () => route.query.postId,
+  (newPostId) => {
+    if (!newPostId) {
+      closeModal();
+      return;
+    }
+    const tryOpen = () => {
+      const foundPost = posts.value.find((p) => p.postId == newPostId);
+      if (foundPost) {
+        selectedPost.value = foundPost;
+        showModal.value = true;
+      }
+    };
+    if (posts.value.length) {
+      tryOpen();
+    } else {
+      fetchPosts().then(() => {
+        tryOpen();
+      });
+    }
+  },
+  { immediate: true }
+);
 
 onMounted(() => {
   fetchPosts();
