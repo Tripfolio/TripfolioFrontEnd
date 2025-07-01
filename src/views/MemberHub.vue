@@ -82,10 +82,9 @@
         </div>
       </div>
     </main>
-    <!-- MemberProfile 模態視窗包裹層 -->
+    <!-- MemberProfile 視窗 -->
     <div v-if="showMemberProfile" class="fixed inset-0 bg-opacity-60 backdrop-blur-xs flex items-center justify-center z-50 overflow-auto p-4">
       <div>
-      <!-- MemberProfileEditModal 元件現在只包含表單內容，沒有外部的 modal 樣式 -->
         <MemberProfile @close-modal="showMemberProfile = false" />
       </div>
     </div>
@@ -114,13 +113,34 @@ const tabs = [
     { key: 'notifications', label: '通知設定' }, 
 ]
 
-//確認會員token
-const fetchData = async () => {
+// fake user data
+const user = ref({
+  name: 'visitor',
+  bio: '歡迎來到我的會員中心！',
+  avatar: 'https://via.placeholder.com/150/CCCCCC/FFFFFF?text=Guest'
+});
+// end of fake data
+
+
+const checkLoginandRedirect = () => {
   const token = localStorage.getItem('token')
     if(!token) {
         alert('請先登入會員')
         router.push({ path: '/login', query: { redirect: route.fullPath } });
+        return false;
     }
+    return true;
+};
+
+
+//確認會員token
+const fetchData = async () => {
+  //判斷登入
+  // if (!checkLoginandRedirect()) {
+  //   return;
+  // }
+
+  const token = localStorage.getItem('token')
 
     const decoded = jwtDecode(token);
     const memberId = decoded.id;

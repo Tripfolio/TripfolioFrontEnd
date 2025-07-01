@@ -14,7 +14,7 @@ import scheduleDetail from "@/views/scheduleDetail.vue";
 import Payment from "@/views/Payment.vue";
 import LinePaySuccess from "@/views/LinePaySuccess.vue";
 import LinePayFail from "@/views/LinePayFail.vue";
-import MemberProfile from "@/views/MemberProfile.vue";
+// import MemberProfile from "@/views/MemberProfile.vue";
 import MemberHub from "@/views/MemberHub.vue";
 
 const routes = [
