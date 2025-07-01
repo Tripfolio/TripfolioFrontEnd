@@ -136,7 +136,7 @@ const signUp = async () => {
 };
 
 const handleGoogleLogin = () => {
-  window.location.href = `${import.meta.env.VITE_API_URL}/auth/google/callback`;
+  window.location.href = `${import.meta.env.VITE_API_URL}/auth/google`;
 };
 
 onMounted(() => {
