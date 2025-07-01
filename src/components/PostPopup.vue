@@ -222,13 +222,13 @@ const getCurrentUserId = () => {
   max-width: 90%;
   max-height: 90%;
 } */
-.post-info {
-  /* background-color: bisque;
+/*.post-info {
+   background-color: bisque;
   flex: 1;
   padding: 24px;
   display: flex;
-  flex-direction: column; */
-}
+  flex-direction: column; 
+}*/
 .avatar {
   width: 40px;
   height: 40px;

@@ -160,9 +160,9 @@ const emit = defineEmits([
 
 // 🔒 權限控制：定義是否能編輯
 const canEdit = computed(
-  () => props.role.value === "editor" || props.role.value === "owner",
+  () => props.role === "editor" || props.role === "owner",
 );
-const isViewer = computed(() => props.role.value === "viewer");
+const isViewer = computed(() => props.role === "viewer");
 
 const editableTitle = ref(props.trip.title);
 const editableNotes = ref(props.trip.description || "");
