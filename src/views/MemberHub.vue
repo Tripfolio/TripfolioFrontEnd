@@ -8,7 +8,7 @@
 
         <!-- 使用者頭像與名稱 -->
         <section class="user-info">
-          <img :src="user.avatar" alt="使用者頭像" class="avatar" />
+          <img :src="user.avatar" alt="" class="avatar" />
           <div class="info">
             <h1>{{ user.name }}</h1>
             <a
@@ -56,10 +56,8 @@
       >
         <div class="relative">
           <MemberProfile
-            @close-modal="
-              showMemberProfile = false;
-              console.log('close-modal 被觸發了');
-            "
+            @close-modal="showMemberProfile = false"
+            @profile-updated="handleProfileUpdated"
           />
         </div>
       </div>
@@ -141,18 +139,25 @@ const fetchData = async () => {
     console.warn("取得資料失敗", err);
   }
 };
+const handleProfileUpdated = (newData) => {
+  user.value.name = newData.name;
+  user.value.avatar = newData.avatar;
+};
 
 onMounted(fetchData);
 watch(() => route.fullPath, fetchData);
 
-const goToTravel = (id) =>
-  router.push({ path: `/schedule/${id}`, query: { from: "tracker" } });
+const goToTravel = (id) => {
+  console.log(id);
+  router.push({ path: `/schedule/${id}` });
+};
 
 const goToPost = (id) =>
   router.push({ path: "/community", query: { postId: id } });
 
 const goToLogin = () => {
   localStorage.removeItem("token");
+  window.dispatchEvent(new Event("login-status-changed"));
   router.push("/login");
 };
 </script>
