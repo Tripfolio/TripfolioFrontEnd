@@ -113,16 +113,24 @@ const tabs = [
     { key: 'notifications', label: '通知設定' }, 
 ]
 
-// fake user data
+//=== fake user data ===
 const user = ref({
   name: 'visitor',
   bio: '歡迎來到我的會員中心！',
   avatar: 'https://via.placeholder.com/150/CCCCCC/FFFFFF?text=Guest'
 });
-// end of fake data
+//=== end of fake user data ===
 
 
 const checkLoginandRedirect = () => {
+  //=== fake token for testing ===
+  const simulatedToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEyMyIsIm5hbWUiOiLpnbnlj7DljYUiLCJpYXQiOjE2NzgyNjcwNjgsImV4cCI6MTcxOTg2NjY2OH0.someFakeSignatureForTesting';
+  localStorage.setItem('token', simulatedToken); 
+
+  // 如果你希望測試 "未登入" 狀態（頁面跳轉到登入頁），請將上一行註解掉，並取消註解下一行：
+  //localStorage.removeItem('token'); // 模擬沒有 token
+  //=== end of fake token ===
+
   const token = localStorage.getItem('token')
     if(!token) {
         alert('請先登入會員')
@@ -136,9 +144,9 @@ const checkLoginandRedirect = () => {
 //確認會員token
 const fetchData = async () => {
   //判斷登入
-  // if (!checkLoginandRedirect()) {
-  //   return;
-  // }
+  if (!checkLoginandRedirect()) {
+    return;
+  }
 
   const token = localStorage.getItem('token')
 
@@ -206,17 +214,4 @@ const goToPost = (id) => {
 </script>
 
 <style scoped>
-	.main-convex-effect {
-		/* background-color: #A2A2A2; */
-		box-shadow:
-    /* 整體外凸陰影 */
-    -8px -8px 16px rgba(255, 255, 255, 0.2),  /* 左上 */
-    8px 8px 16px rgba(0, 0, 0, 0.3),           /* 右下 */
-    -4px 0px 8px rgba(0, 0, 0, 0.1),           /* 左側 */
-    /* Neumorphism 紋理 */
-    inset 2px 2px 5px rgba(0, 0, 0, 0.1),     
-    inset -2px -2px 5px rgba(255, 255, 255, 0.1); 
-
-    transition: all 0.2s ease-in-out;
-	}
 </style>
