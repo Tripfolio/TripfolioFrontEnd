@@ -12,7 +12,7 @@
           <img class="w-24 h-24 rounded-full border-4 border-gray-500 object-cover" :src="profileData.avatar" alt="使用者頭像">
           <div class="flex-grow flex flex-col sm:flex-row items-center gap-6 text-center sm:text-left">
             <div>
-              <h1 class="text-3xl font-bold">{{ user.name }}</h1>
+              <h1 class="text-3xl font-bold">{{ profileData.name }}</h1>
               <div class="flex gap-4 mt-2 text-gray-400 justify-center sm:justify-start">
                 <!-- 編輯按鈕視窗顯示 -->
                 <a href="#" @click.prevent="showMemberProfile = true" class="hover:text-white flex items-center gap-1 transition-colors duration-200">
@@ -20,8 +20,6 @@
                 </a>
               </div>
             </div>
-            <div class="hidden sm:block w-px h-16 bg-gray-500"></div>
-            <p class="text-gray-300">{{ user.bio }}</p>
           </div>
         </div>
         
@@ -85,7 +83,10 @@
     <!-- MemberProfile 視窗 -->
     <div v-if="showMemberProfile" class="fixed inset-0 bg-opacity-60 backdrop-blur-xs flex items-center justify-center z-50 overflow-auto p-4">
       <div>
-        <MemberProfile @close-modal="showMemberProfile = false" />
+        <MemberProfile 
+          @close-modal="showMemberProfile = false" 
+          @profile-updated="handleProfileUpdate"
+        />
       </div>
     </div>
   </div>
@@ -95,7 +96,7 @@
 import { ref, onMounted, watch } from 'vue';
 import { useRouter,useRoute } from 'vue-router';
 import { jwtDecode } from "jwt-decode";
-import axios from 'axios';
+// import axios from 'axios';
 import MemberProfile from '@/components/MemberProfile.vue';
 
 const router = useRouter()
@@ -114,9 +115,8 @@ const tabs = [
 ]
 
 //=== fake user data ===
-const user = ref({
+const profileData = ref({
   name: 'visitor',
-  bio: '歡迎來到我的會員中心！',
   avatar: 'https://via.placeholder.com/150/CCCCCC/FFFFFF?text=Guest'
 });
 //=== end of fake user data ===
@@ -143,7 +143,6 @@ const checkLoginandRedirect = () => {
 
 //確認會員token
 const fetchData = async () => {
-  //判斷登入
   if (!checkLoginandRedirect()) {
     return;
   }
@@ -153,6 +152,24 @@ const fetchData = async () => {
     const decoded = jwtDecode(token);
     const memberId = decoded.id;
     const username = decoded.name;
+
+  // try {
+//   // 會員中心獲取使用者基本資料
+//   const userRes = await axios.get(`${import.meta.env.VITE_API_URL}/api/profile`, {
+//     headers: {
+//       Authorization: `Bearer ${token}`,
+//     },
+//   });
+//   profileData.value.name = userRes.data.name || '';
+//   profileData.value.avatar = userRes.data.avatar || ''; // 更新頭像 URL
+//   } catch (err) {
+//     console.error('取得使用者資料失敗', err);
+// === 如果 axios 請求失敗，確保 user 變數有回退值，避免 undefined 錯誤 ===
+  profileData.value.name = username; 
+  profileData.value.avatar = 'https://images.unsplash.com/photo-1529570058547-733204bf87e5?q=80&w=1362&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'; 
+//   }
+
+
 
   try {
     //篩選自己發過的行程
@@ -189,16 +206,11 @@ const fetchData = async () => {
     console.warn('抓貼文失效', err)
   }
 
-
-// 會員中心獲取使用者基本資料
-const userRes = await axios.get(`${import.meta.env.VITE_API_URL}/api/profile`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-  user.value.name = userRes.data.name || '';
-  user.value.avatar = userRes.data.avatar || ''; // 更新頭像 URL
 };
+
+const handleProfileUpdate = () => {
+  fetchData(); // 重新執行 fetchData 以更新 profileData
+}
 
 //初始化與返回頁面重新載入
 onMounted(fetchData)
