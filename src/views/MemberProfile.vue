@@ -182,10 +182,7 @@ import { Cropper } from "vue-advanced-cropper";
 import "vue-advanced-cropper/dist/style.css";
 import dayjs from "dayjs";
 
-const emit = defineEmits(["close-modal"]);
-function closeModal() {
-  emit("close-modal");
-}
+const emit = defineEmits(["close-modal", "profile-updated"]);
 
 //確認會員token
 const token = localStorage.getItem("token");
@@ -310,6 +307,10 @@ const saveProfile = async () => {
     );
     alert("儲存成功");
     profileData.value = res.data;
+    emit("profile-updated", {
+      name: res.data.name,
+      avatar: res.data.avatar || "",
+    });
   } catch (err) {
     alert("儲存失敗");
   }

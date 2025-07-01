@@ -56,10 +56,8 @@
       >
         <div class="relative">
           <MemberProfile
-            @close-modal="
-              showMemberProfile = false;
-              console.log('close-modal 被觸發了');
-            "
+            @close-modal="showMemberProfile = false"
+            @profile-updated="handleProfileUpdated"
           />
         </div>
       </div>
@@ -140,6 +138,10 @@ const fetchData = async () => {
   } catch (err) {
     console.warn("取得資料失敗", err);
   }
+};
+const handleProfileUpdated = (newData) => {
+  user.value.name = newData.name;
+  user.value.avatar = newData.avatar;
 };
 
 onMounted(fetchData);
