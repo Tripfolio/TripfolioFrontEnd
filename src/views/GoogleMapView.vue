@@ -5,6 +5,7 @@
     :selected-place="selectedPlace"
     :selected-date="selectedDate?.date"
     :default-image="defaultImage"
+    :role="props.role"
   />
 
   <div
@@ -273,6 +274,10 @@ const props = defineProps({
   currentDayIndex: Number,
   dailyPlanRef: Object,
   scheduleDetailRef: Object,
+  role: {
+    type: String,
+    default: "viewer",
+  },
 });
 
 const { trip, currentDayIndex } = toRefs(props);
@@ -330,7 +335,7 @@ function scrollRight() {
 }
 
 //import
-function callItinerary() {
+async function callItinerary() {
   const date = selectedDate.value?.date;
   const place = selectedPlace.value;
 
@@ -339,7 +344,21 @@ function callItinerary() {
     return;
   }
 
-  const success = itineraryRef.value?.addPlace(place, date);
+  let attempts = 0;
+  const maxAttempts = 20;
+  const interval = 50;
+
+  while (itineraryRef.value?.role === "viewer" && attempts < maxAttempts) {
+    await new Promise((resolve) => setTimeout(resolve, interval));
+    attempts++;
+  }
+
+  if (itineraryRef.value?.role === "viewer") {
+    alert("尚未獲得編輯權限，請稍後再試");
+    return;
+  }
+
+  const success = await itineraryRef.value?.addPlace(place, date);
 
   if (success) {
     emit("place-added", { place, date });
@@ -351,7 +370,6 @@ function callItinerary() {
     alert("成功加入行程！");
   }
 }
-
 
 const {
   categories,
@@ -474,7 +492,7 @@ function moveToCity(event) {
       (position) => {
         const center = new google.maps.LatLng(
           position.coords.latitude,
-          position.coords.longitude
+          position.coords.longitude,
         );
         map.value.setCenter(center);
         map.value.setZoom(15);
@@ -486,7 +504,7 @@ function moveToCity(event) {
       },
       () => {
         console.log("無法取得你的定位！");
-      }
+      },
     );
   }
 
@@ -630,7 +648,7 @@ function calculateRoute(origin, destination) {
       } else {
         alert("路線規劃失敗：" + status);
       }
-    }
+    },
   );
 }
 
@@ -690,7 +708,7 @@ function locateUser() {
     (error) => {
       isLocated.value = true;
       alert("無法取得你的定位資訊", error);
-    }
+    },
   );
 }
 
@@ -705,7 +723,7 @@ watch(
   () => route.query.city,
   (newCity) => {
     selectedCityName.value = newCity || "none";
-  }
+  },
 );
 
 watch(selectedPlace, (newVal) => {
@@ -747,7 +765,7 @@ watch(
         location: map.value.getCenter(),
       });
     }
-  }
+  },
 );
 
 onMounted(async () => {
@@ -858,7 +876,7 @@ onMounted(async () => {
               selectedPlace.value = null;
               calculateRoute(
                 selectedMarkers[0].getPosition(),
-                selectedMarkers[1].getPosition()
+                selectedMarkers[1].getPosition(),
               );
             }
           } else {
@@ -873,7 +891,7 @@ onMounted(async () => {
     mapClickListener = google.maps.event.addListener(
       map.value,
       "click",
-      handleClickOutside
+      handleClickOutside,
     );
   } catch (err) {
     alert("Google Maps 載入失敗");

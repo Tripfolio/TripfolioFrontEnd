@@ -3,7 +3,15 @@
 </template>
 
 <script setup>
-import { toRefs, ref, onMounted, onBeforeUnmount, watch, computed } from "vue";
+import {
+  toRefs,
+  ref,
+  onMounted,
+  onBeforeUnmount,
+  watch,
+  computed,
+  toRef,
+} from "vue";
 import axios from "axios";
 
 const emit = defineEmits(["refresh"]);
@@ -30,10 +38,11 @@ const trafficMap = ref({});
 
 // 🔒 權限控制：定義是否可編輯
 const canEdit = computed(
-  () => props.role === "owner" || props.role === "editor",
+  () => props.role.value === "owner" || props.role.value === "editor",
 );
 
 onMounted(() => {
+  console.log("✅ Itinerary.vue mounted, role =", props.role.value);
   loadItinerary();
   window.addEventListener("click", onClickOutside);
 });
@@ -151,8 +160,20 @@ async function updateOrder() {
   }
 }
 
+// 🔁 輪詢直到 canEdit 為 true 為止
+async function waitUntilCanEdit(maxAttempts = 20, interval = 50) {
+  let attempts = 0;
+  while (!canEdit.value && attempts < maxAttempts) {
+    await new Promise((resolve) => setTimeout(resolve, interval));
+    attempts++;
+  }
+}
+
 //加入景點
 async function addPlace(place, date) {
+  await waitUntilCanEdit();
+  console.log("🔍 props.role:", props.role.value);
+  console.log("🔍 canEdit:", canEdit.value);
   if (!canEdit.value) {
     alert("您沒有權限新增景點");
     return false;
@@ -200,6 +221,7 @@ async function addPlace(place, date) {
 
 //移除景點
 async function removePlace(p) {
+  await waitUntilCanEdit();
   if (!canEdit.value) {
     alert("您沒有權限刪除景點");
     return false;

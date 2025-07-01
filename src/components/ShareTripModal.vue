@@ -133,7 +133,7 @@ const generateShareLink = async () => {
   try {
     isLoading.value = true;
     const res = await axios.post(
-      `${import.meta.env.VITE_API_URL}/api/tripShares/${props.tripId}`,
+      `${import.meta.env.VITE_API_URL}/api/tripShares/create/${props.tripId}`,
       {
         permission: selectedPermission.value,
       },
@@ -203,7 +203,7 @@ const removeUser = async (targetUserId) => {
   const token = localStorage.getItem("token");
   try {
     await axios.delete(
-      `${import.meta.env.VITE_API_URL}/api/tripShares/${targetUserId}/${props.tripId}`,
+      `${import.meta.env.VITE_API_URL}/api/tripShares/remove/${targetUserId}/${props.tripId}`,
       {
         headers: { Authorization: `Bearer ${token}` },
         withCredentials: true, // 放在 config 裡

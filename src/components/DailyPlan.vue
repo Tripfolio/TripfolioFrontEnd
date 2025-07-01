@@ -3,9 +3,11 @@
     <h2 class="text-xl font-bold mb-4">{{ currentDay.date }}</h2>
 
     <Itinerary
+      v-if="role !== 'viewer'"
       ref="itineraryRef"
       :trip-id="selectedTrip.id"
       :selected-date="currentDay.date"
+      :role="props.role"
       class="hidden"
       @refresh="refresh"
     />
@@ -115,7 +117,7 @@
             :traffic-data="
               trafficMap[p.id + '-' + itinerarySpots[index + 1].id] || null
             "
-            :role="role"
+            :role="props.role"
             @traffic-updated="refresh"
           />
         </div>
@@ -133,7 +135,7 @@
 </template>
 
 <script setup>
-import { ref, computed, toRefs, onMounted, watch } from "vue";
+import { ref, computed, toRefs, onMounted, watch, nextTick, toRef } from "vue";
 import TrafficBetween from "./TrafficBetween.vue";
 import draggable from "vuedraggable";
 import Itinerary from "./Itinerary.vue";
@@ -146,14 +148,22 @@ const itineraryRef = ref(null);
 const props = defineProps({
   selectedTrip: Object,
   dayIndex: Number,
-  role: String, // 🔒 權限控制：接收 role
+  role: {
+    type: String,
+    default: "viewer", // 🔒 權限控制：接收 role
+  },
 });
+const role = toRef(props, "role");
 const { selectedTrip, dayIndex } = toRefs(props);
 
 // 🔒 權限控制：計算是否可編輯
 const canEdit = computed(
-  () => props.role === "owner" || props.role === "editor",
+  () => props.role.value === "editor" || props.role.value === "owner",
 );
+
+watch(role, (newRole) => {
+  console.log("🎯 DailyPlan.vue role 變化為:", newRole);
+});
 
 const openMenuIndex = ref(null);
 
@@ -173,6 +183,12 @@ const itinerarySpots = ref([]);
 
 //更新景點資料
 async function refresh() {
+  await nextTick(); // 等待 DOM & props 完成
+  const tripId = selectedTrip.value?.id;
+  const date = currentDay.value?.date;
+
+  console.log("refresh 中 tripId:", tripId);
+  console.log("refresh 中 selectedDate:", date);
   if (!selectedTrip.value?.id || !currentDay.value?.date) {
     return;
   }

@@ -40,7 +40,7 @@ const props = defineProps({
 
 // 🔒 權限控制：判斷是否可編輯
 const canEdit = computed(
-  () => props.role === "owner" || props.role === "editor",
+  () => props.role.value === "owner" || props.role.value === "editor",
 );
 
 const selectedMode = ref("NONE");

@@ -32,7 +32,7 @@
       </div>
       <!-- 每日計畫 -->
       <DailyPlan
-        v-if="trip && currentDayIndex !== null"
+        v-if="trip && currentDayIndex !== null && role"
         :selected-trip="trip"
         :day-index="currentDayIndex"
         :itinerary-places="itineraryRef?.itineraryPlaces || []"
@@ -45,7 +45,7 @@
     <!-- 右側：景點清單 -->
     <div class="lg:col-span-1">
       <Itinerary
-        v-if="tripLoaded && trip?.id && currentDayIndex !== null"
+        v-if="tripLoaded && trip?.id && currentDayIndex !== null && role"
         :trip-id="trip.id"
         :selected-date="trip.days[currentDayIndex].date"
         :default-image="'/images/default.jpg'"
@@ -72,14 +72,15 @@ const props = defineProps({
 
 const emit = defineEmits(["back"]);
 const router = useRouter();
+const route = useRoute();
 const trip = ref(null);
 const tripLoaded = ref(false);
 const currentDayIndex = ref(0);
 const coverTimestamp = ref(Date.now());
 const itineraryRef = ref(null);
 const dailyPlanRef = ref(null);
-const route = useRoute();
 const role = ref("viewer");
+const resolvedTripId = props.tripId ?? route.params.id;
 
 const token = localStorage.getItem("token");
 
@@ -105,14 +106,29 @@ const fetchTrip = async () => {
   }
 };
 
-onMounted(() => {
-  fetchTrip();
-});
+const fetchRole = async () => {
+  try {
+    const res = await axios.get(
+      `${import.meta.env.VITE_API_URL}/api/tripShares/getPermission/${resolvedTripId}`,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+        withCredentials: true,
+      },
+    );
+    role.value = res.data.role;
+    console.log("✅ 取得角色:", role.value);
+  } catch {
+    role.value = "viewer";
+  }
+};
 
+// ✅ 當 tripId 變更時重新取得資料
 watch(
   () => props.tripId,
-  () => {
-    fetchTrip();
+  async () => {
+    await fetchTrip();
+    await fetchRole();
+    dailyPlanRef.value?.refresh();
   },
 );
 
@@ -201,19 +217,11 @@ function refreshDailyPlan() {
   dailyPlanRef.value?.refresh?.();
 }
 
+// ✅ 初始化
 onMounted(async () => {
-  try {
-    const res = await axios.get(
-      `${import.meta.env.VITE_API_URL}/api/tripShares/${route.params.id}/permission`,
-      {
-        withCredentials: true,
-      },
-      { headers: { Authorization: `Bearer ${token}` } },
-    );
-    role.value = res.data.role;
-  } catch {
-    role.value = "viewer";
-  }
+  await fetchTrip();
+  await fetchRole();
+  dailyPlanRef.value?.refresh();
 });
 
 // 給父層或地圖強制刷新 DailyPlan 用
