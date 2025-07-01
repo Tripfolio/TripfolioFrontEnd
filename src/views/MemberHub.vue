@@ -145,8 +145,10 @@ const fetchData = async () => {
 onMounted(fetchData);
 watch(() => route.fullPath, fetchData);
 
-const goToTravel = (id) =>
-  router.push({ path: `/schedule/${id}`, query: { from: "tracker" } });
+const goToTravel = (id) => {
+  console.log(id);
+  router.push({ path: `/schedule/${id}` });
+};
 
 const goToPost = (id) =>
   router.push({ path: "/community", query: { postId: id } });
