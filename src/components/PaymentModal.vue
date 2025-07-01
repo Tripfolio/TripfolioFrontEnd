@@ -1,62 +1,83 @@
 <template>
-  <div class="min-h-screen flex items-center justify-center bg-gray-100 p-4">
-    <div class="bg-white p-8 rounded-xl shadow-lg text-center max-w-md w-full">
-      <h1 class="text-3xl font-bold mb-6 text-gray-800">升級為付費會員</h1>
-      <p class="mb-6 text-lg text-gray-600">
-        僅需支付 <span class="font-semibold text-xl text-green-600">NT${{ paymentAmount }}</span> 元，即可建立更多行程！
-      </p>
+  <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
+    <div class="backdrop-blur-lg bg-[#878787]/30 w-full max-w-md rounded-2xl p-6 shadow-xl relative">
+      <button
+        @click="$emit('close')"
+        class="absolute top-3 right-3 text-white hover:text-black text-2xl"
+      >×</button>
 
-      <div v-if="isPremium" class="text-blue-600 font-medium text-lg mb-8 p-4 bg-blue-50 rounded-lg border border-blue-200">
-        您已經是付費會員！感謝您的支持。
+      <!-- 付款結果訊息 -->
+      <div v-if="result === 'success'" class="text-center  text-white p-6 rounded">
+        <h2 class="text-2xl font-bold mb-2">付款成功</h2>
+        <p class="text-white mb-4">感謝您的購買！您的付款已成功處理。</p>
+        <button @click="$emit('close')" class="bg-green-600 hover:bg-green-500 text-white px-6 py-2 rounded shadow">
+          關閉
+        </button>
       </div>
 
+      <div v-else-if="result === 'fail'" class="text-center  text-white p-6 rounded">
+        <h2 class="text-2xl font-bold mb-2">付款失敗</h2>
+        <p class="text-white mb-4">抱歉，您的付款未成功。請稍後再試或聯絡客服。</p>
+        <button @click="$emit('close')" class="bg-red-600 hover:bg-red-500 text-white px-6 py-2 rounded shadow">
+          關閉
+        </button>
+      </div>
+
+      <!-- 主付款表單 -->
       <div v-else>
-        <div class="mb-6">
-          <div v-if="linePayLoading" class="text-green-500 font-medium mb-4">
-            LINE Pay 付款連結生成中，請稍候...
-          </div>
-          <button
-            v-if="!linePayLoading"
-            @click="handleLinePay"
-            :disabled="braintreeLoading"
-            class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg text-lg transition duration-300 transform hover:scale-105 shadow-md disabled:opacity-60 disabled:cursor-not-allowed"
-          >
-            前往 LINE Pay 付款
-          </button>
+        <h1 class="text-2xl font-bold mb-4 text-center text-white">升級為付費會員</h1>
+        <p class="mb-6 text-center text-white">
+          僅需支付 <span class="font-semibold text-xl">NT$ {{ paymentAmount }}</span> 元，即可建立更多行程！
+        </p>
+
+        <div v-if="isPremium" class="text-center bg-green-50 border border-green-300 text-green-700 p-4 rounded mb-4">
+          您已經是付費會員！感謝您的支持。
         </div>
 
-        <div class="border-t border-gray-200 pt-6 mt-6">
-          <button
-            @click="toggleCreditCardPayment"
-            v-if="!showCreditCardDetails"
-            class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg text-lg transition duration-300 transform hover:scale-105 shadow-md disabled:opacity-60 disabled:cursor-not-allowed"
-          >
-            使用信用卡付款
-          </button>
+        <div v-else>
+          <div class="mb-4 text-center">
+            <div v-if="linePayLoading" class="text-white font-medium">LINE Pay 付款連結生成中，請稍候...</div>
+            <button
+              v-if="!linePayLoading"
+              @click="handleLinePay"
+              class="bg-green-500 hover:bg-green-400 text-white px-6 py-2 rounded-lg text-lg shadow w-3/4 max-w-xs"
+            >
+              前往 LINE Pay 付款
+            </button>
+          </div>
 
-          <div v-if="showCreditCardDetails">
-            <p class="text-lg font-semibold text-gray-700 mb-4">信用卡付款</p>
-            <p v-if="dropinisReady" class="text-gray-600 mb-4 text-sm">
-              （測試用卡號： 4111 1111 1111 1111 ）
-            </p>
-            <div id="dropin-container" class="mb-6 border border-gray-300 rounded-lg p-2 bg-white min-h-[100px] flex items-center justify-center bg-gray-50 border-gray-200 p-4"></div>
-            <div class="flex flex-col space-y-4">
-              <button
-                @click="initDropin"
-                :disabled="braintreeLoading || linePayLoading"
-                v-if="!dropinisReady"
-                class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg text-lg transition duration-300 transform hover:scale-105 shadow-md disabled:opacity-60 disabled:cursor-not-allowed"
-              >
-                {{ braintreeLoading ? "載入中..." : "初始化信用卡付款" }}
-              </button>
-              <button
-                v-if="dropinisReady"
-                @click="submitBraintreePayment"
-                :disabled="braintreeLoading || linePayLoading"
-                class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg text-lg transition duration-300 transform hover:scale-105 shadow-md disabled:opacity-60 disabled:cursor-not-allowed"
-              >
-                確認信用卡付款
-              </button>
+          <div class="border-t border-gray-300 pt-4 mt-4 text-center">
+            <button
+              @click="toggleCreditCardPayment"
+              v-if="!showCreditCardDetails"
+              class="bg-gray-600 hover:bg-gray-700 text-white px-6 py-2 rounded-lg text-lg shadow w-3/4 max-w-xs"
+            >
+              使用信用卡付款
+            </button>
+
+            <div v-if="showCreditCardDetails" class="mt-4">
+              <p class="text-lg text-white  font-semibold mb-2">信用卡付款</p>
+              <p v-if="dropinisReady" class="text-white mb-2 text-sm">
+                （測試卡號：4111 1111 1111 1111）
+              </p>
+              <div id="dropin-container" class="border rounded p-2 bg-gray-50 mb-4"></div>
+              <div class="space-y-2">
+                <button
+                  v-if="!dropinisReady"
+                  @click="initDropin"
+                  class="bg-gray-600 hover:bg-gray-700 text-white px-6 py-2 rounded-lg text-lg shadow w-3/4 max-w-xs"
+                >
+                  {{ braintreeLoading ? '載入中...' : '初始化信用卡付款' }}
+                </button>
+                <button
+                  v-if="dropinisReady"
+                  @click="submitBraintreePayment"
+                  :disabled="braintreeLoading"
+                  class="bg-green-500 hover:bg-green-400 text-white px-6 py-2 rounded-lg text-lg shadow w-3/4 max-w-xs"
+                >
+                  確認信用卡付款
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -65,12 +86,15 @@
   </div>
 </template>
 
+
 <script setup>
-import { ref, onMounted } from 'vue';
-import { useRouter } from 'vue-router';
+import { ref } from 'vue';
 import axios from 'axios';
 import dropin from 'braintree-web-drop-in';
-const router = useRouter();
+
+const props = defineProps({
+  result: String
+});
 
 const linePayLoading = ref(false);
 const isPremium = ref(false);
@@ -100,6 +124,8 @@ const checkPremium = async () => {
     isPremium.value = false;
   }
 };
+
+checkPremium();
 
 const handleLinePay = async () => {
   const token = getToken();
@@ -135,9 +161,9 @@ const initDropin = async () => {
   braintreeLoading.value = true;
   const token = getToken();
   if (!token) {
-      alert('請先登入才能進行付款。');
-      braintreeLoading.value = false;
-      return;
+    alert('請先登入才能進行付款。');
+    braintreeLoading.value = false;
+    return;
   }
   try {
     const res = await axios.get(
@@ -150,7 +176,7 @@ const initDropin = async () => {
     );
 
     const clientToken = res.data.token;
-    paymentAmount.value = res.data.amount || paymentAmount.value; 
+    paymentAmount.value = res.data.amount || paymentAmount.value;
 
     dropin.create(
       {
@@ -178,8 +204,8 @@ const initDropin = async () => {
 const submitBraintreePayment = async () => {
   const token = getToken();
   if (!token) {
-      alert('請先登入才能進行付款。');
-      return;
+    alert('請先登入才能進行付款。');
+    return;
   }
   if (!dropinInstance.value) {
     alert('信用卡付款介面未準備好。');
@@ -209,7 +235,6 @@ const submitBraintreePayment = async () => {
       const txnId = result.data.transaction.id;
       alert(`付款成功！金額：NT$${amountPaid}\n交易編號：${txnId}`);
       isPremium.value = true;
-      router.push("/schedule");
     } else {
       alert("付款失敗：" + (result.data.message || '未知錯誤'));
     }
@@ -227,8 +252,4 @@ const toggleCreditCardPayment = () => {
     initDropin();
   }
 };
-
-onMounted(() => {
-  checkPremium();
-});
 </script>
