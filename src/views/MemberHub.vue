@@ -39,6 +39,9 @@
           <template v-if="activeTab === 'travels'">
             <CardGrid :items="travels" @click-card="goToTravel" />
           </template>
+          <template v-if="activeTab === 'posts'">
+            <CardGrid :items="posts" @click-card="goToPost" />
+          </template>
           <template v-else-if="activeTab === 'collected'">
             <CardGrid :items="collectedPosts" @click-card="goToPost" />
           </template>
@@ -72,7 +75,7 @@ import { ref, onMounted, watch } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { jwtDecode } from "jwt-decode";
 import axios from "axios";
-import CardGrid from "@/components/CardGrid.vue"; // 你需自行建立
+import CardGrid from "@/components/CardGrid.vue";
 import MemberProfile from "../views/MemberProfile.vue";
 
 const router = useRouter();
@@ -86,6 +89,7 @@ const showMemberProfile = ref(false);
 
 const tabs = [
   { key: "travels", label: "我建立的行程" },
+  { key: 'posts', label: '我建立的貼文' },
   { key: "collected", label: "我收藏的貼文" },
   { key: "notifications", label: "通知設定" },
 ];
@@ -99,22 +103,20 @@ const fetchData = async () => {
   const memberId = decoded.id;
 
   try {
-    const [userRes, travelRes, favRes] = await Promise.all([
+    const [userRes, travelRes, postRes, collectRes] = await Promise.all([
       axios.get(`${import.meta.env.VITE_API_URL}/api/profile`, {
         headers: { Authorization: `Bearer ${token}` },
       }),
       axios.get(`${import.meta.env.VITE_API_URL}/api/travelSchedule/user`, {
         headers: { Authorization: `Bearer ${token}` },
       }),
-      //   axios.get(
-      //     `${import.meta.env.VITE_API_URL}/api/favorites/user/${memberId}`,
-      //     {
-      //       headers: { Authorization: `Bearer ${token}` },
-      //     },
-      //   ),
+      axios.get(`${import.meta.env.VITE_API_URL}/api/allposts?page=1&limit=100`,{
+            headers: {Authorization: `Bearer ${token}` },
+      }),
+      axios.get(`${import.meta.env.VITE_API_URL}/api/favorites/user/${memberId}`, {
+      headers: { Authorization: `Bearer ${token}` },
+      }),
     ]);
-    // console.log(favRes);
-
     user.value = {
       name: userRes.data.name || "訪客",
       avatar: userRes.data.avatar || "http://picsum.photos/300/200",
@@ -126,17 +128,19 @@ const fetchData = async () => {
       image: item.coverURL,
     }));
 
-    // posts.value = travelRes.data.posts.map((item) => ({
-    //   id: item.id,
-    //   title: item.title,
-    //   image: item.imageUrl,
-    // }));
+    posts.value = postRes.data.posts
+      .filter(item => item.id === memberId)
+      .map(item => ({
+        id: item.postId,
+        title: item.content || '未命名貼文',
+        coverImage: item.imageUrl,
+    }));
 
-    // collectedPosts.value = collectRes.data.map((item) => ({
-    //   id: item.postId,
-    //   title: item.postTitle,
-    //   image: item.postImageUrl,
-    // }));
+    collectedPosts.value = collectRes.data.map(item => ({
+      id: item.postId,
+      title: item.postTitle || '未命名貼文',
+      postImageUrl: item.postImageUrl,
+    }));
   } catch (err) {
     console.warn("取得資料失敗", err);
   }
@@ -145,8 +149,9 @@ const fetchData = async () => {
 onMounted(fetchData);
 watch(() => route.fullPath, fetchData);
 
-const goToTravel = (id) =>
-  router.push({ path: `/schedule/${id}`, query: { from: "tracker" } });
+const goToTravel = () => {
+  router.push({ path: "/schedule" });
+};
 
 const goToPost = (id) =>
   router.push({ path: "/community", query: { postId: id } });
