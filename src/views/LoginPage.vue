@@ -1,72 +1,78 @@
 <template>
-  <main class="solo-card-style mt-25 w-1/2 mx-auto">
-    <h1 class="text-2xl font-bold mb-6 text-center">登入頁面</h1>
-
-    <div
-      v-if="showError"
-      class="w-[300px] flex items-center gap-2 bg-red-100 text-red-800 border border-red-200 px-4 py-3 rounded-md mb-4"
+  <div class="homepage-bg min-h-screen relative bg-cover bg-center">
+    <main
+      class="w-1/2 mx-auto py-5 absolute bottom-0 left-1/2 -translate-1/2 rounded-2xl bg-black/35"
     >
-      <font-awesome-icon
-        icon="exclamation-triangle"
-        class="mr-2 mt-0.5 text-red-600"
-      />
-      <span class="text-sm">
-        {{ errorMessage }}
-      </span>
-    </div>
+      <h4 class="text-lg font-bold mb-6 text-center text-white">登入頁面</h4>
 
-    <form
-      v-if="!isLoggedIn"
-      @submit.prevent="login"
-      class="space-y-6 flex flex-col justify-center items-center"
-    >
-      <div>
-        <input
-          v-model="email"
-          type="email"
-          id="email"
-          placeholder="請輸入電子郵件"
-          required
-          class="mb-5 block w-[300px] rounded-md border border-gray-300 shadow-sm p-2"
-        />
-      </div>
-
-      <div>
-        <input
-          v-model="password"
-          type="password"
-          id="password"
-          placeholder="請輸入密碼"
-          required
-          class="mb-5 block w-[300px] rounded-md border border-gray-300 shadow-sm p-2"
-        />
-      </div>
-
-      <div class="flex justify-start gap-[20px] mt-[10px] w-[300px]">
-        <button
-          type="submit"
-          class="w-[100px] bg-blue-200 text-black py-2 rounded transition"
-        >
-          登入
-        </button>
-      </div>
-      <RouterLink to="/signup">
-        <button class="text-black py-2 rounded transition hover:text-[#0d4a87]">
-          我要註冊
-        </button>
-      </RouterLink>
-    </form>
-
-    <div v-if="isLoggedIn" class="mt-6">
-      <p class="text-blue-600 font-semibold mb-4">您已登入</p>
-      <button
-        @click="logout"
-        class="bg-blue-200 text-black py-2 px-4 rounded transition"
+      <div
+        v-if="showError"
+        class="w-[300px] flex items-center gap-2 bg-red-100 text-red-800 border border-red-200 px-4 py-3 rounded-md mb-4"
       >
-        登出
-      </button>
-    </div>
-  </main>
+        <font-awesome-icon
+          icon="exclamation-triangle"
+          class="mr-2 mt-0.5 text-red-600"
+        />
+        <span class="text-sm">
+          {{ errorMessage }}
+        </span>
+      </div>
+
+      <form
+        v-if="!isLoggedIn"
+        @submit.prevent="login"
+        class="space-y-6 flex flex-col justify-center items-center"
+      >
+        <div>
+          <input
+            v-model="email"
+            type="email"
+            id="email"
+            placeholder="請輸入電子郵件"
+            required
+            class="mb-5 block w-[300px] rounded-md border border-gray-300 shadow-sm p-2"
+          />
+        </div>
+
+        <div>
+          <input
+            v-model="password"
+            type="password"
+            id="password"
+            placeholder="請輸入密碼"
+            required
+            class="mb-5 block w-[300px] rounded-md border border-gray-300 shadow-sm p-2"
+          />
+        </div>
+
+        <div class="flex justify-start gap-[20px] mt-[10px] w-[300px]">
+          <button
+            type="submit"
+            class="w-[100px] bg-blue-200 text-black py-2 rounded transition mx-auto"
+          >
+            登入
+          </button>
+        </div>
+        <RouterLink to="/signup">
+          <button
+            class="text-black py-2 rounded transition hover:text-[#0d4a87]"
+          >
+            我要註冊
+          </button>
+        </RouterLink>
+      </form>
+
+      <div v-if="isLoggedIn" class="mt-6">
+        <p class="text-blue-600 font-semibold mb-4">您已登入</p>
+        <button
+          @click="logout"
+          class="bg-blue-200 text-black py-2 px-4 rounded transition"
+        >
+          登出
+        </button>
+      </div>
+    </main>
+  </div>
 </template>
 
 <script setup>

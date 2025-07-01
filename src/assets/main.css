@@ -19,34 +19,29 @@
 }
 
 .navbar-style {
-  background-color: rgba(50, 50, 50, 0.6); /* 半透明深色背景 */
+  background-color: rgba(50, 50, 50, 0.6);
   color: #fff;
 
-  /* 毛玻璃背景 */
-  backdrop-filter: blur(8px); /* 可略加強 */
-  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
 
-  /* 玻璃邊框 */
-  border: 1px solid rgba(255, 255, 255, 0.2); /* 半透明白邊 */
+  border: 1px solid rgba(255, 255, 255, 0.2);
   box-shadow:
     0 4px 6px -1px rgba(0, 0, 0, 0.1),
     0 2px 4px -1px rgba(0, 0, 0, 0.06),
-    0 0 0 1px rgba(255, 255, 255, 0.1); /* 微光暈 */
+    0 0 0 1px rgba(255, 255, 255, 0.1);
 }
 
 .card-container-style {
-  background-color: rgba(150, 150, 150, 0.5); /* 半透明深色背景 */
+  background-color: rgba(150, 150, 150, 0.5);
   color: #fff;
 
-  /* 毛玻璃背景 */
   backdrop-filter: blur(2px);
 
-  /* 玻璃邊框 */
-  border: 1px solid rgba(255, 255, 255, 0.2); /* 半透明白邊 */
+  border: 1px solid rgba(255, 255, 255, 0.2);
   box-shadow:
     0 4px 6px -1px rgba(0, 0, 0, 0.1),
     0 2px 4px -1px rgba(0, 0, 0, 0.06),
-    0 0 0 1px rgba(255, 255, 255, 0.1); /* 微光暈 */
+    0 0 0 1px rgba(255, 255, 255, 0.1);
 }
 
 .solo-card-style {
@@ -66,19 +61,15 @@
 }
 
 .postform-style {
-  background-color: rgba(50, 50, 50, 0.6); /* 半透明深色背景 */
+  background-color: rgba(50, 50, 50, 0.6);
   color: #fff;
+  backdrop-filter: blur(8px);
 
-  /* 毛玻璃背景 */
-  backdrop-filter: blur(8px); /* 可略加強 */
-  -webkit-backdrop-filter: blur(8px);
-
-  /* 玻璃邊框 */
-  border: 1px solid rgba(255, 255, 255, 0.2); /* 半透明白邊 */
+  border: 1px solid rgba(255, 255, 255, 0.2);
   box-shadow:
     0 4px 6px -1px rgba(0, 0, 0, 0.1),
     0 2px 4px -1px rgba(0, 0, 0, 0.06),
-    0 0 0 1px rgba(255, 255, 255, 0.1); /* 微光暈 */
+    0 0 0 1px rgba(255, 255, 255, 0.1);
 }
 .animated-gradient-modern {
   background: linear-gradient(
