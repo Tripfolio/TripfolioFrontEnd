@@ -1,6 +1,6 @@
 <template>
   <div
-    class="bg-white rounded-2xl shadow-2xl w-full sm:max-w-md md:max-w-lg lg:max-w-xl mx-auto py-6 relative flex flex-col h-auto max-h-[80vh]"
+    class="bg-white rounded-2xl shadow-2xl w-full max-w-screen-lg mx-auto py-6 relative flex flex-col h-auto max-h-[80vh]"
     style="background-color: rgba(128, 128, 128, 0.5); border-radius: 40px"
   >
     <!-- 關閉按鈕 -->
