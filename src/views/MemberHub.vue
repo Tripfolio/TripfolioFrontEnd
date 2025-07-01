@@ -139,7 +139,7 @@ const fetchData = async () => {
     collectedPosts.value = collectRes.data.map(item => ({
       id: item.postId,
       title: item.postTitle || '未命名貼文',
-      postImageUrl: item.postImageUrl,
+      coverImage: item.postImageUrl,
     }));
   } catch (err) {
     console.warn("取得資料失敗", err);
