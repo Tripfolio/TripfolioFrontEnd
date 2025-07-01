@@ -76,10 +76,7 @@ import DailyPlan from "../components/DailyPlan.vue";
 import Itinerary from "../components/Itinerary.vue";
 import { generateDaysArray } from "../stores/tripStore";
 
-const props = defineProps({
-  tripId: [String, Number],
-});
-
+const route = useRoute();
 const emit = defineEmits(["back"]);
 const router = useRouter();
 const trip = ref(null);
@@ -88,23 +85,19 @@ const currentDayIndex = ref(0);
 const coverTimestamp = ref(Date.now());
 const itineraryRef = ref(null);
 const dailyPlanRef = ref(null);
-
 const token = localStorage.getItem("token");
-
-//會員動態頁面用
-const route = useRoute();
 const isFromTracker = computed(() => route.query.from === "tracker");
 
-//返回行程列表
 const goBack = () => {
   emit("back");
 };
 
-//取得行程資料
 const fetchTrip = async () => {
   try {
+    const id = route.params.id;
+    
     const res = await axios.get(
-      `${import.meta.env.VITE_API_URL}/api/travelSchedule/${props.tripId}`,
+      `${import.meta.env.VITE_API_URL}/api/travelSchedule/${id}`,
       { headers: { Authorization: `Bearer ${token}` } },
     );
     const tripData = res.data;
@@ -122,20 +115,20 @@ onMounted(() => {
 });
 
 watch(
-  () => props.tripId,
+  () => route.params.id,
   () => {
     fetchTrip();
   },
 );
 
-//更新送到後端
 const updateCover = async (blob) => {
   const formData = new FormData();
   formData.append("cover", blob);
 
   try {
+    const id = route.params.id;
     const res = await axios.put(
-      `${import.meta.env.VITE_API_URL}/api/travelSchedule/${props.tripId}`,
+      `${import.meta.env.VITE_API_URL}/api/travelSchedule/${id}`,
       formData,
       { headers: { Authorization: `Bearer ${token}` } },
     );
@@ -151,8 +144,9 @@ const updateCover = async (blob) => {
 
 const updateTitle = async (newTitle) => {
   try {
+    const id = route.params.id;
     await axios.put(
-      `${import.meta.env.VITE_API_URL}/api/travelSchedule/${props.tripId}`,
+      `${import.meta.env.VITE_API_URL}/api/travelSchedule/${id}`,
       { title: newTitle },
       { headers: { Authorization: `Bearer ${token}` } },
     );
@@ -164,8 +158,9 @@ const updateTitle = async (newTitle) => {
 
 const updateDates = async ({ startDate, endDate }) => {
   try {
+    const id = route.params.id;
     await axios.patch(
-      `${import.meta.env.VITE_API_URL}/api/travelSchedule/${props.tripId}`,
+      `${import.meta.env.VITE_API_URL}/api/travelSchedule/${id}`,
       { startDate, endDate },
       { headers: { Authorization: `Bearer ${token}` } },
     );
@@ -187,8 +182,9 @@ const updateDates = async ({ startDate, endDate }) => {
 
 const updateNotes = async (newNotes) => {
   try {
+    const id = route.params.id;
     await axios.put(
-      `${import.meta.env.VITE_API_URL}/api/travelSchedule/${props.tripId}`,
+      `${import.meta.env.VITE_API_URL}/api/travelSchedule/${id}`,
       { description: newNotes },
       { headers: { Authorization: `Bearer ${token}` } },
     );
