@@ -3,7 +3,7 @@
     <!-- 上方 Navbar（非地圖頁） -->
     <NavBar
       v-if="!isMapPage"
-      class="absolute top-5 left-1/2 w-[65%] -translate-x-1/2 z-50"
+      class="fixed top-5 left-1/2 w-[65%] -translate-x-1/2 z-50"
     />
 
     <!-- 下方 Navbar（地圖頁） -->

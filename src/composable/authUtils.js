@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
 
-const TOKEN_NAME = 'user_token';
+const TOKEN_NAME = 'token';
 
 export function initializeAuth(router) {
   const urlParams = new URLSearchParams(window.location.search);

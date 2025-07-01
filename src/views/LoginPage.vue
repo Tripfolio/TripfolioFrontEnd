@@ -1,78 +1,71 @@
 <template>
-  <main class="px-4 py-8 md:px-10 md:py-12 lg:px-24 lg:py-16">
-    <h1 class="text-3xl font-extrabold mb-8 text-gray-900">登入頁面</h1>
+  <main class="solo-card-style mt-25 w-[300px] mx-auto">
+    <h1 class="text-2xl font-bold mb-6 text-center">登入頁面</h1>
 
+    <!-- 錯誤訊息 -->
     <div
       v-if="showError"
-      class="w-[300px] flex items-center gap-2 bg-red-100 text-red-700 border border-red-300 px-5 py-3 rounded-lg shadow-sm mb-6 max-w-sm"
+      class="flex items-center gap-2 bg-red-100 text-red-700 border border-red-300 px-4 py-3 rounded-md shadow-sm mb-4"
     >
-      <font-awesome-icon icon="exclamation-triangle" class="mr-2 mt-0.5 text-red-500 text-lg" />
+      <font-awesome-icon icon="exclamation-triangle" class="mr-2 text-red-500 text-lg" />
       <span class="text-sm font-medium">
         {{ errorMessage }}
       </span>
     </div>
 
-    <div class="space-y-6 max-w-sm">
-      <form v-if="!isLoggedIn" @submit.prevent="login" class="space-y-6">
-        <div>
-          <input
-            v-model="email"
-            type="email"
-            id="email"
-            placeholder="請輸入電子郵件"
-            required
-            class="block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-          />
-        </div>
+    <!-- 登入表單 -->
+    <form
+      v-if="!isLoggedIn"
+      @submit.prevent="login"
+      class="flex flex-col gap-4"
+    >
+      <input
+        v-model="email"
+        type="email"
+        id="email"
+        placeholder="請輸入電子郵件"
+        required
+        class="p-[10px] text-[14px] border border-[#aaa] rounded"
+      />
 
-        <div>
-          <input
-            v-model="password"
-            type="password"
-            id="password"
-            placeholder="請輸入密碼"
-            required
-            class="block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-          />
-        </div>
+      <input
+        v-model="password"
+        type="password"
+        id="password"
+        placeholder="請輸入密碼"
+        required
+        class="p-[10px] text-[14px] border border-[#aaa] rounded"
+      />
 
-        <button
-          type="submit"
-          class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#66B3FF] hover:bg-[#2894FF] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150 ease-in-out"
-        >
-          登入
-        </button>
-      </form>
-
-      <div class="flex flex-col space-y-4">
-        <button
-          v-if="!isLoggedIn"
-          type="button"
-          @click="handleGoogleLogin"
-          class="w-full flex items-center justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out"
-        >
-          <img src="https://www.google.com/favicon.ico" alt="Google" class="w-5 h-5 mr-3" />
-          <span>使用 Google 登入</span>
-        </button>
-
-        <button
-          v-else
-          type="button"
-          @click="logout"
-          class="w-full py-2 px-4 text-sm font-medium text-white bg-red-500 hover:bg-red-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition duration-150 ease-in-out"
-        >
-          登出
-        </button>
-      </div>
-    </div>
-
-    <RouterLink to="/signup" class="mt-6 block max-w-sm">
-      <button class="w-full py-2 px-4 text-sm font-medium text-blue-600 hover:text-blue-800 transition duration-150 ease-in-out">
-        我要註冊
+      <button
+        type="submit"
+        class="p-[10px] bg-[#2894FF] text-white border-0 rounded cursor-pointer hover:bg-[#46A3FF]"
+      >
+        登入
       </button>
-    </RouterLink>
 
-    <div v-if="isLoggedIn" class="mt-8 p-6 bg-blue-50 rounded-lg shadow-md max-w-sm">
+      <!-- Google 登入按鈕 -->
+      <button
+        type="button"
+        @click="handleGoogleLogin"
+        class="p-[10px] border border-[#aaa] rounded bg-white text-[14px] flex items-center justify-center gap-2 hover:bg-gray-50"
+      >
+        <img src="https://www.google.com/favicon.ico" alt="Google" class="w-4 h-4" />
+        <span>使用 Google 登入</span>
+      </button>
+
+      <!-- 前往註冊 -->
+      <RouterLink to="/signup">
+        <button
+          class="w-full text-black py-2 rounded transition hover:text-[#0d4a87]"
+        >
+          我要註冊
+        </button>
+      </RouterLink>
+    </form>
+
+    <!-- 登入成功畫面 -->
+    <div v-else class="mt-6 bg-blue-50 text-center rounded-md shadow-md p-4">
       <p class="text-blue-700 font-semibold mb-4">您已成功登入！</p>
       <button
         @click="logout"
@@ -87,13 +80,11 @@
 <script setup>
 import { initializeAuth } from '../composable/authUtils';
 import { ref, onMounted } from 'vue';
-import { useRouter, RouterLink } from 'vue-router';
+import { useRouter } from 'vue-router';
 import axios from 'axios';
-import { jwtDecode } from 'jwt-decode';
-import { logoutUser } from '../composable/authUtils'; 
 
 const router = useRouter();
-const TOKEN_NAME = 'user_token';
+const TOKEN_NAME = 'token';
 const email = ref('');
 const password = ref('');
 const isLoggedIn = ref(false);
@@ -113,13 +104,12 @@ const login = async () => {
     return;
   }
 
-  const userData = {
-    email: email.value,
-    password: password.value,
-  };
-
   try {
-    const res = await axios.post(API_BASE_URL, userData);
+    const res = await axios.post(API_BASE_URL, {
+      email: email.value,
+      password: password.value,
+    });
+
     const token = res.data.token;
     localStorage.setItem(TOKEN_NAME, token);
     axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
@@ -127,11 +117,11 @@ const login = async () => {
     isLoggedIn.value = true;
     showError.value = false;
     clearText();
+
     window.dispatchEvent(new Event("login-status-changed"));
     router.push("/");
   } catch (err) {
     showError.value = true;
-
     const backendErrors = err.response?.data?.errors;
     if (backendErrors && backendErrors.length > 0) {
       errorMessage.value = backendErrors[0];
@@ -153,7 +143,7 @@ const logout = async () => {
   localStorage.removeItem("memberId");
   isLoggedIn.value = false;
   clearText();
-  
+
   window.dispatchEvent(new Event("login-status-changed"));
   router.push("/login");
 };

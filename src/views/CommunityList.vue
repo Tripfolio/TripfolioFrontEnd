@@ -165,8 +165,8 @@ console.log("communityList mounted");
           />
 
           <!-- Footer -->
-          <div class="p-4 flex flex-col justify-between flex-grow">
-            <p class="text-gray-800 font-medium truncate">{{ post.content }}</p>
+          <div class="p-2 flex flex-col justify-between flex-grow">
+            <p class="font-medium truncate">{{ post.content }}</p>
             <div
               class="mt-2 flex items-center justify-end text-gray-600 text-sm gap-4"
             >
