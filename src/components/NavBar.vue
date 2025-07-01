@@ -15,15 +15,15 @@
       </button>
 
       <button class="flex items-center space-x-1">
-        <RouterLink to="/community" class="">
+        <RouterLink to="/community">
           <font-awesome-icon :icon="['fas', 'globe']" />
           <span class="pl-2 no-underline">社群</span>
         </RouterLink>
       </button>
 
-      <slot name="mapSearch"> </slot>
+      <slot name="mapSearch"></slot>
     </nav>
-    <!-- <button @click="logout"></button> -->
+
     <div class="flex-none">
       <template v-if="!isLoggedIn">
         <RouterLink to="/signup" class="underline"
@@ -33,7 +33,6 @@
 
       <template v-else>
         <RouterLink to="/profile" class="flex items-center">
-          <!-- 上面/profile要再改成會員頁面 -->
           <img
             :src="userAvatar || 'https://picsum.photos/32/32?random=1'"
             :alt="會員頭貼"
@@ -50,7 +49,6 @@
 import { ref, onMounted, onUnmounted } from "vue";
 import axios from "axios";
 import logo from "../assets/icons/Logo/logo.svg";
-
 
 const isLoggedIn = ref(false);
 const userAvatar = ref("");
@@ -85,12 +83,7 @@ const checkLoginStatus = () => {
     userAvatar.value = "";
   }
 };
-// const logout = () => {
-//   localStorage.removeItem("token");
-//   isLoggedIn.value = false;
 
-//   router.push("/login");
-// };
 const fetchUserAvatar = async (userId) => {
   if (!userId) {
     return;
@@ -100,7 +93,7 @@ const fetchUserAvatar = async (userId) => {
       `${import.meta.env.VITE_API_URL}/api/profile`,
       {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      },
+      }
     );
 
     userAvatar.value =
