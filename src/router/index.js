@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory } from "vue-router";
-
 import HomeView from "@/views/HomeView.vue";
 import SignUp from "@/views/SignUp.vue";
 import LoginPage from "@/views/LoginPage.vue";
@@ -28,7 +27,7 @@ const routes = [
   {
     path: "/map",
     name: "map",
-    component: GoogleMapView,
+    component: () => import("@/views/GoogleMapView.vue"),
   },
   {
     path: "/login",
@@ -38,7 +37,7 @@ const routes = [
   {
     path: "/calendar",
     name: "calendar",
-    component: GoogleCalendar,
+    component: () => import("@/views/GoogleCalendar.vue"),
   },
   {
     path: "/profile",
@@ -48,7 +47,7 @@ const routes = [
   {
     path: "/emailSettings",
     name: "emailSettings",
-    component: EmailSettings,
+    component: () => import("@/views/EmailSettings.vue"),
   },
   {
     path: "/GetInvite",
@@ -58,17 +57,17 @@ const routes = [
   {
     path: "/schedule",
     name: "schedule",
-    component: Travel,
+    component: () => import("@/views/Travel.vue"),
   },
   {
     path: "/community/post",
     name: "communityPost",
-    component: Post,
+    component: () => import("@/components/PostForm.vue"),
   },
   {
     path: "/community",
     name: "community",
-    component: Community,
+    component: () => import("@/views/CommunityList.vue"),
   },
   {
     path: "/schedule/:id",

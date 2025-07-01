@@ -28,11 +28,10 @@ import { Autoplay ,EffectCoverflow } from 'swiper/modules'
 import 'swiper/css'
 import 'swiper/css/autoplay'
 import 'swiper/css/effect-coverflow'
-import img1 from '@/assets/HomePage/1.png'
-import img2 from '@/assets/HomePage/2.png'
+import img1 from '@/assets/HomePage/2.png'
+import img2 from '@/assets/HomePage/1.png'
 import img3 from '@/assets/HomePage/3.png'
 import img4 from '@/assets/HomePage/4.png'
-
 
 
 const blocks = [
