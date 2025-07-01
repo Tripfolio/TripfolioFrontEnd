@@ -1,12 +1,11 @@
 <template>
   <div class="bg-white min-h-screen p-4 sm:p-8 flex flex-col items-center">
-    <main class="w-full max-w-4xl bg-[#686868] text-white rounded-2xl shadow-lg overflow-hidden transition-all duration-300">
+    <main v-if="profileData" class="w-full max-w-4xl bg-[#686868] text-white rounded-2xl shadow-lg overflow-hidden transition-all duration-300">
 
       <div class="bg-[#A2A2A2] text-white shadow-md p-4 flex justify-between items-center">
         <h2 class="text-2xl font-bold">會員中心</h2>
       </div>
       
-      <!-- 自我介紹 -->
       <div class="p-6 sm:p-8">
         <div class="flex flex-col sm:flex-row items-center gap-6 mb-6">
           <img class="w-24 h-24 rounded-full border-4 border-gray-500 object-cover" :src="profileData.avatar" alt="使用者頭像">
@@ -96,7 +95,7 @@
 import { ref, onMounted, watch } from 'vue';
 import { useRouter,useRoute } from 'vue-router';
 import { jwtDecode } from "jwt-decode";
-// import axios from 'axios';
+import axios from 'axios';
 import MemberProfile from '@/components/MemberProfile.vue';
 
 const router = useRouter()
@@ -114,23 +113,7 @@ const tabs = [
     { key: 'notifications', label: '通知設定' }, 
 ]
 
-//=== fake user data ===
-const profileData = ref({
-  name: 'visitor',
-  avatar: 'https://via.placeholder.com/150/CCCCCC/FFFFFF?text=Guest'
-});
-//=== end of fake user data ===
-
-
 const checkLoginandRedirect = () => {
-  //=== fake token for testing ===
-  const simulatedToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEyMyIsIm5hbWUiOiLpnbnlj7DljYUiLCJpYXQiOjE2NzgyNjcwNjgsImV4cCI6MTcxOTg2NjY2OH0.someFakeSignatureForTesting';
-  localStorage.setItem('token', simulatedToken); 
-
-  // 如果你希望測試 "未登入" 狀態（頁面跳轉到登入頁），請將上一行註解掉，並取消註解下一行：
-  //localStorage.removeItem('token'); // 模擬沒有 token
-  //=== end of fake token ===
-
   const token = localStorage.getItem('token')
     if(!token) {
         alert('請先登入會員')
@@ -153,21 +136,18 @@ const fetchData = async () => {
     const memberId = decoded.id;
     const username = decoded.name;
 
-  // try {
+  try {
 //   // 會員中心獲取使用者基本資料
-//   const userRes = await axios.get(`${import.meta.env.VITE_API_URL}/api/profile`, {
-//     headers: {
-//       Authorization: `Bearer ${token}`,
-//     },
-//   });
-//   profileData.value.name = userRes.data.name || '';
-//   profileData.value.avatar = userRes.data.avatar || ''; // 更新頭像 URL
-//   } catch (err) {
-//     console.error('取得使用者資料失敗', err);
-// === 如果 axios 請求失敗，確保 user 變數有回退值，避免 undefined 錯誤 ===
-  profileData.value.name = username; 
-  profileData.value.avatar = 'https://images.unsplash.com/photo-1529570058547-733204bf87e5?q=80&w=1362&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'; 
-//   }
+    const userRes = await axios.get(`${import.meta.env.VITE_API_URL}/api/profile`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    profileData.value.name = userRes.data.name || '';
+    profileData.value.avatar = userRes.data.avatar || ''; // 更新頭像 URL
+    } catch (err) {
+      console.error('取得使用者資料失敗', err);
+  }
 
 
 
@@ -185,11 +165,6 @@ const fetchData = async () => {
       }));
   } catch (err) {
       console.warn('取得貼文失敗', err);
-      // travels.value = [
-        // { id: 1, title: '沖繩海島慢活之旅', startDate: '2025-07-10', endDate: '2025-07-15', coverUrl: 'https://images.unsplash.com/photo-1662381523885-914182622e12?q=80&w=735&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' },
-        // { id: 2, title: '京都楓葉古寺巡禮', startDate: '2025-11-20', endDate: '2025-11-25', coverUrl: 'https://images.unsplash.com/photo-1545569341-9eb8b30979d9?w=500&q=80' },
-        // { id: 3, title: '探索冰島極光', startDate: '2026-01-05', endDate: '2026-01-12', coverUrl: 'https://plus.unsplash.com/premium_photo-1661926694528-a833cc729d54?q=80&w=1472&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' },
-      // ];
   }
 
   try {
