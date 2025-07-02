@@ -87,7 +87,7 @@ const showMemberProfile = ref(false);
 
 const tabs = [
   { key: "travels", label: "我建立的行程" },
-  { key: 'posts', label: '我建立的貼文' },
+  { key: "posts", label: "我建立的貼文" },
   { key: "collected", label: "我收藏的貼文" },
   { key: "notifications", label: "通知設定" },
 ];
@@ -108,12 +108,18 @@ const fetchData = async () => {
       axios.get(`${import.meta.env.VITE_API_URL}/api/travelSchedule/user`, {
         headers: { Authorization: `Bearer ${token}` },
       }),
-      axios.get(`${import.meta.env.VITE_API_URL}/api/allposts?page=1&limit=100`,{
-            headers: {Authorization: `Bearer ${token}` },
-      }),
-      axios.get(`${import.meta.env.VITE_API_URL}/api/favorites/user/${memberId}`, {
-      headers: { Authorization: `Bearer ${token}` },
-      }),
+      axios.get(
+        `${import.meta.env.VITE_API_URL}/api/allposts?page=1&limit=100`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        },
+      ),
+      axios.get(
+        `${import.meta.env.VITE_API_URL}/api/favorites/user/${memberId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        },
+      ),
     ]);
     user.value = {
       name: userRes.data.name || "訪客",
@@ -127,16 +133,16 @@ const fetchData = async () => {
     }));
 
     posts.value = postRes.data.posts
-      .filter(item => item.id === memberId)
-      .map(item => ({
+      .filter((item) => item.id === memberId)
+      .map((item) => ({
         id: item.postId,
-        title: item.content || '未命名貼文',
+        title: item.content || "未命名貼文",
         coverImage: item.imageUrl,
-    }));
+      }));
 
-    collectedPosts.value = collectRes.data.map(item => ({
+    collectedPosts.value = collectRes.data.map((item) => ({
       id: item.postId,
-      title: item.postTitle || '未命名貼文',
+      title: item.postTitle || "未命名貼文",
       coverImage: item.postImageUrl,
     }));
   } catch (err) {
