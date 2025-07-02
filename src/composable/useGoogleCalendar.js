@@ -81,36 +81,38 @@ export function useGoogleCalendar() {
     });
   };
 
-  onMounted(async () => {
-    try {
-      await Promise.all([loadGapi(), loadGis()]);
+  const ensureGoogleClientInitialized = async () => {
+    if (!gapiClientInitialized.value) {
+      message.value = "Google 服務初始化中，請稍候...";
+      try {
+        await Promise.all([loadGapi(), loadGis()]);
 
-      await gapiRef.value.client.init({
-        apiKey: API_KEY,
-        discoveryDocs: DISCOVERY_DOCS,
-      });
+        await gapiRef.value.client.init({
+          apiKey: API_KEY,
+          discoveryDocs: DISCOVERY_DOCS,
+        });
 
-      await gapiRef.value.client.load('calendar', 'v3');
+        await gapiRef.value.client.load('calendar', 'v3');
 
-      gapiClientInitialized.value = true;
-      console.log('Google API Client and Calendar API initialized.');
-
-    } catch (err) {
-      console.error('初始化 Google API 失敗:', err);
-      message.value = 'Google API 載入或初始化失敗，請檢查 API 金鑰或網路連線。';
-      eventLink.value = '';
+        gapiClientInitialized.value = true;
+        console.log('Google API Client and Calendar API initialized.');
+      } catch (err) {
+        console.error('初始化 Google API 失敗:', err);
+        message.value = 'Google API 載入或初始化失敗，請檢查 API 金鑰或網路連線。';
+        eventLink.value = '';
+        throw err;
+      }
     }
-  });
+  };
+
 
   const authorizeAndCreateEvent = async (trip) => {
     loading.value = true;
     message.value = '';
     eventLink.value = '';
 
-    if (!gapiClientInitialized.value || !gisLoaded.value || !tokenClientRef.value) {
-      message.value = "Google 服務初始化中，請稍候...";
-      return;
-    }
+      await ensureGoogleClientInitialized();
+
     
     if (!trip) {
       message.value = "沒有行程資料可供匯出。";

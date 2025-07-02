@@ -1,6 +1,6 @@
 <template>
   <div class="comment-section">
-    <h4>留言區</h4>
+    <!-- <h4>留言區</h4> -->
 
     <div v-if="isLoading" class="text-center py-4">載入留言中...</div>
 
@@ -22,43 +22,28 @@
           </span>
           <span class="comment-time">{{ formatTime(comment.createdAt) }}</span>
         </div>
-        <p class="comment-content">{{ comment.content }}</p>
-        <button
-          v-if="canDeleteComment(comment)"
-          @click="deleteComment(comment.id)"
-          class="delete-btn"
-          :disabled="isDeletingComment === comment.id"
-        >
-          {{ isDeletingComment === comment.id ? "刪除中..." : "🗑️" }}
-        </button>
+        <div class="flex justify-between">
+          <p class="comment-content">{{ comment.content }}</p>
+          <button
+            v-if="canDeleteComment(comment)"
+            @click="deleteComment(comment.id)"
+            class="delete-btn"
+            :disabled="isDeletingComment === comment.id"
+          >
+            {{ isDeletingComment === comment.id ? "刪除中..." : "🗑️" }}
+          </button>
+        </div>
       </div>
     </div>
 
-    <div v-else class="text-center py-4 text-gray-500">
+    <div v-else class="text-center py-4">
       還沒有留言，成為第一個留言的人吧！
     </div>
 
-    <!-- 新增留言表單 -->
-    <!-- <div class="add-comment">
-      <input
-        v-model="newComment"
-        placeholder="寫下你的留言..."
-        rows="1"
-        class="comment-input"
-        :disabled="isSubmitting"
-      ></input>
-      <button
-        @click="submitComment"
-        :disabled="!newComment.trim() || isSubmitting"
-        class="submit-btn"
-      >
-        {{ isSubmitting ? "送出中..." : "發表留言" }}
-      </button>
-    </div> -->
     <AddComment
       :isSubmitting="isSubmitting"
       @submit="submitComment"
-      class="absolute bottom-0"
+      class="mt-4 w-[90%]"
     />
   </div>
 </template>
@@ -75,7 +60,7 @@ const props = defineProps({
   },
 });
 
-const newComment = ref("");
+const emit = defineEmits(["comment-added"]);
 const comments = ref([]);
 const isSubmitting = ref(false);
 const isLoading = ref(false);
@@ -97,30 +82,6 @@ const getCurrentUserId = () => {
   return null;
 };
 
-// const submitComment = async () => {
-//   if (!newComment.value.trim()) return;
-
-//   isSubmitting.value = true;
-
-//   try {
-//     const response = await axios.post(
-//       `${import.meta.env.VITE_API_URL}/api/post/${props.post.postId}/comments`,
-//       {
-//         content: newComment.value.trim(),
-//         memberId: getCurrentUserId(),
-//       }
-//     );
-
-//     // 成功後更新留言列表（加到頂部）
-//     comments.value.unshift(response.data);
-//     newComment.value = "";
-//     console.log("留言發表成功", response.data);
-//   } catch (error) {
-//     console.error("留言發表失敗:", error);
-//   } finally {
-//     isSubmitting.value = false;
-//   }
-// };
 const submitComment = async (commentText) => {
   if (!commentText.trim()) return;
   isSubmitting.value = true;
@@ -133,9 +94,19 @@ const submitComment = async (commentText) => {
       },
     );
     comments.value.unshift(response.data);
+
+    // 更新本地計數
+    const newCommentCount = (props.post.commentCount || 0) + 1;
+
+    // 發送詳細的更新資訊
+    emit("comment-added", {
+      postId: props.post.postId,
+      commentCount: newCommentCount,
+    });
+
     console.log("留言發表成功", response.data);
   } catch (error) {
-    console.error("留言發表失敗:", error);
+    console.error("留言發表失敗", error);
   } finally {
     isSubmitting.value = false;
   }
@@ -205,6 +176,15 @@ const deleteComment = async (commentId) => {
       (comment) => comment.id !== commentId,
     );
 
+    // 更新本地計數
+    const newCommentCount = Math.max(0, (props.post.commentCount || 0) - 1);
+
+    // 發送詳細的更新資訊
+    emit("comment-added", {
+      postId: props.post.postId,
+      commentCount: newCommentCount,
+    });
+
     console.log("留言刪除成功");
   } catch (error) {
     console.error("刪除留言失敗:", error);
@@ -229,10 +209,33 @@ onMounted(() => {
 </script>
 
 <style scoped>
+@media (max-width: 640px) {
+  .comment-header {
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+
+  .comment-time {
+    width: 100%;
+    margin-left: 40px; /* avatar 寬度對齊 */
+  }
+
+  .submit-btn {
+    width: 100%;
+  }
+}
 .comment-section {
   padding: 16px;
+  display: flex;
+  flex-direction: column;
+  max-height: 100%;
 }
 
+.comments-list {
+  max-height: 300px;
+  overflow-y: auto;
+  margin-bottom: 1rem;
+}
 .comment-item {
   margin-bottom: 16px;
   padding-bottom: 12px;
@@ -260,7 +263,6 @@ onMounted(() => {
 
 .comment-time {
   font-size: 12px;
-  color: #666;
 }
 
 .comment-content {

@@ -1,25 +1,28 @@
 <template>
-  <!-- Google Calendar通知 -->
-  <div class="relative">
-    <div v-if="googleCalendarMessage" :class="{
-      'fixed top-4 left-1/2 transform -translate-x-1/2 p-3 rounded-lg shadow-lg z-50 text-white': true,
-      'bg-blue-500': googleCalendarMessage.includes('正在建立行程') || googleCalendarMessage.includes('正在請求 Google 認證') || googleCalendarMessage.includes('Google 服務初始化中'),
-      'bg-green-500': googleCalendarMessage.includes('成功'),
-      'bg-red-500': !googleCalendarMessage.includes('成功') && !googleCalendarMessage.includes('正在建立行程') && !googleCalendarMessage.includes('正在請求 Google 認證') && !googleCalendarMessage.includes('Google 服務初始化中'),
-    }">
-      <p>{{ googleCalendarMessage }}</p>
-      <a v-if="googleCalendarEventLink" :href="googleCalendarEventLink" target="_blank" rel="noopener noreferrer" class="underline mt-1 block">
-        開啟 Google Calendar
-      </a>
-      <button @click="googleCalendarMessage = ''" class="absolute top-1 right-2 text-white text-xl">&times;</button>
-    </div>
-  </div>
+  <div class="homepage-bg relative">
 
-  <div class="relative">
-    <div class="flex h-screen">
-      <!-- 左側：可放地圖或其他內容 -->
-      <div class="w-4/6 bg-gray-50 p-4 h-full relative overflow-hidden">
-        <div class="w-full h-full relative rounded-xl overflow-hidden">
+    <!-- Google Calendar通知 -->
+    <div class="relative">
+      <div v-if="googleCalendarMessage"
+           :class="{
+             'fixed top-4 left-1/2 transform -translate-x-1/2 p-3 rounded-lg shadow-lg z-50 text-white': true,
+             'bg-blue-500': googleCalendarMessage.includes('正在建立行程') || googleCalendarMessage.includes('正在請求 Google 認證') || googleCalendarMessage.includes('Google 服務初始化中'),
+             'bg-green-500': googleCalendarMessage.includes('成功'),
+             'bg-red-500': !googleCalendarMessage.includes('成功') && !googleCalendarMessage.includes('正在建立行程') && !googleCalendarMessage.includes('正在請求 Google 認證') && !googleCalendarMessage.includes('Google 服務初始化中'),
+           }">
+        <p>{{ googleCalendarMessage }}</p>
+        <a v-if="googleCalendarEventLink" :href="googleCalendarEventLink" target="_blank" rel="noopener noreferrer" class="underline mt-1 block">
+          開啟 Google Calendar
+        </a>
+        <button @click="googleCalendarMessage = ''" class="absolute top-1 right-2 text-white text-xl">&times;</button>
+      </div>
+    </div>
+
+    <div class="flex flex-col lg:flex-row h-screen">
+
+      <!-- 左側：地圖區 -->
+      <div class="h-[65%] lg:h-full lg:w-4/6 relative overflow-hidden mb-2 shadow-2xl">
+        <div class="w-full h-full relative overflow-hidden">
           <GoogleMapView
             ref="mapRef"
             :trip="selectedTrip"
@@ -29,87 +32,109 @@
             :schedule-detail-ref="scheduleDetailRef"
             :default-image="defaultImage"
             @place-added="handlePlaceAdded"
-            />
+          />
         </div>
       </div>
 
-      <!-- 右側：行程列表區 -->
-      <div class="w-2/6 h-full overflow-y-auto bg-white p-4 border-l">
-        <div class="flex justify-end mb-4">
-          <button @click="handleOpenForm" class="bg-blue-500 hover:bg-blue-400 text-white px-4 py-2 rounded-lg shadow">建立行程</button>
+      <!-- 右側：行程列表 -->
+      <div class="flex-1 lg:w-2/6 h-[45%] lg:h-full overflow-y-auto">
+
+        <!-- 建立行程按鈕 -->
+        <div v-if="!editingTripId" class="fixed bottom-5 right-6 z-50">
+          <button
+            @click="handleOpenForm"
+            class="animated-gradient-modern text-white text-xl px-10 py-3 rounded-full shadow-md shadow-black/40 cursor-pointer bg-gradient-trip hover:bg-gradient-trip-hover"
+          >
+            建立行程
+          </button>
         </div>
 
-      <!-- 行程卡片列表 -->
-      <div v-if="!editingTripId">
-        <div v-if="tripStore.trips.length > 0" class="space-y-4">
-          <div 
-            v-for="item in tripStore.trips" 
-            :key="item.id" @click="editingTripId = item.id" 
-            class="bg-white rounded-xl shadow p-4 relative cursor-pointer hover:ring-2 hover:ring-blue-300 transition">
-          <img :src="item.coverURL || 'https://placehold.co/600x300?text=封面圖'" class="w-full h-60 object-cover rounded-xl mb-3" alt="行程封面照"/>
-          <h2 class="text-xl font-bold mb-1">{{ item.title }}</h2>
-          <p class="text-gray-600 text-sm">
-            {{ item.startDate }} - {{ item.endDate }}
-          </p>
-          <p class="text-gray-500 text-sm mt-2">{{ item.description }}</p>
-          <button @click.stop="deleteSchedule(item.id)" title="刪除行程" class="absolute bottom-2 right-2 text-gray-400 hover:text-red-500 text-xl">刪除行程</button>
-          <!-- Google Calendar button -->
-          <button 
-              @click.stop="handleAddToGoogleCalendar(item)" 
-              :disabled="googleCalendarLoading && currentProcessingTripId === item.id"
-              class="absolute bottom-2 left-2 text-gray-400 hover:text-blue-500 text-[12px] flex items-center">
-              <span v-if="googleCalendarLoading && currentProcessingTripId === item.id" class="flex items-center">
-                  <svg class="animate-spin -ml-1 mr-2 h-3 w-3 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                  </svg>
-                  處理中...
-              </span>
-              <span v-else>
-                加入Google calendar
-              </span>
-            </button>
+        <!-- 行程卡片列表 -->
+        <div v-if="!editingTripId" class="travel-card-style rounded-2xl p-7 m-5">
+          <div v-if="tripStore.trips.length > 0" class="solo-card-style mt-2 space-y-4 rounded-xl">
+            <div
+              v-for="item in tripStore.trips"
+              :key="item.id"
+              @click="editingTripId = item.id"
+              class="rounded-2xl shadow-md shadow-black/40 overflow-hidden relative cursor-pointer hover:ring-2 hover:ring-gray-400 transition"
+            >
+              <img
+                :src="item.coverURL || 'https://placehold.co/600x300?text=封面圖'"
+                class="w-full h-60 object-cover rounded-tl-xl rounded-tr-xl mb-3"
+                alt="行程封面照"
+              />
+              <div class="px-5">
+                <h2 class="text-xl text-white font-bold mb-1">{{ item.title }}</h2>
+                <p class="text-white text-m">{{ item.startDate }} - {{ item.endDate }}</p>
+                <p class="text-white text-m mt-2">{{ item.description }}</p>
+              </div>
+
+              <!-- Google Calendar + 刪除按鈕 -->
+              <div class="absolute bottom-2 left-2 right-2 flex justify-end items-center px-4">
+                
+                <!-- Google Calendar 按鈕 -->
+                <button
+                  @click.stop="handleAddToGoogleCalendar(item)"
+                  :disabled="googleCalendarLoading && currentProcessingTripId === item.id"
+                  class="text-gray-600 bg-white px-2 mx-1 rounded-2xl hover:text-blue-500 text-md flex items-center"
+                >
+                  <span v-if="googleCalendarLoading && currentProcessingTripId === item.id" class="flex items-center">
+                    <svg class="animate-spin -ml-1 mr-2 h-3 w-3 text-gray-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    處理中...
+                  </span>
+                  <span v-else>加入 Google日曆</span>
+                </button>
+
+                <!-- 刪除按鈕 -->
+                <button
+                  @click.stop="deleteSchedule(item.id)"
+                  title="刪除行程"
+                  class="text-gray-600 bg-white px-2 rounded-2xl hover:text-red-500 text-md"
+                >
+                  刪除行程
+                </button>
+              </div>
+            </div>
           </div>
         </div>
-        <div v-else class="text-gray-400 text-center">尚未建立任何行程</div>
-      </div>
 
-      <!-- 編輯行程 -->
-      <ScheduleDetail 
-          v-else 
-          :trip-id="editingTripId" 
+        <!-- 編輯行程 -->
+        <ScheduleDetail
+          v-else
+          :trip-id="editingTripId"
           :selected-date="selectedTrip?.days?.[currentDayIndex]?.date"
           ref="scheduleDetailRef"
           @back="handleCloseDetail"
-      />
+          @day-changed="currentDayIndex = $event"
+          class="w-[50%] lg:w-full"
+        />
       </div>
-    </div>
-    <!-- 彈出建立行程表單 -->
-    <div v-if="showForm" class="fixed inset-0 bg-white/50 backdrop-blur-sm flex items-center justify-center z-50">
-      <div class="bg-white w-full max-w-xl rounded-2xl p-6 shadow-lg relative">
-        <TravelSchedule @close="handleCloseForm" />
-      </div>
-    </div>
 
-    <!-- 付款提醒Modal -->
-    <div v-if="showPayModal" class="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50">
-      <div class="bg-white rounded-2xl shadow-xl max-w-md w-full p-6 text-center">
-        <h2 class="text-xl font-bold mb-2">升級成付費會員</h2>
-        <p class="text-gray-600 mb-6">免費會員僅可建立一筆行程，若要建立更多行程，請升級為付費會員。</p>
-        <div class="flex justify-center gap-4">
-          <button @click="goToPay" class="bg-green-500 hover:bg-green-400 text-white px-4 py-2 rounded">前往付款</button>
-          <button @click="showPayModal = false" class="px-4 py-2 border rounded text-gray-600 hover:bg-gray-100">取消</button>
+      <!-- 建立行程表單 Modal -->
+      <div v-if="showForm" class="fixed inset-0 backdrop-blur-sm flex items-center justify-center z-50 overflow-auto p-4">
+        <div>
+          <TravelSchedule @close="handleCloseForm" />
         </div>
       </div>
+
+      <!-- 付款提醒 Modal -->
+      <PaymentModal
+        v-if="showPayModal"
+        :result="payResult"
+        @close="showPayModal = false"
+      />
     </div>
   </div>
 </template>
 
-
 <script setup>
 import { ref, onMounted, computed, watch } from 'vue';
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router';
 import TravelSchedule from '@/components/TravelSchedule.vue';
+import PaymentModal from "@/components/PaymentModal.vue";
 import axios from 'axios';
 import GoogleMapView from '@/views/GoogleMapView.vue';
 import ScheduleDetail from '@/views/scheduleDetail.vue';
@@ -117,6 +142,7 @@ import { useTripStore } from '@/stores/tripStore';
 import { useGoogleCalendar } from '@/composable/useGoogleCalendar';
 
 const router = useRouter();
+const route = useRoute();
 const editingTripId = ref(null);
 const tripStore = useTripStore();
 const showForm = ref(false);
@@ -125,91 +151,79 @@ const showPayModal = ref(false);
 const selectedPlace = ref(null);
 const defaultImage = "https://picsum.photos/1000?image";
 const currentDayIndex = ref(0);
-const itineraryRef = ref(null)
+const itineraryRef = ref(null);
 const dailyPlanRef = ref(null);
 const mapRef = ref(null);
 const scheduleDetailRef = ref(null);
+const payResult = ref(null);
 
-const selectedTrip = computed(() => {
-  return tripStore.trips.find(t => t.id === editingTripId.value);
-});
+const selectedTrip = computed(() => tripStore.trips.find((t) => t.id === editingTripId.value));
 
-
-//取得會員是否為付費會員
 const fetchIsPremium = async () => {
-  const token = localStorage.getItem('token');
-
+  const token = localStorage.getItem("token");
   try {
     const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/profile`, {
       headers: { Authorization: `Bearer ${token}` },
     });
     isPremium.value = res.data.isPremium;
-  } catch (err) {
-    // eslint-disable-next-line no-empty
-  }
+  } catch (err) {}
 };
 
-//首次載入取得行程
 onMounted(() => {
   tripStore.fetchTrips();
   fetchIsPremium();
+
+  if (route.query.linepayResult === 'success' || route.query.linepayResult === 'fail') {
+    payResult.value = route.query.linepayResult;
+    showPayModal.value = true;
+  }
 });
 
-
-//建立行程時檢查是否登入
 const handleOpenForm = () => {
-    const token = localStorage.getItem('token');
-    if(!token) {
-      alert('請先登入會員')
-      return
-    }
-    
-    const count = tripStore.trips.length;
+  const token = localStorage.getItem("token");
+  if (!token) {
+    alert("請先登入會員");
+    return;
+  }
 
-    if(isPremium.value || count < 1) {
-      showForm.value = true;
-    } else {
-      showPayModal.value = true;
-    }
+  const count = tripStore.trips.length;
+  if (isPremium.value || count < 1) {
+    showForm.value = true;
+  } else {
+    showPayModal.value = true;
+  }
 };
 
 const goToPay = () => {
   showPayModal.value = false;
-  router.push('/payment');
-}
+  router.push("/payment");
+};
 
-//事件處理函式
 function handlePlaceAdded() {
-  if (scheduleDetailRef.value?.refreshDailyPlan) {
-    scheduleDetailRef.value.refreshDailyPlan();
-  }
+  scheduleDetailRef.value?.refreshDailyPlan?.();
 }
 
 function refreshDailyPlan() {
-  // 呼叫 DailyPlan 的 refresh 方法
   dailyPlanRef.value?.refresh?.();
 }
 
-
-//表單關閉後刷新行程列表
 const handleCloseForm = () => {
-  showForm.value = false
+  showForm.value = false;
   tripStore.fetchTrips();
   fetchIsPremium();
 };
 
-//返回總覽同步更新
 const handleCloseDetail = () => {
   editingTripId.value = null;
   tripStore.fetchTrips();
 };
 
-//Google calendar
-const { 
-  message: googleCalendarMessage, 
-  eventLink: googleCalendarEventLink, 
-  loading: googleCalendarLoading, 
-  authorizeAndCreateEvent 
+// Google Calendar 功能
+const {
+  message: googleCalendarMessage,
+  eventLink: googleCalendarEventLink,
+  loading: googleCalendarLoading,
+  authorizeAndCreateEvent
 } = useGoogleCalendar();
 
 const currentProcessingTripId = ref(null);
@@ -227,38 +241,27 @@ watch(googleCalendarMessage, (newVal) => {
     messageTimeout = setTimeout(() => {
       googleCalendarMessage.value = '';
       googleCalendarEventLink.value = '';
-    }, 5000); 
+    }, 5000);
   }
 });
 
-//刪除行程
 const deleteSchedule = async (id) => {
-  const confirmed = confirm("確定刪除這個行程嗎?")
-  if(!confirmed) return
+  const confirmed = confirm("確定刪除這個行程嗎?");
+  if (!confirmed) return;
 
-  const token = localStorage.getItem('token');
-
-  try{
-    await axios.delete(`${import.meta.env.VITE_API_URL}/api/travelSchedule/${id}`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-
+  const token = localStorage.getItem("token");
+  try {
+    await axios.delete(
+      `${import.meta.env.VITE_API_URL}/api/travelSchedule/${id}`,
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
     tripStore.trips = tripStore.trips.filter((s) => s.id !== id);
-    alert("刪除成功")
+    alert("刪除成功");
   } catch (err) {
-    alert("刪除失敗，請稍後再試")
+    alert("刪除失敗，請稍後再試");
   }
 };
 
-function handlePlaceSelect(place) {
-  selectedPlace.value = place;
-}
-
-function callItinerary() {
-  mapRef.value?.callItinerary();
-}
-
-// 暴露方法給父元件使用
 defineExpose({
   refreshDailyPlan,
   dailyPlanRef,
