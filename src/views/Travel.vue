@@ -3,20 +3,34 @@
 
     <!-- Google Calendar通知 -->
     <div class="relative">
-      <div v-if="googleCalendarMessage"
-           :class="{
-             'fixed top-4 left-1/2 transform -translate-x-1/2 p-3 rounded-lg shadow-lg z-50 text-white': true,
-             'bg-blue-500': googleCalendarMessage.includes('正在建立行程') || googleCalendarMessage.includes('正在請求 Google 認證') || googleCalendarMessage.includes('Google 服務初始化中'),
-             'bg-green-500': googleCalendarMessage.includes('成功'),
-             'bg-red-500': !googleCalendarMessage.includes('成功') && !googleCalendarMessage.includes('正在建立行程') && !googleCalendarMessage.includes('正在請求 Google 認證') && !googleCalendarMessage.includes('Google 服務初始化中'),
-           }">
-        <p>{{ googleCalendarMessage }}</p>
-        <a v-if="googleCalendarEventLink" :href="googleCalendarEventLink" target="_blank" rel="noopener noreferrer" class="underline mt-1 block">
+      <div
+        v-if="googleCalendarMessage"
+        :class="[
+          'fixed top-4 left-1/2 transform -translate-x-1/2 max-w-xs w-full px-6 py-4 rounded-lg shadow-lg z-50 text-white backdrop-blur-md border border-white/10',
+          googleCalendarMessage.includes('成功') || googleCalendarMessage.includes('正在建立行程') || googleCalendarMessage.includes('正在請求 Google 認證') || googleCalendarMessage.includes('Google 服務初始化中')
+            ? 'bg-gray-800/50'
+            : 'bg-red-800/50'
+        ]"
+      >
+        <p class="text-sm">{{ googleCalendarMessage }}</p>
+        <a
+          v-if="googleCalendarEventLink"
+          :href="googleCalendarEventLink"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="underline mt-2 block text-sm"
+        >
           開啟 Google Calendar
         </a>
-        <button @click="googleCalendarMessage = ''" class="absolute top-1 right-2 text-white text-xl">&times;</button>
+        <button
+          @click="googleCalendarMessage = ''"
+          class="absolute top-1 right-2 text-white text-xl"
+        >
+          &times;
+        </button>
       </div>
     </div>
+
 
     <div class="flex flex-col lg:flex-row h-screen">
 
@@ -70,13 +84,13 @@
               </div>
 
               <!-- Google Calendar + 刪除按鈕 -->
-              <div class="absolute bottom-2 left-2 right-2 flex justify-end items-center px-4">
-                
+              <div class="absolute bottom-2 left-2 right-2 flex justify-end items-center px-">
+
                 <!-- Google Calendar 按鈕 -->
                 <button
                   @click.stop="handleAddToGoogleCalendar(item)"
                   :disabled="googleCalendarLoading && currentProcessingTripId === item.id"
-                  class="text-gray-600 bg-white px-2 mx-1 rounded-2xl hover:text-blue-500 text-md flex items-center"
+                  class="text-gray-600 px-2 rounded-2xl hover:text-blue-500 text-md flex items-center"
                 >
                   <span v-if="googleCalendarLoading && currentProcessingTripId === item.id" class="flex items-center">
                     <svg class="animate-spin -ml-1 mr-2 h-3 w-3 text-gray-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -85,7 +99,13 @@
                     </svg>
                     處理中...
                   </span>
-                  <span v-else>加入 Google日曆</span>
+                  <span v-else>
+                    <img
+                    src="@/assets/icons/googleCalendar.svg"
+                    alt="Google Calendar"
+                    class="w-5 h-5"
+                    />
+                  </span>
                 </button>
 
                 <!-- 刪除按鈕 -->
