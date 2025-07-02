@@ -6,7 +6,7 @@
         <div
           v-for="(msg, index) in errorMessages"
           :key="index"
-          class="flex items-start bg-red-100 text-ed-800 border border-red-200 px-4 py-3 rounded-md text-sm"
+          class="flex items-start bg-red-100 text-red-800 border border-red-200 px-4 py-3 rounded-md text-sm mb-3"
         >
           <font-awesome-icon
             icon="exclamation-triangle"

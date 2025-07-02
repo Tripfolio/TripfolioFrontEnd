@@ -27,7 +27,7 @@
             id="email"
             placeholder="請輸入電子郵件"
             required
-            class="mb-5 block w-[300px] text-white  rounded-md border border-gray-300 shadow-sm p-2"
+            class="mb-2 block w-[300px] text-white  rounded-md border border-gray-300 shadow-sm p-2"
           />
         </div>
 
