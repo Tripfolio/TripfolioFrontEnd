@@ -19,7 +19,12 @@
           @change="onScheduleChange"
           class="w-full px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400"
         >
-          <option v-for="s in schedules" :key="s.id" :value="s.id">
+          <option
+            v-for="s in schedules"
+            :key="s.id"
+            :value="s.id"
+            class="text-red"
+          >
             {{ s.title }}
           </option>
         </select>
