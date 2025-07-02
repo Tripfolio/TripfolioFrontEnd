@@ -8,7 +8,7 @@
 
         <!-- 使用者頭像與名稱 -->
         <section class="user-info">
-          <img :src="user.avatar" alt="" class="avatar" />
+          <img :src="user.avatar + '?t=' + avatarTimestamp" alt="使用者頭像" class="avatar" />
           <div class="info">
             <h1>{{ user.name }}</h1>
             <a
@@ -46,7 +46,7 @@
             <CardGrid :items="collectedPosts" @click-card="goToPost" />
           </template>
           <template v-else-if="activeTab === 'notifications'">
-            <div class="notice">通知設定區塊</div>
+            <EmailSettings />
           </template>
         </section>
       </main>
@@ -60,6 +60,11 @@
         <div class="relative">
           <MemberProfile
             @close-modal="showMemberProfile = false"
+            @update-profile="
+              fetchData();
+              avatarTimestamp.value = Date.now();
+              showMemberProfile = false;
+            "
             @profile-updated="handleProfileUpdated"
           />
         </div>
@@ -75,6 +80,7 @@ import { jwtDecode } from "jwt-decode";
 import axios from "axios";
 import CardGrid from "@/components/CardGrid.vue";
 import MemberProfile from "../views/MemberProfile.vue";
+import EmailSettings from "../views/EmailSettings.vue";
 
 const router = useRouter();
 const route = useRoute();
@@ -84,6 +90,7 @@ const travels = ref([]);
 const posts = ref([]);
 const collectedPosts = ref([]);
 const showMemberProfile = ref(false);
+const avatarTimestamp = ref(Date.now());
 
 const tabs = [
   { key: "travels", label: "我建立的行程" },
