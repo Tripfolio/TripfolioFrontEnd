@@ -184,6 +184,7 @@ const uploadAvatar = (event) => {
   showCropper.value = true;
 };
 
+
 //儲存大頭貼傳至後端
 const saveAvatar = async () => {
   const canvas = cropperRef.value.getResult().canvas;
@@ -219,11 +220,15 @@ const saveAvatar = async () => {
       profileData.value = profileRes.data;
       previewUrl.value = "";
       showCropper.value = false;
+
+      emit('update-profile');
+      
     } catch (err) {
-      alert("上傳失敗");
+
     }
   }, "image/jpeg");
 };
+
 
 const phoneError = ref("");
 
