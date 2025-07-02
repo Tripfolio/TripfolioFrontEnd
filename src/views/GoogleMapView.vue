@@ -197,7 +197,7 @@
   >
     <button
       @click="locateUser"
-      class="block w-full text-left bg-gray-500/80 hover:bg-gray-400 text-white px-4 py-2 rounded-full cursor-pointer shadow-inner"
+      class="navbar-style block w-full text-left hover:bg-gray-400 text-white px-4 py-2 rounded-full cursor-pointer shadow-inner"
     >
       ⚙︎
     </button>
@@ -220,7 +220,7 @@
 
       <div
         v-if="showCustomCategory"
-        class="absolute z-10 bg-gray-400/90 rounded-4xl p-3 w-80 shadow-md bottom-1 left-18 transform transition-all duration-300 ease-in-out translate-x-0 opacity-100"
+        class="navbar-style absolute z-10 rounded-2xl p-3 w-80 shadow-md bottom-1 left-18 transform transition-all duration-300 ease-in-out translate-x-0 opacity-100"
       >
         <button
           @click="removeCategory(item)"
@@ -339,7 +339,7 @@ function callItinerary() {
     }
 
     if (props.scheduleDetailRef?.fetchTrip) {
-      props.scheduleDetailRef.fetchTrip();   // 保證 trip.days 最新
+      props.scheduleDetailRef.fetchTrip(); // 保證 trip.days 最新
     }
 
     alert("成功加入行程！");

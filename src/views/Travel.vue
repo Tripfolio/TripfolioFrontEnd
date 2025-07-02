@@ -32,22 +32,21 @@
 
         <!-- 行程卡片列表 -->
         <div>
-          <div
-            v-if="!editingTripId"
-            class="travel-card-style rounded-2xl p-7 m-5"
-          >
+          <div v-if="!editingTripId" class="rounded-2xl p-7 m-5">
             <div
               v-if="tripStore.trips.length > 0"
-              class="solo-card-style mt-2 space-y-4 rounded-xl"
+              class="mt-2 space-y-4 rounded-xl"
             >
               <div
                 v-for="item in tripStore.trips"
                 :key="item.id"
                 @click="editingTripId = item.id"
-                class="rounded-2xl shadow-md shadow-black/40 verflow-hidden relative cursor-pointer hover:ring-2 hover:ring-gray-400 transition"
+                class="navbar-style rounded-2xl shadow-md shadow-black/40 verflow-hidden relative cursor-pointer hover:ring-2 hover:ring-gray-400 transition"
               >
                 <img
-                  :src="item.coverURL || 'https://placehold.co/600x300?text=封面圖'"
+                  :src="
+                    item.coverURL || 'https://placehold.co/600x300?text=封面圖'
+                  "
                   class="w-full h-60 object-cover rounded-tl-xl rounded-tr-xl mb-3"
                   alt="行程封面照"
                 />
@@ -96,9 +95,11 @@
       </div>
 
       <!-- 付款提醒Modal -->
-      <PaymentModal v-if="showPayModal" 
+      <PaymentModal
+        v-if="showPayModal"
         :result="payResult"
-        @close="showPayModal = false"  />
+        @close="showPayModal = false"
+      />
     </div>
   </div>
 </template>
@@ -152,7 +153,10 @@ onMounted(() => {
   tripStore.fetchTrips();
   fetchIsPremium();
 
-  if (route.query.linepayResult === 'success' || route.query.linepayResult === 'fail') {
+  if (
+    route.query.linepayResult === "success" ||
+    route.query.linepayResult === "fail"
+  ) {
     payResult.value = route.query.linepayResult;
     showPayModal.value = true;
   }
