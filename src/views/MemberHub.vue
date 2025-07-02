@@ -70,7 +70,7 @@ import { ref, onMounted, watch } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { jwtDecode } from "jwt-decode";
 import axios from "axios";
-import CardGrid from "@/components/CardGrid.vue"; // 你需自行建立
+import CardGrid from "@/components/CardGrid.vue";
 import MemberProfile from "../views/MemberProfile.vue";
 
 const router = useRouter();
