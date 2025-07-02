@@ -139,11 +139,6 @@ async function confirmTime(p) {
 
 //更新順序
 async function updateOrder() {
-  // if (!canEdit.value) {
-  //   alert("您沒有權限調整順序");
-  //   return;
-  // }
-
   const newOrder = itineraryPlaces.value.map((p, i) => ({
     id: p.id,
     placeOrder: i + 1,
@@ -261,5 +256,3 @@ defineExpose({
   trafficMap,
 });
 </script>
-
-<style scoped></style>

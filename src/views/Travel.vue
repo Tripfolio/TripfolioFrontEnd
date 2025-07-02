@@ -1,9 +1,11 @@
 <template>
-  <div class="relative">
-    <div class="flex h-screen">
+  <div class="homepage-bg relative">
+    <div class="flex flex-col lg:flex-row h-screen">
       <!-- 左側：可放地圖或其他內容 -->
-      <div class="w-4/6 bg-gray-50 p-4 h-full relative overflow-hidden">
-        <div class="w-full h-full relative rounded-xl overflow-hidden">
+      <div
+        class="h-[65%] lg:h-full lg:w-4/6 relative overflow-hidden mb-2 shadow-2xl"
+      >
+        <div class="w-full h-full relative overflow-hidden">
           <GoogleMapView
             ref="mapRef"
             :trip="selectedTrip"
@@ -17,104 +19,97 @@
         </div>
       </div>
 
-      <!-- 右側：行程列表區 -->
-      <div class="w-2/6 h-full overflow-y-auto bg-white p-4 border-l">
-        <div class="flex justify-end mb-4">
+      <!-- 右側：行程列表區-->
+      <div class="flex-1 lg:w-2/6 h-[45%] lg:h-full overflow-y-auto">
+        <div v-if="!editingTripId" class="fixed bottom-5 right-6 z-50">
           <button
             @click="handleOpenForm"
-            class="bg-blue-500 hover:bg-blue-400 text-white px-4 py-2 rounded-lg shadow"
+            class="animated-gradient-modern text-white text-xl px-10 py-3 rounded-full shadow-md shadow-black/40 cursor-pointer bg-gradient-trip hover:bg-gradient-trip-hover"
           >
             建立行程
           </button>
         </div>
 
         <!-- 行程卡片列表 -->
-        <div v-if="!editingTripId">
-          <div v-if="tripStore.trips.length > 0" class="space-y-4">
+        <div>
+          <div
+            v-if="!editingTripId"
+            class="travel-card-style rounded-2xl p-7 m-5"
+          >
             <div
-              v-for="item in tripStore.trips"
-              :key="item.id"
-              @click="editingTripId = item.id"
-              class="bg-white rounded-xl shadow p-4 relative cursor-pointer hover:ring-2 hover:ring-blue-300 transition"
+              v-if="tripStore.trips.length > 0"
+              class="solo-card-style mt-2 space-y-4 rounded-xl"
             >
-              <img
-                :src="
-                  item.coverURL || 'https://placehold.co/600x300?text=封面圖'
-                "
-                class="w-full h-60 object-cover rounded-xl mb-3"
-                alt="行程封面照"
-              />
-              <h2 class="text-xl font-bold mb-1">{{ item.title }}</h2>
-              <p class="text-gray-600 text-sm">
-                {{ item.startDate }} - {{ item.endDate }}
-              </p>
-              <p class="text-gray-500 text-sm mt-2">{{ item.description }}</p>
-              <button
-                @click.stop="deleteSchedule(item.id)"
-                title="刪除行程"
-                class="absolute bottom-2 right-2 text-gray-400 hover:text-red-500 text-xl"
+              <div
+                v-for="item in tripStore.trips"
+                :key="item.id"
+                @click="editingTripId = item.id"
+                class="rounded-2xl shadow-md shadow-black/40 verflow-hidden relative cursor-pointer hover:ring-2 hover:ring-gray-400 transition"
               >
-                刪除行程
-              </button>
-              <button
-                @click.stop="openShareModal(item.id)"
-                title="共享行程"
-                class="absolute bottom-2 right-16 text-gray-400 hover:text-blue-500 text-xl"
-              >
-                共享行程
-              </button>
+                <img
+                  :src="
+                    item.coverURL || 'https://placehold.co/600x300?text=封面圖'
+                  "
+                  class="w-full h-60 object-cover rounded-tl-xl rounded-tr-xl mb-3"
+                  alt="行程封面照"
+                />
+                <div class="px-5">
+                  <h2 class="text-xl text-white font-bold mb-1">
+                    {{ item.title }}
+                  </h2>
+                  <p class="text-white text-m">
+                    {{ item.startDate }} - {{ item.endDate }}
+                  </p>
+                  <p class="text-white text-m mt-2">{{ item.description }}</p>
+                </div>
+                <button
+                  @click.stop="deleteSchedule(item.id)"
+                  title="刪除行程"
+                  class="absolute bottom-2 right-2 text-gray-600 bg-white px-2 rounded-2xl hover:text-red-500 text-md"
+                >
+                  刪除行程
+                </button>
+                <button
+                  @click.stop="openShareModal(item.id)"
+                  title="共享行程"
+                  class="absolute bottom-2 right-16 text-gray-400 hover:text-blue-500 text-xl"
+                >
+                  共享行程
+                </button>
+              </div>
             </div>
+            <div v-else class="text-gray-400 text-center">尚未建立任何行程</div>
           </div>
-          <div v-else class="text-gray-400 text-center">尚未建立任何行程</div>
+
+          <!-- 編輯行程 -->
+          <ScheduleDetail
+            v-else
+            :trip-id="editingTripId"
+            :selected-date="selectedTrip?.days?.[currentDayIndex]?.date"
+            ref="scheduleDetailRef"
+            @back="handleCloseDetail"
+            @day-changed="currentDayIndex = $event"
+            class="w-[50%] lg:w-full"
+          />
         </div>
-
-        <!-- 編輯行程 -->
-        <ScheduleDetail
-          v-else
-          :trip-id="editingTripId"
-          :selected-date="selectedTrip?.days?.[currentDayIndex]?.date"
-          ref="scheduleDetailRef"
-          @back="handleCloseDetail"
-        />
       </div>
-    </div>
-    <!-- 彈出建立行程表單 -->
-    <div
-      v-if="showForm"
-      class="fixed inset-0 bg-white/50 backdrop-blur-sm flex items-center justify-center z-50"
-    >
-      <div class="bg-white w-full max-w-xl rounded-2xl p-6 shadow-lg relative">
-        <TravelSchedule @close="handleCloseForm" />
-      </div>
-    </div>
 
-    <!-- 付款提醒Modal -->
-    <div
-      v-if="showPayModal"
-      class="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50"
-    >
+      <!-- 彈出建立行程表單 -->
       <div
-        class="bg-white rounded-2xl shadow-xl max-w-md w-full p-6 text-center"
+        v-if="showForm"
+        class="fixed inset-0 backdrop-blur-sm flex items-center justify-center z-50 overflow-auto p-4"
       >
-        <h2 class="text-xl font-bold mb-2">升級成付費會員</h2>
-        <p class="text-gray-600 mb-6">
-          免費會員僅可建立一筆行程，若要建立更多行程，請升級為付費會員。
-        </p>
-        <div class="flex justify-center gap-4">
-          <button
-            @click="goToPay"
-            class="bg-green-500 hover:bg-green-400 text-white px-4 py-2 rounded"
-          >
-            前往付款
-          </button>
-          <button
-            @click="showPayModal = false"
-            class="px-4 py-2 border rounded text-gray-600 hover:bg-gray-100"
-          >
-            取消
-          </button>
+        <div>
+          <TravelSchedule @close="handleCloseForm" />
         </div>
       </div>
+
+      <!-- 付款提醒Modal -->
+      <PaymentModal
+        v-if="showPayModal"
+        :result="payResult"
+        @close="showPayModal = false"
+      />
     </div>
     <ShareTripModal
       :is-open="showShareModal"
@@ -126,15 +121,17 @@
 
 <script setup>
 import { ref, onMounted, computed } from "vue";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import TravelSchedule from "@/components/TravelSchedule.vue";
 import axios from "axios";
 import GoogleMapView from "@/views/GoogleMapView.vue";
 import ScheduleDetail from "@/views/scheduleDetail.vue";
 import { useTripStore } from "@/stores/tripStore";
 import ShareTripModal from "@/components/ShareTripModal.vue";
+import PaymentModal from "@/components/PaymentModal.vue";
 
 const router = useRouter();
+const route = useRoute();
 const editingTripId = ref(null);
 const tripStore = useTripStore();
 const showForm = ref(false);
@@ -149,6 +146,7 @@ const mapRef = ref(null);
 const scheduleDetailRef = ref(null);
 const showShareModal = ref(false);
 const shareTripId = ref(null);
+const payResult = ref(null);
 
 const selectedTrip = computed(() => {
   return tripStore.trips.find((t) => t.id === editingTripId.value);
@@ -172,6 +170,14 @@ const fetchIsPremium = async () => {
 onMounted(() => {
   tripStore.fetchTrips();
   fetchIsPremium();
+
+  if (
+    route.query.linepayResult === "success" ||
+    route.query.linepayResult === "fail"
+  ) {
+    payResult.value = route.query.linepayResult;
+    showPayModal.value = true;
+  }
 });
 
 //建立行程時檢查是否登入
@@ -267,3 +273,5 @@ defineExpose({
   dailyPlanRef,
 });
 </script>
+
+<style scoped></style>

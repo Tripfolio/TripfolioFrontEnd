@@ -1,13 +1,11 @@
 <template>
-  <div v-if="selectedTrip && currentDay">
-    <h2 class="text-xl font-bold mb-4">{{ currentDay.date }}</h2>
+  <div v-if="selectedTrip && currentDay" class="w-full max-w-xl mx-auto">
+    <h2 class="text-xl font-bold mb-4 ml-13">{{ currentDay.date }}</h2>
 
     <Itinerary
-      v-if="role !== 'viewer'"
       ref="itineraryRef"
       :trip-id="selectedTrip.id"
       :selected-date="currentDay.date"
-      :role="props.role"
       class="hidden"
       @refresh="refresh"
     />
@@ -15,18 +13,18 @@
     <draggable
       :list="itinerarySpots"
       item-key="id"
-      ghost-class="bg-yellow-100"
+      ghost-class="solo-card-style"
       animation="200"
       @end="updateOrder"
     >
       <template #item="{ element: p, index }">
-        <div>
+        <div class="">
           <li
-            class="mb-4 border-b bg-gray-500 list-none flex justify-between rounded-2xl w-full relative items-stretch"
+            class="navbar-style mb-4 list-none flex justify-between rounded-2xl w-[80%] mx-auto relative items-stretch"
           >
             <div class="w-1/2 p-3">
               <p
-                class="number bg-red-600 w-6 text-center rounded-2xl text-amber-50"
+                class="number bg-[#6a7282] w-6 text-center rounded-2xl text-amber-50"
               >
                 {{ index + 1 }}
               </p>
@@ -66,7 +64,7 @@
                       更改
                     </button>
                     <button @click="cancelEditing(p)" class="text-red-300">
-                      ✘ 取消
+                      取消
                     </button>
                   </div>
                 </div>
@@ -85,7 +83,7 @@
               >
                 <font-awesome-icon
                   icon="ellipsis-h"
-                  class="p-1 text-white bg-cyan-800 rounded-full cursor-pointer absolute right-2 top-2"
+                  class="p-1 text-white bg-[#878787] rounded-full cursor-pointer absolute right-2 top-2"
                 />
               </button>
               <ul
@@ -95,9 +93,9 @@
                 <li>
                   <button
                     @click="removePlace(p)"
-                    class="w-full text-left px-4 py-2 hover:bg-gray-100"
+                    class="px-3 py-1 bg-white text-black rounded hover:bg-gray-100 whitespace-nowrap"
                   >
-                    🗑️ remove
+                    🗑️ 移除
                   </button>
                 </li>
               </ul>
@@ -117,8 +115,8 @@
             :traffic-data="
               trafficMap[p.id + '-' + itinerarySpots[index + 1].id] || null
             "
-            :role="props.role"
             @traffic-updated="refresh"
+            class="mx-auto"
           />
         </div>
       </template>
@@ -135,7 +133,7 @@
 </template>
 
 <script setup>
-import { ref, computed, toRefs, onMounted, watch, nextTick } from "vue";
+import { ref, computed, toRefs, onMounted, watch } from "vue";
 import TrafficBetween from "./TrafficBetween.vue";
 import draggable from "vuedraggable";
 import Itinerary from "./Itinerary.vue";
@@ -214,6 +212,16 @@ watch(
   () => {
     refresh();
   },
+);
+
+// 監聽變化時重新載入
+
+watch(
+  () => selectedTrip.value,
+  () => {
+    refresh();
+  },
+  { deep: true },
 );
 
 function toggleMenu(index) {
