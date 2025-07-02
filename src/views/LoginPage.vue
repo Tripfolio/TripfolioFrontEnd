@@ -1,9 +1,9 @@
 <template>
-  <div class="homepage-bg min-h-screen relative bg-cover bg-center">
+  <div class="homepage-bg min-h-screen relative ">
     <main
-      class="w-1/2 mx-auto py-5 absolute bottom-0 left-1/2 -translate-1/2 rounded-2xl bg-black/35"
+      class="w-1/2 py-5 absolute top-100  left-1/2 -translate-1/2 rounded-2xl bg-black/35 shadow-2xl h-[400px] min-w-[400px] "
     >
-      <h4 class="text-lg font-bold mb-6 text-center text-white">登入頁面</h4>
+      <h4 class="text-lg font-bold mb-10 text-center text-white">登入</h4>
 
       <div
         v-if="showError"
@@ -30,7 +30,7 @@
             id="email"
             placeholder="請輸入電子郵件"
             required
-            class="mb-5 block w-[300px] rounded-md border border-gray-300 shadow-sm p-2"
+            class="mb-5 block w-[300px] text-white  rounded-md border border-gray-300 shadow-sm p-2"
           />
         </div>
 
@@ -41,23 +41,23 @@
             id="password"
             placeholder="請輸入密碼"
             required
-            class="mb-5 block w-[300px] rounded-md border border-gray-300 shadow-sm p-2"
+            class="mb-5 block w-[300px] text-white rounded-md border border-gray-300 shadow-sm p-2"
           />
         </div>
 
         <div class="flex justify-start gap-[20px] mt-[10px] w-[300px]">
           <button
             type="submit"
-            class="w-[100px] bg-blue-200 text-black py-2 rounded transition mx-auto"
+            class="w-[100px] bg-black/50 text-white py-2 rounded-full transition mx-auto cursor-pointer"
           >
             登入
           </button>
         </div>
         <RouterLink to="/signup">
           <button
-            class="text-black py-2 rounded transition hover:text-[#0d4a87]"
+            class="text-[#4d4d4d] py-2 transition hover:text-[#ffffff]"
           >
-            我要註冊
+            還沒有帳號？註冊
           </button>
         </RouterLink>
       </form>
