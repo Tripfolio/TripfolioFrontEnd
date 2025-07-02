@@ -33,14 +33,13 @@ const props = defineProps({
   destination: Object,
   trafficData: Object,
   role: {
-    type: String,
-    default: "viewer", // 🔒 權限控制：新增 role prop
+    type: String, // 🔒 權限控制：新增 role prop
   },
 });
 
 // 🔒 權限控制：判斷是否可編輯
 const canEdit = computed(
-  () => props.role.value === "owner" || props.role.value === "editor",
+  () => props.role === "owner" || props.role === "editor",
 );
 
 const selectedMode = ref("NONE");
@@ -82,10 +81,10 @@ watch(
 );
 
 async function getTravelInfo() {
-  if (!canEdit.value) {
-    alert("您沒有權限變更交通方式");
-    return;
-  }
+  // if (!canEdit.value) {
+  //   alert("您沒有權限變更交通方式");
+  //   return;
+  // }
 
   if (selectedMode.value === "NONE") {
     durationText.value = "";

@@ -145,8 +145,7 @@ const props = defineProps({
     required: true,
   },
   role: {
-    type: String,
-    default: "viewer", // 🔒 權限控制
+    type: String, // 🔒 權限控制
   },
 });
 

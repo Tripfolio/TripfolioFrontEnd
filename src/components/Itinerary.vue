@@ -25,8 +25,7 @@ const props = defineProps({
   },
   selectedPlace: Object,
   role: {
-    type: String,
-    default: "viewer", // 🔒 權限控制：接收 role
+    type: String, // 🔒 權限控制：接收 role
   },
 });
 
@@ -38,11 +37,11 @@ const trafficMap = ref({});
 
 // 🔒 權限控制：定義是否可編輯
 const canEdit = computed(
-  () => props.role.value === "owner" || props.role.value === "editor",
+  () => props.role === "owner" || props.role === "editor",
 );
 
 onMounted(() => {
-  console.log("✅ Itinerary.vue mounted, role =", props.role.value);
+  console.log("✅ Itinerary.vue mounted, role =", props.role);
   loadItinerary();
   window.addEventListener("click", onClickOutside);
 });
@@ -89,10 +88,10 @@ function onClickOutside(e) {
 }
 
 function startEditing(p) {
-  if (!canEdit.value) {
-    alert("您沒有編輯權限");
-    return;
-  }
+  // if (!canEdit.value) {
+  //   alert("您沒有編輯權限");
+  //   return;
+  // }
   p.editingTime = true;
   p.arrivalHourTemp = p.arrivalHour ?? 0;
   p.arrivalMinuteTemp = p.arrivalMinute ?? 0;
@@ -109,10 +108,10 @@ function formatTime(hour, minute) {
 
 //確認更改時間
 async function confirmTime(p) {
-  if (!canEdit.value) {
-    alert("您沒有編輯權限");
-    return;
-  }
+  // if (!canEdit.value) {
+  //   alert("您沒有編輯權限");
+  //   return;
+  // }
   const newTime = p.arrivalHourTemp * 60 + p.arrivalMinuteTemp;
   const hasConflict = itineraryPlaces.value.some(
     (place) =>
@@ -140,10 +139,10 @@ async function confirmTime(p) {
 
 //更新順序
 async function updateOrder() {
-  if (!canEdit.value) {
-    alert("您沒有權限調整順序");
-    return;
-  }
+  // if (!canEdit.value) {
+  //   alert("您沒有權限調整順序");
+  //   return;
+  // }
 
   const newOrder = itineraryPlaces.value.map((p, i) => ({
     id: p.id,
@@ -160,24 +159,14 @@ async function updateOrder() {
   }
 }
 
-// 🔁 輪詢直到 canEdit 為 true 為止
-async function waitUntilCanEdit(maxAttempts = 20, interval = 50) {
-  let attempts = 0;
-  while (!canEdit.value && attempts < maxAttempts) {
-    await new Promise((resolve) => setTimeout(resolve, interval));
-    attempts++;
-  }
-}
-
 //加入景點
 async function addPlace(place, date) {
-  await waitUntilCanEdit();
-  console.log("🔍 props.role:", props.role.value);
+  console.log("🔍 props.role:", props.role);
   console.log("🔍 canEdit:", canEdit.value);
-  if (!canEdit.value) {
-    alert("您沒有權限新增景點");
-    return false;
-  }
+  // if (!canEdit.value) {
+  //   alert("您沒有權限新增景點");
+  //   return false;
+  // }
 
   if (!place || !date) {
     alert("請選擇地點與日期");
@@ -221,11 +210,10 @@ async function addPlace(place, date) {
 
 //移除景點
 async function removePlace(p) {
-  await waitUntilCanEdit();
-  if (!canEdit.value) {
-    alert("您沒有權限刪除景點");
-    return false;
-  }
+  // if (!canEdit.value) {
+  //   alert("您沒有權限刪除景點");
+  //   return false;
+  // }
 
   try {
     const res = await axios.delete(`${API_URL}/api/itinerary/place`, {

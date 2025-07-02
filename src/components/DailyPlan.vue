@@ -135,7 +135,7 @@
 </template>
 
 <script setup>
-import { ref, computed, toRefs, onMounted, watch, nextTick, toRef } from "vue";
+import { ref, computed, toRefs, onMounted, watch, nextTick } from "vue";
 import TrafficBetween from "./TrafficBetween.vue";
 import draggable from "vuedraggable";
 import Itinerary from "./Itinerary.vue";
@@ -149,21 +149,16 @@ const props = defineProps({
   selectedTrip: Object,
   dayIndex: Number,
   role: {
-    type: String,
-    default: "viewer", // 🔒 權限控制：接收 role
+    type: String, // 🔒 權限控制：接收 role
   },
 });
-const role = toRef(props, "role");
+
 const { selectedTrip, dayIndex } = toRefs(props);
 
 // 🔒 權限控制：計算是否可編輯
 const canEdit = computed(
-  () => props.role.value === "editor" || props.role.value === "owner",
+  () => props.role === "editor" || props.role === "owner",
 );
-
-watch(role, (newRole) => {
-  console.log("🎯 DailyPlan.vue role 變化為:", newRole);
-});
 
 const openMenuIndex = ref(null);
 
@@ -183,12 +178,6 @@ const itinerarySpots = ref([]);
 
 //更新景點資料
 async function refresh() {
-  await nextTick(); // 等待 DOM & props 完成
-  const tripId = selectedTrip.value?.id;
-  const date = currentDay.value?.date;
-
-  console.log("refresh 中 tripId:", tripId);
-  console.log("refresh 中 selectedDate:", date);
   if (!selectedTrip.value?.id || !currentDay.value?.date) {
     return;
   }
@@ -237,10 +226,10 @@ function formatTime(hour, minute) {
 
 //呼叫子層
 function startEditing(p) {
-  if (!canEdit.value) {
-    alert("您沒有編輯權限");
-    return;
-  }
+  // if (!canEdit.value) {
+  //   alert("您沒有編輯權限");
+  //   return;
+  // }
   itineraryRef.value?.startEditing(p);
 }
 
@@ -249,27 +238,27 @@ function cancelEditing(p) {
 }
 
 function confirmTime(p) {
-  if (!canEdit.value) {
-    alert("您沒有編輯權限");
-    return;
-  }
+  // if (!canEdit.value) {
+  //   alert("您沒有編輯權限");
+  //   return;
+  // }
   itineraryRef.value?.confirmTime(p);
 }
 
 function removePlace(p) {
-  if (!canEdit.value) {
-    alert("您沒有刪除權限");
-    return;
-  }
+  // if (!canEdit.value) {
+  //   alert("您沒有刪除權限");
+  //   return;
+  // }
   itineraryRef.value?.removePlace(p);
 }
 
 //更新排序
 function updateOrder() {
-  if (!canEdit.value) {
-    alert("您沒有調整順序的權限");
-    return;
-  }
+  // if (!canEdit.value) {
+  //   alert("您沒有調整順序的權限");
+  //   return;
+  // }
   const newOrder = itinerarySpots.value.map((p, i) => ({
     id: p.id,
     placeOrder: i + 1,

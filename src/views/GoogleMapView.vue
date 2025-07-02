@@ -5,7 +5,6 @@
     :selected-place="selectedPlace"
     :selected-date="selectedDate?.date"
     :default-image="defaultImage"
-    :role="props.role"
   />
 
   <div
@@ -274,10 +273,6 @@ const props = defineProps({
   currentDayIndex: Number,
   dailyPlanRef: Object,
   scheduleDetailRef: Object,
-  role: {
-    type: String,
-    default: "viewer",
-  },
 });
 
 const { trip, currentDayIndex } = toRefs(props);
@@ -335,7 +330,7 @@ function scrollRight() {
 }
 
 //import
-async function callItinerary() {
+function callItinerary() {
   const date = selectedDate.value?.date;
   const place = selectedPlace.value;
 
@@ -344,21 +339,7 @@ async function callItinerary() {
     return;
   }
 
-  let attempts = 0;
-  const maxAttempts = 20;
-  const interval = 50;
-
-  while (itineraryRef.value?.role === "viewer" && attempts < maxAttempts) {
-    await new Promise((resolve) => setTimeout(resolve, interval));
-    attempts++;
-  }
-
-  if (itineraryRef.value?.role === "viewer") {
-    alert("尚未獲得編輯權限，請稍後再試");
-    return;
-  }
-
-  const success = await itineraryRef.value?.addPlace(place, date);
+  const success = itineraryRef.value?.addPlace(place, date);
 
   if (success) {
     emit("place-added", { place, date });
