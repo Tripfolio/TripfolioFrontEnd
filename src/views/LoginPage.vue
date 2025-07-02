@@ -1,15 +1,15 @@
 <template>
   <div class="homepage-bg min-h-screen relative ">
     <main
-      class="w-1/2 py-5 absolute top-100  left-1/2 -translate-1/2 rounded-2xl bg-black/45 shadow-2xl h-[400px] min-w-[400px] "
+      class="w-1/2 py-5 absolute top-100  left-1/2 -translate-1/2 rounded-2xl bg-black/45 shadow-2xl min-h-[400px] min-w-[400px] "
     >
       <h4 class="text-lg font-bold mb-10 text-center text-white">登入</h4>
 
       <div
         v-if="showError"
-        class="w-[300px] flex items-center gap-2 bg-red-100 text-red-800 border border-red-200 px-4 py-3 rounded-md mb-4">
+        class="w-[300px] mx-auto gap-2 bg-red-100 text-red-800 border border-red-200 px-4 py-3 rounded-md mb-4 ">
         <font-awesome-icon icon="exclamation-triangle" class="mr-2 text-red-500 text-lg" />
-        <span class="text-sm font-medium">
+        <span class="text-sm font-medium mx-auto">
           {{ errorMessage }}
         </span>
       </div>
