@@ -161,6 +161,7 @@ async function updateOrder() {
 
 //加入景點
 async function addPlace(place, date) {
+  console.log("props:", props);
   console.log("🔍 props.role:", props.role);
   console.log("🔍 canEdit:", canEdit.value);
   // if (!canEdit.value) {
