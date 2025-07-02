@@ -1,6 +1,6 @@
 <template>
   <div class="homepage-bg min-h-screen relative">
-    <div class="w-1/2 py-5 absolute top-100 left-1/2 -translate-1/2 rounded-2xl bg-black/35 shadow-2xl h-[400px] min-w-[400px]">
+    <div class="w-1/2 py-5 absolute top-100 left-1/2 -translate-1/2 rounded-2xl bg-black/45 shadow-2xl h-[400px] min-w-[400px]">
       <h2 class="text-lg font-bold mb-8 text-center text-white">註冊</h2>
       <div v-if="showError" class="space-y-2 w-[300px] mx-auto">
         <div
@@ -45,12 +45,27 @@
           class="mb-5 block w-[300px] text-white  rounded-md border border-gray-300 shadow-sm p-2"
         />
 
-        <button
-          type="submit"
-          class="w-[100px] bg-black/50 text-white py-2 rounded-full transition mx-auto cursor-pointer mt-4"
-        >
-          註冊
-        </button>
+        <div class="flex justify-center gap-6 mt-4">
+
+          <!-- Google 註冊/登入按鈕 -->
+          <button
+            type="button"
+            @click="handleGoogleLogin"
+            class="p-[10px] border border-[#fff]  rounded-full  text-[14px] flex items-center justify-center gap-2 hover:bg-white/30 w-full"
+          >
+            <img src="https://www.google.com/favicon.ico" alt="Google" class="w-5 h-5 "/>
+            <span class="text-white px-0.5">使用 Google 註冊</span>
+          </button>
+
+          <button
+            type="submit"
+            class="w-[100px] bg-black/50 text-white py-2 rounded-full transition mx-auto cursor-pointer  hover:bg-white/30"
+          >
+            註冊
+          </button>
+
+        </div>
+
 
         <RouterLink to="/login">
           <button
@@ -65,7 +80,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from 'vue';
 import { useRouter } from "vue-router";
 import axios from "axios";
 
@@ -74,6 +89,7 @@ const email = ref("");
 const password = ref("");
 
 const router = useRouter();
+const TOKEN_NAME = 'token';
 
 const showError = ref(false);
 const errorMessages = ref([]);
@@ -119,4 +135,20 @@ const signUp = async () => {
     }
   }
 };
+
+const handleGoogleLogin = () => {
+  window.location.href = `${import.meta.env.VITE_API_URL}/auth/google`;
+};
+
+onMounted(() => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const googleToken = urlParams.get('token');
+
+  if (googleToken) {
+    localStorage.setItem(TOKEN_NAME, googleToken);
+    axios.defaults.headers.common['Authorization'] = `Bearer ${googleToken}`;
+    router.replace('/');
+  }
+});
+
 </script>

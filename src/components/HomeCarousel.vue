@@ -34,7 +34,6 @@ import img3 from '@/assets/HomePage/3.png'
 import img4 from '@/assets/HomePage/4.png'
 
 
-
 const blocks = [
   { img: img1 },
   { img: img2 },

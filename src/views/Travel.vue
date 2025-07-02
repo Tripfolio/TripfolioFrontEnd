@@ -47,9 +47,7 @@
                 class="rounded-2xl shadow-md shadow-black/40 verflow-hidden relative cursor-pointer hover:ring-2 hover:ring-gray-400 transition"
               >
                 <img
-                  :src="
-                    item.coverURL || 'https://placehold.co/600x300?text=封面圖'
-                  "
+                  :src="item.coverURL || 'https://placehold.co/600x300?text=封面圖'"
                   class="w-full h-60 object-cover rounded-tl-xl rounded-tr-xl mb-3"
                   alt="行程封面照"
                 />
@@ -98,47 +96,25 @@
       </div>
 
       <!-- 付款提醒Modal -->
-      <div
-        v-if="showPayModal"
-        class="fixed inset-0 bg-white/50 backdrop-blur-sm flex items-center justify-center z-50 overflow-auto p-4"
-      >
-        <div
-          class="bg-white w-full max-w-xl rounded-2xl p-6 shadow-lg relative"
-        >
-          <h2 class="text-xl font-bold mb-2">升級成付費會員</h2>
-          <p class="text-gray-600 mb-6">
-            免費會員僅可建立一筆行程，若要建立更多行程，請升級為付費會員。
-          </p>
-          <div class="flex justify-center gap-4">
-            <button
-              @click="goToPay"
-              class="bg-green-500 hover:bg-green-400 text-white px-4 py-2 rounded"
-            >
-              前往付款
-            </button>
-            <button
-              @click="showPayModal = false"
-              class="px-4 py-2 border rounded text-gray-600 hover:bg-gray-100"
-            >
-              取消
-            </button>
-          </div>
-        </div>
-      </div>
+      <PaymentModal v-if="showPayModal" 
+        :result="payResult"
+        @close="showPayModal = false"  />
     </div>
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted, computed } from "vue";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import TravelSchedule from "@/components/TravelSchedule.vue";
 import axios from "axios";
 import GoogleMapView from "@/views/GoogleMapView.vue";
 import ScheduleDetail from "@/views/scheduleDetail.vue";
 import { useTripStore } from "@/stores/tripStore";
+import PaymentModal from "@/components/PaymentModal.vue";
 
 const router = useRouter();
+const route = useRoute();
 const editingTripId = ref(null);
 const tripStore = useTripStore();
 const showForm = ref(false);
@@ -151,6 +127,7 @@ const itineraryRef = ref(null);
 const dailyPlanRef = ref(null);
 const mapRef = ref(null);
 const scheduleDetailRef = ref(null);
+const payResult = ref(null);
 
 const selectedTrip = computed(() => {
   return tripStore.trips.find((t) => t.id === editingTripId.value);
@@ -174,6 +151,11 @@ const fetchIsPremium = async () => {
 onMounted(() => {
   tripStore.fetchTrips();
   fetchIsPremium();
+
+  if (route.query.linepayResult === 'success' || route.query.linepayResult === 'fail') {
+    payResult.value = route.query.linepayResult;
+    showPayModal.value = true;
+  }
 });
 
 //建立行程時檢查是否登入

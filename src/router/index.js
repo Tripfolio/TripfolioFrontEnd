@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory } from "vue-router";
-
 import HomeView from "@/views/HomeView.vue";
 import SignUp from "@/views/SignUp.vue";
 import LoginPage from "@/views/LoginPage.vue";
@@ -11,9 +10,6 @@ import GetInvite from "@/views/GetInvite.vue";
 import Post from "@/components/PostForm.vue";
 import Community from "@/views/CommunityList.vue";
 import scheduleDetail from "@/views/scheduleDetail.vue";
-import Payment from "@/views/Payment.vue";
-import LinePaySuccess from "@/views/LinePaySuccess.vue";
-import LinePayFail from "@/views/LinePayFail.vue";
 import MemberProfile from "@/views/MemberProfile.vue";
 import MemberHub from "@/views/MemberHub.vue";
 
@@ -31,7 +27,7 @@ const routes = [
   {
     path: "/map",
     name: "map",
-    component: GoogleMapView,
+    component: () => import("@/views/GoogleMapView.vue"),
   },
   {
     path: "/login",
@@ -41,7 +37,7 @@ const routes = [
   {
     path: "/calendar",
     name: "calendar",
-    component: GoogleCalendar,
+    component: () => import("@/views/GoogleCalendar.vue"),
   },
   {
     path: "/profile",
@@ -51,7 +47,7 @@ const routes = [
   {
     path: "/emailSettings",
     name: "emailSettings",
-    component: EmailSettings,
+    component: () => import("@/views/EmailSettings.vue"),
   },
   {
     path: "/GetInvite",
@@ -61,37 +57,22 @@ const routes = [
   {
     path: "/schedule",
     name: "schedule",
-    component: Travel,
+    component: () => import("@/views/Travel.vue"),
   },
   {
     path: "/community/post",
     name: "communityPost",
-    component: Post,
+    component: () => import("@/components/PostForm.vue"),
   },
   {
     path: "/community",
     name: "community",
-    component: Community,
+    component: () => import("@/views/CommunityList.vue"),
   },
   {
     path: "/schedule/:id",
     name: "scheduledetail",
     component: scheduleDetail,
-  },
-  {
-    path: "/payment",
-    name: "payment",
-    component: Payment,
-  },
-  {
-    path: "/linepay-success",
-    name: "linepaysuccess",
-    component: LinePaySuccess,
-  },
-  {
-    path: "/linepay-fail",
-    name: "linepayfail",
-    component: LinePayFail,
   },
 ];
 

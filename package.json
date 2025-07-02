@@ -21,6 +21,7 @@
     "cors": "^2.8.5",
     "dayjs": "^1.11.13",
     "jwt-decode": "^4.0.0",
+    "passport": "^0.7.0",
     "pinia": "^3.0.1",
     "qrcode.vue": "^3.6.0",
     "swiper": "^11.2.8",
