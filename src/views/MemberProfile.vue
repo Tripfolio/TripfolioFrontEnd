@@ -1,21 +1,26 @@
 <template>
-  <div class="solo-card-style rounded-2xl p-4 max-w-md mx-auto">
-    <h2 class="text-xl font-bold mb-4">資料修改</h2>
+  <div
+    class="solo-card-style rounded-2xl p-6 sm:p-8 w-full max-w-xl text-gray-800 space-y-6 max-h-[80vh] overflow-y-auto"
+  >
+    <!-- 標題 -->
+    <h2 class="text-2xl font-semibold text-center text-white">會員資料修改</h2>
 
-    <div class="flex flex-col items-center mb-4">
-      <div class="relative w-40 h-40">
+    <!-- 頭像區塊 -->
+    <div class="flex justify-center">
+      <div class="relative w-24 h-24">
         <img
           v-if="!showCropper && (previewUrl || profileData.avatar)"
           :src="previewUrl || profileData.avatar"
-          class="w-full h-full rounded-full object-cover border border-gray-300"
+          class="w-full h-full rounded-full object-cover border-4 border-gray-200"
           alt="大頭貼"
         />
         <label
           for="avatar-upload"
-          class="avatar-upload absolute bottom-2 right-2 bg-white border border-gray-300 rounded-full p-2 cursor-pointer hover:bg-gray-100 shadow-md"
+          class="absolute bottom-1 right-1 bg-white border rounded-full p-2 cursor-pointer shadow hover:bg-gray-100"
           title="更換大頭貼"
-          ><font-awesome-icon :icon="['fas', 'pen-to-square']"
-        /></label>
+        >
+          <font-awesome-icon :icon="['fas', 'pen-to-square']" />
+        </label>
         <input
           type="file"
           id="avatar-upload"
@@ -25,9 +30,11 @@
         />
       </div>
     </div>
+
+    <!-- 裁切器 -->
     <div
       v-if="showCropper"
-      class="absolute top-0 left-0 w-full h-full bg-white/80 flex flex-col items-center justify-center z-50"
+      class="fixed inset-0 bg-white/80 flex flex-col items-center justify-center z-50"
     >
       <Cropper
         ref="cropperRef"
@@ -35,87 +42,136 @@
         :stensil-props="{ aspectRatio: 1 }"
         class="w-40 h-40 rounded-full"
       />
-      <button @click="saveAvatar" class="w-24 bg-sky-500/50 mt-2">
+      <button
+        @click="saveAvatar"
+        class="mt-4 px-4 py-2 bg-sky-500 text-white rounded hover:bg-sky-600"
+      >
         儲存大頭貼
       </button>
     </div>
 
-    <form @submit.prevent="saveProfile">
-      <span>名稱：</span>
-      <input
-        type="text"
-        v-model="profileData.name"
-        placeholder="名稱"
-        class="border-2 border-solid"
-      />
-      <span>性別：</span>
-      <select
-        name=""
-        id=""
-        v-model="profileData.gender"
-        class="border-2 border-solid"
-      >
-        <option value="male">男</option>
-        <option value="female">女</option>
-      </select>
+    <!-- 基本資料表單 -->
+    <form @submit.prevent="saveProfile" class="space-y-2">
+      <div class="grid sm:grid-cols-2 gap-4">
+        <div>
+          <label class="block font-medium mb-1">名稱</label>
+          <input
+            type="text"
+            v-model="profileData.name"
+            class="w-full border border-gray-300 rounded px-3 py-2"
+            placeholder="請輸入名稱"
+          />
+        </div>
+
+        <div>
+          <label class="block font-medium mb-1">性別</label>
+          <select
+            v-model="profileData.gender"
+            class="w-full border border-gray-300 rounded px-3 py-2"
+          >
+            <option value="male">男</option>
+            <option value="female">女</option>
+          </select>
+        </div>
+      </div>
+
       <div>
-        <span>手機號碼：</span>
+        <label class="block font-medium mb-1">手機號碼</label>
         <input
           type="tel"
           v-model="profileData.phone"
-          placeholder="手機號碼"
-          class="border-2 border-solid"
+          class="w-full border border-gray-300 rounded px-3 py-2"
+          placeholder="請輸入手機號碼"
         />
-        <p v-if="phoneError" style="color: red">{{ phoneError }}</p>
+        <p v-if="phoneError" class="text-red-500 text-sm mt-1">
+          {{ phoneError }}
+        </p>
       </div>
-      <span>生日：</span>
-      <input
-        type="date"
-        v-model="profileData.birthday"
-        class="border-2 border-solid"
-      />
-      <button type="submit" class="w-24 bg-sky-500/50">儲存會員資料</button>
+
+      <div>
+        <label class="block font-medium mb-1">生日</label>
+        <input
+          type="date"
+          v-model="profileData.birthday"
+          class="w-full border border-gray-300 rounded px-3 py-2"
+        />
+      </div>
+
+      <div class="text-center">
+        <button
+          type="submit"
+          class="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600"
+        >
+          儲存會員資料
+        </button>
+      </div>
     </form>
 
-    <h2>密碼修改</h2>
-    <form @submit.prevent="changePassword">
-      <div>
-        <input
-          :type="showOld ? 'text' : 'password'"
-          v-model="passwordData.oldPassword"
-          placeholder="舊密碼"
-          class="border-2 border-solid"
-        />
-        <span @click="showOld = !showOld">
-          <font-awesome-icon :icon="showOld ? 'fa-eye-slash' : 'fa-eye'" />
-        </span>
-      </div>
-      <div>
-        <input
-          :type="showNew ? 'text' : 'password'"
-          v-model="passwordData.newPassword"
-          placeholder="新密碼"
-          class="border-2 border-solid"
-        />
-        <span @click="showNew = !showNew">
-          <font-awesome-icon :icon="showNew ? 'fa-eye-slash' : 'fa-eye'" />
-        </span>
-        <p>需輸入8位以上字元，密碼需包含數字+英文</p>
-        <p v-if="passwordError" style="color: red">{{ passwordError }}</p>
-      </div>
-      <div>
-        <input
-          :type="showConfirm ? 'text' : 'password'"
-          v-model="passwordData.confirmPassword"
-          placeholder="再次輸入新密碼"
-          class="border-2 border-solid"
-        />
-        <span @click="showConfirm = !showConfirm">
-          <font-awesome-icon :icon="showConfirm ? 'fa-eye-slash' : 'fa-eye'" />
-        </span>
-      </div>
-      <button type="submit" class="w-24 bg-sky-500/50">送出修改密碼</button>
-    </form>
+    <!-- 密碼區 -->
+    <div>
+      <h2 class="text-xl font-bold mt-6 mb-4 text-center">密碼修改</h2>
+      <form @submit.prevent="changePassword" class="space-y-4">
+        <div class="relative">
+          <input
+            :type="showOld ? 'text' : 'password'"
+            v-model="passwordData.oldPassword"
+            class="w-full border border-gray-300 rounded px-3 py-2"
+            placeholder="舊密碼"
+          />
+          <span
+            class="absolute right-3 top-3 text-gray-500 cursor-pointer"
+            @click="showOld = !showOld"
+          >
+            <font-awesome-icon :icon="showOld ? 'fa-eye-slash' : 'fa-eye'" />
+          </span>
+        </div>
+
+        <div class="relative">
+          <input
+            :type="showNew ? 'text' : 'password'"
+            v-model="passwordData.newPassword"
+            class="w-full border border-gray-300 rounded px-3 py-2"
+            placeholder="新密碼"
+          />
+          <span
+            class="absolute right-3 top-3 text-gray-500 cursor-pointer"
+            @click="showNew = !showNew"
+          >
+            <font-awesome-icon :icon="showNew ? 'fa-eye-slash' : 'fa-eye'" />
+          </span>
+          <p class="text-sm text-gray-500 mt-1">需 8 字元以上，含英文與數字</p>
+          <p v-if="passwordError" class="text-red-500 text-sm">
+            {{ passwordError }}
+          </p>
+        </div>
+
+        <div class="relative">
+          <input
+            :type="showConfirm ? 'text' : 'password'"
+            v-model="passwordData.confirmPassword"
+            class="w-full border border-gray-300 rounded px-3 py-2"
+            placeholder="再次輸入新密碼"
+          />
+          <span
+            class="absolute right-3 top-3 text-gray-500 cursor-pointer"
+            @click="showConfirm = !showConfirm"
+          >
+            <font-awesome-icon
+              :icon="showConfirm ? 'fa-eye-slash' : 'fa-eye'"
+            />
+          </span>
+        </div>
+
+        <div class="text-center">
+          <button
+            type="submit"
+            class="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600"
+          >
+            送出修改密碼
+          </button>
+        </div>
+      </form>
+    </div>
   </div>
 </template>
 
@@ -126,10 +182,7 @@ import { Cropper } from "vue-advanced-cropper";
 import "vue-advanced-cropper/dist/style.css";
 import dayjs from "dayjs";
 
-const emit = defineEmits(["close-modal"]);
-function closeModal() {
-  emit("close-modal");
-}
+const emit = defineEmits(["close-modal", "profile-updated"]);
 
 //確認會員token
 const token = localStorage.getItem("token");
@@ -259,6 +312,10 @@ const saveProfile = async () => {
     );
     alert("儲存成功");
     profileData.value = res.data;
+    emit("profile-updated", {
+      name: res.data.name,
+      avatar: res.data.avatar || "",
+    });
   } catch (err) {
     alert("儲存失敗");
   }
