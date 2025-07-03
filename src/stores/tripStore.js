@@ -39,9 +39,14 @@ export const useTripStore = defineStore("trip", () => {
     error.value = null;
     const token = localStorage.getItem("token");
     try {
-      const response = await axios.get(`${API_BASE_URL}/user`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_URL}/api/tripShares/allTrips`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        },
+        { withCredentials: true },
+      );
+      console.log("API Response:", response);
 
       const scheduleData =
         response.data && Array.isArray(response.data.schedules)
@@ -59,6 +64,7 @@ export const useTripStore = defineStore("trip", () => {
       }
     } catch (err) {
       error.value = err.message || "獲取行程失敗";
+      console.error("Fetch error:", error);
     } finally {
       isLoading.value = false;
     }

@@ -3,7 +3,15 @@
 </template>
 
 <script setup>
-import { toRefs, ref, onMounted, onBeforeUnmount, watch } from "vue";
+import {
+  toRefs,
+  ref,
+  onMounted,
+  onBeforeUnmount,
+  watch,
+  computed,
+  toRef,
+} from "vue";
 import axios from "axios";
 
 const emit = defineEmits(["refresh"]);
@@ -16,6 +24,9 @@ const props = defineProps({
     default: "https://placehold.co/600x400?text=No+Image",
   },
   selectedPlace: Object,
+  role: {
+    type: String, // 🔒 權限控制：接收 role
+  },
 });
 
 const { defaultImage, tripId, selectedDate } = toRefs(props);
@@ -24,7 +35,13 @@ const API_URL = import.meta.env.VITE_API_URL;
 
 const trafficMap = ref({});
 
+// 🔒 權限控制：定義是否可編輯
+const canEdit = computed(
+  () => props.role === "owner" || props.role === "editor",
+);
+
 onMounted(() => {
+  console.log("✅ Itinerary.vue mounted, role =", props.role);
   loadItinerary();
   window.addEventListener("click", onClickOutside);
 });
@@ -71,6 +88,10 @@ function onClickOutside(e) {
 }
 
 function startEditing(p) {
+  // if (!canEdit.value) {
+  //   alert("您沒有編輯權限");
+  //   return;
+  // }
   p.editingTime = true;
   p.arrivalHourTemp = p.arrivalHour ?? 0;
   p.arrivalMinuteTemp = p.arrivalMinute ?? 0;
@@ -87,6 +108,10 @@ function formatTime(hour, minute) {
 
 //確認更改時間
 async function confirmTime(p) {
+  // if (!canEdit.value) {
+  //   alert("您沒有編輯權限");
+  //   return;
+  // }
   const newTime = p.arrivalHourTemp * 60 + p.arrivalMinuteTemp;
   const hasConflict = itineraryPlaces.value.some(
     (place) =>
@@ -131,6 +156,14 @@ async function updateOrder() {
 
 //加入景點
 async function addPlace(place, date) {
+  console.log("props:", props);
+  console.log("🔍 props.role:", props.role);
+  console.log("🔍 canEdit:", canEdit.value);
+  // if (!canEdit.value) {
+  //   alert("您沒有權限新增景點");
+  //   return false;
+  // }
+
   if (!place || !date) {
     alert("請選擇地點與日期");
     return false;
@@ -173,6 +206,11 @@ async function addPlace(place, date) {
 
 //移除景點
 async function removePlace(p) {
+  // if (!canEdit.value) {
+  //   alert("您沒有權限刪除景點");
+  //   return false;
+  // }
+
   try {
     const res = await axios.delete(`${API_URL}/api/itinerary/place`, {
       params: { itineraryId: tripId.value, name: p.name },

@@ -1,205 +1,247 @@
 <template>
-  <div class="bg-white p-6 rounded-xl shadow-md w-full max-w-md mx-auto">
-    <div class="flex border-b mb-4">邀請共編</div>
-    <div>
-      <!-- 權限選單 -->
-      <div class="relative mb-4">
+  <div
+    v-if="isOpen"
+    class="fixed inset-0 z-50 bg-black/50 flex items-center justify-center px-4"
+  >
+    <div
+      class="navbar-style w-full max-w-[500px] rounded-2xl shadow-xl p-6 sm:p-6"
+    >
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-xl font-semibold text-white">分享行程</h2>
         <button
-          @click="togglePermissionDropdown"
-          class="w-full border border-gray-300 rounded-md py-2 px-4 text-left flex justify-between items-center hover:bg-gray-100"
+          @click="emit('close')"
+          class="text-white hover:text-gray-400 text-lg cursor-pointer"
         >
-          {{ permission === "editor" ? "可編輯" : "僅供檢視" }}
-          <svg
-            class="w-4 h-4 ml-2"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            viewBox="0 0 24 24"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <path d="M6 9l6 6 6-6" />
-          </svg>
+          ✕
         </button>
+      </div>
 
-        <!-- Dropdown -->
-        <ul
-          v-if="showDropdown"
-          class="absolute z-10 bg-white w-full mt-1 border border-gray-200 rounded-md shadow"
+      <!-- 權限選擇 -->
+      <div class="mb-4">
+        <label class="block mb-1 text-sm text-white font-medium"
+          >權限設定</label
         >
-          <li
-            class="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-            @click="setPermission('viewer')"
-          >
-            僅供檢視
-          </li>
-          <li
-            class="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-            @click="setPermission('editor')"
-          >
-            可編輯
-          </li>
-        </ul>
+        <select
+          v-model="selectedPermission"
+          class="w-full border border-gray-300 rounded-md px-3 py-2 text-white shadow-sm cursor-pointer"
+        >
+          <option value="viewer">僅可檢視</option>
+          <option value="editor">可編輯</option>
+        </select>
       </div>
 
-      <!-- QRCode + 說明 -->
-      <div v-if="shareUrl" class="flex flex-col items-center space-y-3 my-4">
-        <qrcode-vue :value="shareUrl" :size="160" />
-        <p class="text-sm text-gray-500 text-center leading-snug">
-          手機掃描條碼，即可查看此行程
-        </p>
-      </div>
-
-      <!-- 複製按鈕 -->
       <button
-        @click="copyToClipboard"
-        class="w-full bg-blue-500 text-white font-semibold py-2 px-4 rounded-md hover:bg-blue-600"
+        @click="generateShareLink"
+        class="bg-white/30 hover:bg-black/20 text-white px-4 py-2 rounded-md w-full font-medium cursor-pointer"
+        :disabled="isLoading"
       >
-        複製連結
+        產生分享連結
       </button>
 
-      <!-- 成員清單 -->
-      <div class="mt-6">
-        <h3 class="text-base font-semibold mb-2">共編成員</h3>
-        <ul class="space-y-3 max-h-60 overflow-y-auto">
-          <li
-            v-for="member in members"
-            :key="member.name"
-            class="flex items-center justify-between border px-3 py-2 rounded-md"
+      <!-- 分享結果區塊 -->
+      <div v-if="shareUrl" class="mt-6">
+        <label class="block mb-1 text-sm text-white font-medium"
+          >分享連結</label
+        >
+        <div class="flex items-center gap-2">
+          <input
+            :value="shareUrl"
+            readonly
+            class="flex-1 border border-gray-300 rounded-md px-3 py-2 text-sm text-white shadow-sm"
+          />
+          <button
+            @click="copyToClipboard"
+            class="text-sm text-white hover:text-white/20 whitespace-nowrap cursor-pointer"
           >
-            <div class="flex items-center space-x-3">
-              <img
-                :src="member.avatar"
-                alt="avatar"
-                class="w-8 h-8 rounded-full object-cover"
-              />
-              <div>
-                <p class="font-medium">{{ member.name }}</p>
-              </div>
+            複製
+          </button>
+        </div>
+
+        <div class="mt-4 flex justify-center">
+          <qrcode-vue :value="shareUrl" :size="160" />
+        </div>
+
+        <div class="text-sm text-white mt-2 text-center">
+          到期時間：{{ formattedExpire }}
+        </div>
+      </div>
+
+      <!-- 共享者清單區塊 -->
+      <div v-if="sharedUsers.length" class="mt-6">
+        <h3 class="text-white font-semibold text-base mb-2">
+          目前共享的使用者
+        </h3>
+        <div class="space-y-2">
+          <div
+            v-for="user in sharedUsers"
+            :key="user.id"
+            class="flex items-center justify-between border border-gray-300 rounded-md px-3 py-2 shadow-sm"
+          >
+            <div>
+              <div class="font-medium text-white">{{ user.name }}</div>
+              <div class="text-sm text-gray-400">{{ user.email }}</div>
             </div>
 
-            <div class="flex items-center space-x-2">
-              <!-- 權限下拉 -->
-              <select
-                v-model="member.permission"
-                class="border rounded-md px-2 py-1 text-sm"
-                @change="changePermission(member)"
+            <div class="flex items-center gap-2">
+              <span
+                v-if="user.role === 'owner'"
+                class="text-sm text-gray-200 font-semibold"
+                >建立者</span
               >
-                <option value="editor">可編輯</option>
-                <option value="viewer">僅供檢視</option>
-              </select>
 
-              <!-- 刪除按鈕 -->
-              <button
-                @click="removeMember(member)"
-                class="text-red-500 hover:text-red-700 disabled:opacity-30"
-              >
-                ✕
-              </button>
+              <template v-else>
+                <select
+                  v-if="isOwner"
+                  v-model="user.role"
+                  @change="updatePermission(user.id, user.role)"
+                  class="text-sm border border-gray-300 rounded px-2 py-1 text-gray-700"
+                >
+                  <option value="viewer">檢視者</option>
+                  <option value="editor">編輯者</option>
+                </select>
+
+                <span v-else class="text-sm text-gray-500">{{
+                  user.role
+                }}</span>
+
+                <button
+                  v-if="isOwner"
+                  @click="removeUser(user.id)"
+                  class="text-red-500 hover:text-red-700 text-base"
+                >
+                  🗑
+                </button>
+              </template>
             </div>
-          </li>
-        </ul>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
-import QrcodeVue from "qrcode.vue";
+import { ref, computed, watch } from "vue";
 import axios from "axios";
+import QrcodeVue from "qrcode.vue";
 
 const props = defineProps({
-  tripId: {
-    type: String,
-    required: true,
-  },
+  tripId: Number,
+  isOpen: Boolean,
 });
+const emit = defineEmits(["close"]);
 
-const permission = ref("editor");
+const selectedPermission = ref("viewer");
 const shareUrl = ref("");
-const showDropdown = ref(false);
-const members = ref([]);
+const expiresAt = ref("");
+const isLoading = ref(false);
+const sharedUsers = ref([]);
+const isOwner = ref(false);
 
-const togglePermissionDropdown = () => {
-  showDropdown.value = !showDropdown.value;
-};
-
-const setPermission = async (type) => {
-  permission.value = type;
-  showDropdown.value = false;
-  await generateShareUrl();
-  alert("邀請連結已更新");
-};
-
-const generateShareUrl = async () => {
+const generateShareLink = async () => {
+  const token = localStorage.getItem("token");
+  console.log("發送的 Token:", token);
   try {
+    isLoading.value = true;
     const res = await axios.post(
-      `${import.meta.env.VITE_API_URL}/api/trip-shares/${props.tripId}`,
+      `${import.meta.env.VITE_API_URL}/api/tripShares/create/${props.tripId}`,
       {
-        permission: permission.value,
+        permission: selectedPermission.value,
+      },
+      {
+        headers: { Authorization: `Bearer ${token}` },
+        withCredentials: true,
       },
     );
-    shareUrl.value = res.data.shareLink;
-    await fetchMembers();
+    const data = {
+      permission: selectedPermission.value, // 檢查 permission
+    };
+    console.log("發送的資料:", data);
+    shareUrl.value = res.data.shareUrl;
+    expiresAt.value = res.data.expiresAt;
+
+    // 更新共享名單
+    // fetchSharedUsers();
   } catch (err) {
-    alert("產生連結失敗。");
+    alert("建立分享連結失敗");
+    console.error(err);
+  } finally {
+    isLoading.value = false;
   }
 };
 
-const copyToClipboard = async () => {
-  try {
-    await navigator.clipboard.writeText(shareUrl.value);
-    alert("已複製連結！");
-  } catch (err) {
-    alert("複製失敗");
-  }
-};
-
-// 共編成員功能區
-
-const fetchMembers = async () => {
+const fetchSharedUsers = async () => {
+  const token = localStorage.getItem("token");
   try {
     const res = await axios.get(
-      `${import.meta.env.VITE_API_URL}/api/trip-shares/${props.tripId}`,
-    );
-    members.value = res.data.map((item) => ({
-      token: item.token,
-      permission: item.permission,
-      name: item.name || "未知使用者",
-      avatarUrl: item.avatar, // 頭像須從user資料取得
-    }));
-  } catch (err) {
-    alert("取得共編成員失敗。");
-  }
-};
-
-const changePermission = async (member) => {
-  try {
-    await axios.put(
-      `${import.meta.env.VITE_API_URL}/api/trip-shares/${member.token}`,
+      `${import.meta.env.VITE_API_URL}/api/tripShares/list/${props.tripId}`,
       {
-        permission: member.permission,
+        headers: { Authorization: `Bearer ${token}` },
+        withCredentials: true,
       },
     );
+    sharedUsers.value = res.data.data;
+    isOwner.value = res.data.isOwner;
   } catch (err) {
-    alert("變更權限失敗");
+    console.error("取得共享者清單失敗", err);
   }
 };
 
-const removeMember = async (member) => {
-  if (!confirm(`確定要移除 ${member.name} 嗎？`)) return;
+const updatePermission = async (targetUserId, newRole) => {
+  const token = localStorage.getItem("token");
+  try {
+    await axios.patch(
+      `${import.meta.env.VITE_API_URL}/api/tripShares/permission`,
+      {
+        targetUserId,
+        tripId: props.tripId,
+        newRole,
+      },
+      {
+        headers: { Authorization: `Bearer ${token}` },
+        withCredentials: true,
+      },
+    );
+    alert("權限已更新");
+  } catch (err) {
+    alert("權限更新失敗");
+    console.error(err);
+  }
+};
+
+const removeUser = async (targetUserId) => {
+  if (!confirm("確定要取消共享這位使用者嗎？")) return;
+  const token = localStorage.getItem("token");
   try {
     await axios.delete(
-      `${import.meta.env.VITE_API_URL}/api/trip-shares/${member.token}`,
+      `${import.meta.env.VITE_API_URL}/api/tripShares/remove/${targetUserId}/${props.tripId}`,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+        withCredentials: true, // 放在 config 裡
+      },
     );
-    await fetchMembers();
+    sharedUsers.value = sharedUsers.value.filter((u) => u.id !== targetUserId);
+    alert("已取消共享");
   } catch (err) {
-    alert("移除失敗");
+    alert("取消共享失敗");
+    console.error(err);
   }
 };
 
-onMounted(() => {
-  fetchMembers();
-});
+// 開啟 Modal 時觸發
+watch(
+  () => props.isOpen,
+  (open) => {
+    if (open) fetchSharedUsers();
+  },
+);
+
+const copyToClipboard = () => {
+  navigator.clipboard.writeText(shareUrl.value);
+  alert("已複製分享連結");
+};
+
+const formattedExpire = computed(() =>
+  new Date(expiresAt.value).toLocaleString("zh-TW"),
+);
 </script>

@@ -52,7 +52,7 @@ const routes = [
     component: () => import("@/views/EmailSettings.vue"),
   },
   {
-    path: "/GetInvite",
+    path: "/share/:token",
     name: "GetInvite",
     component: GetInvite,
   },
