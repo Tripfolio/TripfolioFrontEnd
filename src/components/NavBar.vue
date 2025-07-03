@@ -10,14 +10,14 @@
       <button class="flex items-center space-x-1 pr-5">
         <RouterLink to="/schedule" class="">
           <font-awesome-icon :icon="['fas', 'compass']" />
-          <span class="pl-2 no-underline">探索</span>
+          <span class="pl-2 no-underline">{{ $t('navbar.explore') }}</span>
         </RouterLink>
       </button>
 
       <button class="flex items-center space-x-1">
         <RouterLink to="/community">
           <font-awesome-icon :icon="['fas', 'globe']" />
-          <span class="pl-2 no-underline">社群</span>
+          <span class="pl-2 no-underline">{{ $t('navbar.community') }}</span>
         </RouterLink>
       </button>
 

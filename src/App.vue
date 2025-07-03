@@ -6,6 +6,12 @@
       class="fixed top-5 left-1/2 w-[65%] -translate-x-1/2 z-50"
     />
 
+    <!-- 這兩行是語言設定 -->
+    <button @click="changeLanguage('en')">English</button>
+    <button @click="changeLanguage('zh')">中文</button>
+    <button @click="changeLanguage('ja')">日本語</button>
+    <button @click="changeLanguage('ko')">한국어</button>
+
     <!-- 下方 Navbar（地圖頁） -->
     <NavBar
       v-if="isMapPage"

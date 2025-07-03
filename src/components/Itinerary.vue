@@ -5,6 +5,8 @@
 <script setup>
 import { toRefs, ref, onMounted, onBeforeUnmount, watch } from "vue";
 import axios from "axios";
+import { useI18n } from 'vue-i18n'
+const { t, locale } = useI18n()
 
 const emit = defineEmits(["refresh"]);
 
@@ -51,7 +53,7 @@ async function loadItinerary() {
     await fetchTrafficData(); //撈「交通資料」
     emit("refresh", itineraryPlaces.value); // ← 這行通知父層
   } catch (error) {
-    alert("載入行程失敗");
+    alert($t('itinerary.loadItineraryFail'));
   }
 }
 
@@ -94,7 +96,7 @@ async function confirmTime(p) {
       place.arrivalHour * 60 + place.arrivalMinute === newTime,
   );
   if (hasConflict) {
-    alert("有其他景點時間重複！");
+    alert($t('itinerary.timeConflict'));
     return;
   }
 
@@ -108,7 +110,7 @@ async function confirmTime(p) {
       arrivalMinute: p.arrivalMinute,
     });
   } catch {
-    alert("更新時間失敗");
+    alert($t('itinerary.updateTimeFail'));
   }
 }
 
@@ -125,19 +127,19 @@ async function updateOrder() {
     await loadItinerary();
     emit("refresh");
   } catch {
-    alert("排序更新失敗");
+    alert($t('itinerary.updateOrderFail'));
   }
 }
 
 //加入景點
 async function addPlace(place, date) {
   if (!place || !date) {
-    alert("請選擇地點與日期");
+    alert($t('itinerary.selectLocationDate'));
     return false;
   }
   const exists = itineraryPlaces.value.some((p) => p.name === place.name);
   if (exists) {
-    alert("已加入此景點");
+    alert($t('itinerary.placeAlreadyAdded'));
     return false;
   }
   const photo =
@@ -163,10 +165,10 @@ async function addPlace(place, date) {
       emit("refresh");
       return true;
     }
-    alert("加入失敗：" + res.data.message);
+    alert($t('itinerary.addPlaceFail') + res.data.message);
     return false;
   } catch {
-    alert("加入景點失敗");
+    alert($t('itinerary.addPlaceFail'));
     return false;
   }
 }
@@ -182,10 +184,10 @@ async function removePlace(p) {
       emit("refresh");
       return true;
     }
-    alert("刪除失敗");
+    alert($t('itinerary.removePlaceFail'));
     return false;
   } catch {
-    alert("刪除失敗");
+    alert($t('itinerary.removePlaceFail'));
     return false;
   }
 }

@@ -8,16 +8,16 @@
 
       <!-- 付款結果訊息 -->
       <div v-if="result === 'success'" class="text-center  text-white p-6 rounded">
-        <h2 class="text-2xl font-bold mb-2">付款成功</h2>
-        <p class="text-white mb-4">感謝您的購買！您的付款已成功處理。</p>
+        <h2 class="text-2xl font-bold mb-2">{{ $t('paymentModal.success') }}</h2>
+        <p class="text-white mb-4">{{ $t('paymentModal.successMessage') }}</p>
         <button @click="$emit('close')" class="bg-green-600 hover:bg-green-500 text-white px-6 py-2 rounded shadow">
-          關閉
+          {{ $t('paymentModal.close') }}
         </button>
       </div>
 
       <div v-else-if="result === 'fail'" class="text-center  text-white p-6 rounded">
-        <h2 class="text-2xl font-bold mb-2">付款失敗</h2>
-        <p class="text-white mb-4">抱歉，您的付款未成功。請稍後再試或聯絡客服。</p>
+        <h2 class="text-2xl font-bold mb-2">{{ $t('paymentModal.fail') }}</h2>
+        <p class="text-white mb-4">{{ $t('paymentModal.failMessage') }}</p>
         <button @click="$emit('close')" class="bg-red-600 hover:bg-red-500 text-white px-6 py-2 rounded shadow">
           關閉
         </button>
@@ -25,24 +25,25 @@
 
       <!-- 主付款表單 -->
       <div v-else>
-        <h1 class="text-2xl font-bold mb-4 text-center text-white">升級為付費會員</h1>
-        <p class="mb-6 text-center text-white">
-          僅需支付 <span class="font-semibold text-xl">NT$ {{ paymentAmount }}</span> 元，即可建立更多行程！
+        <h1 class="text-2xl font-bold mb-4 text-center text-white">{{ $t('paymentModal.upgradeToPremium') }}</h1>
+        <p class="mb-6 text-center text-white">{{ $t('paymentModal.payAmount') }} <span class="font-semibold text-xl">
+          NT$ {{ paymentAmount }}</span> {{ $t('paymentModal.moreTrips') }}
         </p>
 
+
         <div v-if="isPremium" class="text-center bg-green-50 border border-green-300 text-green-700 p-4 rounded mb-4">
-          您已經是付費會員！感謝您的支持。
+          {{ $t('paymentModal.alreadyPremium') }}
         </div>
 
         <div v-else>
           <div class="mb-4 text-center">
-            <div v-if="linePayLoading" class="text-white font-medium">LINE Pay 付款連結生成中，請稍候...</div>
+            <div v-if="linePayLoading" class="text-white font-medium">{{ $t('paymentModal.linePayLoading') }}</div>
             <button
               v-if="!linePayLoading"
               @click="handleLinePay"
               class="bg-green-500 hover:bg-green-400 text-white px-6 py-2 rounded-lg text-lg shadow w-3/4 max-w-xs"
             >
-              前往 LINE Pay 付款
+              {{ $t('paymentModal.goToLinePay') }}
             </button>
           </div>
 
@@ -52,13 +53,13 @@
               v-if="!showCreditCardDetails"
               class="bg-gray-600 hover:bg-gray-700 text-white px-6 py-2 rounded-lg text-lg shadow w-3/4 max-w-xs"
             >
-              使用信用卡付款
+              {{ $t('paymentModal.useCreditCard') }}
             </button>
 
             <div v-if="showCreditCardDetails" class="mt-4">
-              <p class="text-lg text-white  font-semibold mb-2">信用卡付款</p>
+              <p class="text-lg text-white  font-semibold mb-2">{{ $t('paymentModal.creditCardPayment') }}</p>
               <p v-if="dropinisReady" class="text-white mb-2 text-sm">
-                （測試卡號：4111 1111 1111 1111）
+                {{ $t('paymentModal.testCardNumber') }}
               </p>
               <div id="dropin-container" class="border rounded p-2 bg-gray-50 mb-4"></div>
               <div class="space-y-2">
@@ -67,7 +68,7 @@
                   @click="initDropin"
                   class="bg-gray-600 hover:bg-gray-700 text-white px-6 py-2 rounded-lg text-lg shadow w-3/4 max-w-xs"
                 >
-                  {{ braintreeLoading ? '載入中...' : '初始化信用卡付款' }}
+                  {{ braintreeLoading ? $t('paymentModal.loading') : $t('paymentModal.initCreditCardPayment') }}
                 </button>
                 <button
                   v-if="dropinisReady"
@@ -75,7 +76,7 @@
                   :disabled="braintreeLoading"
                   class="bg-green-500 hover:bg-green-400 text-white px-6 py-2 rounded-lg text-lg shadow w-3/4 max-w-xs"
                 >
-                  確認信用卡付款
+                  {{ $t('paymentModal.confirmCreditCardPayment') }}
                 </button>
               </div>
             </div>
