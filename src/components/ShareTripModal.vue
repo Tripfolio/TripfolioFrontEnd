@@ -1,16 +1,16 @@
 <template>
   <div
     v-if="isOpen"
-    class="fixed inset-0 z-50 bg-gray-600/60 flex items-center justify-center px-4"
+    class="fixed inset-0 z-50 bg-black/50 flex items-center justify-center px-4"
   >
     <div
-      class="bg-gray-500/90 w-full max-w-[500px] rounded-2xl shadow-xl p-6 sm:p-6"
+      class="navbar-style w-full max-w-[500px] rounded-2xl shadow-xl p-6 sm:p-6"
     >
       <div class="flex justify-between items-center mb-4">
-        <h2 class="text-xl font-semibold text-gray-700">分享行程</h2>
+        <h2 class="text-xl font-semibold text-white">分享行程</h2>
         <button
           @click="emit('close')"
-          class="text-gray-400 hover:text-gray-600 text-lg"
+          class="text-white hover:text-gray-400 text-lg cursor-pointer"
         >
           ✕
         </button>
@@ -18,12 +18,12 @@
 
       <!-- 權限選擇 -->
       <div class="mb-4">
-        <label class="block mb-1 text-sm text-gray-600 font-medium"
+        <label class="block mb-1 text-sm text-white font-medium"
           >權限設定</label
         >
         <select
           v-model="selectedPermission"
-          class="w-full border border-gray-300 rounded-md px-3 py-2 text-gray-700 shadow-sm"
+          class="w-full border border-gray-300 rounded-md px-3 py-2 text-white shadow-sm cursor-pointer"
         >
           <option value="viewer">僅可檢視</option>
           <option value="editor">可編輯</option>
@@ -32,7 +32,7 @@
 
       <button
         @click="generateShareLink"
-        class="bg-gray-700 hover:bg-gray-800 text-white px-4 py-2 rounded-md w-full font-medium"
+        class="bg-white/30 hover:bg-black/20 text-white px-4 py-2 rounded-md w-full font-medium cursor-pointer"
         :disabled="isLoading"
       >
         產生分享連結
@@ -40,18 +40,18 @@
 
       <!-- 分享結果區塊 -->
       <div v-if="shareUrl" class="mt-6">
-        <label class="block mb-1 text-sm text-gray-600 font-medium"
+        <label class="block mb-1 text-sm text-white font-medium"
           >分享連結</label
         >
         <div class="flex items-center gap-2">
           <input
             :value="shareUrl"
             readonly
-            class="flex-1 border border-gray-300 rounded-md px-3 py-2 text-sm text-gray-700 shadow-sm"
+            class="flex-1 border border-gray-300 rounded-md px-3 py-2 text-sm text-white shadow-sm"
           />
           <button
             @click="copyToClipboard"
-            class="text-sm text-gray-600 hover:text-gray-800 whitespace-nowrap"
+            class="text-sm text-white hover:text-white/20 whitespace-nowrap cursor-pointer"
           >
             複製
           </button>
@@ -61,14 +61,14 @@
           <qrcode-vue :value="shareUrl" :size="160" />
         </div>
 
-        <div class="text-sm text-gray-500 mt-2 text-center">
+        <div class="text-sm text-white mt-2 text-center">
           到期時間：{{ formattedExpire }}
         </div>
       </div>
 
       <!-- 共享者清單區塊 -->
       <div v-if="sharedUsers.length" class="mt-6">
-        <h3 class="text-gray-700 font-semibold text-base mb-2">
+        <h3 class="text-white font-semibold text-base mb-2">
           目前共享的使用者
         </h3>
         <div class="space-y-2">
@@ -78,14 +78,14 @@
             class="flex items-center justify-between border border-gray-300 rounded-md px-3 py-2 shadow-sm"
           >
             <div>
-              <div class="font-medium text-gray-700">{{ user.name }}</div>
-              <div class="text-sm text-gray-500">{{ user.email }}</div>
+              <div class="font-medium text-white">{{ user.name }}</div>
+              <div class="text-sm text-gray-400">{{ user.email }}</div>
             </div>
 
             <div class="flex items-center gap-2">
               <span
                 v-if="user.role === 'owner'"
-                class="text-sm text-blue-500 font-semibold"
+                class="text-sm text-gray-200 font-semibold"
                 >建立者</span
               >
 
