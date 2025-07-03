@@ -12,6 +12,8 @@ import Community from "@/views/CommunityList.vue";
 import scheduleDetail from "@/views/scheduleDetail.vue";
 import MemberProfile from "@/views/MemberProfile.vue";
 import MemberHub from "@/views/MemberHub.vue";
+import PrivacyPolicy from '../views/PrivacyPolicy.vue' 
+import TermsOfService from '../views/TermsOfService.vue' 
 
 const routes = [
   {
@@ -74,11 +76,33 @@ const routes = [
     name: "scheduledetail",
     component: scheduleDetail,
   },
+  {
+    path: '/privacy-policy', 
+    name: 'privacy-policy',
+    component: PrivacyPolicy, 
+  },
+  {
+    path: '/terms-of-service', 
+    name: 'terms-of-service',
+    component: TermsOfService,
+  }
 ];
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes,
+
+  scrollBehavior(to, from, savedPosition) {
+    if (savedPosition) {
+      return savedPosition
+    } else if (to.name === 'privacy-policy' || to.name === 'terms-of-service') {
+      // 如果目標路由是隱私權政策或服務條款頁面，則平滑滾動到頂部
+      return { top: 0, behavior: 'smooth' }
+    } else {
+      // 對於其他所有新的路由導航，即時滾動到頂部
+      return { top: 0 }
+    }
+  }
 });
 
 export default router;
