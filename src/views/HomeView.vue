@@ -267,7 +267,7 @@ import AOS from 'aos'
 import 'aos/dist/aos.css'
 import HomeCarousel from '../components/HomeCarousel.vue';
 import HomeSchedule from "../components/HomeSchedule.vue";
-import AppFooter from '../components/Footer.vue'; 
+import Footer from '../components/Footer.vue'; 
 import taiwan from '../assets/HomePage/taiwan.png';
 import s1 from '../assets/HomePage/s1.png';
 import s2 from '../assets/HomePage/s2.png';
