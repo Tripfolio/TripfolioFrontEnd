@@ -194,11 +194,11 @@ onBeforeUnmount(() => {
             >
               <div class="flex items-center gap-1">
                 <span>❤️</span>
-                <span>{{ post.favoriteCount || 0 }}</span>
+                <span class="text-white">{{ post.favoriteCount || 0 }}</span>
               </div>
               <div class="flex items-center gap-1">
                 <span>💬</span>
-                <span>{{ post.commentCount || 0 }}</span>
+                <span class="text-white">{{ post.commentCount || 0 }}</span>
               </div>
             </div>
           </div>
