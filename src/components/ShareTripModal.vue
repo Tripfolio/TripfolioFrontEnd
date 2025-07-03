@@ -1,14 +1,16 @@
 <template>
   <div
     v-if="isOpen"
-    class="fixed inset-0 z-50 bg-black/50 flex items-center justify-center"
+    class="fixed inset-0 z-50 bg-gray-600/60 flex items-center justify-center px-4"
   >
-    <div class="bg-white p-6 rounded-xl w-[500px]">
+    <div
+      class="bg-gray-500/90 w-full max-w-[500px] rounded-2xl shadow-xl p-6 sm:p-6"
+    >
       <div class="flex justify-between items-center mb-4">
-        <h2 class="text-xl font-bold">分享行程</h2>
+        <h2 class="text-xl font-semibold text-gray-700">分享行程</h2>
         <button
           @click="emit('close')"
-          class="text-gray-400 hover:text-gray-600"
+          class="text-gray-400 hover:text-gray-600 text-lg"
         >
           ✕
         </button>
@@ -16,10 +18,12 @@
 
       <!-- 權限選擇 -->
       <div class="mb-4">
-        <label class="block mb-1 font-medium">權限設定</label>
+        <label class="block mb-1 text-sm text-gray-600 font-medium"
+          >權限設定</label
+        >
         <select
           v-model="selectedPermission"
-          class="w-full border rounded px-3 py-2"
+          class="w-full border border-gray-300 rounded-md px-3 py-2 text-gray-700 shadow-sm"
         >
           <option value="viewer">僅可檢視</option>
           <option value="editor">可編輯</option>
@@ -28,7 +32,7 @@
 
       <button
         @click="generateShareLink"
-        class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded w-full"
+        class="bg-gray-700 hover:bg-gray-800 text-white px-4 py-2 rounded-md w-full font-medium"
         :disabled="isLoading"
       >
         產生分享連結
@@ -36,14 +40,19 @@
 
       <!-- 分享結果區塊 -->
       <div v-if="shareUrl" class="mt-6">
-        <label class="block mb-1 font-medium">分享連結</label>
-        <div class="flex items-center space-x-2">
+        <label class="block mb-1 text-sm text-gray-600 font-medium"
+          >分享連結</label
+        >
+        <div class="flex items-center gap-2">
           <input
             :value="shareUrl"
             readonly
-            class="flex-1 border rounded px-2 py-1"
+            class="flex-1 border border-gray-300 rounded-md px-3 py-2 text-sm text-gray-700 shadow-sm"
           />
-          <button @click="copyToClipboard" class="text-sm text-blue-500">
+          <button
+            @click="copyToClipboard"
+            class="text-sm text-gray-600 hover:text-gray-800 whitespace-nowrap"
+          >
             複製
           </button>
         </div>
@@ -52,26 +61,28 @@
           <qrcode-vue :value="shareUrl" :size="160" />
         </div>
 
-        <div class="text-sm text-gray-500 mt-2">
+        <div class="text-sm text-gray-500 mt-2 text-center">
           到期時間：{{ formattedExpire }}
         </div>
       </div>
 
       <!-- 共享者清單區塊 -->
       <div v-if="sharedUsers.length" class="mt-6">
-        <h3 class="font-bold mb-2">目前共享的使用者</h3>
+        <h3 class="text-gray-700 font-semibold text-base mb-2">
+          目前共享的使用者
+        </h3>
         <div class="space-y-2">
           <div
             v-for="user in sharedUsers"
             :key="user.id"
-            class="flex items-center justify-between border px-3 py-2 rounded"
+            class="flex items-center justify-between border border-gray-300 rounded-md px-3 py-2 shadow-sm"
           >
             <div>
-              <div class="font-medium">{{ user.name }}</div>
+              <div class="font-medium text-gray-700">{{ user.name }}</div>
               <div class="text-sm text-gray-500">{{ user.email }}</div>
             </div>
 
-            <div class="flex items-center space-x-2">
+            <div class="flex items-center gap-2">
               <span
                 v-if="user.role === 'owner'"
                 class="text-sm text-blue-500 font-semibold"
@@ -83,7 +94,7 @@
                   v-if="isOwner"
                   v-model="user.role"
                   @change="updatePermission(user.id, user.role)"
-                  class="text-sm border rounded px-2 py-1"
+                  class="text-sm border border-gray-300 rounded px-2 py-1 text-gray-700"
                 >
                   <option value="viewer">檢視者</option>
                   <option value="editor">編輯者</option>
@@ -96,7 +107,7 @@
                 <button
                   v-if="isOwner"
                   @click="removeUser(user.id)"
-                  class="text-red-500 hover:text-red-700"
+                  class="text-red-500 hover:text-red-700 text-base"
                 >
                   🗑
                 </button>

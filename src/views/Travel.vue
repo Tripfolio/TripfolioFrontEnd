@@ -72,7 +72,7 @@
                 <button
                   @click.stop="openShareModal(item.id)"
                   title="共享行程"
-                  class="absolute bottom-2 right-16 text-gray-400 hover:text-blue-500 text-xl"
+                  class="absolute bottom-2 right-25 text-gray-600 bg-white px-2 rounded-2xl hover:text-blue-500 text-md"
                 >
                   共享行程
                 </button>
