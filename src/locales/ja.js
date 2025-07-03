@@ -2,7 +2,7 @@ export default {
   addComment: {
     placeholderTitle: "コメントを入力してください...",
     submitting: "送信中...",
-    submit: "コメントを投稿"
+    submit: "コメントを投稿",
   },
   commentSection: {
     loadingComments: "コメントを読み込み中...",
@@ -14,7 +14,7 @@ export default {
     justNow: "たった今",
     minutesAgo: "分前",
     hoursAgo: "時間前",
-    deleteConfirm: "このコメントを削除してもよろしいですか？"
+    deleteConfirm: "このコメントを削除してもよろしいですか？",
   },
   dailyPlan: {
     arrival: "到着",
@@ -22,8 +22,9 @@ export default {
     cancel: "キャンセル",
     remove: "削除",
     noPlaces: "まだ観光地が追加されていません",
-    selectTripMessage: "右側のサイドバーから旅行と日付を選択して、日別計画を確認してください。",
-    sortFail: "並べ替えの更新に失敗しました"
+    selectTripMessage:
+      "右側のサイドバーから旅行と日付を選択して、日別計画を確認してください。",
+    sortFail: "並べ替えの更新に失敗しました",
   },
   itinerary: {
     loadItineraryFail: "日程の読み込みに失敗しました",
@@ -33,19 +34,21 @@ export default {
     selectLocationDate: "場所と日付を選択してください",
     placeAlreadyAdded: "この観光地はすでに追加されています",
     addPlaceFail: "追加に失敗しました",
-    removePlaceFail: "削除に失敗しました"
+    removePlaceFail: "削除に失敗しました",
   },
   navbar: {
     explore: "探険",
     community: "コミュニティ",
-    profilePicture: "プロフィール写真"
+    profilePicture: "プロフィール写真",
   },
   paymentModal: {
     success: "支払い成功",
-    successMessage: "ご購入いただきありがとうございます！ 支払いが正常に処理されました。",
+    successMessage:
+      "ご購入いただきありがとうございます！ 支払いが正常に処理されました。",
     close: "閉じる",
     fail: "支払い失敗",
-    failMessage: "申し訳ありませんが、支払いが失敗しました。後で再試行するか、カスタマーサポートにお問い合わせください。",
+    failMessage:
+      "申し訳ありませんが、支払いが失敗しました。後で再試行するか、カスタマーサポートにお問い合わせください。",
     upgradeToPremium: "プレミアムメンバーにアップグレード",
     payAmount: "支払い金額",
     moreTrips: "円で、さらに多くの旅行を作成できます！",
@@ -57,10 +60,11 @@ export default {
     loading: "読み込み中...",
     initCreditCardPayment: "クレジットカード支払いの初期化",
     confirmCreditCardPayment: "クレジットカード支払いの確認",
-    alreadyPremium: "すでにプレミアムメンバーです！ ご支援ありがとうございます。"
+    alreadyPremium:
+      "すでにプレミアムメンバーです！ ご支援ありがとうございます。",
   },
   postCard: {
-    author: "投稿者"
+    author: "投稿者",
   },
   postForm: {
     selectSchedule: "旅行を選択",
@@ -68,9 +72,10 @@ export default {
     content: "投稿内容",
     submitPost: "投稿を送信",
     fetchError: "取得できませんでした",
-    fileError: "フォーマットがサポートされていないか、ファイルが大きすぎます。JPG、PNG、またはWebPをアップロードしてください。ファイルサイズは最大3MBまで",
+    fileError:
+      "フォーマットがサポートされていないか、ファイルが大きすぎます。JPG、PNG、またはWebPをアップロードしてください。ファイルサイズは最大3MBまで",
     submitError: "投稿の送信に失敗しました。後で再試行してください！",
-    success: "成功"
+    success: "成功",
   },
   postPopup: {
     travelReference: "旅行参照",
@@ -79,7 +84,7 @@ export default {
     noContent: "コンテンツがありません",
     justNow: "たった今",
     minutesAgo: "分前",
-    hoursAgo: "時間前"
+    hoursAgo: "時間前",
   },
   shareTripModal: {
     inviteCollaborators: "共同編集者を招待",
@@ -96,14 +101,15 @@ export default {
     confirmRemove: "{name} を削除してもよろしいですか？",
     unknownUser: "不明なユーザー",
     linkUpdated: "招待リンクが更新されました",
-    fetchMembersFailed: "共同編集者の取得に失敗しました"
+    fetchMembersFailed: "共同編集者の取得に失敗しました",
   },
   traffic: {
     selectMode: "交通手段を選択",
     drive: "運転",
     walk: "徒歩",
     transit: "公共交通機関",
-    errorFetchingData: "交通情報の読み込みに失敗しました。後で再試行してください"
+    errorFetchingData:
+      "交通情報の読み込みに失敗しました。後で再試行してください",
   },
   schedule: {
     placeholderTitle: "旅行の名前を付けてください⸜(*ˊᗜˋ*)⸝",
@@ -114,21 +120,23 @@ export default {
     saving: "保存中...",
     create: "作成",
     errorFields: "旅行名と旅行開始/終了日を入力してください",
-    successSave: "保存成功、フォームを閉じて旅行をクリックして編集に進んでください",
+    successSave:
+      "保存成功、フォームを閉じて旅行をクリックして編集に進んでください",
     errorSave: "保存に失敗しました。後で再試行してください",
     title: "旅行名",
     dates: "旅行日",
     totalDays: "総 {{ days }} 日",
     description: "旅行の説明（任意）",
-    unsavedChanges: "保存していない内容があります。ページを離れてもよろしいですか？",
-    placeholderDescription: "旅行を簡単に記録してください~(ﾉ˶>ᗜ​<˵)ﾉ"
+    unsavedChanges:
+      "保存していない内容があります。ページを離れてもよろしいですか？",
+    placeholderDescription: "旅行を簡単に記録してください~(ﾉ˶>ᗜ​<˵)ﾉ",
   },
   tripList: {
     myTrips: "私の旅行",
     noTrips: "まだ旅行がありません！",
     noCoverImage: "カバー画像なし",
     total: "合計",
-    days: "日"
+    days: "日",
   },
   tripOverview: {
     backToOverview: "旅行の概要に戻る",
@@ -138,18 +146,20 @@ export default {
     cancel: "キャンセル",
     crop: "トリミング",
     notes: "メモ：",
-    placeholderNotes: "ここをクリックして旅行メモを追加または編集してください..."
+    placeholderNotes:
+      "ここをクリックして旅行メモを追加または編集してください...",
   },
   communityList: {
     noPosts: "投稿がありません。最初の投稿を作成しましょう！",
     allPostsLoaded: "すべての投稿が読み込まれました",
-    errorFetchingPosts: "投稿の読み込みに失敗しました"
+    errorFetchingPosts: "投稿の読み込みに失敗しました",
   },
   emailSettings: {
     title: "Eメール通知設定",
     loading: "読み込み中...",
     save: "設定を保存",
-    notLoggedInError: "ログインしていないため、設定を読み込むことができません。",
+    notLoggedInError:
+      "ログインしていないため、設定を読み込むことができません。",
     errorFetchingPreferences: "設定の読み込みに失敗しました。",
     notLoggedInSaveError: "ログインしていないため、設定を保存できません。",
     preferencesUpdated: "設定が更新されました！",
@@ -157,7 +167,7 @@ export default {
     onLogin: "ログイン成功",
     onLoginfail: "アカウントログインエラー",
     onComment: "投稿にコメントがあります",
-    onBookmark: "投稿がブックマークされました"
+    onBookmark: "投稿がブックマークされました",
   },
   getInvite: {
     loading: "読み込み中...",
@@ -167,7 +177,7 @@ export default {
     alreadyJoined: "すでに共同編集者です！",
     editPermission: "編集権限",
     viewPermission: "表示権限",
-    joinFailed: "参加に失敗しました。後で再試行してください"
+    joinFailed: "参加に失敗しました。後で再試行してください",
   },
   googleMapView: {
     current: "現在地",
@@ -177,7 +187,8 @@ export default {
     selectPlaceAndDate: "場所と日付を選択してください",
     addToItinerarySuccess: "旅行に追加成功！",
     mapNotInitialized: "地図が初期化されていません。後で再試行してください",
-    geoLocationNotSupported: "お使いのブラウザは位置情報機能をサポートしていません",
+    geoLocationNotSupported:
+      "お使いのブラウザは位置情報機能をサポートしていません",
     failedToGetLocation: "位置情報を取得できませんでした",
     more: "もっと見る",
     previousImage: "前の画像",
@@ -186,9 +197,11 @@ export default {
     routePlanningFailed: "ルート計画に失敗しました：",
     failedToGetDetails: "詳細情報の取得に失敗しました",
     clickedNonPlace: "非場所をクリックしました",
-    mapsLoadFailed: "Google Mapsの読み込みに失敗しました"
+    mapsLoadFailed: "Google Mapsの読み込みに失敗しました",
   },
   homeView: {
+    exploreYourMap: "地図を探索",
+    markLandmarks: "地図にマークを付けて、それぞれの旅は人生の宝物になります",
     current: "現在地",
     inputPlace: "場所を入力",
     search: "検索",
@@ -203,7 +216,7 @@ export default {
     sharingBecomesRouteSign: "共有が互いの道標になります",
     taiwanTravel5Days: "台湾5日間旅行",
     oneStepOneScene: "一歩一景、小さな島の旅",
-    taipeiTrip3Days2Nights: "台北3日間2泊旅行"
+    taipeiTrip3Days2Nights: "台北3日間2泊旅行",
   },
   loginPage: {
     login: "ログイン",
@@ -215,7 +228,7 @@ export default {
     loginSuccess: "ログインに成功しました！",
     logoutButton: "ログアウト",
     errorMessage: "ログイン失敗、メールアドレスとパスワードを確認してください",
-    inputEmailAndPassword: "メールアドレスとパスワードを入力してください"
+    inputEmailAndPassword: "メールアドレスとパスワードを入力してください",
   },
   memberHub: {
     memberCenter: "会員センター",
@@ -227,7 +240,8 @@ export default {
     notifications: "通知設定",
     pleaseLogin: "まずログインしてください",
     unnamedPost: "名前のない投稿",
-    profileUpdated: "プロファイルが更新されました"
+    profileUpdated: "プロファイルが更新されました",
+    language: "言語",
   },
   memberProfile: {
     updateProfile: "プロフィール更新",
@@ -240,11 +254,26 @@ export default {
     passwordRequiresLetter: "パスワードには英字を含める必要があります",
     passwordRequiresNumber: "パスワードには数字を含める必要があります",
     passwordNoMatchName: "パスワードは名前と同じにできません",
-    passwordMismatch: "新しいパスワードが一致しません。もう一度入力してください",
+    passwordMismatch:
+      "新しいパスワードが一致しません。もう一度入力してください",
     oldPasswordError: "古いパスワードが間違っています",
     fillAllFields: "すべてのフィールドを入力してください",
     passwordChangedSuccess: "パスワード変更成功",
-    loginFirst: "先にログインしてください"
+    loginFirst: "先にログインしてください",
+    name: "名前",
+    namePlaceholder: "名前を入力してください",
+    gender: "性別",
+    male: "男性",
+    female: "女性",
+    phone: "電話番号",
+    phonePlaceholder: "電話番号を入力してください",
+    birthday: "誕生日",
+    saveProfileBtn: "プロフィールを保存",
+    passwordSectionTitle: "パスワード変更",
+    oldPasswordPlaceholder: "現在のパスワード",
+    newPasswordPlaceholder: "新しいパスワード",
+    confirmPasswordPlaceholder: "新しいパスワード（再入力）",
+    changePasswordBtn: "パスワードを変更",
   },
   scheduleDetail: {
     tripOverview: "旅行の概要",
@@ -255,7 +284,7 @@ export default {
     updateDatesFailure: "日付の更新に失敗しました",
     updateNotesFailure: "メモの更新に失敗しました",
     fetchTripFailure: "旅行を取得できませんでした",
-    day: "日"
+    day: "日",
   },
   signUp: {
     signUp: "サインアップ",
@@ -266,7 +295,7 @@ export default {
     submit: "登録",
     alreadyHaveAccount: "すでにアカウントがありますか？ ログイン",
     registerFailure: "登録に失敗しました。後で再試行してください",
-    registerSuccess: "登録成功"
+    registerSuccess: "登録成功",
   },
   travel: {
     createTrip: "旅行作成",
@@ -275,6 +304,6 @@ export default {
     loginRequired: "まずログインしてください",
     confirmDelete: "この旅行を削除してもよろしいですか？",
     deleteSuccess: "削除成功",
-    deleteFailure: "削除に失敗しました。後で再試行してください"
-  }
+    deleteFailure: "削除に失敗しました。後で再試行してください",
+  },
 };

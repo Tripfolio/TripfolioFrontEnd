@@ -2,7 +2,7 @@ export default {
   addComment: {
     placeholderTitle: "댓글을 작성하세요...",
     submitting: "제출 중...",
-    submit: "댓글 제출"
+    submit: "댓글 제출",
   },
   commentSection: {
     loadingComments: "댓글을 불러오는 중...",
@@ -14,7 +14,7 @@ export default {
     justNow: "방금",
     minutesAgo: "분 전",
     hoursAgo: "시간 전",
-    deleteConfirm: "이 댓글을 삭제하시겠습니까?"
+    deleteConfirm: "이 댓글을 삭제하시겠습니까?",
   },
   dailyPlan: {
     arrival: "도착",
@@ -22,8 +22,9 @@ export default {
     cancel: "취소",
     remove: "제거",
     noPlaces: "아직 추가된 명소가 없습니다",
-    selectTripMessage: "오른쪽 사이드바에서 여행과 날짜를 선택하여 일일 계획을 확인하세요.",
-    sortFail: "정렬 업데이트 실패"
+    selectTripMessage:
+      "오른쪽 사이드바에서 여행과 날짜를 선택하여 일일 계획을 확인하세요.",
+    sortFail: "정렬 업데이트 실패",
   },
   itinerary: {
     loadItineraryFail: "일정 로드 실패",
@@ -33,19 +34,21 @@ export default {
     selectLocationDate: "위치와 날짜를 선택하세요",
     placeAlreadyAdded: "이미 이 명소를 추가했습니다",
     addPlaceFail: "명소 추가 실패",
-    removePlaceFail: "명소 삭제 실패"
+    removePlaceFail: "명소 삭제 실패",
   },
   navbar: {
     explore: "탐험",
     community: "커뮤니티",
-    profilePicture: "회원 프로필 사진"
+    profilePicture: "회원 프로필 사진",
   },
   paymentModal: {
     success: "결제 성공",
-    successMessage: "구매해 주셔서 감사합니다! 결제가 성공적으로 처리되었습니다.",
+    successMessage:
+      "구매해 주셔서 감사합니다! 결제가 성공적으로 처리되었습니다.",
     close: "닫기",
     fail: "결제 실패",
-    failMessage: "죄송합니다, 결제에 실패했습니다. 나중에 다시 시도하거나 고객센터에 문의해 주세요.",
+    failMessage:
+      "죄송합니다, 결제에 실패했습니다. 나중에 다시 시도하거나 고객센터에 문의해 주세요.",
     upgradeToPremium: "프리미엄 회원으로 업그레이드",
     payAmount: "단지",
     moreTrips: "원으로 더 많은 여행을 생성할 수 있습니다!",
@@ -57,10 +60,10 @@ export default {
     loading: "로딩 중...",
     initCreditCardPayment: "신용카드 결제 초기화",
     confirmCreditCardPayment: "신용카드 결제 확인",
-    alreadyPremium: "이미 프리미엄 회원입니다! 지원해 주셔서 감사합니다."
+    alreadyPremium: "이미 프리미엄 회원입니다! 지원해 주셔서 감사합니다.",
   },
   postCard: {
-    author: "작성자"
+    author: "작성자",
   },
   postForm: {
     selectSchedule: "일정을 선택하세요",
@@ -68,9 +71,10 @@ export default {
     content: "게시물 내용",
     submitPost: "게시물 제출",
     fetchError: "데이터를 가져올 수 없습니다",
-    fileError: "지원되지 않는 형식이거나 파일이 너무 큽니다. JPG, PNG 또는 WebP 파일을 업로드하세요. 파일 최대 3MB",
+    fileError:
+      "지원되지 않는 형식이거나 파일이 너무 큽니다. JPG, PNG 또는 WebP 파일을 업로드하세요. 파일 최대 3MB",
     submitError: "게시물 제출 실패, 잠시 후 다시 시도해주세요!",
-    success: "성공"
+    success: "성공",
   },
   postPopup: {
     travelReference: "여행 참조",
@@ -79,7 +83,7 @@ export default {
     noContent: "내용이 없습니다",
     justNow: "방금",
     minutesAgo: "분 전",
-    hoursAgo: "시간 전"
+    hoursAgo: "시간 전",
   },
   shareTripModal: {
     inviteCollaborators: "공동 편집 초대",
@@ -96,14 +100,14 @@ export default {
     confirmRemove: "{name}을(를) 제거하시겠습니까?",
     unknownUser: "알 수 없는 사용자",
     linkUpdated: "초대 링크가 업데이트되었습니다",
-    fetchMembersFailed: "공동 편집자 목록을 가져오는 데 실패했습니다"
+    fetchMembersFailed: "공동 편집자 목록을 가져오는 데 실패했습니다",
   },
   traffic: {
     selectMode: "교통 수단 선택",
     drive: "운전",
     walk: "걷기",
     transit: "대중교통",
-    errorFetchingData: "교통 정보 불러오기 실패, 잠시 후 다시 시도해주세요"
+    errorFetchingData: "교통 정보 불러오기 실패, 잠시 후 다시 시도해주세요",
   },
   schedule: {
     placeholderTitle: "여행 이름을 지어주세요⸜(*ˊᗜˋ*)⸝",
@@ -121,14 +125,14 @@ export default {
     totalDays: "총 {{ days }}일",
     description: "여행 설명 (선택 사항)",
     unsavedChanges: "저장되지 않은 내용이 있습니다. 정말로 떠나시겠습니까?",
-    placeholderDescription: "여행을 간단히 기록하세요~(ﾉ˶>ᗜ​<˵)ﾉ"
+    placeholderDescription: "여행을 간단히 기록하세요~(ﾉ˶>ᗜ​<˵)ﾉ",
   },
   tripList: {
     myTrips: "내 여행",
     noTrips: "아직 여행이 없습니다!",
     noCoverImage: "커버 이미지 없음",
     total: "총",
-    days: "일"
+    days: "일",
   },
   tripOverview: {
     backToOverview: "여행 총괄로 돌아가기",
@@ -138,12 +142,12 @@ export default {
     cancel: "취소",
     crop: "자르기",
     notes: "노트:",
-    placeholderNotes: "여행 노트를 추가하거나 편집하려면 여기를 클릭하세요..."
+    placeholderNotes: "여행 노트를 추가하거나 편집하려면 여기를 클릭하세요...",
   },
   communityList: {
     noPosts: "게시물이 없습니다. 첫 번째 게시물을 만들어보세요!",
     allPostsLoaded: "모든 게시물이 로드되었습니다",
-    errorFetchingPosts: "게시물 로드 실패"
+    errorFetchingPosts: "게시물 로드 실패",
   },
   emailSettings: {
     title: "이메일 알림 설정",
@@ -157,7 +161,7 @@ export default {
     onLogin: "로그인 성공",
     onLoginfail: "계정 로그인 오류",
     onComment: "게시물에 댓글이 달렸습니다",
-    onBookmark: "게시물이 즐겨찾기에 추가되었습니다"
+    onBookmark: "게시물이 즐겨찾기에 추가되었습니다",
   },
   getInvite: {
     loading: "로딩 중...",
@@ -167,7 +171,7 @@ export default {
     alreadyJoined: "이미 공동 편집자입니다!",
     editPermission: "편집 권한",
     viewPermission: "보기 권한",
-    joinFailed: "참여 실패, 잠시 후 다시 시도해주세요"
+    joinFailed: "참여 실패, 잠시 후 다시 시도해주세요",
   },
   googleMapView: {
     current: "현재",
@@ -176,7 +180,8 @@ export default {
     noLocationFound: "장소를 찾을 수 없습니다!",
     selectPlaceAndDate: "장소와 날짜를 선택하세요",
     addToItinerarySuccess: "여행 일정에 추가 성공!",
-    mapNotInitialized: "지도 초기화가 완료되지 않았습니다. 잠시 후 다시 시도해주세요",
+    mapNotInitialized:
+      "지도 초기화가 완료되지 않았습니다. 잠시 후 다시 시도해주세요",
     geoLocationNotSupported: "브라우저에서 위치 정보 기능을 지원하지 않습니다",
     failedToGetLocation: "위치 정보를 가져올 수 없습니다",
     more: "더보기",
@@ -186,9 +191,11 @@ export default {
     routePlanningFailed: "경로 계획 실패:",
     failedToGetDetails: "상세 정보 가져오기 실패",
     clickedNonPlace: "비장소를 클릭했습니다",
-    mapsLoadFailed: "Google 지도 로드 실패"
+    mapsLoadFailed: "Google 지도 로드 실패",
   },
   homeView: {
+    exploreYourMap: "지도 탐험",
+    markLandmarks: "지도에 표시하고 각 여행은 삶의 귀중한 챕터가 됩니다",
     current: "현재",
     inputPlace: "장소 입력",
     search: "검색",
@@ -196,14 +203,15 @@ export default {
     selectPlaceAndDate: "장소와 날짜를 선택하세요",
     addToItinerarySuccess: "여행 일정에 추가 성공!",
     highFreedomItineraryPlanning: "자유도가 높은 여행 일정 계획",
-    dragAndSort: "장소를 드래그하여 자유롭게 정렬하세요. 여행 관리가 쉬워집니다",
+    dragAndSort:
+      "장소를 드래그하여 자유롭게 정렬하세요. 여행 관리가 쉬워집니다",
     oneStopInfoCollection: "정보를 한 곳에서 모두 수집",
     quickScheduling: "빠른 일정 설정",
     collaborateWithFriends: "친구와 함께 편집",
     sharingBecomesRouteSign: "공유가 서로의 길잡이가 됩니다",
     taiwanTravel5Days: "대만 5일 여행",
     oneStepOneScene: "한 걸음, 한 장면, 작은 섬 여행",
-    taipeiTrip3Days2Nights: "타이베이 3일 2박 여행"
+    taipeiTrip3Days2Nights: "타이베이 3일 2박 여행",
   },
   loginPage: {
     login: "로그인",
@@ -215,7 +223,7 @@ export default {
     loginSuccess: "로그인에 성공했습니다!",
     logoutButton: "로그아웃",
     errorMessage: "로그인 실패, 이메일과 비밀번호를 확인하세요",
-    inputEmailAndPassword: "이메일과 비밀번호를 입력하세요"
+    inputEmailAndPassword: "이메일과 비밀번호를 입력하세요",
   },
   memberHub: {
     memberCenter: "회원 센터",
@@ -227,7 +235,8 @@ export default {
     notifications: "알림 설정",
     pleaseLogin: "먼저 로그인하세요",
     unnamedPost: "이름 없는 게시물",
-    profileUpdated: "프로필이 업데이트되었습니다"
+    profileUpdated: "프로필이 업데이트되었습니다",
+    language: "언어",
   },
   memberProfile: {
     updateProfile: "회원 프로필 수정",
@@ -244,7 +253,21 @@ export default {
     oldPasswordError: "기존 비밀번호가 틀렸습니다",
     fillAllFields: "모든 필드를 입력하세요",
     passwordChangedSuccess: "비밀번호 변경 성공",
-    loginFirst: "먼저 로그인하세요"
+    loginFirst: "먼저 로그인하세요",
+    name: "이름",
+    namePlaceholder: "이름을 입력하세요",
+    gender: "성별",
+    male: "남성",
+    female: "여성",
+    phone: "전화번호",
+    phonePlaceholder: "전화번호를 입력하세요",
+    birthday: "생일",
+    saveProfileBtn: "프로필 저장",
+    passwordSectionTitle: "비밀번호 변경",
+    oldPasswordPlaceholder: "현재 비밀번호",
+    newPasswordPlaceholder: "새 비밀번호",
+    confirmPasswordPlaceholder: "새 비밀번호 확인",
+    changePasswordBtn: "비밀번호 변경",
   },
   scheduleDetail: {
     tripOverview: "여행 개요",
@@ -255,7 +278,7 @@ export default {
     updateDatesFailure: "날짜 업데이트 실패",
     updateNotesFailure: "메모 업데이트 실패",
     fetchTripFailure: "여행을 불러올 수 없습니다",
-    day: "일"
+    day: "일",
   },
   signUp: {
     signUp: "회원 가입",
@@ -266,7 +289,7 @@ export default {
     submit: "가입",
     alreadyHaveAccount: "계정이 이미 있으신가요? 로그인",
     registerFailure: "가입 실패, 나중에 다시 시도해주세요",
-    registerSuccess: "가입 성공"
+    registerSuccess: "가입 성공",
   },
   travel: {
     createTrip: "여행 만들기",
@@ -275,6 +298,6 @@ export default {
     loginRequired: "먼저 로그인하세요",
     confirmDelete: "이 여행을 삭제하시겠습니까?",
     deleteSuccess: "삭제 성공",
-    deleteFailure: "삭제 실패, 잠시 후 다시 시도해주세요"
-  }
+    deleteFailure: "삭제 실패, 잠시 후 다시 시도해주세요",
+  },
 };

@@ -2,7 +2,7 @@ export default {
   addComment: {
     placeholderTitle: "Write your comment...",
     submitting: "Submitting...",
-    submit: "Post Comment"
+    submit: "Post Comment",
   },
   commentSection: {
     loadingComments: "Loading comments...",
@@ -14,7 +14,7 @@ export default {
     justNow: "Just now",
     minutesAgo: "minutes ago",
     hoursAgo: "hours ago",
-    deleteConfirm: "Are you sure you want to delete this comment?"
+    deleteConfirm: "Are you sure you want to delete this comment?",
   },
   dailyPlan: {
     arrival: "Arrival",
@@ -22,8 +22,9 @@ export default {
     cancel: "Cancel",
     remove: "Remove",
     noPlaces: "No places added yet",
-    selectTripMessage: "Please select a trip and date from the sidebar to view the daily plan.",
-    sortFail: "Failed to update sorting"
+    selectTripMessage:
+      "Please select a trip and date from the sidebar to view the daily plan.",
+    sortFail: "Failed to update sorting",
   },
   itinerary: {
     loadItineraryFail: "Failed to load itinerary",
@@ -33,19 +34,21 @@ export default {
     selectLocationDate: "Please select a location and date",
     placeAlreadyAdded: "This place is already added",
     addPlaceFail: "Failed to add place",
-    removePlaceFail: "Failed to remove place"
+    removePlaceFail: "Failed to remove place",
   },
   navbar: {
     explore: "Explore",
     community: "Community",
-    profilePicture: "Profile Picture"
+    profilePicture: "Profile Picture",
   },
   paymentModal: {
     success: "Payment Successful",
-    successMessage: "Thank you for your purchase! Your payment has been successfully processed.",
+    successMessage:
+      "Thank you for your purchase! Your payment has been successfully processed.",
     close: "Close",
     fail: "Payment Failed",
-    failMessage: "Sorry, your payment was unsuccessful. Please try again later or contact support.",
+    failMessage:
+      "Sorry, your payment was unsuccessful. Please try again later or contact support.",
     upgradeToPremium: "Upgrade to Premium",
     payAmount: "Only pay",
     moreTrips: "to create more trips!",
@@ -57,10 +60,11 @@ export default {
     loading: "Loading...",
     initCreditCardPayment: "Initializing Credit Card Payment",
     confirmCreditCardPayment: "Confirm Credit Card Payment",
-    alreadyPremium: "You are already a premium member! Thank you for your support."
+    alreadyPremium:
+      "You are already a premium member! Thank you for your support.",
   },
   postCard: {
-    author: "Author"
+    author: "Author",
   },
   postForm: {
     selectSchedule: "Select Schedule",
@@ -68,9 +72,10 @@ export default {
     content: "Post Content",
     submitPost: "Submit Post",
     fetchError: "Unable to fetch",
-    fileError: "Unsupported format or file too large. Please upload JPG, PNG, or WebP. Maximum file size 3MB",
+    fileError:
+      "Unsupported format or file too large. Please upload JPG, PNG, or WebP. Maximum file size 3MB",
     submitError: "Failed to post, please try again later!",
-    success: "Success"
+    success: "Success",
   },
   postPopup: {
     travelReference: "Trip Reference",
@@ -79,7 +84,7 @@ export default {
     noContent: "No content",
     justNow: "Just now",
     minutesAgo: "minutes ago",
-    hoursAgo: "hours ago"
+    hoursAgo: "hours ago",
   },
   shareTripModal: {
     inviteCollaborators: "Invite Collaborators",
@@ -96,14 +101,15 @@ export default {
     confirmRemove: "Are you sure you want to remove {name}?",
     unknownUser: "Unknown User",
     linkUpdated: "Invitation link updated",
-    fetchMembersFailed: "Failed to fetch collaborators"
+    fetchMembersFailed: "Failed to fetch collaborators",
   },
   traffic: {
     selectMode: "Select Mode of Transport",
     drive: "Drive",
     walk: "Walk",
     transit: "Public Transport",
-    errorFetchingData: "Failed to fetch traffic information, please try again later"
+    errorFetchingData:
+      "Failed to fetch traffic information, please try again later",
   },
   schedule: {
     placeholderTitle: "Give your trip a name ⸜(*ˊᗜˋ*)⸝",
@@ -114,21 +120,22 @@ export default {
     saving: "Saving...",
     create: "Create",
     errorFields: "Please fill in the trip name and start/end dates",
-    successSave: "Saved successfully, you can close the form and click the trip to edit",
+    successSave:
+      "Saved successfully, you can close the form and click the trip to edit",
     errorSave: "Save failed, please try again later",
     title: "Trip Name",
     dates: "Trip Dates",
     totalDays: "Total {{ days }} Days",
     description: "Trip Description (optional)",
     unsavedChanges: "You have unsaved changes, are you sure you want to leave?",
-    placeholderDescription: "Please briefly record your trip~(ﾉ˶>ᗜ​<˵)ﾉ"
+    placeholderDescription: "Please briefly record your trip~(ﾉ˶>ᗜ​<˵)ﾉ",
   },
   tripList: {
     myTrips: "My Trips",
     noTrips: "No trips yet!",
     noCoverImage: "No cover image",
     total: "Total",
-    days: "Days"
+    days: "Days",
   },
   tripOverview: {
     backToOverview: "Back to Overview",
@@ -138,12 +145,12 @@ export default {
     cancel: "Cancel",
     crop: "Crop",
     notes: "Notes:",
-    placeholderNotes: "Click here to add or edit trip notes..."
+    placeholderNotes: "Click here to add or edit trip notes...",
   },
   communityList: {
     noPosts: "No posts yet, create the first one!",
     allPostsLoaded: "All posts loaded",
-    errorFetchingPosts: "Failed to load posts"
+    errorFetchingPosts: "Failed to load posts",
   },
   emailSettings: {
     title: "Email Notification Settings",
@@ -157,7 +164,7 @@ export default {
     onLogin: "Login Success",
     onLoginfail: "Account login error",
     onComment: "Post commented",
-    onBookmark: "Post bookmarked"
+    onBookmark: "Post bookmarked",
   },
   getInvite: {
     loading: "Loading...",
@@ -167,7 +174,7 @@ export default {
     alreadyJoined: "You are already a collaborator!",
     editPermission: "Edit Permission",
     viewPermission: "View Permission",
-    joinFailed: "Join failed, please try again later"
+    joinFailed: "Join failed, please try again later",
   },
   googleMapView: {
     current: "Current",
@@ -186,9 +193,12 @@ export default {
     routePlanningFailed: "Route planning failed:",
     failedToGetDetails: "Failed to get details",
     clickedNonPlace: "Clicked a non-place location",
-    mapsLoadFailed: "Google Maps load failed"
+    mapsLoadFailed: "Google Maps load failed",
   },
   homeView: {
+    exploreYourMap: "Explore Your Map",
+    markLandmarks:
+      "Mark landmarks and leave footprints, each journey is a valuable life chapter to be treasured",
     current: "Current",
     inputPlace: "Enter place",
     search: "Search",
@@ -203,7 +213,7 @@ export default {
     sharingBecomesRouteSign: "Let sharing become a roadmap for each other",
     taiwanTravel5Days: "Slow Travel Taiwan for Five Days",
     oneStepOneScene: "One Step, One Scene, Island Travel",
-    taipeiTrip3Days2Nights: "Taipei 3 Days 2 Nights Guide"
+    taipeiTrip3Days2Nights: "Taipei 3 Days 2 Nights Guide",
   },
   loginPage: {
     login: "Login",
@@ -215,7 +225,7 @@ export default {
     loginSuccess: "You have successfully logged in!",
     logoutButton: "Logout",
     errorMessage: "Login failed, please check email and password",
-    inputEmailAndPassword: "Please enter email and password"
+    inputEmailAndPassword: "Please enter email and password",
   },
   memberHub: {
     memberCenter: "Member Center",
@@ -227,7 +237,8 @@ export default {
     notifications: "Notification Settings",
     pleaseLogin: "Please log in first",
     unnamedPost: "Unnamed Post",
-    profileUpdated: "Profile updated"
+    profileUpdated: "Profile updated",
+    language: "Language Settings",
   },
   memberProfile: {
     updateProfile: "Update Profile",
@@ -244,7 +255,21 @@ export default {
     oldPasswordError: "Incorrect old password",
     fillAllFields: "Please fill in all fields",
     passwordChangedSuccess: "Password changed successfully",
-    loginFirst: "Please log in first"
+    loginFirst: "Please log in first",
+    name: "Name",
+    namePlaceholder: "Enter your name",
+    gender: "Gender",
+    male: "Male",
+    female: "Female",
+    phone: "Phone Number",
+    phonePlaceholder: "Enter your phone number",
+    birthday: "Birthday",
+    saveProfileBtn: "Save Profile",
+    passwordSectionTitle: "Change Password",
+    oldPasswordPlaceholder: "Old Password",
+    newPasswordPlaceholder: "New Password",
+    confirmPasswordPlaceholder: "Confirm New Password",
+    changePasswordBtn: "Submit Password Change",
   },
   scheduleDetail: {
     tripOverview: "Trip Overview",
@@ -255,7 +280,7 @@ export default {
     updateDatesFailure: "Failed to update dates",
     updateNotesFailure: "Failed to update notes",
     fetchTripFailure: "Failed to load trip",
-    day: "Day"
+    day: "Day",
   },
   signUp: {
     signUp: "Sign Up",
@@ -266,15 +291,15 @@ export default {
     submit: "Register",
     alreadyHaveAccount: "Already have an account? Login",
     registerFailure: "Registration failed, please try again later",
-    registerSuccess: "Registration successful"
+    registerSuccess: "Registration successful",
   },
   travel: {
     createTrip: "Create Trip",
     deleteTrip: "Delete Trip",
-    noTrips: "No trips created yet",
+    noTrips: "No trips yet!",
     loginRequired: "Please log in first",
     confirmDelete: "Are you sure you want to delete this trip?",
     deleteSuccess: "Deleted successfully",
-    deleteFailure: "Failed to delete, please try again later"
-  }
+    deleteFailure: "Delete failed, please try again later",
+  },
 };

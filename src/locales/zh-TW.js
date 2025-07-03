@@ -2,7 +2,7 @@ export default {
   addComment: {
     placeholderTitle: "寫下你的留言...",
     submitting: "送出中...",
-    submit: "發表留言"
+    submit: "發表留言",
   },
   commentSection: {
     loadingComments: "載入留言中...",
@@ -14,7 +14,7 @@ export default {
     justNow: "剛剛",
     minutesAgo: "分鐘前",
     hoursAgo: "小時前",
-    deleteConfirm: "確定要刪除這則留言嗎？"
+    deleteConfirm: "確定要刪除這則留言嗎？",
   },
   dailyPlan: {
     arrival: "抵達",
@@ -23,7 +23,7 @@ export default {
     remove: "移除",
     noPlaces: "尚未加入任何景點",
     selectTripMessage: "請從右側邊欄選擇一個旅程和日期來查看每日計畫。",
-    sortFail: "排序更新失敗"
+    sortFail: "排序更新失敗",
   },
   itinerary: {
     loadItineraryFail: "載入行程失敗",
@@ -33,12 +33,12 @@ export default {
     selectLocationDate: "請選擇地點與日期",
     placeAlreadyAdded: "已加入此景點",
     addPlaceFail: "加入失敗",
-    removePlaceFail: "刪除失敗"
+    removePlaceFail: "刪除失敗",
   },
   navbar: {
     explore: "探索",
     community: "社群",
-    profilePicture: "會員頭貼"
+    profilePicture: "會員頭貼",
   },
   paymentModal: {
     success: "付款成功",
@@ -57,10 +57,10 @@ export default {
     loading: "載入中...",
     initCreditCardPayment: "初始化信用卡付款",
     confirmCreditCardPayment: "確認信用卡付款",
-    alreadyPremium: "您已經是付費會員！感謝您的支持。"
+    alreadyPremium: "您已經是付費會員！感謝您的支持。",
   },
   postCard: {
-    author: "發文者"
+    author: "發文者",
   },
   postForm: {
     selectSchedule: "選擇行程",
@@ -70,7 +70,7 @@ export default {
     fetchError: "無法取得",
     fileError: "格式不支援或檔案太大。請上傳 JPG、PNG 或 WebP。檔案最高3MB",
     submitError: "發佈貼文失敗，請稍後再試！",
-    success: "成功"
+    success: "成功",
   },
   postPopup: {
     travelReference: "行程參考",
@@ -79,7 +79,7 @@ export default {
     noContent: "沒有內容",
     justNow: "剛剛",
     minutesAgo: "分鐘前",
-    hoursAgo: "小時前"
+    hoursAgo: "小時前",
   },
   shareTripModal: {
     inviteCollaborators: "邀請共編",
@@ -96,14 +96,14 @@ export default {
     confirmRemove: "確定要移除 {name} 嗎？",
     unknownUser: "未知使用者",
     linkUpdated: "邀請連結已更新",
-    fetchMembersFailed: "取得共編成員失敗"
+    fetchMembersFailed: "取得共編成員失敗",
   },
   traffic: {
     selectMode: "選交通方式",
     drive: "開車",
     walk: "步行",
     transit: "大眾運輸",
-    errorFetchingData: "讀取交通資訊失敗，請稍後再試"
+    errorFetchingData: "讀取交通資訊失敗，請稍後再試",
   },
   schedule: {
     placeholderTitle: "幫行程取個名字⸜(*ˊᗜˋ*)⸝",
@@ -121,14 +121,14 @@ export default {
     totalDays: "共 {{ days }} 天",
     description: "行程描述(可選填)",
     unsavedChanges: "您有尚未儲存的內容，確定要離開嗎?",
-    placeholderDescription: "請簡單記錄一下自己的行程吧~(ﾉ˶>ᗜ​<˵)ﾉ"
+    placeholderDescription: "請簡單記錄一下自己的行程吧~(ﾉ˶>ᗜ​<˵)ﾉ",
   },
   tripList: {
     myTrips: "我的行程",
     noTrips: "還沒有任何行程資料！",
     noCoverImage: "無封面圖片",
     total: "共",
-    days: "天"
+    days: "天",
   },
   tripOverview: {
     backToOverview: "返回行程總覽",
@@ -138,12 +138,12 @@ export default {
     cancel: "取消",
     crop: "裁切",
     notes: "筆記：",
-    placeholderNotes: "點擊這裡新增或編輯行程筆記..."
+    placeholderNotes: "點擊這裡新增或編輯行程筆記...",
   },
   communityList: {
     noPosts: "尚無貼文，快來建立第一篇吧！",
     allPostsLoaded: "已載入所有貼文",
-    errorFetchingPosts: "載入貼文失敗"
+    errorFetchingPosts: "載入貼文失敗",
   },
   emailSettings: {
     title: "Email 通知設定",
@@ -157,7 +157,7 @@ export default {
     onLogin: "登入成功",
     onLoginfail: "帳號登入異常",
     onComment: "貼文被留言",
-    onBookmark: "貼文被收藏"
+    onBookmark: "貼文被收藏",
   },
   getInvite: {
     loading: "載入中...",
@@ -167,7 +167,7 @@ export default {
     alreadyJoined: "你已是共編成員！",
     editPermission: "編輯權限",
     viewPermission: "檢視權限",
-    joinFailed: "加入失敗，請稍後再試"
+    joinFailed: "加入失敗，請稍後再試",
   },
   googleMapView: {
     current: "當前",
@@ -186,9 +186,11 @@ export default {
     routePlanningFailed: "路線規劃失敗：",
     failedToGetDetails: "取得詳細資料失敗",
     clickedNonPlace: "點擊了非place地點",
-    mapsLoadFailed: "Google Maps 載入失敗"
+    mapsLoadFailed: "Google Maps 載入失敗",
   },
   homeView: {
+    exploreYourMap: "探索你的地圖",
+    markLandmarks: "標記景點留下足跡，每段旅程都是值得收藏的人生篇章",
     current: "當前",
     inputPlace: "輸入地點",
     search: "搜尋",
@@ -203,7 +205,7 @@ export default {
     sharingBecomesRouteSign: "讓分享，成為彼此的路標",
     taiwanTravel5Days: "慢遊台灣五日行",
     oneStepOneScene: "一步一景，小島旅行中",
-    taipeiTrip3Days2Nights: "台北三天兩夜攻略"
+    taipeiTrip3Days2Nights: "台北三天兩夜攻略",
   },
   loginPage: {
     login: "登入",
@@ -215,7 +217,7 @@ export default {
     loginSuccess: "您已成功登入！",
     logoutButton: "登出",
     errorMessage: "登入失敗，請檢查郵件與密碼",
-    inputEmailAndPassword: "請輸入 Email 和密碼"
+    inputEmailAndPassword: "請輸入 Email 和密碼",
   },
   memberHub: {
     memberCenter: "會員中心",
@@ -227,7 +229,8 @@ export default {
     notifications: "通知設定",
     pleaseLogin: "請先登入會員",
     unnamedPost: "未命名貼文",
-    profileUpdated: "資料已更新"
+    profileUpdated: "資料已更新",
+    language: "語言設定",
   },
   memberProfile: {
     updateProfile: "會員資料修改",
@@ -244,7 +247,21 @@ export default {
     oldPasswordError: "舊密碼錯誤",
     fillAllFields: "請填寫所有欄位",
     passwordChangedSuccess: "密碼修改成功",
-    loginFirst: "請先登入會員"
+    loginFirst: "請先登入會員",
+    name: "名稱",
+    namePlaceholder: "請輸入名稱",
+    gender: "性別",
+    male: "男",
+    female: "女",
+    phone: "手機號碼",
+    phonePlaceholder: "請輸入手機號碼",
+    birthday: "生日",
+    saveProfileBtn: "儲存資料",
+    passwordSectionTitle: "修改密碼",
+    oldPasswordPlaceholder: "舊密碼",
+    newPasswordPlaceholder: "新密碼",
+    confirmPasswordPlaceholder: "再次輸入新密碼",
+    changePasswordBtn: "送出修改密碼",
   },
   scheduleDetail: {
     tripOverview: "行程總覽",
@@ -255,7 +272,7 @@ export default {
     updateDatesFailure: "更新日期失敗",
     updateNotesFailure: "筆記更新失敗",
     fetchTripFailure: "無法載入行程",
-    day: "第"
+    day: "第",
   },
   signUp: {
     signUp: "註冊",
@@ -266,7 +283,7 @@ export default {
     submit: "註冊",
     alreadyHaveAccount: "已有帳號？登入",
     registerFailure: "註冊失敗，請稍後重試",
-    registerSuccess: "註冊成功"
+    registerSuccess: "註冊成功",
   },
   travel: {
     createTrip: "建立行程",
@@ -275,6 +292,6 @@ export default {
     loginRequired: "請先登入會員",
     confirmDelete: "確定刪除這個行程嗎?",
     deleteSuccess: "刪除成功",
-    deleteFailure: "刪除失敗，請稍後再試"
-  }
+    deleteFailure: "刪除失敗，請稍後再試",
+  },
 };

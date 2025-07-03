@@ -22,7 +22,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import axios from "axios";
 import { useI18n } from 'vue-i18n'
 const { t, locale } = useI18n()
@@ -34,12 +34,12 @@ const preferences = ref({
   onBookmark: true,
 });
 
-const labels = {
-  onLogin: "{{ $t('emailSettings.onLogin') }}",
-  onLoginfail: "{{ $t('emailSettings.onLoginfail') }}",
-  onComment: "{{ $t('emailSettings.onComment') }}",
-  onBookmark: "{{ $t('emailSettings.onBookmark') }}",
-};
+const labels = computed(() => ({
+  onLogin: t('emailSettings.onLogin'),
+  onLoginfail: t('emailSettings.onLoginfail'),
+  onComment: t('emailSettings.onComment'),
+  onBookmark: t('emailSettings.onBookmark'),
+}));
 
 const loading = ref(false);
 
