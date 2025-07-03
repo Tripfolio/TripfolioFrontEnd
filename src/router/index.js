@@ -12,6 +12,8 @@ import Community from "@/views/CommunityList.vue";
 import scheduleDetail from "@/views/scheduleDetail.vue";
 import MemberProfile from "@/views/MemberProfile.vue";
 import MemberHub from "@/views/MemberHub.vue";
+import PrivacyPolicy from '../views/PrivacyPolicy.vue' 
+import TermsOfService from '../views/TermsOfService.vue' 
 
 const routes = [
   {
@@ -74,6 +76,16 @@ const routes = [
     name: "scheduledetail",
     component: scheduleDetail,
   },
+  {
+    path: '/privacy-policy', 
+    name: 'privacy-policy',
+    component: PrivacyPolicy, 
+  },
+  {
+    path: '/terms-of-service', 
+    name: 'terms-of-service',
+    component: TermsOfService,
+  }
 ];
 
 const router = createRouter({
