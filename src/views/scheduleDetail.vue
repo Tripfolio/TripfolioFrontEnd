@@ -38,7 +38,7 @@
                 : 'bg-white text-gray-700 border-gray-300 '
             "
           >
-            第{{ index + 1 }}天
+          {{ $t('scheduleDetail.day') }} {{ index + 1 }}
           </button>
         </div>
       </div>
@@ -112,7 +112,7 @@ const fetchTrip = async () => {
     trip.value = tripData;
     tripLoaded.value = true;
   } catch (err) {
-    alert("無法載入行程");
+    alert(t('scheduleDetail.fetchTripFailure'));
     router.push("/schedule");
   }
 };
@@ -143,9 +143,9 @@ const updateCover = async (blob) => {
       trip.value.coverURL = res.data.coverURL;
       coverTimestamp.value = Date.now();
     }
-    alert("封面已成功更新！");
+    alert(t('scheduleDetail.updateCoverSuccess'));
   } catch (err) {
-    alert("封面更新失敗");
+    alert(t('scheduleDetail.updateCoverFailure'));
   }
 };
 
@@ -158,7 +158,7 @@ const updateTitle = async (newTitle) => {
     );
     trip.value.title = newTitle;
   } catch (err) {
-    alert("標題更新失敗");
+    alert(t('scheduleDetail.updateTitleFailure'));
   }
 };
 
@@ -181,7 +181,7 @@ const updateDates = async ({ startDate, endDate }) => {
       currentDayIndex.value = 0;
     }
   } catch (err) {
-    alert("更新日期失敗");
+    alert(t('scheduleDetail.updateDatesFailure'));
   }
 };
 
@@ -194,7 +194,7 @@ const updateNotes = async (newNotes) => {
     );
     trip.value.description = newNotes;
   } catch (err) {
-    alert("筆記更新失敗");
+    alert(t('scheduleDetail.updateNotesFailure'));
   }
 };
 

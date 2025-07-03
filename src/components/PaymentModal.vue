@@ -92,6 +92,8 @@
 import { ref } from 'vue';
 import axios from 'axios';
 import dropin from 'braintree-web-drop-in';
+import { useI18n } from 'vue-i18n'
+const { t, locale } = useI18n()
 
 const props = defineProps({
   result: String

@@ -1,6 +1,6 @@
 <template>
   <div class="bg-white p-6 rounded-xl shadow-md w-full max-w-md mx-auto">
-    <div class="flex border-b mb-4">邀請共編</div>
+    <div class="flex border-b mb-4">{{ $t('shareTripModal.inviteCollaborators') }}</div>
     <div>
       <!-- 權限選單 -->
       <div class="relative mb-4">
@@ -8,7 +8,7 @@
           @click="togglePermissionDropdown"
           class="w-full border border-gray-300 rounded-md py-2 px-4 text-left flex justify-between items-center hover:bg-gray-100"
         >
-          {{ permission === "editor" ? "可編輯" : "僅供檢視" }}
+        {{ permission === "editor" ? $t('shareTripModal.editPermission') : $t('shareTripModal.viewPermission') }}
           <svg
             class="w-4 h-4 ml-2"
             fill="none"
@@ -31,13 +31,13 @@
             class="px-4 py-2 hover:bg-gray-100 cursor-pointer"
             @click="setPermission('viewer')"
           >
-            僅供檢視
+            {{$t('shareTripModal.viewPermission')}}
           </li>
           <li
             class="px-4 py-2 hover:bg-gray-100 cursor-pointer"
             @click="setPermission('editor')"
           >
-            可編輯
+            {{$t('shareTripModal.editPermission')}}
           </li>
         </ul>
       </div>
@@ -46,7 +46,7 @@
       <div v-if="shareUrl" class="flex flex-col items-center space-y-3 my-4">
         <qrcode-vue :value="shareUrl" :size="160" />
         <p class="text-sm text-gray-500 text-center leading-snug">
-          手機掃描條碼，即可查看此行程
+          {{ $t('shareTripModal.scanQr') }}
         </p>
       </div>
 
@@ -55,12 +55,12 @@
         @click="copyToClipboard"
         class="w-full bg-blue-500 text-white font-semibold py-2 px-4 rounded-md hover:bg-blue-600"
       >
-        複製連結
+        {{ $t('shareTripModal.copyLink') }}
       </button>
 
       <!-- 成員清單 -->
       <div class="mt-6">
-        <h3 class="text-base font-semibold mb-2">共編成員</h3>
+        <h3 class="text-base font-semibold mb-2">{{ $t('shareTripModal.collaborators') }}</h3>
         <ul class="space-y-3 max-h-60 overflow-y-auto">
           <li
             v-for="member in members"
@@ -85,8 +85,8 @@
                 class="border rounded-md px-2 py-1 text-sm"
                 @change="changePermission(member)"
               >
-                <option value="editor">可編輯</option>
-                <option value="viewer">僅供檢視</option>
+                <option value="editor">{{$t('shareTripModal.editPermission')}}</option>
+                <option value="viewer">{{$t('shareTripModal.viewPermission')}}</option>
               </select>
 
               <!-- 刪除按鈕 -->
@@ -108,6 +108,8 @@
 import { ref, onMounted } from "vue";
 import QrcodeVue from "qrcode.vue";
 import axios from "axios";
+import { useI18n } from 'vue-i18n'
+const { t, locale } = useI18n()
 
 const props = defineProps({
   tripId: {
@@ -129,7 +131,7 @@ const setPermission = async (type) => {
   permission.value = type;
   showDropdown.value = false;
   await generateShareUrl();
-  alert("邀請連結已更新");
+  alert(t('shareTripModal.linkUpdated'));
 };
 
 const generateShareUrl = async () => {
@@ -143,16 +145,16 @@ const generateShareUrl = async () => {
     shareUrl.value = res.data.shareLink;
     await fetchMembers();
   } catch (err) {
-    alert("產生連結失敗。");
+    alert(t('shareTripModal.generateLinkFailed'));
   }
 };
 
 const copyToClipboard = async () => {
   try {
     await navigator.clipboard.writeText(shareUrl.value);
-    alert("已複製連結！");
+    alert(t('shareTripModal.linkCopied'));
   } catch (err) {
-    alert("複製失敗");
+    alert(t('shareTripModal.copyFailed'));
   }
 };
 
@@ -166,11 +168,11 @@ const fetchMembers = async () => {
     members.value = res.data.map((item) => ({
       token: item.token,
       permission: item.permission,
-      name: item.name || "未知使用者",
+      name: item.name || $t('shareTripModal.unknownUser'),
       avatarUrl: item.avatar, // 頭像須從user資料取得
     }));
   } catch (err) {
-    alert("取得共編成員失敗。");
+    alert(t('shareTripModal.fetchMembersFailed'));
   }
 };
 
@@ -183,19 +185,19 @@ const changePermission = async (member) => {
       },
     );
   } catch (err) {
-    alert("變更權限失敗");
+    alert(t('shareTripModal.permissionChangeFailed'));
   }
 };
 
 const removeMember = async (member) => {
-  if (!confirm(`確定要移除 ${member.name} 嗎？`)) return;
+  if (!confirm($t('shareTripModal.confirmRemove', { name: member.name }))) return;
   try {
     await axios.delete(
       `${import.meta.env.VITE_API_URL}/api/trip-shares/${member.token}`,
     );
     await fetchMembers();
   } catch (err) {
-    alert("移除失敗");
+    alert($t('shareTripModal.removeFailed'));
   }
 };
 

@@ -9,10 +9,6 @@ import { initializeAuth } from "./composable/authUtils";
 
 import { createI18n } from "vue-i18n";
 import messages from "./locales/index.js";
-import en from './locales/en.js';
-import zhTW from './locales/zh-TW.js';
-import ja from './locales/ja.js';
-import ko from './locales/ko.js';
 
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
@@ -55,19 +51,16 @@ library.add(
 const app = createApp(App);
 
 const i18n = createI18n({
-  locale: "zh-TW",
-  messages,
+  legacy: false,  // 關閉 legacy 模式
+  locale: "zh-TW",  // 預設語言
+  messages,         // 語言包
 });
+
+
+app.use(i18n);
 
 app.use(createPinia());
 initializeAuth(router);
 app.use(router);
 app.component("FontAwesomeIcon", FontAwesomeIcon);
 app.mount("#app");
-
-export default {
-  en,
-  'zh-TW': zhTW,
-  ja,
-  ko,
-};

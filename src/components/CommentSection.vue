@@ -155,7 +155,7 @@ const canDeleteComment = (comment) => {
 };
 
 const deleteComment = async (commentId) => {
-  if (!confirm($t('commentSection.deleteConfirm'))) {
+  if (!confirm(t('commentSection.deleteConfirm'))) {
     return;
   }
 
@@ -192,15 +192,15 @@ const deleteComment = async (commentId) => {
     console.error("刪除留言失敗:", error);
 
     if (error.response?.status === 403) {
-      alert((t('commentSection.noPermissionDelete')));
+      alert(t('commentSection.noPermissionDelete'));
     } else if (error.response?.status === 404) {
-      alert(($t('commentSection.commentNotFound')));
+      alert(t('commentSection.commentNotFound'));
       // 從本地陣列中移除不存在的留言
       comments.value = comments.value.filter(
         (comment) => comment.id !== commentId,
       );
     } else {
-      alert(($t('commentSection.deleteFail')));
+      alert(t('commentSection.deleteFail'));
     }
   }
 };

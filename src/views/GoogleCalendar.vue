@@ -50,6 +50,8 @@ const message = ref("");
 const eventLink = ref("");
 const loading = ref(false); //避免使用者重複請求
 const isLink = ref(false);
+import { useI18n } from 'vue-i18n'
+const { t, locale } = useI18n()
 
 const CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 const API_KEY = import.meta.env.VITE_GOOGLE_API_KEY;

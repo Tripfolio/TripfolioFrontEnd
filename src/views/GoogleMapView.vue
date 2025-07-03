@@ -16,7 +16,7 @@
         @change="onCityChange($event)"
         class="appearance-none navbar-style rounded-4xl text-sm py-1 pl-2 pr-3 focus:outline-none hover:bg-gray-400 transition duration-200 cursor-pointer shadow-inner"
       >
-        <option value="none">當前</option>
+        <option value="none">{{ $t('googleMapView.current') }}</option>
         <option v-for="city in cities" :key="city.name" :value="city.name">
           {{ city.name }}
         </option>
@@ -40,7 +40,7 @@
       <input
         type="text"
         v-model="searchQuery"
-        placeholder="輸入地點"
+        :placeholder="$t('googleMapView.inputPlace')"
         class="w-[80%] rounded-full border-none px-3 py-1.5 box-border text-base placeholder-white focus:outline-none"
         ref="searchInput"
         @keyup.enter="searchPlace"
@@ -49,7 +49,7 @@
         @click.prevent="searchPlace"
         class="absolute right-0.5 top-1/2 -translate-y-1/2 bg-white px-2.5 py-1.5 rounded-full border-none cursor-pointer text-xs text-gray-800"
       >
-        搜尋
+        {{ $t('googleMapView.search') }}
       </button>
     </div>
   </div>
@@ -107,7 +107,7 @@
               class="bg-gray-400 text-white py-2 px-4 rounded-full text-sm hover:bg-gray-700 whitespace-nowrap"
               @click="loadNextPage"
             >
-              更多
+              {{ $t('googleMapView.more') }}
             </button>
           </div>
         </div>
@@ -138,7 +138,7 @@
               selectedPlace.photos.length
           "
           class="absolute top-1/2 left-2 -translate-y-1/2 bg-black bg-opacity-40 text-white rounded-full w-8 h-8 flex items-center justify-center hover:bg-gray-700"
-          aria-label="上一張圖片"
+          aria-label="$t('googleMapView.previousImage')"
         >
           ‹
         </button>
@@ -162,7 +162,7 @@
               (selectedPlacePhotoIndex + 1) % selectedPlace.photos.length
           "
           class="absolute top-1/2 right-2 -translate-y-1/2 bg-black bg-opacity-40 text-white flex rounded-full w-8 h-8 items-center justify-center hover:bg-gray-700"
-          aria-label="下一張圖片"
+          aria-label="$t('googleMapView.nextImage')"
         >
           ›
         </button>
@@ -185,7 +185,7 @@
           @click="callItinerary"
           class="absolute bottom-4 right-4 border px-4 py-1 rounded-2xl text-white cursor-pointer"
         >
-          加入行程+
+          {{ $t('googleMapView.addToItinerary') }}
         </button>
       </div>
     </div>
@@ -254,6 +254,8 @@ import { rawCategories, rawPlaceCategories } from "../constants/category";
 import { useCategoryMenu } from "../composable/useCategoryMenu";
 import { useMapSearch, SearchType } from "../composable/useMapSearch";
 import NavBar from "../components/NavBar.vue";
+import { useI18n } from 'vue-i18n'
+const { t, locale } = useI18n()
 
 const emit = defineEmits(["call-itinerary", "place-added"]);
 
@@ -325,7 +327,7 @@ function callItinerary() {
   const place = selectedPlace.value;
 
   if (!place || !date) {
-    alert("請選擇地點與日期");
+    alert(t('googleMapView.selectPlaceAndDate'));
     return;
   }
 
@@ -342,7 +344,7 @@ function callItinerary() {
       props.scheduleDetailRef.fetchTrip();   // 保證 trip.days 最新
     }
 
-    alert("成功加入行程！");
+    alert(t('googleMapView.addToItinerarySuccess'));
   }
 }
 
@@ -499,7 +501,7 @@ function moveToCity(event) {
 
 function handleResults(results, status, pagination) {
   if (status !== google.maps.places.PlacesServiceStatus.OK || !results.length) {
-    alert("找不到地點！");
+    alert(t('googleMapView.noLocationFound'));
     return;
   }
 
@@ -621,7 +623,7 @@ function calculateRoute(origin, destination) {
           duration: leg.duration.text,
         };
       } else {
-        alert("路線規劃失敗：" + status);
+        alert(t('googleMapView.routePlanningFailed') + status);
       }
     },
   );
@@ -640,12 +642,12 @@ function onCityChange(event) {
 
 function locateUser() {
   if (!map.value) {
-    alert("地圖尚未初始化完成，請稍後再試。");
+    alert(t('googleMapView.mapNotInitialized'));
     return;
   }
 
   if (!navigator.geolocation) {
-    alert("你的瀏覽器不支援地理定位功能。");
+    alert(t('googleMapView.geoLocationNotSupported'));
     return;
   }
   navigator.geolocation.getCurrentPosition(
@@ -682,7 +684,7 @@ function locateUser() {
     },
     (error) => {
       isLocated.value = true;
-      alert("無法取得你的定位資訊", error);
+      alert(t('googleMapView.failedToGetLocation'), error);
     },
   );
 }
@@ -855,11 +857,11 @@ onMounted(async () => {
               );
             }
           } else {
-            alert("取得詳細資料失敗", detailStatus);
+            alert(t('googleMapView.failedToGetDetails'), detailStatus);
           }
         });
       } else {
-        alert("點擊了非place地點");
+        alert(t('googleMapView.clickedNonPlace'));
       }
     });
 
@@ -869,7 +871,7 @@ onMounted(async () => {
       handleClickOutside,
     );
   } catch (err) {
-    alert("Google Maps 載入失敗");
+    alert(t('googleMapView.mapsLoadFailed'));
   }
 });
 

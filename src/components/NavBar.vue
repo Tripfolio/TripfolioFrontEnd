@@ -49,6 +49,8 @@
 import { ref, onMounted, onUnmounted } from "vue";
 import axios from "axios";
 import logo from "../assets/icons/Logo/logo.svg";
+import { useI18n } from 'vue-i18n'
+const { t, locale } = useI18n()
 
 const isLoggedIn = ref(false);
 const userAvatar = ref("");

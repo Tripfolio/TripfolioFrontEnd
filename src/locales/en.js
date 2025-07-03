@@ -1,54 +1,280 @@
 export default {
-  "addComment": {
-    "placeholder": "Write your comment...",
-    "submitting": "Submitting...",
-    "submit": "Post Comment"
+  addComment: {
+    placeholderTitle: "Write your comment...",
+    submitting: "Submitting...",
+    submit: "Post Comment"
   },
-  "commentSection": {
-    "loadingComments": "Loading comments...",
-    "noComments": "No comments yet, be the first to comment!",
-    "deleting": "Deleting...",
-    "noPermissionDelete": "You don't have permission to delete this comment",
-    "commentNotFound": "Comment not found or has been deleted",
-    "deleteFail": "Delete failed, please try again later",
-    "justNow": "Just now",
-    "minutesAgo": "minutes ago",
-    "hoursAgo": "hours ago",
-    "deleteConfirm": "Are you sure you want to delete this comment?",
+  commentSection: {
+    loadingComments: "Loading comments...",
+    noComments: "No comments yet, be the first to comment!",
+    deleting: "Deleting...",
+    noPermissionDelete: "You do not have permission to delete this comment",
+    commentNotFound: "Comment not found or has been deleted",
+    deleteFail: "Failed to delete, please try again later",
+    justNow: "Just now",
+    minutesAgo: "minutes ago",
+    hoursAgo: "hours ago",
+    deleteConfirm: "Are you sure you want to delete this comment?"
   },
-  "dailyPlan": {
-    "arrival": "Arrival",
-    "change": "Change",
-    "cancel": "Cancel",
-    "remove": "Remove",
-    "noPlaces": "No places added yet",
-    "selectTripMessage": "Please select a trip and date from the right sidebar to view your daily plan.",
-    "sortFail": "Sort update failed"
+  dailyPlan: {
+    arrival: "Arrival",
+    change: "Change",
+    cancel: "Cancel",
+    remove: "Remove",
+    noPlaces: "No places added yet",
+    selectTripMessage: "Please select a trip and date from the sidebar to view the daily plan.",
+    sortFail: "Failed to update sorting"
   },
-  "itinerary": {
-    "loadItineraryFail": "Failed to load itinerary",
-    "timeConflict": "There is a time conflict with another place!",
-    "updateTimeFail": "Failed to update time",
-    "updateOrderFail": "Failed to update the order",
-    "selectLocationDate": "Please select a location and date",
-    "placeAlreadyAdded": "This place is already added",
-    "addPlaceFail": "Failed to add place",
-    "removePlaceFail": "Failed to delete"
+  itinerary: {
+    loadItineraryFail: "Failed to load itinerary",
+    timeConflict: "Time conflict with another place!",
+    updateTimeFail: "Failed to update time",
+    updateOrderFail: "Failed to update order",
+    selectLocationDate: "Please select a location and date",
+    placeAlreadyAdded: "This place is already added",
+    addPlaceFail: "Failed to add place",
+    removePlaceFail: "Failed to remove place"
   },
-  "navbar": {
-    "explore": "Explore",
-    "community": "Community",
-    "profilePicture": "Profile Picture",
+  navbar: {
+    explore: "Explore",
+    community: "Community",
+    profilePicture: "Profile Picture"
   },
-  "paymentModal": {
-    "success": "Payment Successful",
-    "successMessage": "Thank you for your purchase! Your payment has been successfully processed.",
-    "close": "Close",
-    "fail": "Payment Failed",
-    "failMessage": "Sorry, your payment was unsuccessful. Please try again later or contact customer service.",
-    "upgradeToPremium": "Upgrade to Premium Membership",
-    "payAmount": "Only pay",
-    "moreTrips": "to create more trips!"
+  paymentModal: {
+    success: "Payment Successful",
+    successMessage: "Thank you for your purchase! Your payment has been successfully processed.",
+    close: "Close",
+    fail: "Payment Failed",
+    failMessage: "Sorry, your payment was unsuccessful. Please try again later or contact support.",
+    upgradeToPremium: "Upgrade to Premium",
+    payAmount: "Only pay",
+    moreTrips: "to create more trips!",
+    linePayLoading: "LINE Pay payment link is being generated, please wait...",
+    goToLinePay: "Go to LINE Pay to pay",
+    useCreditCard: "Use Credit Card Payment",
+    creditCardPayment: "Credit Card Payment",
+    testCardNumber: "(Test Card Number: 4111 1111 1111 1111)",
+    loading: "Loading...",
+    initCreditCardPayment: "Initializing Credit Card Payment",
+    confirmCreditCardPayment: "Confirm Credit Card Payment",
+    alreadyPremium: "You are already a premium member! Thank you for your support."
+  },
+  postCard: {
+    author: "Author"
+  },
+  postForm: {
+    selectSchedule: "Select Schedule",
+    mainImage: "Main Image",
+    content: "Post Content",
+    submitPost: "Submit Post",
+    fetchError: "Unable to fetch",
+    fileError: "Unsupported format or file too large. Please upload JPG, PNG, or WebP. Maximum file size 3MB",
+    submitError: "Failed to post, please try again later!",
+    success: "Success"
+  },
+  postPopup: {
+    travelReference: "Trip Reference",
+    anonymousUser: "Anonymous User",
+    scheduleDeleted: "The schedule has been deleted",
+    noContent: "No content",
+    justNow: "Just now",
+    minutesAgo: "minutes ago",
+    hoursAgo: "hours ago"
+  },
+  shareTripModal: {
+    inviteCollaborators: "Invite Collaborators",
+    editPermission: "Can Edit",
+    viewPermission: "View Only",
+    scanQr: "Scan the barcode with your phone to view this trip",
+    copyLink: "Copy Link",
+    collaborators: "Collaborators",
+    linkCopied: "Link copied!",
+    copyFailed: "Failed to copy",
+    generateLinkFailed: "Failed to generate link.",
+    permissionChangeFailed: "Failed to change permissions",
+    removeFailed: "Failed to remove",
+    confirmRemove: "Are you sure you want to remove {name}?",
+    unknownUser: "Unknown User",
+    linkUpdated: "Invitation link updated",
+    fetchMembersFailed: "Failed to fetch collaborators"
+  },
+  traffic: {
+    selectMode: "Select Mode of Transport",
+    drive: "Drive",
+    walk: "Walk",
+    transit: "Public Transport",
+    errorFetchingData: "Failed to fetch traffic information, please try again later"
+  },
+  schedule: {
+    placeholderTitle: "Give your trip a name ⸜(*ˊᗜˋ*)⸝",
+    setup: "Trip Setup",
+    uploadImage: "Upload Image",
+    crop: "Crop",
+    cancel: "Cancel",
+    saving: "Saving...",
+    create: "Create",
+    errorFields: "Please fill in the trip name and start/end dates",
+    successSave: "Saved successfully, you can close the form and click the trip to edit",
+    errorSave: "Save failed, please try again later",
+    title: "Trip Name",
+    dates: "Trip Dates",
+    totalDays: "Total {{ days }} Days",
+    description: "Trip Description (optional)",
+    unsavedChanges: "You have unsaved changes, are you sure you want to leave?",
+    placeholderDescription: "Please briefly record your trip~(ﾉ˶>ᗜ​<˵)ﾉ"
+  },
+  tripList: {
+    myTrips: "My Trips",
+    noTrips: "No trips yet!",
+    noCoverImage: "No cover image",
+    total: "Total",
+    days: "Days"
+  },
+  tripOverview: {
+    backToOverview: "Back to Overview",
+    noCoverImage: "No cover image",
+    changeCover: "Change Cover",
+    saved: "Saved",
+    cancel: "Cancel",
+    crop: "Crop",
+    notes: "Notes:",
+    placeholderNotes: "Click here to add or edit trip notes..."
+  },
+  communityList: {
+    noPosts: "No posts yet, create the first one!",
+    allPostsLoaded: "All posts loaded",
+    errorFetchingPosts: "Failed to load posts"
+  },
+  emailSettings: {
+    title: "Email Notification Settings",
+    loading: "Loading...",
+    save: "Save Settings",
+    notLoggedInError: "Not logged in, unable to load preferences.",
+    errorFetchingPreferences: "Failed to load preferences.",
+    notLoggedInSaveError: "Not logged in, unable to save settings.",
+    preferencesUpdated: "Preferences updated!",
+    saveError: "Save failed, please try again later.",
+    onLogin: "Login Success",
+    onLoginfail: "Account login error",
+    onComment: "Post commented",
+    onBookmark: "Post bookmarked"
+  },
+  getInvite: {
+    loading: "Loading...",
+    linkExpiredOrInvalid: "This link has expired or is invalid",
+    failedToLoadTripInfo: "Failed to load trip information",
+    joinCollaboration: "Join Collaboration",
+    alreadyJoined: "You are already a collaborator!",
+    editPermission: "Edit Permission",
+    viewPermission: "View Permission",
+    joinFailed: "Join failed, please try again later"
+  },
+  googleMapView: {
+    current: "Current",
+    inputPlace: "Enter place",
+    search: "Search",
+    noLocationFound: "No location found!",
+    selectPlaceAndDate: "Please select place and date",
+    addToItinerarySuccess: "Successfully added to itinerary!",
+    mapNotInitialized: "Map is not fully initialized, please try again later",
+    geoLocationNotSupported: "Your browser does not support geolocation",
+    failedToGetLocation: "Failed to get your location",
+    more: "More",
+    previousImage: "Previous Image",
+    nextImage: "Next Image",
+    addToItinerary: "Add to Itinerary+",
+    routePlanningFailed: "Route planning failed:",
+    failedToGetDetails: "Failed to get details",
+    clickedNonPlace: "Clicked a non-place location",
+    mapsLoadFailed: "Google Maps load failed"
+  },
+  homeView: {
+    current: "Current",
+    inputPlace: "Enter place",
+    search: "Search",
+    others: "+ Others",
+    selectPlaceAndDate: "Please select place and date",
+    addToItinerarySuccess: "Successfully added to itinerary!",
+    highFreedomItineraryPlanning: "Highly Flexible Itinerary Planning",
+    dragAndSort: "Drag and Sort places to easily manage your trip",
+    oneStopInfoCollection: "Complete all information collection in one stop",
+    quickScheduling: "Quick Scheduling",
+    collaborateWithFriends: "Collaborate with friends",
+    sharingBecomesRouteSign: "Let sharing become a roadmap for each other",
+    taiwanTravel5Days: "Slow Travel Taiwan for Five Days",
+    oneStepOneScene: "One Step, One Scene, Island Travel",
+    taipeiTrip3Days2Nights: "Taipei 3 Days 2 Nights Guide"
+  },
+  loginPage: {
+    login: "Login",
+    pleaseEnterEmail: "Please enter your email",
+    pleaseEnterPassword: "Please enter your password",
+    googleLogin: "Login with Google",
+    loginButton: "Login",
+    noAccountRegister: "No account? Register",
+    loginSuccess: "You have successfully logged in!",
+    logoutButton: "Logout",
+    errorMessage: "Login failed, please check email and password",
+    inputEmailAndPassword: "Please enter email and password"
+  },
+  memberHub: {
+    memberCenter: "Member Center",
+    edit: "Edit",
+    logout: "Logout",
+    myTravels: "My Travels",
+    myPosts: "My Posts",
+    collectedPosts: "My Collected Posts",
+    notifications: "Notification Settings",
+    pleaseLogin: "Please log in first",
+    unnamedPost: "Unnamed Post",
+    profileUpdated: "Profile updated"
+  },
+  memberProfile: {
+    updateProfile: "Update Profile",
+    avatarUpload: "Upload Avatar",
+    saveAvatarSuccess: "Avatar uploaded successfully",
+    saveProfileSuccess: "Profile saved successfully",
+    saveProfileFailure: "Failed to save profile",
+    phoneError: "Invalid phone format, example: 0912345678",
+    passwordMinLength: "Password must be at least 8 characters",
+    passwordRequiresLetter: "Password must contain letters",
+    passwordRequiresNumber: "Password must contain numbers",
+    passwordNoMatchName: "Password cannot match the name",
+    passwordMismatch: "New passwords do not match, please re-enter",
+    oldPasswordError: "Incorrect old password",
+    fillAllFields: "Please fill in all fields",
+    passwordChangedSuccess: "Password changed successfully",
+    loginFirst: "Please log in first"
+  },
+  scheduleDetail: {
+    tripOverview: "Trip Overview",
+    dailyPlan: "Daily Plan",
+    updateCoverSuccess: "Cover updated successfully!",
+    updateCoverFailure: "Failed to update cover",
+    updateTitleFailure: "Failed to update title",
+    updateDatesFailure: "Failed to update dates",
+    updateNotesFailure: "Failed to update notes",
+    fetchTripFailure: "Failed to load trip",
+    day: "Day"
+  },
+  signUp: {
+    signUp: "Sign Up",
+    namePlaceholder: "What should we call you?",
+    emailPlaceholder: "Please enter your email",
+    passwordPlaceholder: "Please enter your password",
+    googleSignUp: "Sign up with Google",
+    submit: "Register",
+    alreadyHaveAccount: "Already have an account? Login",
+    registerFailure: "Registration failed, please try again later",
+    registerSuccess: "Registration successful"
+  },
+  travel: {
+    createTrip: "Create Trip",
+    deleteTrip: "Delete Trip",
+    noTrips: "No trips created yet",
+    loginRequired: "Please log in first",
+    confirmDelete: "Are you sure you want to delete this trip?",
+    deleteSuccess: "Deleted successfully",
+    deleteFailure: "Failed to delete, please try again later"
   }
-  
 };

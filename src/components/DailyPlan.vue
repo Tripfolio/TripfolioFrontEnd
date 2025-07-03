@@ -254,7 +254,7 @@ function updateOrder() {
       console.log("排序更新成功");
     })
     .catch(() => {
-      alert(($t('dailyPlan.sortFail')));
+      alert(t('dailyPlan.sortFail'));
     });
 }
 </script>

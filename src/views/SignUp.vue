@@ -1,7 +1,7 @@
 <template>
   <div class="homepage-bg min-h-screen relative">
     <div class="w-1/2 py-5 absolute top-100 left-1/2 -translate-1/2 rounded-2xl bg-black/45 shadow-2xl min-h-[400px] min-w-[400px]">
-      <h2 class="text-lg font-bold mb-8 text-center text-white">註冊</h2>
+      <h2 class="text-lg font-bold mb-8 text-center text-white">{{ $t('signUp.signUp') }}</h2>
       <div v-if="showError" class="space-y-2 w-[300px] mx-auto">
         <div
           v-for="(msg, index) in errorMessages"
@@ -29,19 +29,19 @@
       >
         <input
           v-model="name"
-          placeholder="該怎麼稱呼您"
+          :placeholder="$t('signUp.namePlaceholder')"
           class="mb-5 block w-[300px] text-white rounded-md border border-gray-300 shadow-sm p-2"
         />
         <input
           v-model="email"
           type="email"
-          placeholder="請輸入電子郵件"
+          :placeholder="$t('signUp.emailPlaceholder')"
           class="mb-5 block w-[300px] text-white rounded-md border border-gray-300 shadow-sm p-2"
         />
         <input
           v-model="password"
           type="password"
-          placeholder="請輸入密碼"
+          :placeholder="$t('signUp.passwordPlaceholder')"
           class="mb-5 block w-[300px] text-white  rounded-md border border-gray-300 shadow-sm p-2"
         />
 
@@ -54,14 +54,14 @@
             class="p-[10px] border border-[#fff]  rounded-full  text-[14px] flex items-center justify-center gap-2 hover:bg-white/30 w-full"
           >
             <img src="https://www.google.com/favicon.ico" alt="Google" class="w-5 h-5 "/>
-            <span class="text-white px-0.5">使用 Google 註冊</span>
+            <span class="text-white px-0.5">{{ $t('signUp.googleSignUp') }}</span>
           </button>
 
           <button
             type="submit"
             class="w-[100px] bg-black/50 text-white py-2 rounded-full transition mx-auto cursor-pointer  hover:bg-white/30"
           >
-            註冊
+            {{ $t('signUp.submit') }}
           </button>
 
         </div>
@@ -71,7 +71,7 @@
           <button
             class="text-[#4d4d4d] py-2 transition hover:text-[#ffffff]"
           >
-            已有帳號？登入
+            {{ $t('signUp.alreadyHaveAccount') }}
           </button>
         </RouterLink>
       </form>
@@ -131,7 +131,7 @@ const signUp = async () => {
     if (Array.isArray(err.response?.data?.errors)) {
       errorMessages.value = err.response.data.errors;
     } else {
-      errorMessages.value = ["註冊失敗，請稍後重試"];
+      errorMessages.value = [t('signUp.registerFailure')];
     }
   }
 };

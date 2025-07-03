@@ -3,7 +3,7 @@
     class="solo-card-style rounded-2xl p-6 sm:p-8 w-full max-w-xl text-gray-800 space-y-6 max-h-[80vh] overflow-y-auto"
   >
     <!-- 標題 -->
-    <h2 class="text-2xl font-semibold text-center text-white">會員資料修改</h2>
+    <h2 class="text-2xl font-semibold text-center text-white">{{ $t('memberProfile.updateProfile') }}</h2>
 
     <!-- 頭像區塊 -->
     <div class="flex justify-center">
@@ -17,7 +17,7 @@
         <label
           for="avatar-upload"
           class="absolute bottom-1 right-1 bg-white border rounded-full p-2 cursor-pointer shadow hover:bg-gray-100"
-          title="更換大頭貼"
+          :title="$t('memberProfile.avatarUpload')"
         >
           <font-awesome-icon :icon="['fas', 'pen-to-square']" />
         </label>
@@ -46,7 +46,7 @@
         @click="saveAvatar"
         class="mt-4 px-4 py-2 bg-sky-500 text-white rounded hover:bg-sky-600"
       >
-        儲存大頭貼
+        {{ $t('memberProfile.saveAvatarSuccess') }}
       </button>
     </div>
 
@@ -102,21 +102,21 @@
           type="submit"
           class="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600"
         >
-          儲存會員資料
+          {{ $t('memberProfile.saveProfileSuccess') }}
         </button>
       </div>
     </form>
 
     <!-- 密碼區 -->
     <div>
-      <h2 class="text-xl font-bold mt-6 mb-4 text-center">密碼修改</h2>
+      <h2 class="text-xl font-bold mt-6 mb-4 text-center">{{ $t('memberProfile.passwordChangedSuccess') }}</h2>
       <form @submit.prevent="changePassword" class="space-y-4">
         <div class="relative">
           <input
             :type="showOld ? 'text' : 'password'"
             v-model="passwordData.oldPassword"
             class="w-full border border-gray-300 rounded px-3 py-2"
-            placeholder="舊密碼"
+            :placeholder="$t('memberProfile.oldPasswordError')"
           />
           <span
             class="absolute right-3 top-3 text-gray-500 cursor-pointer"
@@ -139,7 +139,7 @@
           >
             <font-awesome-icon :icon="showNew ? 'fa-eye-slash' : 'fa-eye'" />
           </span>
-          <p class="text-sm text-gray-500 mt-1">需 8 字元以上，含英文與數字</p>
+          <p class="text-sm text-gray-500 mt-1">{{ $t('memberProfile.passwordMinLength') }}</p>
           <p v-if="passwordError" class="text-red-500 text-sm">
             {{ passwordError }}
           </p>
@@ -187,7 +187,7 @@ const emit = defineEmits(["close-modal", "profile-updated"]);
 //確認會員token
 const token = localStorage.getItem("token");
 if (!token) {
-  alert("請先登入會員");
+  alert(t('memberProfile.loginFirst'));
   throw new Error("token 不存在");
 }
 
@@ -260,7 +260,7 @@ const saveAvatar = async () => {
           },
         },
       );
-      alert("大頭貼上傳成功");
+      alert(t('memberProfile.saveAvatarSuccess'));
 
       const profileRes = await axios.get(
         `${import.meta.env.VITE_API_URL}/api/profile`,
@@ -291,7 +291,7 @@ watch(
   (newPhone) => {
     const phoneNumber = /^09\d{8}$/;
     if (!phoneNumber.test(newPhone)) {
-      phoneError.value = "手機格式錯誤，範例：0912345678";
+      phoneError.value = $t('memberProfile.phoneError');;
     } else {
       phoneError.value = "";
     }
@@ -310,14 +310,14 @@ const saveProfile = async () => {
         },
       },
     );
-    alert("儲存成功");
+    alert(t('memberProfile.saveProfileSuccess'));
     profileData.value = res.data;
     emit("profile-updated", {
       name: res.data.name,
       avatar: res.data.avatar || "",
     });
   } catch (err) {
-    alert("儲存失敗");
+    alert(t('memberProfile.saveProfileFailure'));
   }
 };
 
@@ -342,13 +342,13 @@ watch(
     const isSameAsName = newPwd === profileData.value.name;
 
     if (!hasMinLength) {
-      passwordError.value = "密碼至少需8個字元";
+      passwordError.value = $t('memberProfile.passwordMinLength');
     } else if (!hasLetter) {
-      passwordError.value = "密碼需包含英文字母";
+      passwordError.value = $t('memberProfile.passwordRequiresLetter');
     } else if (!hasNumber) {
-      passwordError.value = "密碼需包含數字";
+      passwordError.value = $t('memberProfile.passwordRequiresNumber');
     } else if (isSameAsName) {
-      passwordError.value = "密碼不可與姓名相同";
+      passwordError.value = $t('memberProfile.passwordNoMatchName');
     } else {
       passwordError.value = "";
     }
@@ -362,7 +362,7 @@ const changePassword = async () => {
     !passwordData.value.newPassword ||
     !passwordData.value.confirmPassword
   ) {
-    alert("請填寫所有欄位");
+    alert(t('memberProfile.fillAllFields'));
     return;
   }
   if (passwordError.value) {
@@ -370,7 +370,7 @@ const changePassword = async () => {
     return;
   }
   if (passwordData.value.newPassword !== passwordData.value.confirmPassword) {
-    alert("新密碼輸入不一致，請重新輸入");
+    alert(t('memberProfile.passwordMismatch'));
     return;
   }
 
@@ -385,13 +385,13 @@ const changePassword = async () => {
         headers: { Authorization: `Bearer ${token}` },
       },
     );
-    alert("密碼修改成功");
+    alert(t('memberProfile.passwordChangedSuccess'));
 
     passwordData.value.oldPassword = "";
     passwordData.value.newPassword = "";
     passwordData.value.confirmPassword = "";
   } catch (err) {
-    const errorMessage = err.response?.data?.error || "舊密碼錯誤";
+    const errorMessage = err.response?.data?.error || $t('memberProfile.oldPasswordError');;
     alert(errorMessage);
   }
 };

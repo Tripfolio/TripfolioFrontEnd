@@ -13,7 +13,7 @@
       @submit.prevent="scheduleSubmit"
       class="space-y-4 p-2 rounded max-w-xl mx-auto"
     >
-      <span class="text-2xl font-bold">行程設定</span>
+      <span class="text-2xl font-bold">{{ $t('schedule.setup') }}</span>
 
       <div class="relative">
         <img
@@ -27,7 +27,7 @@
             @click="uploadFile"
             class="bg-white px-3 py-1 rounded-full shadow flex items-center gap-1 text-[#878787]"
           >
-            <font-awesome-icon :icon="['fas', 'pen-to-square']" />上傳圖片
+            <font-awesome-icon :icon="['fas', 'pen-to-square']" />{{ $t('schedule.uploadImage') }}
           </button>
         </div>
         <input
@@ -57,14 +57,14 @@
               @click="showCropper = false"
               class="bg-gray-300 px-4 py-2 rounded"
             >
-              取消
+            {{ $t('schedule.cancel') }}
             </button>
             <button
               type="button"
               @click="applyCrop"
               class="bg-[#878787] hover:bg-[#c2c2c2] text-white px-4 py-2 rounded"
             >
-              裁切
+            {{ $t('schedule.crop') }}
             </button>
           </div>
         </div>
@@ -72,19 +72,19 @@
 
       <div>
         <label class="block mb-1"
-          >行程名稱<span class="text-red-500">*</span></label
+          >{{ $t('schedule.title') }}<span class="text-red-500">*</span></label
         >
         <input
           type="text"
           v-model="title"
           class="border p-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-gray-500"
-          placeholder="幫行程取個名字⸜(*ˊᗜˋ*)⸝"
+          :placeholder="$t('schedule.placeholderTitle')"
         />
       </div>
 
       <div>
         <label class="block mb-1"
-          >行程日期<span class="text-red-500">*</span></label
+          >{{ $t('schedule.dates') }}<span class="text-red-500">*</span></label
         >
 
         <div class="flex flex-col sm:flex-row gap-2 items-center">
@@ -107,16 +107,16 @@
         </div>
 
         <span v-if="days > 0" class="text-sm text-[#828282] mt-1 block">
-          共 {{ days }} 天
+          {{ $t('schedule.totalDays', { days }) }}
         </span>
       </div>
 
       <div>
-        <label class="block mb-1">行程描述(可選填)</label>
+        <label class="block mb-1">{{ $t('schedule.description') }}</label>
         <textarea
           v-model="description"
           class="p-2 h-18 border w-full rounded focus:outline-none focus:ring-2 focus:ring-gray-500"
-          placeholder="請簡單記錄一下自己的行程吧~(ﾉ˶>ᗜ​<˵)ﾉ"
+          :placeholder="$t('schedule.placeholderDescription')"
         ></textarea>
       </div>
 
@@ -126,7 +126,7 @@
           @click="scheduleCancel"
           class="bg-gray-300 hover:bg-gray-200 px-4 py-2 rounded"
         >
-          取消
+          {{ $t('schedule.cancel') }}
         </button>
         <button
           type="submit"
@@ -134,12 +134,12 @@
           class="bg-[#878787] hover:bg-[#c2c2c2] text-white px-4 py-2 rounded"
         >
           <span v-if="isLoading" class="flex items-center gap-2">
-            儲存中...
+            {{ $t('schedule.saving') }}
             <!-- <span
               class="inline-block animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white"
             ></span> -->
           </span>
-          <span v-else>建立</span>
+          <span v-else>{{ $t('schedule.create') }}</span>
         </button>
       </div>
     </form>
@@ -152,6 +152,8 @@ import axios from "axios";
 import { Cropper } from "vue-advanced-cropper";
 import { useRouter } from "vue-router";
 import dayjs from "dayjs";
+import { useI18n } from 'vue-i18n'
+const { t, locale } = useI18n()
 const router = useRouter();
 import "vue-advanced-cropper/dist/style.css";
 
@@ -213,7 +215,7 @@ watch([title, startDate, endDate, description, file], () => {
 
 const handleClose = () => {
   if (isDirty.value) {
-    const confirmExit = confirm("您有尚未儲存的內容，確定要離開嗎?");
+    const confirmExit = confirm(t('schedule.unsavedChanges'));
     if (!confirmExit) return;
   }
   emit("close");
@@ -233,7 +235,7 @@ const scheduleCancel = () => {
 const scheduleSubmit = async () => {
   if (isLoading.value) return;
   if (!title.value || !startDate.value || !endDate.value) {
-    alert("請填寫行程名稱及行程開始/結束日期");
+    alert(t('schedule.errorFields'));
     return;
   }
 
@@ -261,11 +263,11 @@ const scheduleSubmit = async () => {
     const newId = res.data.schedule.id;
     createdScheduleId.value = newId;
 
-    alert("儲存成功，你可以關閉表單點擊行程進入編輯");
+    alert(t('schedule.successSave'));
     isDirty.value = false;
     emit("submitted", newId);
   } catch (err) {
-    alert("儲存失敗，請稍後再試");
+    alert(t('schedule.errorSave'));
   } finally {
     isLoading.value = false;
   }

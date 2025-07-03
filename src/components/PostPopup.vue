@@ -36,18 +36,17 @@
             />
             <div>
               <div class="font-semibold">
-                {{ localPost.authorName || "匿名使用者" }}
+                {{ localPost.authorName || $t('postPopup.anonymousUser') }}
               </div>
               <div class="text-sm">
-                {{ scheduleTitle || "行程已刪除 ಥ_ಥ" }}
-              </div>
+                {{ scheduleTitle || $t('postPopup.scheduleDeleted') }}
             </div>
           </div>
           <button
             class="cursor-pointer bg-blue-500 hover:bg-blue-600 px-3 py-1 rounded transition-colors"
             @click="toTravelPage"
           >
-            <p class="text-white text-sm">行程參考</p>
+            <p class="text-white text-sm">{{ $t('postPopup.travelReference') }}</p>
           </button>
         </div>
 
@@ -55,7 +54,7 @@
         <div class="flex-1 flex flex-col overflow-hidden relative">
           <div class="post-body p-4 border-b">
             <p class="break-words whitespace-pre-wrap">
-              {{ localPost.content || "沒有內容" }}
+              {{ localPost.content || $t('postPopup.noContent') }}
             </p>
           </div>
 
@@ -76,6 +75,7 @@
       </div>
     </div>
   </div>
+</div>
 </template>
 
 <script setup>
@@ -83,6 +83,8 @@ import { ref, onMounted, watch } from "vue";
 import axios from "axios";
 import CommentSection from "../components/CommentSection.vue";
 import FavoriteButton from "../components/FavoriteButton.vue";
+import { useI18n } from 'vue-i18n'
+const { t, locale } = useI18n()
 
 const props = defineProps({
   post: {
@@ -132,7 +134,7 @@ const fetchScheduleTitle = async () => {
       scheduleTitle.value = props.post.title;
     }
   } else {
-    scheduleTitle.value = "行程已刪除 ಥ_ಥ";
+    scheduleTitle.value = (t('postPopup.scheduleDeleted'));
   }
 };
 
@@ -143,9 +145,9 @@ const formatTime = (timeString) => {
   const now = new Date();
   const diff = now - date;
 
-  if (diff < 60000) return "剛剛";
-  if (diff < 3600000) return `${Math.floor(diff / 60000)}分鐘前`;
-  if (diff < 86400000) return `${Math.floor(diff / 3600000)}小時前`;
+  if (diff < 60000) return $t('postPopup.justNow');
+  if (diff < 3600000) return `${Math.floor(diff / 60000)}${$t('postPopup.minutesAgo')}`;
+  if (diff < 86400000) return `${Math.floor(diff / 3600000)}${$t('postPopup.hoursAgo')}`;
 
   return date.toLocaleDateString("zh-TW");
 };

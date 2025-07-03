@@ -3,7 +3,7 @@
     <main
       class="w-1/2 py-5 absolute top-100  left-1/2 -translate-1/2 rounded-2xl bg-black/45 shadow-2xl min-h-[400px] min-w-[400px] "
     >
-      <h4 class="text-lg font-bold mb-10 text-center text-white">登入</h4>
+      <h4 class="text-lg font-bold mb-10 text-center text-white">{{ $t('loginPage.loginButton') }}</h4>
 
       <div
         v-if="showError"
@@ -25,7 +25,7 @@
             v-model="email"
             type="email"
             id="email"
-            placeholder="請輸入電子郵件"
+            :placeholder="$t('loginPage.pleaseEnterEmail')"
             required
             class="mb-2 block w-[300px] text-white  rounded-md border border-gray-300 shadow-sm p-2"
           />
@@ -36,7 +36,7 @@
             v-model="password"
             type="password"
             id="password"
-            placeholder="請輸入密碼"
+            :placeholder="$t('loginPage.pleaseEnterPassword')"
             required
             class="mb-5 block w-[300px] text-white rounded-md border border-gray-300 shadow-sm p-2"
           />
@@ -51,14 +51,14 @@
             class="p-[10px] border border-[#fff] rounded-full text-[14px] flex items-center justify-center gap-2 hover:bg-white/30 cursor-pointer"
           >
             <img src="https://www.google.com/favicon.ico" alt="Google" class="w-5 h-5 " />
-            <span  class="text-white px-0.5">使用 Google 登入</span>
+            <span  class="text-white px-0.5">{{ $t('loginPage.googleLogin') }}</span>
           </button>
 
             <button
               type="submit"
               class="w-[100px] bg-black/50 text-white py-2 rounded-full transition mx-auto cursor-pointer hover:bg-white/30"
             >
-              登入
+              {{ $t('loginPage.login') }}
             </button>
 
         </div>
@@ -69,14 +69,14 @@
           <button
             class="text-[#4d4d4d] py-2 transition hover:text-[#ffffff]"
           >
-            還沒有帳號？註冊
+            {{ $t('loginPage.noAccountRegister') }}
           </button>
         </RouterLink>
       </form>
 
     <!-- 登入成功畫面 -->
     <div v-else class="mt-6 bg-blue-50 text-center rounded-md shadow-md p-4">
-      <p class="text-blue-700 font-semibold mb-4">您已成功登入！</p>
+      <p class="text-blue-700 font-semibold mb-4">{{ $t('loginPage.loginSuccess') }}</p>
       <button
         @click="logout"
         class="bg-red-500 text-white py-2 px-4 rounded-md shadow-sm hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition duration-150 ease-in-out"
@@ -92,12 +92,12 @@
       </div>
 
       <div v-if="isLoggedIn" class="mt-6">
-        <p class="text-blue-600 font-semibold mb-4">您已登入</p>
+        <p class="text-blue-600 font-semibold mb-4">{{ $t('loginPage.loginSuccess') }}</p>
         <button
           @click="logout"
           class="bg-blue-200 text-black py-2 px-4 rounded transition"
         >
-          登出
+          {{ $t('loginPage.logoutButton') }}
         </button>
       </div>
     </main>
@@ -109,6 +109,8 @@ import { initializeAuth } from '../composable/authUtils';
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import axios from 'axios';
+import { useI18n } from 'vue-i18n'
+const { t, locale } = useI18n()
 
 const router = useRouter();
 const TOKEN_NAME = 'token';

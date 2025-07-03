@@ -26,7 +26,7 @@
             @click="handleOpenForm"
             class="animated-gradient-modern text-white text-xl px-10 py-3 rounded-full shadow-md shadow-black/40 cursor-pointer bg-gradient-trip hover:bg-gradient-trip-hover"
           >
-            建立行程
+            {{ $t('travel.createTrip') }}
           </button>
         </div>
 
@@ -65,11 +65,11 @@
                   title="刪除行程"
                   class="absolute bottom-2 right-2 text-gray-600 bg-white px-2 rounded-2xl hover:text-red-500 text-md"
                 >
-                  刪除行程
+                  {{ $t('travel.deleteTrip') }}
                 </button>
               </div>
             </div>
-            <div v-else class="text-gray-400 text-center">尚未建立任何行程</div>
+            <div v-else class="text-gray-400 text-center">{{ $t('travel.noTrips') }}</div>
           </div>
 
           <!-- 編輯行程 -->
@@ -162,7 +162,7 @@ onMounted(() => {
 const handleOpenForm = () => {
   const token = localStorage.getItem("token");
   if (!token) {
-    alert("請先登入會員");
+    alert(t('travel.loginRequired'));
     return;
   }
 
@@ -207,7 +207,7 @@ const handleCloseDetail = () => {
 
 //刪除行程
 const deleteSchedule = async (id) => {
-  const confirmed = confirm("確定刪除這個行程嗎?");
+  const confirmed = confirm(t('travel.confirmDelete'));
   if (!confirmed) return;
 
   const token = localStorage.getItem("token");
@@ -221,9 +221,9 @@ const deleteSchedule = async (id) => {
     );
 
     tripStore.trips = tripStore.trips.filter((s) => s.id !== id);
-    alert("刪除成功");
+    alert(t('travel.deleteSuccess'));
   } catch (err) {
-    alert("刪除失敗，請稍後再試");
+    alert(t('travel.deleteFailure'));
   }
 };
 
