@@ -138,7 +138,7 @@ watch(
       });
     }
   },
-  { immediate: true }
+  { immediate: true },
 );
 
 onMounted(() => {
@@ -252,7 +252,7 @@ console.log("communityList mounted");
       />
 
       <button
-        class="animated-gradient fixed bottom-6 right-6 text-4xl text-white px-5 py-3 rounded-full flex justify-center leading-none"
+        class="animated-gradient-modern fixed bottom-6 right-6 text-4xl text-white px-5 py-3 rounded-full flex justify-center leading-none"
         @click="goToCreatePost"
       >
         +
