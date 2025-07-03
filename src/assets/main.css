@@ -31,6 +31,19 @@
     0 0 0 1px rgba(255, 255, 255, 0.1);
 }
 
+.cate-style {
+  background-color: rgba(40, 40, 40, 0.8);
+  color: #fff;
+
+  backdrop-filter: blur(27px);
+
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06),
+    0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
 .card-container-style {
   background-color: rgba(150, 150, 150, 0.5);
   color: #fff;

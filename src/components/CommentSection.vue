@@ -2,7 +2,9 @@
   <div class="comment-section">
     <!-- <h4>留言區</h4> -->
 
-    <div v-if="isLoading" class="text-center py-4">{{ $t('commentSection.loadingComments') }}</div>
+    <div v-if="isLoading" class="text-center py-4">
+      {{ $t("commentSection.loadingComments") }}
+    </div>
 
     <!-- 現有留言 -->
     <div v-else-if="comments.length > 0" class="comments-list overflow-y-auto">
@@ -30,14 +32,18 @@
             class="delete-btn"
             :disabled="isDeletingComment === comment.id"
           >
-            {{ isDeletingComment === comment.id ? $t('commentSection.deleting') : "🗑️" }}
+            {{
+              isDeletingComment === comment.id
+                ? $t("commentSection.deleting")
+                : "🗑️"
+            }}
           </button>
         </div>
       </div>
     </div>
 
     <div v-else class="text-center py-4">
-      {{ $t('commentSection.noComments') }}
+      {{ $t("commentSection.noComments") }}
     </div>
 
     <AddComment
@@ -52,8 +58,8 @@
 import { ref, onMounted } from "vue";
 import axios from "axios";
 import AddComment from "../components/AddComment.vue";
-import { useI18n } from 'vue-i18n'
-const { t, locale } = useI18n()
+import { useI18n } from "vue-i18n";
+const { t, locale } = useI18n();
 
 const props = defineProps({
   post: {
@@ -117,9 +123,11 @@ const formatTime = (timeString) => {
   const now = new Date();
   const diff = now - date;
 
-  if (diff < 60000) return $t('commentSection.justNow');
-  if (diff < 3600000) return `${Math.floor(diff / 60000)}${$t('commentSection.minutesAgo')}`;
-  if (diff < 86400000) return `${Math.floor(diff / 3600000)} ${$t('commentSection.hoursAgo')}`;
+  if (diff < 60000) return t("commentSection.justNow");
+  if (diff < 3600000)
+    return `${Math.floor(diff / 60000)}${t("commentSection.minutesAgo")}`;
+  if (diff < 86400000)
+    return `${Math.floor(diff / 3600000)} ${t("commentSection.hoursAgo")}`;
 
   return date.toLocaleDateString("zh-TW");
 };
@@ -148,7 +156,7 @@ const canDeleteComment = (comment) => {
 };
 
 const deleteComment = async (commentId) => {
-  if (!confirm(t('commentSection.deleteConfirm'))) {
+  if (!confirm(t("commentSection.deleteConfirm"))) {
     return;
   }
 
@@ -179,15 +187,15 @@ const deleteComment = async (commentId) => {
     });
   } catch (error) {
     if (error.response?.status === 403) {
-      alert(t('commentSection.noPermissionDelete'));
+      alert(t("commentSection.noPermissionDelete"));
     } else if (error.response?.status === 404) {
-      alert(t('commentSection.commentNotFound'));
+      alert(t("commentSection.commentNotFound"));
       // 從本地陣列中移除不存在的留言
       comments.value = comments.value.filter(
         (comment) => comment.id !== commentId,
       );
     } else {
-      alert(t('commentSection.deleteFail'));
+      alert(t("commentSection.deleteFail"));
     }
   }
 };

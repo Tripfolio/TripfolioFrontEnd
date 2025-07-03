@@ -36,25 +36,20 @@
             />
             <div>
               <div class="font-semibold">
-                {{ localPost.authorName || $t('postPopup.anonymousUser') }}
+                {{ localPost.authorName || "匿名使用者" }}
               </div>
               <div class="text-sm">
-                {{ scheduleTitle || $t('postPopup.scheduleDeleted') }}
+                {{ scheduleTitle || "行程已刪除 ಥ_ಥ" }}
+              </div>
             </div>
           </div>
-          <button
-            class="cursor-pointer bg-blue-500 hover:bg-blue-600 px-3 py-1 rounded transition-colors"
-            @click="toTravelPage"
-          >
-            <p class="text-white text-sm">{{ $t('postPopup.travelReference') }}</p>
-          </button>
         </div>
 
         <!-- 內容與留言區域 -->
         <div class="flex-1 flex flex-col overflow-hidden relative">
           <div class="post-body p-4 border-b">
             <p class="break-words whitespace-pre-wrap">
-              {{ localPost.content || $t('postPopup.noContent') }}
+              {{ localPost.content || "沒有內容" }}
             </p>
           </div>
 
@@ -75,7 +70,6 @@
       </div>
     </div>
   </div>
-</div>
 </template>
 
 <script setup>
@@ -83,8 +77,6 @@ import { ref, onMounted, watch } from "vue";
 import axios from "axios";
 import CommentSection from "../components/CommentSection.vue";
 import FavoriteButton from "../components/FavoriteButton.vue";
-import { useI18n } from 'vue-i18n'
-const { t, locale } = useI18n()
 
 const props = defineProps({
   post: {
@@ -114,62 +106,16 @@ const close = () => {
   emit("close");
 };
 
-const toTravelPage = () => {
-  console.log("跳轉到行程頁面");
-};
-
 // 獲取行程 title
 const fetchScheduleTitle = async () => {
   if (props.post.title) {
     try {
-      // const res = await axios.get(
-      //   `${import.meta.env.VITE_API_URL}/api/travelSchedule/${props.post.title}`,
-      //   {
-      //     headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      //   },
-      // );
-
       scheduleTitle.value = props.post.title || "未命名行程";
     } catch (error) {
       scheduleTitle.value = props.post.title;
     }
   } else {
-    scheduleTitle.value = (t('postPopup.scheduleDeleted'));
-  }
-};
-
-// 格式化時間
-const formatTime = (timeString) => {
-  if (!timeString) return "";
-  const date = new Date(timeString);
-  const now = new Date();
-  const diff = now - date;
-
-  if (diff < 60000) return $t('postPopup.justNow');
-  if (diff < 3600000) return `${Math.floor(diff / 60000)}${$t('postPopup.minutesAgo')}`;
-  if (diff < 86400000) return `${Math.floor(diff / 3600000)}${$t('postPopup.hoursAgo')}`;
-
-  return date.toLocaleDateString("zh-TW");
-};
-
-const refreshPost = async () => {
-  try {
-    // 嘗試獲取最新的貼文資訊
-    const res = await axios.get(
-      `${import.meta.env.VITE_API_URL}/api/allposts/${props.post.postId}`,
-    );
-
-    // 通知父組件更新列表中顯示的計數
-    emit("update-post", res.data.post || res.data);
-  } catch (error) {
-    // 如果 API 端點不存在，我們可以手動更新計數
-    // 這裡可以根據實際情況調整
-    const updatedPost = {
-      postId: props.post.postId,
-      commentCount: props.post.commentCount,
-      favoriteCount: props.post.favoriteCount,
-    };
-    emit("update-post", updatedPost);
+    scheduleTitle.value = "行程已刪除 ಥ_ಥ";
   }
 };
 
