@@ -44,7 +44,6 @@ const fetchPosts = async () => {
       })),
     );
     page.value++;
-    console.log(posts.value);
   } catch (err) {
     alert(t('communityList.errorFetchingPosts'));
   } finally {
@@ -78,11 +77,6 @@ const updatePost = (updatedPost) => {
     });
 
     posts.value[index] = updateData;
-
-    console.log(`更新貼文 ${updatedPost.postId} 的計數:`, {
-      commentCount: updateData.commentCount,
-      favoriteCount: updateData.favoriteCount,
-    });
   }
 };
 
@@ -140,7 +134,7 @@ watch(
       });
     }
   },
-  { immediate: true }
+  { immediate: true },
 );
 
 onMounted(() => {
@@ -153,7 +147,6 @@ onBeforeUnmount(() => {
     observer.unobserve(scrollTrigger.value);
   }
 });
-console.log("communityList mounted");
 </script>
 
 <template>
@@ -254,7 +247,7 @@ console.log("communityList mounted");
       />
 
       <button
-        class="animated-gradient fixed bottom-6 right-6 text-4xl text-white px-5 py-3 rounded-full flex justify-center leading-none"
+        class="animated-gradient-modern fixed bottom-6 right-6 text-4xl text-white px-5 py-3 rounded-full flex justify-center leading-none"
         @click="goToCreatePost"
       >
         +

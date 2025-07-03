@@ -1,31 +1,31 @@
 <template>
   <div class="homepage-bg min-h-screen relative bg-cover bg-center">
-    <div class="member-center w-[70%] mx-auto">
+    <div class="member-center min-w-[70%] sm:w-[70%] mx-auto">
       <main class="navbar-style mt-25 rounded-2xl min-h-140">
         <header class="header rounded-tl-2xl rounded-tr-2xl">
           <h5>{{ $t("memberHub.memberCenter") }}</h5>
         </header>
 
         <!-- 使用者頭像與名稱 -->
-        <section class="user-info">
-          <img
-            :src="user.avatar + '?t=' + avatarTimestamp"
-            alt="使用者頭像"
-            class="avatar"
-          />
-          <div class="info">
-            <h1>{{ user.name }}</h1>
-            <a
-              class="text-gray"
-              href="#"
-              @click.prevent="showMemberProfile = true"
-              >{{ $t("memberHub.edit") }}</a
-            >
-            <hr />
-            <a class="text-gray" href="#" @click.prevent="goToLogin">{{
+
+        <section class="user-info  ">
+          <img :src="user.avatar + '?t=' + avatarTimestamp" alt="使用者頭像" class="avatar" />
+          <div>
+            <h1 class="text-xl mb-3 ml-2">{{ user.name }}</h1>
+            <div  class="flex space-x-1 items-center ">
+                <a
+                  class="text-gray text-sm cursor-pointer bg-black/30 rounded-full px-5 py-0.5"
+                  href="#"
+                  @click.prevent="showMemberProfile = true"
+                  >{{ $t("memberHub.edit") }}</a
+                >
+                <hr />
+                <a class="text-gray text-sm cursor-pointer  bg-black/30 rounded-full px-5 py-0.5" href="#" @click.prevent="goToLogin" >{{
               $t("memberHub.logout")
             }}</a>
-          </div>
+            </div>
+          </div>       
+
         </section>
 
         <!-- Tab 切換 -->
@@ -204,7 +204,7 @@ const goToLogin = () => {
 .user-info {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap:2rem;
   padding: 1rem;
 }
 .avatar {
@@ -219,7 +219,7 @@ const goToLogin = () => {
   padding: 1rem;
 }
 .tabs button.active {
-  border-bottom: 2px solid #60a5fa;
+  border-bottom: 2px solid #ffffff;
   color: white;
 }
 .tab-content {

@@ -13,6 +13,7 @@
         v-if="trip"
         :trip="trip"
         :cover-timestamp="coverTimestamp"
+        :role="role"
         :is-from-tracker="isFromTracker"
         @back-to-list="goBack"
         @update-cover="updateCover"
@@ -48,6 +49,7 @@
         :selected-trip="trip"
         :day-index="currentDayIndex"
         :itinerary-places="itineraryRef?.itineraryPlaces || []"
+        :role="role"
         class="mt-6 w-full"
         ref="dailyPlanRef"
       />
@@ -88,6 +90,8 @@ const currentDayIndex = ref(0);
 const coverTimestamp = ref(Date.now());
 const itineraryRef = ref(null);
 const dailyPlanRef = ref(null);
+const role = ref("viewer");
+const resolvedTripId = props.tripId ?? route.params.id;
 
 const token = localStorage.getItem("token");
 
@@ -117,14 +121,28 @@ const fetchTrip = async () => {
   }
 };
 
-onMounted(() => {
-  fetchTrip();
-});
+const fetchRole = async () => {
+  try {
+    const res = await axios.get(
+      `${import.meta.env.VITE_API_URL}/api/tripShares/getPermission/${resolvedTripId}`,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+        withCredentials: true,
+      },
+    );
+    role.value = res.data.role;
+  } catch {
+    role.value = "viewer";
+  }
+};
 
+// ✅ 當 tripId 變更時重新取得資料
 watch(
   () => props.tripId,
-  () => {
-    fetchTrip();
+  async () => {
+    await fetchTrip();
+    await fetchRole();
+    dailyPlanRef.value?.refresh();
   },
 );
 
@@ -223,6 +241,13 @@ function refreshDailyPlan() {
   // 呼叫 DailyPlan 的 refresh 方法
   dailyPlanRef.value?.refresh?.();
 }
+
+// ✅ 初始化
+onMounted(async () => {
+  await fetchTrip();
+  await fetchRole();
+  dailyPlanRef.value?.refresh();
+});
 
 // 給父層或地圖強制刷新 DailyPlan 用
 defineExpose({

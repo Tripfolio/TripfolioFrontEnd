@@ -32,22 +32,37 @@
 
         <!-- 行程卡片列表 -->
         <div>
-          <div
-            v-if="!editingTripId"
-            class="travel-card-style rounded-2xl p-7 m-5"
-          >
+          <div v-if="!editingTripId" class="rounded-2xl p-7 m-5">
             <div
               v-if="tripStore.trips.length > 0"
-              class="solo-card-style mt-2 space-y-4 rounded-xl"
+              class="mt-2 space-y-4 rounded-xl"
             >
               <div
                 v-for="item in tripStore.trips"
                 :key="item.id"
                 @click="editingTripId = item.id"
-                class="rounded-2xl shadow-md shadow-black/40 verflow-hidden relative cursor-pointer hover:ring-2 hover:ring-gray-400 transition"
+                class="navbar-style rounded-2xl shadow-md shadow-black/40  cursor-pointer hover:ring-2 hover:ring-gray-400 transition z-0"
               >
+                <div class="relative">
+                  <button
+                    @click.stop="deleteSchedule(item.id)"
+                    title="刪除行程"
+                    class="absolute top-2 right-3 text-gray-600 bg-white px-2 rounded-2xl hover:text-red-500 text-md"
+                  >
+                    刪除行程
+                  </button>
+                  <button
+                    @click.stop="openShareModal(item.id)"
+                    title="共享行程"
+                    class="absolute top-2 right-25 text-gray-600 bg-white px-2 rounded-2xl hover:text-blue-500 text-md"
+                  >
+                    共享行程
+                  </button>
+                </div>
                 <img
-                  :src="item.coverURL || 'https://placehold.co/600x300?text=封面圖'"
+                  :src="
+                    item.coverURL || 'https://placehold.co/600x300?text=封面圖'
+                  "
                   class="w-full h-60 object-cover rounded-tl-xl rounded-tr-xl mb-3"
                   alt="行程封面照"
                 />
@@ -60,6 +75,7 @@
                   </p>
                   <p class="text-white text-m mt-2">{{ item.description }}</p>
                 </div>
+
                 <button
                   @click.stop="deleteSchedule(item.id)"
                   title="刪除行程"
@@ -67,6 +83,7 @@
                 >
                   {{ $t('travel.deleteTrip') }}
                 </button>
+
               </div>
             </div>
             <div v-else class="text-gray-400 text-center">{{ $t('travel.noTrips') }}</div>
@@ -96,10 +113,17 @@
       </div>
 
       <!-- 付款提醒Modal -->
-      <PaymentModal v-if="showPayModal" 
+      <PaymentModal
+        v-if="showPayModal"
         :result="payResult"
-        @close="showPayModal = false"  />
+        @close="showPayModal = false"
+      />
     </div>
+    <ShareTripModal
+      :is-open="showShareModal"
+      :trip-id="shareTripId"
+      @close="closeShareModal"
+    />
   </div>
 </template>
 
@@ -111,6 +135,7 @@ import axios from "axios";
 import GoogleMapView from "@/views/GoogleMapView.vue";
 import ScheduleDetail from "@/views/scheduleDetail.vue";
 import { useTripStore } from "@/stores/tripStore";
+import ShareTripModal from "@/components/ShareTripModal.vue";
 import PaymentModal from "@/components/PaymentModal.vue";
 
 const router = useRouter();
@@ -127,6 +152,8 @@ const itineraryRef = ref(null);
 const dailyPlanRef = ref(null);
 const mapRef = ref(null);
 const scheduleDetailRef = ref(null);
+const showShareModal = ref(false);
+const shareTripId = ref(null);
 const payResult = ref(null);
 
 const selectedTrip = computed(() => {
@@ -152,7 +179,10 @@ onMounted(() => {
   tripStore.fetchTrips();
   fetchIsPremium();
 
-  if (route.query.linepayResult === 'success' || route.query.linepayResult === 'fail') {
+  if (
+    route.query.linepayResult === "success" ||
+    route.query.linepayResult === "fail"
+  ) {
     payResult.value = route.query.linepayResult;
     showPayModal.value = true;
   }
@@ -233,6 +263,16 @@ function handlePlaceSelect(place) {
 
 function callItinerary() {
   mapRef.value?.callItinerary();
+}
+
+function openShareModal(id) {
+  shareTripId.value = id;
+  showShareModal.value = true;
+}
+
+function closeShareModal() {
+  showShareModal.value = false;
+  shareTripId.value = null;
 }
 
 // 暴露方法給父元件使用

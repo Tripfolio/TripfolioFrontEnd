@@ -77,7 +77,6 @@ const getCurrentUserId = () => {
       // 根據實際 payload key 調整
       return payload.userId || payload.id || payload.memberId || null;
     } catch (error) {
-      console.error("解析 token 失敗:", error);
       return null;
     }
   }
@@ -105,8 +104,6 @@ const submitComment = async (commentText) => {
       postId: props.post.postId,
       commentCount: newCommentCount,
     });
-
-    console.log("留言發表成功", response.data);
   } catch (error) {
     console.error("留言發表失敗", error);
   } finally {
@@ -129,18 +126,14 @@ const formatTime = (timeString) => {
 
 const loadComments = async () => {
   if (!props.post.postId) {
-    console.warn("沒有貼文 ID");
     return;
   }
 
   try {
-    console.log(`正在載入貼文 ${props.post.postId} 的留言`);
-
     const response = await axios.get(
       `${import.meta.env.VITE_API_URL}/api/post/${props.post.postId}/comments`,
     );
     comments.value = response.data;
-    console.log("載入留言成功:", response.data);
   } catch (error) {
     console.error("載入留言失敗:", error);
   } finally {
@@ -162,8 +155,6 @@ const deleteComment = async (commentId) => {
   isDeletingComment.value = commentId;
 
   try {
-    console.log(`正在刪除留言 ${commentId}`);
-
     await axios.delete(
       `${import.meta.env.VITE_API_URL}/api/post/${props.post.postId}/comments/${commentId}`,
       {
@@ -186,11 +177,7 @@ const deleteComment = async (commentId) => {
       postId: props.post.postId,
       commentCount: newCommentCount,
     });
-
-    console.log("留言刪除成功");
   } catch (error) {
-    console.error("刪除留言失敗:", error);
-
     if (error.response?.status === 403) {
       alert(t('commentSection.noPermissionDelete'));
     } else if (error.response?.status === 404) {

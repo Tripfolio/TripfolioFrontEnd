@@ -8,7 +8,12 @@
     >
       <div class="relative">
         <img
-          :src="item.image || item.coverImage || item.imageUrl || 'https://via.placeholder.com/400x200?text=No+Image'"
+          :src="
+            item.image ||
+            item.coverImage ||
+            item.imageUrl ||
+            'https://picsum.photos/200/300'
+          "
           @error="handleImageError"
           class="w-full h-50 object-cover rounded-t-lg"
           alt="預覽圖"

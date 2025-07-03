@@ -30,6 +30,4 @@ const router = useRouter();
 const goToPost = () => {
   router.push(`/post/${props.post.id}`);
 };
-
-console.log(props.post);
 </script>

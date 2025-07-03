@@ -3,7 +3,15 @@
 </template>
 
 <script setup>
-import { toRefs, ref, onMounted, onBeforeUnmount, watch } from "vue";
+import {
+  toRefs,
+  ref,
+  onMounted,
+  onBeforeUnmount,
+  watch,
+  computed,
+  toRef,
+} from "vue";
 import axios from "axios";
 import { useI18n } from 'vue-i18n'
 const { t, locale } = useI18n()
@@ -18,6 +26,9 @@ const props = defineProps({
     default: "https://placehold.co/600x400?text=No+Image",
   },
   selectedPlace: Object,
+  role: {
+    type: String, // 🔒 權限控制：接收 role
+  },
 });
 
 const { defaultImage, tripId, selectedDate } = toRefs(props);
@@ -25,6 +36,11 @@ const itineraryPlaces = ref([]);
 const API_URL = import.meta.env.VITE_API_URL;
 
 const trafficMap = ref({});
+
+// 🔒 權限控制：定義是否可編輯
+const canEdit = computed(
+  () => props.role === "owner" || props.role === "editor",
+);
 
 onMounted(() => {
   loadItinerary();
@@ -73,6 +89,10 @@ function onClickOutside(e) {
 }
 
 function startEditing(p) {
+  // if (!canEdit.value) {
+  //   alert("您沒有編輯權限");
+  //   return;
+  // }
   p.editingTime = true;
   p.arrivalHourTemp = p.arrivalHour ?? 0;
   p.arrivalMinuteTemp = p.arrivalMinute ?? 0;
@@ -89,6 +109,10 @@ function formatTime(hour, minute) {
 
 //確認更改時間
 async function confirmTime(p) {
+  // if (!canEdit.value) {
+  //   alert("您沒有編輯權限");
+  //   return;
+  // }
   const newTime = p.arrivalHourTemp * 60 + p.arrivalMinuteTemp;
   const hasConflict = itineraryPlaces.value.some(
     (place) =>
@@ -133,6 +157,11 @@ async function updateOrder() {
 
 //加入景點
 async function addPlace(place, date) {
+  // if (!canEdit.value) {
+  //   alert("您沒有權限新增景點");
+  //   return false;
+  // }
+
   if (!place || !date) {
     alert($t('itinerary.selectLocationDate'));
     return false;
@@ -175,6 +204,11 @@ async function addPlace(place, date) {
 
 //移除景點
 async function removePlace(p) {
+  // if (!canEdit.value) {
+  //   alert("您沒有權限刪除景點");
+  //   return false;
+  // }
+
   try {
     const res = await axios.delete(`${API_URL}/api/itinerary/place`, {
       params: { itineraryId: tripId.value, name: p.name },

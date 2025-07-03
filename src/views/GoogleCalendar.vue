@@ -81,7 +81,6 @@ onMounted(() => {
 
 function initializeGapiClient() {
   if (!CLIENT_ID || !API_KEY) {
-    console.error("缺少 CLIENT_ID 或 API_KEY");
     message.value = "缺少 CLIENT_ID 或 API_KEY，請檢查環境變數";
     return;
   }
@@ -92,11 +91,9 @@ function initializeGapiClient() {
       discoveryDocs: [DISCOVERY_DOC],
     })
     .then(() => {
-      console.log("GAPI client initialized");
       gapiInitialized = true;
     })
     .catch((err) => {
-      console.error("GAPI 初始化失敗", err);
       message.value = "Google API 初始化失敗：" + err.message;
     });
 }
@@ -114,7 +111,7 @@ function handleAuthClick() {
       callback: (resp) => {
         if (resp.error) {
           message.value = "認證失敗：" + resp.error;
-          console.error("OAuth 認證錯誤", resp);
+
           return;
         }
         message.value = "認證成功！建立行程中...";
@@ -159,11 +156,9 @@ function createEvent(summary, startDateTime, endDateTime) {
       message.value = "成功建立行程：";
       eventLink.value = response.result.htmlLink;
       isLink.value = true;
-      console.log("行程建立成功", response);
     })
     .catch((error) => {
       message.value = "建立行程錯誤：" + error.message;
-      console.error("建立行程失敗", error);
     });
 }
 

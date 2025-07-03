@@ -148,8 +148,17 @@ const itineraryRef = ref(null);
 const props = defineProps({
   selectedTrip: Object,
   dayIndex: Number,
+  role: {
+    type: String, // 🔒 權限控制：接收 role
+  },
 });
+
 const { selectedTrip, dayIndex } = toRefs(props);
+
+// 🔒 權限控制：計算是否可編輯
+const canEdit = computed(
+  () => props.role === "editor" || props.role === "owner",
+);
 
 const openMenuIndex = ref(null);
 
@@ -181,7 +190,6 @@ async function refresh() {
         date: currentDay.value.date,
       },
     });
-    console.log("更新景點資料：", res.data.places);
 
     // 直接更新 DailyPlan 的資料
     itinerarySpots.value = res.data.places
@@ -227,6 +235,10 @@ function formatTime(hour, minute) {
 
 //呼叫子層
 function startEditing(p) {
+  // if (!canEdit.value) {
+  //   alert("您沒有編輯權限");
+  //   return;
+  // }
   itineraryRef.value?.startEditing(p);
 }
 
@@ -235,15 +247,27 @@ function cancelEditing(p) {
 }
 
 function confirmTime(p) {
+  // if (!canEdit.value) {
+  //   alert("您沒有編輯權限");
+  //   return;
+  // }
   itineraryRef.value?.confirmTime(p);
 }
 
 function removePlace(p) {
+  // if (!canEdit.value) {
+  //   alert("您沒有刪除權限");
+  //   return;
+  // }
   itineraryRef.value?.removePlace(p);
 }
 
 //更新排序
 function updateOrder() {
+  // if (!canEdit.value) {
+  //   alert("您沒有調整順序的權限");
+  //   return;
+  // }
   const newOrder = itinerarySpots.value.map((p, i) => ({
     id: p.id,
     placeOrder: i + 1,
