@@ -1,19 +1,18 @@
 <template>
-  <div class="p-4 max-w-xl mx-auto">
-    <h2 class="text-xl font-bold mb-4">Email 通知設定</h2>
+  <div class="p-2 max-w-xl">
     <div v-if="loading">載入中...</div>
     <div v-else>
       <div
         v-for="(_value, key) in preferences"
         :key="key"
-        class="flex items-center justify-between py-2 border-b"
+        class="flex items-center py-3"
       >
-        <span>{{ labels[key] }}</span>
         <input type="checkbox" v-model="preferences[key]" />
+        <span>{{ labels[key] }}</span>
       </div>
       <button
         @click="savePreferences"
-        class="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
+        class="text-gray text-sm cursor-pointer bg-black/30 rounded-full px-5 py-0.5 relative top-4"
       >
         儲存設定
       </button>
