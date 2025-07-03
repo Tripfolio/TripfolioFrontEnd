@@ -32,19 +32,16 @@
 
         <!-- 行程卡片列表 -->
         <div>
-          <div
-            v-if="!editingTripId"
-            class="travel-card-style rounded-2xl p-7 m-5"
-          >
+          <div v-if="!editingTripId" class="rounded-2xl p-7 m-5">
             <div
               v-if="tripStore.trips.length > 0"
-              class="solo-card-style mt-2 space-y-4 rounded-xl"
+              class="mt-2 space-y-4 rounded-xl"
             >
               <div
                 v-for="item in tripStore.trips"
                 :key="item.id"
                 @click="editingTripId = item.id"
-                class="rounded-2xl shadow-md shadow-black/40 verflow-hidden relative cursor-pointer hover:ring-2 hover:ring-gray-400 transition"
+                class="navbar-style rounded-2xl shadow-md shadow-black/40 verflow-hidden relative cursor-pointer hover:ring-2 hover:ring-gray-400 transition"
               >
                 <img
                   :src="
