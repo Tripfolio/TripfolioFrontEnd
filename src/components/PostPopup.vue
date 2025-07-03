@@ -120,16 +120,16 @@ const toTravelPage = () => {
 const fetchScheduleTitle = async () => {
   if (props.post.title) {
     try {
-      const res = await axios.get(
-        `${import.meta.env.VITE_API_URL}/api/travelSchedule/${props.post.title}`,
-        {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-        },
-      );
+      // const res = await axios.get(
+      //   `${import.meta.env.VITE_API_URL}/api/travelSchedule/${props.post.title}`,
+      //   {
+      //     headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      //   },
+      // );
 
-      scheduleTitle.value = res.data.title || "未命名行程";
+      scheduleTitle.value = props.post.title || "未命名行程";
     } catch (error) {
-      scheduleTitle.value = "行程已刪除 ಥ_ಥ";
+      scheduleTitle.value = props.post.title;
     }
   } else {
     scheduleTitle.value = "行程已刪除 ಥ_ಥ";

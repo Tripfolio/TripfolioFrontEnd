@@ -8,7 +8,7 @@
 
         <!-- 使用者頭像與名稱 -->
         <section class="user-info  ">
-          <img :src="user.avatar" alt="" class="avatar" />
+          <img :src="user.avatar + '?t=' + avatarTimestamp" alt="使用者頭像" class="avatar" />
           <div>
             <h1 class="text-xl mb-3 ml-2">{{ user.name }}</h1>
             <div  class="flex space-x-1 items-center ">
@@ -21,8 +21,7 @@
                 <hr />
                 <a class="text-gray text-sm cursor-pointer  bg-black/30 rounded-full px-5 py-0.5" href="#" @click.prevent="goToLogin" >登出</a>
             </div>
-          </div>
-          
+          </div>       
         </section>
 
         <!-- Tab 切換 -->
@@ -49,7 +48,7 @@
             <CardGrid :items="collectedPosts" @click-card="goToPost" />
           </template>
           <template v-else-if="activeTab === 'notifications'">
-            <div class="notice">通知設定區塊</div>
+            <EmailSettings />
           </template>
         </section>
       </main>
@@ -63,6 +62,11 @@
         <div class="relative">
           <MemberProfile
             @close-modal="showMemberProfile = false"
+            @update-profile="
+              fetchData();
+              avatarTimestamp.value = Date.now();
+              showMemberProfile = false;
+            "
             @profile-updated="handleProfileUpdated"
           />
         </div>
@@ -78,6 +82,7 @@ import { jwtDecode } from "jwt-decode";
 import axios from "axios";
 import CardGrid from "@/components/CardGrid.vue";
 import MemberProfile from "../views/MemberProfile.vue";
+import EmailSettings from "../views/EmailSettings.vue";
 
 const router = useRouter();
 const route = useRoute();
@@ -87,10 +92,11 @@ const travels = ref([]);
 const posts = ref([]);
 const collectedPosts = ref([]);
 const showMemberProfile = ref(false);
+const avatarTimestamp = ref(Date.now());
 
 const tabs = [
   { key: "travels", label: "我建立的行程" },
-  { key: 'posts', label: '我建立的貼文' },
+  { key: "posts", label: "我建立的貼文" },
   { key: "collected", label: "我收藏的貼文" },
   { key: "notifications", label: "通知設定" },
 ];
@@ -111,12 +117,18 @@ const fetchData = async () => {
       axios.get(`${import.meta.env.VITE_API_URL}/api/travelSchedule/user`, {
         headers: { Authorization: `Bearer ${token}` },
       }),
-      axios.get(`${import.meta.env.VITE_API_URL}/api/allposts?page=1&limit=100`,{
-            headers: {Authorization: `Bearer ${token}` },
-      }),
-      axios.get(`${import.meta.env.VITE_API_URL}/api/favorites/user/${memberId}`, {
-      headers: { Authorization: `Bearer ${token}` },
-      }),
+      axios.get(
+        `${import.meta.env.VITE_API_URL}/api/allposts?page=1&limit=100`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        },
+      ),
+      axios.get(
+        `${import.meta.env.VITE_API_URL}/api/favorites/user/${memberId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        },
+      ),
     ]);
     user.value = {
       name: userRes.data.name || "訪客",
@@ -130,16 +142,16 @@ const fetchData = async () => {
     }));
 
     posts.value = postRes.data.posts
-      .filter(item => item.id === memberId)
-      .map(item => ({
+      .filter((item) => item.id === memberId)
+      .map((item) => ({
         id: item.postId,
-        title: item.content || '未命名貼文',
+        title: item.content || "未命名貼文",
         coverImage: item.imageUrl,
-    }));
+      }));
 
-    collectedPosts.value = collectRes.data.map(item => ({
+    collectedPosts.value = collectRes.data.map((item) => ({
       id: item.postId,
-      title: item.postTitle || '未命名貼文',
+      title: item.postTitle || "未命名貼文",
       coverImage: item.postImageUrl,
     }));
   } catch (err) {

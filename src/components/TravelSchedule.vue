@@ -1,6 +1,6 @@
 <template>
   <div
-    class="relative max-w-xl mx-auto p-5 rounded-2xl bg-[#878787]/60 shadow-md shadow-black/40 text-white h-[710px] w-[450px] scale-[0.75] sm:scale-100"
+    class="relative max-w-xl mx-auto p-5 rounded-2xl bg-[#878787]/60 shadow-md shadow-black/40 text-white h-[640px] w-[450px] scale-[0.75] sm:scale-100"
   >
     <button
       type="button"
@@ -115,7 +115,7 @@
         <label class="block mb-1">行程描述(可選填)</label>
         <textarea
           v-model="description"
-          class="p-2 h-24 border w-full rounded focus:outline-none focus:ring-2 focus:ring-gray-500"
+          class="p-2 h-18 border w-full rounded focus:outline-none focus:ring-2 focus:ring-gray-500"
           placeholder="請簡單記錄一下自己的行程吧~(ﾉ˶>ᗜ​<˵)ﾉ"
         ></textarea>
       </div>
@@ -134,9 +134,10 @@
           class="bg-[#878787] hover:bg-[#c2c2c2] text-white px-4 py-2 rounded"
         >
           <span v-if="isLoading" class="flex items-center gap-2">
-            儲存中...<span
+            儲存中...
+            <!-- <span
               class="inline-block animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white"
-            ></span>
+            ></span> -->
           </span>
           <span v-else>建立</span>
         </button>
@@ -230,6 +231,7 @@ const scheduleCancel = () => {
 };
 
 const scheduleSubmit = async () => {
+  if (isLoading.value) return;
   if (!title.value || !startDate.value || !endDate.value) {
     alert("請填寫行程名稱及行程開始/結束日期");
     return;
