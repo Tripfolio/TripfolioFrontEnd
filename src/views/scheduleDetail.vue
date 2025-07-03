@@ -131,7 +131,6 @@ const fetchRole = async () => {
       },
     );
     role.value = res.data.role;
-    console.log("✅ 取得角色:", role.value);
   } catch {
     role.value = "viewer";
   }

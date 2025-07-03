@@ -41,7 +41,6 @@ const canEdit = computed(
 );
 
 onMounted(() => {
-  console.log("✅ Itinerary.vue mounted, role =", props.role);
   loadItinerary();
   window.addEventListener("click", onClickOutside);
 });
@@ -156,9 +155,6 @@ async function updateOrder() {
 
 //加入景點
 async function addPlace(place, date) {
-  console.log("props:", props);
-  console.log("🔍 props.role:", props.role);
-  console.log("🔍 canEdit:", canEdit.value);
   // if (!canEdit.value) {
   //   alert("您沒有權限新增景點");
   //   return false;

@@ -42,7 +42,6 @@ const fetchPosts = async () => {
       })),
     );
     page.value++;
-    console.log(posts.value);
   } catch (err) {
     alert("載入貼文失敗");
   } finally {
@@ -76,11 +75,6 @@ const updatePost = (updatedPost) => {
     });
 
     posts.value[index] = updateData;
-
-    console.log(`更新貼文 ${updatedPost.postId} 的計數:`, {
-      commentCount: updateData.commentCount,
-      favoriteCount: updateData.favoriteCount,
-    });
   }
 };
 
@@ -151,7 +145,6 @@ onBeforeUnmount(() => {
     observer.unobserve(scrollTrigger.value);
   }
 });
-console.log("communityList mounted");
 </script>
 
 <template>

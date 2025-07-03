@@ -188,7 +188,6 @@ async function refresh() {
         date: currentDay.value.date,
       },
     });
-    console.log("更新景點資料：", res.data.places);
 
     // 直接更新 DailyPlan 的資料
     itinerarySpots.value = res.data.places

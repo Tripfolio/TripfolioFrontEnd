@@ -123,7 +123,6 @@ async function getTravelInfo() {
       distance: rawDistance.value,
     });
   } catch (err) {
-    console.error("取得/儲存交通資料失敗：", err);
     alert("讀取交通資訊失敗，請稍後再試");
   }
 }

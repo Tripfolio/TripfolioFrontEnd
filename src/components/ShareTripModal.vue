@@ -140,7 +140,7 @@ const isOwner = ref(false);
 
 const generateShareLink = async () => {
   const token = localStorage.getItem("token");
-  console.log("發送的 Token:", token);
+
   try {
     isLoading.value = true;
     const res = await axios.post(
@@ -156,7 +156,7 @@ const generateShareLink = async () => {
     const data = {
       permission: selectedPermission.value, // 檢查 permission
     };
-    console.log("發送的資料:", data);
+
     shareUrl.value = res.data.shareUrl;
     expiresAt.value = res.data.expiresAt;
 
@@ -164,7 +164,6 @@ const generateShareLink = async () => {
     // fetchSharedUsers();
   } catch (err) {
     alert("建立分享連結失敗");
-    console.error(err);
   } finally {
     isLoading.value = false;
   }
@@ -205,7 +204,6 @@ const updatePermission = async (targetUserId, newRole) => {
     alert("權限已更新");
   } catch (err) {
     alert("權限更新失敗");
-    console.error(err);
   }
 };
 
@@ -224,7 +222,6 @@ const removeUser = async (targetUserId) => {
     alert("已取消共享");
   } catch (err) {
     alert("取消共享失敗");
-    console.error(err);
   }
 };
 

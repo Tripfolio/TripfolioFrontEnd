@@ -160,8 +160,6 @@ const refreshPost = async () => {
     // 通知父組件更新列表中顯示的計數
     emit("update-post", res.data.post || res.data);
   } catch (error) {
-    console.error("更新貼文資訊失敗，嘗試手動更新計數", error);
-
     // 如果 API 端點不存在，我們可以手動更新計數
     // 這裡可以根據實際情況調整
     const updatedPost = {
@@ -197,8 +195,6 @@ const handleFavoriteToggle = (favoriteData) => {
 
     // 通知父組件更新
     emit("update-post", localPost.value);
-
-    console.log(`收藏計數更新: ${favoriteData.favoriteCount}`);
   }
 };
 
@@ -213,8 +209,6 @@ const handleCommentUpdate = (commentData) => {
 
     // 通知父組件更新
     emit("update-post", localPost.value);
-
-    console.log(`留言計數更新: ${commentData.commentCount}`);
   }
 };
 
