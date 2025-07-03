@@ -294,7 +294,8 @@ export default {
   travel: {
     createTrip: "여행 만들기",
     deleteTrip: "여행 삭제",
-    noTrips: "아직 여행이 없습니다",
+    shareTrip: "여행 공유",
+    noTrips: "아직 여행이 없습니다!",
     loginRequired: "먼저 로그인하세요",
     confirmDelete: "이 여행을 삭제하시겠습니까?",
     deleteSuccess: "삭제 성공",

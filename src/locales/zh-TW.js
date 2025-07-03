@@ -288,6 +288,7 @@ export default {
   travel: {
     createTrip: "建立行程",
     deleteTrip: "刪除行程",
+    shareTrip: "共享行程",
     noTrips: "尚未建立任何行程",
     loginRequired: "請先登入會員",
     confirmDelete: "確定刪除這個行程嗎?",

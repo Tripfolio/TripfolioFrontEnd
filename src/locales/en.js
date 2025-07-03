@@ -296,6 +296,7 @@ export default {
   travel: {
     createTrip: "Create Trip",
     deleteTrip: "Delete Trip",
+    shareTrip: "Share Trip",
     noTrips: "No trips yet!",
     loginRequired: "Please log in first",
     confirmDelete: "Are you sure you want to delete this trip?",

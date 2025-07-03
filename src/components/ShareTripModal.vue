@@ -1,5 +1,4 @@
 <template>
-
   <div
     v-if="isOpen"
     class="fixed inset-0 z-50 bg-black/50 flex items-center justify-center px-4"
@@ -8,7 +7,9 @@
       class="navbar-style w-full max-w-[500px] rounded-2xl shadow-xl p-6 sm:p-6"
     >
       <div class="flex justify-between items-center mb-4">
-        <h2 class="text-xl font-semibold text-white">分享行程</h2>
+        <h2 class="text-xl font-semibold text-white">
+          {{ $t("shareTripModal.shareTrip") }}
+        </h2>
         <button
           @click="emit('close')"
           class="text-white hover:text-gray-400 text-lg cursor-pointer"
@@ -19,17 +20,16 @@
 
       <!-- 權限選擇 -->
       <div class="mb-4">
-        <label class="block mb-1 text-sm text-white font-medium"
-          >權限設定</label
-        >
+        <label class="block mb-1 text-sm text-white font-medium">
+          {{ $t("shareTripModal.permissionSetting") }}
+        </label>
         <select
           v-model="selectedPermission"
           class="w-full border border-gray-300 rounded-md px-3 py-2 text-white shadow-sm cursor-pointer"
         >
-          <option value="viewer">僅可檢視</option>
-          <option value="editor">可編輯</option>
+          <option value="viewer">{{ $t("shareTripModal.viewOnly") }}</option>
+          <option value="editor">{{ $t("shareTripModal.canEdit") }}</option>
         </select>
-
       </div>
 
       <button
@@ -37,15 +37,14 @@
         class="bg-white/30 hover:bg-black/20 text-white px-4 py-2 rounded-md w-full font-medium cursor-pointer"
         :disabled="isLoading"
       >
-
-        {{ $t('shareTripModal.copyLink') }}
+        {{ $t("shareTripModal.copyLink") }}
       </button>
 
       <!-- 分享結果區塊 -->
       <div v-if="shareUrl" class="mt-6">
-        <label class="block mb-1 text-sm text-white font-medium"
-          >分享連結</label
-        >
+        <label class="block mb-1 text-sm text-white font-medium">
+          {{ $t("shareTripModal.shareLink") }}
+        </label>
         <div class="flex items-center gap-2">
           <input
             :value="shareUrl"
@@ -56,7 +55,7 @@
             @click="copyToClipboard"
             class="text-sm text-white hover:text-white/20 whitespace-nowrap cursor-pointer"
           >
-            複製
+            {{ $t("shareTripModal.copy") }}
           </button>
         </div>
 
@@ -65,14 +64,14 @@
         </div>
 
         <div class="text-sm text-white mt-2 text-center">
-          到期時間：{{ formattedExpire }}
+          {{ $t("shareTripModal.expireTime") }}：{{ formattedExpire }}
         </div>
       </div>
 
       <!-- 共享者清單區塊 -->
       <div v-if="sharedUsers.length" class="mt-6">
         <h3 class="text-white font-semibold text-base mb-2">
-          目前共享的使用者
+          {{ $t("shareTripModal.currentSharedUsers") }}
         </h3>
         <div class="space-y-2">
           <div
@@ -89,7 +88,7 @@
               <span
                 v-if="user.role === 'owner'"
                 class="text-sm text-gray-200 font-semibold"
-                >建立者</span
+                >{{ $t("shareTripModal.owner") }}</span
               >
 
               <template v-else>
@@ -99,12 +98,16 @@
                   @change="updatePermission(user.id, user.role)"
                   class="text-sm border border-gray-300 rounded px-2 py-1 text-gray-700"
                 >
-                  <option value="viewer">檢視者</option>
-                  <option value="editor">編輯者</option>
+                  <option value="viewer">
+                    {{ $t("shareTripModal.viewer") }}
+                  </option>
+                  <option value="editor">
+                    {{ $t("shareTripModal.editor") }}
+                  </option>
                 </select>
 
                 <span v-else class="text-sm text-gray-500">{{
-                  user.role
+                  $t("shareTripModal." + user.role)
                 }}</span>
 
                 <button
@@ -115,7 +118,6 @@
                   🗑
                 </button>
               </template>
-
             </div>
           </div>
         </div>
@@ -127,11 +129,10 @@
 <script setup>
 import { ref, computed, watch } from "vue";
 import axios from "axios";
-import { useI18n } from 'vue-i18n'
-const { t, locale } = useI18n()
+import { useI18n } from "vue-i18n";
+const { t, locale } = useI18n();
 
 import QrcodeVue from "qrcode.vue";
-
 
 const props = defineProps({
   tripId: Number,
@@ -146,10 +147,8 @@ const isLoading = ref(false);
 const sharedUsers = ref([]);
 const isOwner = ref(false);
 
-
 const generateShareLink = async () => {
   const token = localStorage.getItem("token");
-
 
   try {
     isLoading.value = true;
@@ -174,10 +173,9 @@ const generateShareLink = async () => {
     // 更新共享名單
     // fetchSharedUsers();
   } catch (err) {
-    alert("建立分享連結失敗");
+    alert($t("shareTripModal.createShareLinkFail"));
   } finally {
     isLoading.value = false;
-
   }
 };
 
@@ -196,7 +194,6 @@ const fetchSharedUsers = async () => {
     isOwner.value = res.data.isOwner;
   } catch (err) {
     console.error("取得共享者清單失敗", err);
-
   }
 };
 
@@ -215,15 +212,14 @@ const updatePermission = async (targetUserId, newRole) => {
         withCredentials: true,
       },
     );
-    alert("權限已更新");
+    alert($t("shareTripModal.permissionUpdated"));
   } catch (err) {
-
-    alert("權限更新失敗");
+    alert($t("shareTripModal.permissionUpdateFail"));
   }
 };
 
 const removeUser = async (targetUserId) => {
-  if (!confirm("確定要取消共享這位使用者嗎？")) return;
+  if (!confirm($t("shareTripModal.confirmRemoveUser"))) return;
   const token = localStorage.getItem("token");
 
   try {
@@ -235,11 +231,9 @@ const removeUser = async (targetUserId) => {
       },
     );
     sharedUsers.value = sharedUsers.value.filter((u) => u.id !== targetUserId);
-    alert("已取消共享");
+    alert($t("shareTripModal.removed"));
   } catch (err) {
-
-    alert("取消共享失敗");
-
+    alert($t("shareTripModal.removeFail"));
   }
 };
 
@@ -253,7 +247,7 @@ watch(
 
 const copyToClipboard = () => {
   navigator.clipboard.writeText(shareUrl.value);
-  alert("已複製分享連結");
+  alert($t("shareTripModal.copied"));
 };
 
 const formattedExpire = computed(() =>

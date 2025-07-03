@@ -6,11 +6,11 @@ export const rawCategories = [
 ];
 
 export const rawPlaceCategories = [
-  { type: "cafe", label: "咖啡廳" },
-  { type: "museum", label: "博物館" },
-  { type: "park", label: "公園" },
-  { type: "zoo", label: "動物園" },
-  { type: "amusement_park", label: "遊樂園" },
+  { type: "cafe", label: "☕" },
+  { type: "museum", label: "🏛️" },
+  { type: "park", label: "⛲" },
+  { type: "zoo", label: "🦁" },
+  { type: "amusement_park", label: "🎡" },
   { type: "aquarium", label: "水族館" },
   { type: "art_gallery", label: "藝廊" },
   { type: "bar", label: "酒吧" },
