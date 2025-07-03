@@ -20,8 +20,11 @@ import NavBar from "./components/NavBar.vue";
 import { useRoute } from "vue-router";
 import { computed } from "vue";
 
+
 const route = useRoute();
 const isMapPage = computed(() => route.path === "/schedule");
+
+
 </script>
 
 <style scoped>

@@ -35,7 +35,7 @@
                   class="cursor-pointer pb-2"
                   @click="startEditing(p)"
                 >
-                  {{ formatTime(p.arrivalHour, p.arrivalMinute) }}抵達
+                  {{ formatTime(p.arrivalHour, p.arrivalMinute) }}{{ $t('dailyPlan.arrival') }}
                 </p>
                 <div v-else class="flex flex-col gap-1">
                   <div class="flex gap-1 items-center">
@@ -56,15 +56,15 @@
                         {{ m.toString().padStart(2, "0") }}
                       </option>
                     </select>
-                    抵達
+                    {{ $t('dailyPlan.arrival') }}
                   </div>
 
                   <div class="flex gap-2 mt-1">
                     <button @click="confirmTime(p)" class="text-green-300">
-                      更改
+                      {{ $t('dailyPlan.change') }}
                     </button>
                     <button @click="cancelEditing(p)" class="text-red-300">
-                      取消
+                      {{ $t('dailyPlan.cancel') }}
                     </button>
                   </div>
                 </div>
@@ -95,7 +95,7 @@
                     @click="removePlace(p)"
                     class="px-3 py-1 bg-white text-black rounded hover:bg-gray-100 whitespace-nowrap"
                   >
-                    🗑️ 移除
+                    🗑️ {{ $t('dailyPlan.remove') }}
                   </button>
                 </li>
               </ul>
@@ -123,12 +123,12 @@
     </draggable>
 
     <div v-if="itinerarySpots.length === 0" class="text-gray-400 mb-2">
-      尚未加入任何景點
+      {{ $t('dailyPlan.noPlaces') }}
     </div>
   </div>
 
   <div v-else class="text-center text-gray-500 py-10">
-    <p>請從右側邊欄選擇一個旅程和日期來查看每日計畫。</p>
+    <p>{{ $t('dailyPlan.selectTripMessage') }}</p>
   </div>
 </template>
 
@@ -138,6 +138,8 @@ import TrafficBetween from "./TrafficBetween.vue";
 import draggable from "vuedraggable";
 import Itinerary from "./Itinerary.vue";
 import axios from "axios";
+import { useI18n } from 'vue-i18n'
+const { t, locale } = useI18n()
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -146,8 +148,17 @@ const itineraryRef = ref(null);
 const props = defineProps({
   selectedTrip: Object,
   dayIndex: Number,
+  role: {
+    type: String, // 🔒 權限控制：接收 role
+  },
 });
+
 const { selectedTrip, dayIndex } = toRefs(props);
+
+// 🔒 權限控制：計算是否可編輯
+const canEdit = computed(
+  () => props.role === "editor" || props.role === "owner",
+);
 
 const openMenuIndex = ref(null);
 
@@ -179,7 +190,6 @@ async function refresh() {
         date: currentDay.value.date,
       },
     });
-    console.log("更新景點資料：", res.data.places);
 
     // 直接更新 DailyPlan 的資料
     itinerarySpots.value = res.data.places
@@ -225,6 +235,10 @@ function formatTime(hour, minute) {
 
 //呼叫子層
 function startEditing(p) {
+  // if (!canEdit.value) {
+  //   alert("您沒有編輯權限");
+  //   return;
+  // }
   itineraryRef.value?.startEditing(p);
 }
 
@@ -233,15 +247,27 @@ function cancelEditing(p) {
 }
 
 function confirmTime(p) {
+  // if (!canEdit.value) {
+  //   alert("您沒有編輯權限");
+  //   return;
+  // }
   itineraryRef.value?.confirmTime(p);
 }
 
 function removePlace(p) {
+  // if (!canEdit.value) {
+  //   alert("您沒有刪除權限");
+  //   return;
+  // }
   itineraryRef.value?.removePlace(p);
 }
 
 //更新排序
 function updateOrder() {
+  // if (!canEdit.value) {
+  //   alert("您沒有調整順序的權限");
+  //   return;
+  // }
   const newOrder = itinerarySpots.value.map((p, i) => ({
     id: p.id,
     placeOrder: i + 1,
@@ -252,7 +278,7 @@ function updateOrder() {
       console.log("排序更新成功");
     })
     .catch(() => {
-      alert("排序更新失敗");
+      alert(t('dailyPlan.sortFail'));
     });
 }
 </script>

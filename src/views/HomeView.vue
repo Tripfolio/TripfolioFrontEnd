@@ -27,7 +27,7 @@
                     @change="onCityChange($event)"
                     class="appearance-none bg-gray-800/80 text-white text-sm py-2 pl-4 pr-10 rounded-full focus:outline-none hover:bg-gray-400 transition duration-200 cursor-pointer shadow-inner"
                   >
-                    <option value="none">當前</option>
+                    <option value="none">{{ $t('homeView.current') }}</option>
                     <option
                       v-for="city in cities"
                       :key="city.name"
@@ -68,7 +68,7 @@
                   <input
                     type="text"
                     v-model="searchQuery"
-                    placeholder="輸入地點"
+                    :placeholder="$t('homeView.inputPlace')"
                     class="w-full rounded-full border-none text-white px-9 py-1.5 box-border text-base placeholder-white focus:outline-none"
                     ref="searchInput"
                     @keyup.enter="searchPlace"
@@ -77,7 +77,7 @@
                     @click.prevent="searchPlace"
                     class="absolute right-2 top-1/2 -translate-y-1/2 bg-gray-800 px-2.5 py-1.5 rounded-full border-none cursor-pointer text-xs text-white"
                   >
-                    搜尋
+                    {{ $t('homeView.search') }}
                   </button>
                 </div>
               </div>
@@ -128,19 +128,19 @@
 
     <section class="min-h-[600px] flex flex-col sm:flex-row relative mt-10 mb-20 ">
       <h2 class=" ml-10 sm:ml-50 mt-10 sm:mt-30" data-aos="fade-up" data-aos-duration="1000">
-        <p class="text-3xl sm:text-5xl font-bold tracking-[1px] sm:tracking-[4px] mb-4">探索你的地圖</p>
-        <p class="mt-1 text-lg sm:text-2xl font-medium tracking-wide sm:tracking-wider whitespace-nowrap"> 標記景點留下足跡，每段旅程都是值得收藏的人生篇章</p>
+        <p class="text-3xl sm:text-5xl font-bold tracking-[1px] sm:tracking-[4px] mb-4">{{ $t('homeView.exploreYourMap') }}</p>
+        <p class="mt-1 text-lg sm:text-2xl font-medium tracking-wide sm:tracking-wider whitespace-nowrap"> {{ $t('homeView.markLandmarks') }}</p>
       </h2>
     
       <div class="relative mt-15 sm:mt-6" data-aos="fade-up" data-aos-delay="300">
         <div class="static sm:absolute sm:right-100  sm:top-70 min-h-5 max-w-[200px]  bg-black rounded-full flex items-center justify-center mb-3 ml-10">
-          <p class="text-white py-1 sm:py-2 px-3 sm:px-5 text-md sm:text-lg whitespace-nowrap">一站式完成資訊蒐集</p>
+          <p class="text-white py-1 sm:py-2 px-3 sm:px-5 text-md sm:text-lg whitespace-nowrap">{{ $t('homeView.oneStopInfoCollection') }}</p>
         </div>
         <div class="static sm:absolute sm:right-70  sm:top-90 min-h-5 max-w-[150px]  bg-black rounded-full flex items-center justify-center mb-3 ml-40">
-          <p class="text-white py-1 sm:py-2 px-3 sm:px-5 text-md sm:text-lg whitespace-nowrap">快速排程</p>
+          <p class="text-white py-1 sm:py-2 px-3 sm:px-5 text-md sm:text-lg whitespace-nowrap">{{ $t('homeView.quickScheduling') }}</p>
         </div>
         <div class="static sm:absolute sm:right-90 sm:top-110 min-h-5 max-w-[150px] bg-black rounded-full flex items-center justify-center mb-3 ml-20">
-          <p class="text-white py-1 sm:py-2 px-3 sm:px-5 text-md  sm:text-lg text-shadow-sm whitespace-nowrap">與好友共編</p>
+          <p class="text-white py-1 sm:py-2 px-3 sm:px-5 text-md  sm:text-lg text-shadow-sm whitespace-nowrap">{{ $t('homeView.collaborateWithFriends') }}</p>
         </div>
       </div>
     
@@ -163,10 +163,10 @@
               
         <div class="absolute mt-20 ml-10 sm:ml-20 sm:mt-50 z-40 ">
           <h2 class="text-3xl sm:text-4xl font-bold tracking-wide sm:tracking-wider" data-aos="fade-right" data-aos-duration="2000">
-            高自由度行程規劃
+            {{ $t('homeView.highFreedomItineraryPlanning') }}
           </h2>
           <p class="mt-5 ml-8 sm:ml-16 text-lg sm:text-xl font-medium tracking-wide sm:tracking-wider" data-aos="fade-left" data-aos-duration="2000">
-            景點隨心拖曳排序 輕鬆管理你的旅程
+            {{ $t('homeView.dragAndSort') }}
           </p>
          </div>
           <div class="block sm:hidden absolute top-50 left-12 ">
@@ -179,7 +179,7 @@
     <section class="min-h-[600px] px-6 py-16">
 
       <h2 class="text-3xl sm:text-4xl font-bold text-center mb-20 mt-10" data-aos="fade-up" data-aos-duration="1000" data-aos-anchor-placement="top-center">
-        讓分享，成為彼此的路標
+        {{ $t('homeView.sharingBecomesRouteSign') }}
       </h2>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
@@ -193,7 +193,7 @@
             </div>
           </div>
           <div class="p-4 flex justify-between items-center">
-            <p class="text-sm font-medium">慢遊台灣五日行</p>
+            <p class="text-sm font-medium">{{ $t('homeView.taiwanTravel5Days') }}</p>
             <button class="text-xl">♡</button>
           </div>
         </div>
@@ -208,7 +208,7 @@
             </div>
           </div>
           <div class="p-4 flex justify-between items-center">
-            <p class="text-sm font-medium">一步一景，小島旅行中</p>
+            <p class="text-sm font-medium">{{ $t('homeView.oneStepOneScene') }}</p>
             <button class="text-xl">♡</button>
           </div>
         </div>
@@ -222,7 +222,7 @@
             </div>
           </div>
           <div class="p-4 flex justify-between items-center">
-            <p class="text-sm font-medium">台北三天兩夜攻略</p>
+            <p class="text-sm font-medium">{{ $t('homeView.taipeiTrip3Days2Nights') }}</p>
             <button class="text-xl">♡</button>
           </div>
         </div>
@@ -276,6 +276,8 @@ import p1 from '../assets/HomePage/p1.png';
 import p2 from '../assets/HomePage/p2.png';
 import btn from '../assets/HomePage/btn.svg';
 import map from '../assets/HomePage/map.png';
+import { useI18n } from 'vue-i18n'
+const { t, locale } = useI18n()
 
 const show = ref(true)
 const showMarker1 = ref(false)

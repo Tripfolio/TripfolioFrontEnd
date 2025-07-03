@@ -1,6 +1,8 @@
 <template>
+
   <div class="p-2 max-w-xl">
-    <div v-if="loading">載入中...</div>
+    <div v-if="loading">{{ $t('emailSettings.loading') }}</div>
+
     <div v-else>
       <div
         v-for="(_value, key) in preferences"
@@ -14,15 +16,17 @@
         @click="savePreferences"
         class="text-gray text-sm cursor-pointer bg-black/30 rounded-full px-5 py-0.5 relative top-4"
       >
-        儲存設定
+        {{ $t('emailSettings.save') }}
       </button>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import axios from "axios";
+import { useI18n } from 'vue-i18n'
+const { t, locale } = useI18n()
 
 const preferences = ref({
   onLogin: true,
@@ -31,12 +35,12 @@ const preferences = ref({
   onBookmark: true,
 });
 
-const labels = {
-  onLogin: "登入成功",
-  onLoginfail: "帳號登入異常",
-  onComment: "貼文被留言",
-  onBookmark: "貼文被收藏",
-};
+const labels = computed(() => ({
+  onLogin: t('emailSettings.onLogin'),
+  onLoginfail: t('emailSettings.onLoginfail'),
+  onComment: t('emailSettings.onComment'),
+  onBookmark: t('emailSettings.onBookmark'),
+}));
 
 const loading = ref(false);
 
@@ -46,7 +50,7 @@ const fetchPreferences = async () => {
     const token = localStorage.getItem("token");
 
     if (!token) {
-      alert("尚未登入，無法載入偏好設定。");
+      alert(t('emailSettings.notLoggedInError') );
       return; // 提早結束
     }
 
@@ -60,7 +64,7 @@ const fetchPreferences = async () => {
     );
     preferences.value = data;
   } catch (err) {
-    alert("載入偏好設定失敗。");
+    alert(t('emailSettings.errorFetchingPreferences'))
   } finally {
     loading.value = false;
   }
@@ -71,7 +75,7 @@ const savePreferences = async () => {
     const token = localStorage.getItem("token");
 
     if (!token) {
-      alert("尚未登入，無法儲存設定。");
+      alert(t('emailSettings.notLoggedInSaveError'));
       return;
     }
 
@@ -84,9 +88,9 @@ const savePreferences = async () => {
         },
       },
     );
-    alert("偏好設定已更新！");
+    alert(t('emailSettings.preferencesUpdated'));
   } catch (err) {
-    alert("儲存失敗，請稍後再試。");
+    alert(t('emailSettings.saveError'));
   }
 };
 

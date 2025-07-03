@@ -4,6 +4,8 @@ import axios from "axios";
 import dayjs from "dayjs";
 import { useRoute, useRouter } from "vue-router";
 import PostPopup from "../components/PostPopup.vue";
+import { useI18n } from 'vue-i18n'
+const { t, locale } = useI18n()
 
 const posts = ref([]);
 const page = ref(1);
@@ -42,9 +44,8 @@ const fetchPosts = async () => {
       })),
     );
     page.value++;
-    console.log(posts.value);
   } catch (err) {
-    alert("載入貼文失敗");
+    alert(t('communityList.errorFetchingPosts'));
   } finally {
     isLoading.value = false;
   }
@@ -76,11 +77,6 @@ const updatePost = (updatedPost) => {
     });
 
     posts.value[index] = updateData;
-
-    console.log(`更新貼文 ${updatedPost.postId} 的計數:`, {
-      commentCount: updateData.commentCount,
-      favoriteCount: updateData.favoriteCount,
-    });
   }
 };
 
@@ -151,7 +147,6 @@ onBeforeUnmount(() => {
     observer.unobserve(scrollTrigger.value);
   }
 });
-console.log("communityList mounted");
 </script>
 
 <template>
@@ -199,11 +194,11 @@ console.log("communityList mounted");
             >
               <div class="flex items-center gap-1">
                 <span>❤️</span>
-                <span>{{ post.favoriteCount || 0 }}</span>
+                <span class="text-white">{{ post.favoriteCount || 0 }}</span>
               </div>
               <div class="flex items-center gap-1">
                 <span>💬</span>
-                <span>{{ post.commentCount || 0 }}</span>
+                <span class="text-white">{{ post.commentCount || 0 }}</span>
               </div>
             </div>
           </div>
@@ -233,14 +228,14 @@ console.log("communityList mounted");
         v-if="!isLoading && posts.length === 0"
         class="text-center text-gray-400 my-12"
       >
-        尚無貼文，快來建立第一篇吧！
+      {{ $t('communityList.noPosts') }}
       </div>
 
       <div
         v-if="!hasMore && posts.length"
         class="text-center text-gray-400 my-4"
       >
-        已載入所有貼文
+        {{ $t('communityList.allPostsLoaded') }}
       </div>
 
       <PostPopup

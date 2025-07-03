@@ -12,7 +12,7 @@
       <!-- 行程選擇 -->
       <div>
         <label class="block text-lg font-medium mb-2 text-center"
-          >選擇行程</label
+          >{{ $t('postForm.selectSchedule') }}</label
         >
         <select
           v-model="selectedScheduleId"
@@ -32,7 +32,7 @@
 
       <!-- 主圖上傳 -->
       <div>
-        <label class="block text-lg font-medium mb-2">貼文主圖</label>
+        <label class="block text-lg font-medium mb-2">{{ $t('postForm.mainImage') }}</label>
         <input
           type="file"
           accept="image/*"
@@ -53,7 +53,7 @@
 
       <!-- 內容 -->
       <div>
-        <label class="block text-lg font-medium mb-2">貼文內容</label>
+        <label class="block text-lg font-medium mb-2">{{ $t('postForm.content') }}</label>
         <textarea
           v-model="content"
           rows="5"
@@ -66,7 +66,7 @@
         @click="submitPost"
         class="mt-4 px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-full transition"
       >
-        送出貼文
+        {{ $t('postForm.submitPost') }}
       </button>
     </div>
   </div>
@@ -76,6 +76,8 @@
 import { ref, onMounted } from "vue";
 import axios from "axios";
 import { useRouter } from "vue-router";
+import { useI18n } from 'vue-i18n'
+const { t, locale } = useI18n()
 
 const router = useRouter();
 const schedules = ref([]);
@@ -95,7 +97,7 @@ onMounted(async () => {
     );
     schedules.value = res.data.schedules;
   } catch {
-    alert("無法取得");
+    alert(t('postForm.fetchError'));
   }
 });
 
@@ -116,7 +118,7 @@ function handleImageUpload(e) {
   const acceptedTypes = ["image/jpeg", "image/png", "image/webp"];
   const maxSizeBytes = 3145728;
   if (!acceptedTypes.includes(file.type) || file.size > maxSizeBytes) {
-    alert("格式不支援或檔案太大。請上傳 JPG、PNG 或 WebP。檔案最高3MB");
+    alert(t('postForm.fileError'));
 
     const selected = schedules.value.find(
       (s) => s.id === selectedScheduleId.value,
@@ -168,10 +170,10 @@ async function submitPost() {
         },
       },
     );
-    alert("success");
+    alert(t('postForm.success'));
     router.push("/community");
   } catch (err) {
-    alert("發佈貼文失敗，請稍後再試！");
+    alert(t('postForm.submitError'));
   }
 }
 </script>

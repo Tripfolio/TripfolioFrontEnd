@@ -2,7 +2,9 @@
   <div class="comment-section">
     <!-- <h4>留言區</h4> -->
 
-    <div v-if="isLoading" class="text-center py-4">載入留言中...</div>
+    <div v-if="isLoading" class="text-center py-4">
+      {{ $t("commentSection.loadingComments") }}
+    </div>
 
     <!-- 現有留言 -->
     <div v-else-if="comments.length > 0" class="comments-list overflow-y-auto">
@@ -30,14 +32,18 @@
             class="delete-btn"
             :disabled="isDeletingComment === comment.id"
           >
-            {{ isDeletingComment === comment.id ? "刪除中..." : "🗑️" }}
+            {{
+              isDeletingComment === comment.id
+                ? $t("commentSection.deleting")
+                : "🗑️"
+            }}
           </button>
         </div>
       </div>
     </div>
 
     <div v-else class="text-center py-4">
-      還沒有留言，成為第一個留言的人吧！
+      {{ $t("commentSection.noComments") }}
     </div>
 
     <AddComment
@@ -52,6 +58,8 @@
 import { ref, onMounted } from "vue";
 import axios from "axios";
 import AddComment from "../components/AddComment.vue";
+import { useI18n } from "vue-i18n";
+const { t, locale } = useI18n();
 
 const props = defineProps({
   post: {
@@ -75,7 +83,6 @@ const getCurrentUserId = () => {
       // 根據實際 payload key 調整
       return payload.userId || payload.id || payload.memberId || null;
     } catch (error) {
-      console.error("解析 token 失敗:", error);
       return null;
     }
   }
@@ -103,8 +110,6 @@ const submitComment = async (commentText) => {
       postId: props.post.postId,
       commentCount: newCommentCount,
     });
-
-    console.log("留言發表成功", response.data);
   } catch (error) {
     console.error("留言發表失敗", error);
   } finally {
@@ -118,27 +123,25 @@ const formatTime = (timeString) => {
   const now = new Date();
   const diff = now - date;
 
-  if (diff < 60000) return "剛剛";
-  if (diff < 3600000) return `${Math.floor(diff / 60000)}分鐘前`;
-  if (diff < 86400000) return `${Math.floor(diff / 3600000)}小時前`;
+  if (diff < 60000) return t("commentSection.justNow");
+  if (diff < 3600000)
+    return `${Math.floor(diff / 60000)}${t("commentSection.minutesAgo")}`;
+  if (diff < 86400000)
+    return `${Math.floor(diff / 3600000)} ${t("commentSection.hoursAgo")}`;
 
   return date.toLocaleDateString("zh-TW");
 };
 
 const loadComments = async () => {
   if (!props.post.postId) {
-    console.warn("沒有貼文 ID");
     return;
   }
 
   try {
-    console.log(`正在載入貼文 ${props.post.postId} 的留言`);
-
     const response = await axios.get(
       `${import.meta.env.VITE_API_URL}/api/post/${props.post.postId}/comments`,
     );
     comments.value = response.data;
-    console.log("載入留言成功:", response.data);
   } catch (error) {
     console.error("載入留言失敗:", error);
   } finally {
@@ -153,15 +156,13 @@ const canDeleteComment = (comment) => {
 };
 
 const deleteComment = async (commentId) => {
-  if (!confirm("確定要刪除這則留言嗎？")) {
+  if (!confirm(t("commentSection.deleteConfirm"))) {
     return;
   }
 
   isDeletingComment.value = commentId;
 
   try {
-    console.log(`正在刪除留言 ${commentId}`);
-
     await axios.delete(
       `${import.meta.env.VITE_API_URL}/api/post/${props.post.postId}/comments/${commentId}`,
       {
@@ -184,21 +185,17 @@ const deleteComment = async (commentId) => {
       postId: props.post.postId,
       commentCount: newCommentCount,
     });
-
-    console.log("留言刪除成功");
   } catch (error) {
-    console.error("刪除留言失敗:", error);
-
     if (error.response?.status === 403) {
-      alert("您沒有權限刪除此留言");
+      alert(t("commentSection.noPermissionDelete"));
     } else if (error.response?.status === 404) {
-      alert("留言不存在或已被刪除");
+      alert(t("commentSection.commentNotFound"));
       // 從本地陣列中移除不存在的留言
       comments.value = comments.value.filter(
         (comment) => comment.id !== commentId,
       );
     } else {
-      alert("刪除失敗，請稍後再試");
+      alert(t("commentSection.deleteFail"));
     }
   }
 };

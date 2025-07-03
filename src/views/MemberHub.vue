@@ -3,10 +3,11 @@
     <div class="member-center min-w-[70%] sm:w-[70%] mx-auto">
       <main class="navbar-style mt-25 rounded-2xl min-h-140">
         <header class="header rounded-tl-2xl rounded-tr-2xl">
-          <h5>會員中心</h5>
+          <h5>{{ $t("memberHub.memberCenter") }}</h5>
         </header>
 
         <!-- 使用者頭像與名稱 -->
+
         <section class="user-info  ">
           <img :src="user.avatar + '?t=' + avatarTimestamp" alt="使用者頭像" class="avatar" />
           <div>
@@ -16,12 +17,15 @@
                   class="text-gray text-sm cursor-pointer bg-black/30 rounded-full px-5 py-0.5"
                   href="#"
                   @click.prevent="showMemberProfile = true"
-                  >編輯</a
+                  >{{ $t("memberHub.edit") }}</a
                 >
                 <hr />
-                <a class="text-gray text-sm cursor-pointer  bg-black/30 rounded-full px-5 py-0.5" href="#" @click.prevent="goToLogin" >登出</a>
+                <a class="text-gray text-sm cursor-pointer  bg-black/30 rounded-full px-5 py-0.5" href="#" @click.prevent="goToLogin" >{{
+              $t("memberHub.logout")
+            }}</a>
             </div>
           </div>       
+
         </section>
 
         <!-- Tab 切換 -->
@@ -45,10 +49,13 @@
             <CardGrid :items="posts" @click-card="goToPost" />
           </template>
           <template v-else-if="activeTab === 'collected'">
-            <CardGrid :items="collectedPosts" @click-card="goToPost" />
+            <CardGrid :items="collected" @click-card="goToPost" />
           </template>
           <template v-else-if="activeTab === 'notifications'">
             <EmailSettings />
+          </template>
+          <template v-else-if="activeTab === 'language'">
+            <Language />
           </template>
         </section>
       </main>
@@ -76,13 +83,16 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from "vue";
+import { ref, onMounted, watch, computed } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { jwtDecode } from "jwt-decode";
 import axios from "axios";
 import CardGrid from "@/components/CardGrid.vue";
 import MemberProfile from "../views/MemberProfile.vue";
 import EmailSettings from "../views/EmailSettings.vue";
+import { useI18n } from "vue-i18n";
+import Language from "./Language.vue";
+const { t, locale } = useI18n();
 
 const router = useRouter();
 const route = useRoute();
@@ -90,21 +100,22 @@ const route = useRoute();
 const user = ref({ name: "", avatar: "" });
 const travels = ref([]);
 const posts = ref([]);
-const collectedPosts = ref([]);
+const collected = ref([]);
 const showMemberProfile = ref(false);
 const avatarTimestamp = ref(Date.now());
 
-const tabs = [
-  { key: "travels", label: "我建立的行程" },
-  { key: "posts", label: "我建立的貼文" },
-  { key: "collected", label: "我收藏的貼文" },
-  { key: "notifications", label: "通知設定" },
-];
+const tabs = computed(() => [
+  { key: "travels", label: t('memberHub.myTravels') },
+  { key: "posts", label: t('memberHub.myPosts') },
+  { key: "collected", label: t('memberHub.collectedPosts') },
+  { key: "notifications", label: t('memberHub.notifications') },
+  { key: "language", label: t('memberHub.language') },
+]);
 const activeTab = ref("travels");
 
 const fetchData = async () => {
   const token = localStorage.getItem("token");
-  if (!token) return alert("請先登入會員");
+  if (!token) return alert(t("memberHub.pleaseLogin"));
 
   const decoded = jwtDecode(token);
   const memberId = decoded.id;
@@ -145,13 +156,13 @@ const fetchData = async () => {
       .filter((item) => item.id === memberId)
       .map((item) => ({
         id: item.postId,
-        title: item.content || "未命名貼文",
+        title: item.content || t("memberHub.unnamedPost"),
         coverImage: item.imageUrl,
       }));
 
-    collectedPosts.value = collectRes.data.map((item) => ({
+    collected.value = collectRes.data.map((item) => ({
       id: item.postId,
-      title: item.postTitle || "未命名貼文",
+      title: item.postTitle || t("memberHub.unnamedPost"),
       coverImage: item.postImageUrl,
     }));
   } catch (err) {
@@ -165,7 +176,6 @@ const handleProfileUpdated = (newData) => {
 
 onMounted(fetchData);
 watch(() => route.fullPath, fetchData);
-
 
 const goToTravel = () => {
   router.push({ path: "/schedule" });

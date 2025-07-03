@@ -43,12 +43,6 @@
               </div>
             </div>
           </div>
-          <button
-            class="cursor-pointer bg-blue-500 hover:bg-blue-600 px-3 py-1 rounded transition-colors"
-            @click="toTravelPage"
-          >
-            <p class="text-white text-sm">行程參考</p>
-          </button>
         </div>
 
         <!-- 內容與留言區域 -->
@@ -112,64 +106,16 @@ const close = () => {
   emit("close");
 };
 
-const toTravelPage = () => {
-  console.log("跳轉到行程頁面");
-};
-
 // 獲取行程 title
 const fetchScheduleTitle = async () => {
   if (props.post.title) {
     try {
-      // const res = await axios.get(
-      //   `${import.meta.env.VITE_API_URL}/api/travelSchedule/${props.post.title}`,
-      //   {
-      //     headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      //   },
-      // );
-
       scheduleTitle.value = props.post.title || "未命名行程";
     } catch (error) {
       scheduleTitle.value = props.post.title;
     }
   } else {
     scheduleTitle.value = "行程已刪除 ಥ_ಥ";
-  }
-};
-
-// 格式化時間
-const formatTime = (timeString) => {
-  if (!timeString) return "";
-  const date = new Date(timeString);
-  const now = new Date();
-  const diff = now - date;
-
-  if (diff < 60000) return "剛剛";
-  if (diff < 3600000) return `${Math.floor(diff / 60000)}分鐘前`;
-  if (diff < 86400000) return `${Math.floor(diff / 3600000)}小時前`;
-
-  return date.toLocaleDateString("zh-TW");
-};
-
-const refreshPost = async () => {
-  try {
-    // 嘗試獲取最新的貼文資訊
-    const res = await axios.get(
-      `${import.meta.env.VITE_API_URL}/api/allposts/${props.post.postId}`,
-    );
-
-    // 通知父組件更新列表中顯示的計數
-    emit("update-post", res.data.post || res.data);
-  } catch (error) {
-    console.error("更新貼文資訊失敗，嘗試手動更新計數", error);
-
-    // 如果 API 端點不存在，我們可以手動更新計數
-    // 這裡可以根據實際情況調整
-    const updatedPost = {
-      postId: props.post.postId,
-      commentCount: props.post.commentCount,
-      favoriteCount: props.post.favoriteCount,
-    };
-    emit("update-post", updatedPost);
   }
 };
 
@@ -197,8 +143,6 @@ const handleFavoriteToggle = (favoriteData) => {
 
     // 通知父組件更新
     emit("update-post", localPost.value);
-
-    console.log(`收藏計數更新: ${favoriteData.favoriteCount}`);
   }
 };
 
@@ -213,8 +157,6 @@ const handleCommentUpdate = (commentData) => {
 
     // 通知父組件更新
     emit("update-post", localPost.value);
-
-    console.log(`留言計數更新: ${commentData.commentCount}`);
   }
 };
 

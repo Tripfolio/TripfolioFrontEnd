@@ -3,8 +3,18 @@
 </template>
 
 <script setup>
-import { toRefs, ref, onMounted, onBeforeUnmount, watch } from "vue";
+import {
+  toRefs,
+  ref,
+  onMounted,
+  onBeforeUnmount,
+  watch,
+  computed,
+  toRef,
+} from "vue";
 import axios from "axios";
+import { useI18n } from 'vue-i18n'
+const { t, locale } = useI18n()
 
 const emit = defineEmits(["refresh"]);
 
@@ -16,6 +26,9 @@ const props = defineProps({
     default: "https://placehold.co/600x400?text=No+Image",
   },
   selectedPlace: Object,
+  role: {
+    type: String, // 🔒 權限控制：接收 role
+  },
 });
 
 const { defaultImage, tripId, selectedDate } = toRefs(props);
@@ -23,6 +36,11 @@ const itineraryPlaces = ref([]);
 const API_URL = import.meta.env.VITE_API_URL;
 
 const trafficMap = ref({});
+
+// 🔒 權限控制：定義是否可編輯
+const canEdit = computed(
+  () => props.role === "owner" || props.role === "editor",
+);
 
 onMounted(() => {
   loadItinerary();
@@ -51,7 +69,7 @@ async function loadItinerary() {
     await fetchTrafficData(); //撈「交通資料」
     emit("refresh", itineraryPlaces.value); // ← 這行通知父層
   } catch (error) {
-    alert("載入行程失敗");
+    alert($t('itinerary.loadItineraryFail'));
   }
 }
 
@@ -71,6 +89,10 @@ function onClickOutside(e) {
 }
 
 function startEditing(p) {
+  // if (!canEdit.value) {
+  //   alert("您沒有編輯權限");
+  //   return;
+  // }
   p.editingTime = true;
   p.arrivalHourTemp = p.arrivalHour ?? 0;
   p.arrivalMinuteTemp = p.arrivalMinute ?? 0;
@@ -87,6 +109,10 @@ function formatTime(hour, minute) {
 
 //確認更改時間
 async function confirmTime(p) {
+  // if (!canEdit.value) {
+  //   alert("您沒有編輯權限");
+  //   return;
+  // }
   const newTime = p.arrivalHourTemp * 60 + p.arrivalMinuteTemp;
   const hasConflict = itineraryPlaces.value.some(
     (place) =>
@@ -94,7 +120,7 @@ async function confirmTime(p) {
       place.arrivalHour * 60 + place.arrivalMinute === newTime,
   );
   if (hasConflict) {
-    alert("有其他景點時間重複！");
+    alert($t('itinerary.timeConflict'));
     return;
   }
 
@@ -108,7 +134,7 @@ async function confirmTime(p) {
       arrivalMinute: p.arrivalMinute,
     });
   } catch {
-    alert("更新時間失敗");
+    alert($t('itinerary.updateTimeFail'));
   }
 }
 
@@ -125,19 +151,24 @@ async function updateOrder() {
     await loadItinerary();
     emit("refresh");
   } catch {
-    alert("排序更新失敗");
+    alert($t('itinerary.updateOrderFail'));
   }
 }
 
 //加入景點
 async function addPlace(place, date) {
+  // if (!canEdit.value) {
+  //   alert("您沒有權限新增景點");
+  //   return false;
+  // }
+
   if (!place || !date) {
-    alert("請選擇地點與日期");
+    alert($t('itinerary.selectLocationDate'));
     return false;
   }
   const exists = itineraryPlaces.value.some((p) => p.name === place.name);
   if (exists) {
-    alert("已加入此景點");
+    alert($t('itinerary.placeAlreadyAdded'));
     return false;
   }
   const photo =
@@ -163,16 +194,21 @@ async function addPlace(place, date) {
       emit("refresh");
       return true;
     }
-    alert("加入失敗：" + res.data.message);
+    alert($t('itinerary.addPlaceFail') + res.data.message);
     return false;
   } catch {
-    alert("加入景點失敗");
+    alert($t('itinerary.addPlaceFail'));
     return false;
   }
 }
 
 //移除景點
 async function removePlace(p) {
+  // if (!canEdit.value) {
+  //   alert("您沒有權限刪除景點");
+  //   return false;
+  // }
+
   try {
     const res = await axios.delete(`${API_URL}/api/itinerary/place`, {
       params: { itineraryId: tripId.value, name: p.name },
@@ -182,10 +218,10 @@ async function removePlace(p) {
       emit("refresh");
       return true;
     }
-    alert("刪除失敗");
+    alert($t('itinerary.removePlaceFail'));
     return false;
   } catch {
-    alert("刪除失敗");
+    alert($t('itinerary.removePlaceFail'));
     return false;
   }
 }

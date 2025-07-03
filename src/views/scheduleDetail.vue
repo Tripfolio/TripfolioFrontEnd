@@ -13,6 +13,7 @@
         v-if="trip"
         :trip="trip"
         :cover-timestamp="coverTimestamp"
+        :role="role"
         :is-from-tracker="isFromTracker"
         @back-to-list="goBack"
         @update-cover="updateCover"
@@ -38,7 +39,7 @@
                 : 'bg-white text-gray-700 border-gray-300 '
             "
           >
-            第{{ index + 1 }}天
+          {{ $t('scheduleDetail.day') }} {{ index + 1 }}
           </button>
         </div>
       </div>
@@ -48,6 +49,7 @@
         :selected-trip="trip"
         :day-index="currentDayIndex"
         :itinerary-places="itineraryRef?.itineraryPlaces || []"
+        :role="role"
         class="mt-6 w-full"
         ref="dailyPlanRef"
       />
@@ -88,6 +90,8 @@ const currentDayIndex = ref(0);
 const coverTimestamp = ref(Date.now());
 const itineraryRef = ref(null);
 const dailyPlanRef = ref(null);
+const role = ref("viewer");
+const resolvedTripId = props.tripId ?? route.params.id;
 
 const token = localStorage.getItem("token");
 
@@ -112,19 +116,33 @@ const fetchTrip = async () => {
     trip.value = tripData;
     tripLoaded.value = true;
   } catch (err) {
-    alert("無法載入行程");
+    alert(t('scheduleDetail.fetchTripFailure'));
     router.push("/schedule");
   }
 };
 
-onMounted(() => {
-  fetchTrip();
-});
+const fetchRole = async () => {
+  try {
+    const res = await axios.get(
+      `${import.meta.env.VITE_API_URL}/api/tripShares/getPermission/${resolvedTripId}`,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+        withCredentials: true,
+      },
+    );
+    role.value = res.data.role;
+  } catch {
+    role.value = "viewer";
+  }
+};
 
+// ✅ 當 tripId 變更時重新取得資料
 watch(
   () => props.tripId,
-  () => {
-    fetchTrip();
+  async () => {
+    await fetchTrip();
+    await fetchRole();
+    dailyPlanRef.value?.refresh();
   },
 );
 
@@ -143,9 +161,9 @@ const updateCover = async (blob) => {
       trip.value.coverURL = res.data.coverURL;
       coverTimestamp.value = Date.now();
     }
-    alert("封面已成功更新！");
+    alert(t('scheduleDetail.updateCoverSuccess'));
   } catch (err) {
-    alert("封面更新失敗");
+    alert(t('scheduleDetail.updateCoverFailure'));
   }
 };
 
@@ -158,7 +176,7 @@ const updateTitle = async (newTitle) => {
     );
     trip.value.title = newTitle;
   } catch (err) {
-    alert("標題更新失敗");
+    alert(t('scheduleDetail.updateTitleFailure'));
   }
 };
 
@@ -181,7 +199,7 @@ const updateDates = async ({ startDate, endDate }) => {
       currentDayIndex.value = 0;
     }
   } catch (err) {
-    alert("更新日期失敗");
+    alert(t('scheduleDetail.updateDatesFailure'));
   }
 };
 
@@ -194,7 +212,7 @@ const updateNotes = async (newNotes) => {
     );
     trip.value.description = newNotes;
   } catch (err) {
-    alert("筆記更新失敗");
+    alert(t('scheduleDetail.updateNotesFailure'));
   }
 };
 
@@ -223,6 +241,13 @@ function refreshDailyPlan() {
   // 呼叫 DailyPlan 的 refresh 方法
   dailyPlanRef.value?.refresh?.();
 }
+
+// ✅ 初始化
+onMounted(async () => {
+  await fetchTrip();
+  await fetchRole();
+  dailyPlanRef.value?.refresh();
+});
 
 // 給父層或地圖強制刷新 DailyPlan 用
 defineExpose({

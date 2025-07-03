@@ -5,7 +5,7 @@
       class="mb-4 text-gray-600 hover:text-gray-800 flex items-center text-sm"
     >
       <font-awesome-icon :icon="['fas', 'arrow-left']" class="w-4 h-4 mr-1" />
-      返回行程總覽
+      {{ $t('tripOverview.backToOverview') }}
     </button>
 
     <div
@@ -23,7 +23,7 @@
           v-else
           class="w-full h-full bg-gray-200 flex items-center justify-center text-gray-500"
         >
-          無封面圖片
+          {{ $t('tripOverview.noCoverImage') }}
         </div>
 
         <div
@@ -32,7 +32,9 @@
           <div class="flex items-center">
             <h2
               v-if="!isTitleEditing"
-              @click="isTitleEditing = true"
+              @click="
+                canEdit ? (isTitleEditing = true) : alert('您沒有編輯權限')
+              "
               class="text-xl font-bold cursor-pointer hover:text-gray-300"
             >
               {{ trip.title }}
@@ -41,7 +43,7 @@
                 class="ml-2 text-white text-lg"
               />
               <span v-if="titleSaved" class="ml-2 text-yellow-500 text-sm">
-                已儲存
+                {{ $t('tripList.days') }}
               </span>
             </h2>
             <input
@@ -58,6 +60,7 @@
               type="date"
               v-model="editableStartDate"
               @blur="saveDates"
+              :disabled="!canEdit"
               class="border px-2 py-1 rounded text-white focus:outline-none focus:ring-2 focus:ring-gray-400"
             />
             <span>-</span>
@@ -65,22 +68,24 @@
               type="date"
               v-model="editableEndDate"
               @blur="saveDates"
+              :disabled="!canEdit"
               :min="editableStartDate"
               class="border px-2 py-1 rounded text-white focus:outline-none focus:ring-2 focus:ring-gray-400"
             />
-            <span>(共 {{ tripDays }} 天)</span>
+            <span>({{ $t('tripList.total') }} {{ tripDays }} {{ $t('tripList.days') }})</span>
             <span v-if="dateSaved" class="text-yellow-500 text-sm ml-2">
-              已儲存
+              {{ $t('tripOverview.saved') }}
             </span>
           </div>
         </div>
 
         <label
+          v-if="canEdit"
           for="cover-upload"
           class="absolute top-2 right-2 w-150 h-30 flex items-center justify-center text-white text-base px-4 py-2 rounded cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity duration-300 gap-1"
         >
           <font-awesome-icon :icon="['fas', 'camera']" class="w-5 h-5" />
-          更改封面
+          {{ $t('tripOverview.changeCover') }}
         </label>
         <input
           type="file"
@@ -92,16 +97,17 @@
       </div>
       <div class="px-2 mt-4">
         <div class="flex items-center text-white mb-4">
-          <span class="text-sm">筆記：</span>
+          <span class="text-sm">{{ $t('tripOverview.notes') }}</span>
           <textarea
             v-model="editableNotes"
             @blur="saveNotes"
+            :readonly="!canEdit"
             class="flex-grow ml-2 p-2 border border-gray-300 rounded-md text-sm resize-y min-h-[60px] text-white focus:outline-none focus:ring-2 focus:ring-gray-400"
-            placeholder="點擊這裡新增或編輯行程筆記..."
+            :placeholder="$t('tripOverview.placeholderNotes')"
           >
           </textarea>
           <span v-if="noteSaved" class="ml-2 text-yellow-500 text-sm">
-            已儲存
+            {{ $t('tripOverview.saved') }}
           </span>
         </div>
       </div>
@@ -122,14 +128,14 @@
         />
         <div class="flex justify-end gap-2 mt-4">
           <button @click="cancelCrop" class="bg-gray-300 px-4 py-2 rounded">
-            取消
+            {{ $t('tripOverview.cancel') }}
           </button>
           <button
             type="button"
             @click="applyCrop"
             class="bg-blue-500 text-white px-4 py-2 rounded"
           >
-            裁切
+            {{ $t('tripOverview.crop') }}
           </button>
         </div>
       </div>
@@ -142,11 +148,16 @@ import { ref, defineProps, watch, computed } from "vue";
 import { Cropper } from "vue-advanced-cropper";
 import "vue-advanced-cropper/dist/style.css";
 import dayjs from "dayjs";
+import { useI18n } from 'vue-i18n'
+const { t, locale } = useI18n()
 
 const props = defineProps({
   trip: {
     type: Object,
     required: true,
+  },
+  role: {
+    type: String, // 🔒 權限控制
   },
 });
 
@@ -157,6 +168,12 @@ const emit = defineEmits([
   "update-notes",
   "update-dates",
 ]);
+
+// 🔒 權限控制：定義是否能編輯
+const canEdit = computed(
+  () => props.role === "editor" || props.role === "owner",
+);
+const isViewer = computed(() => props.role === "viewer");
 
 const editableTitle = ref(props.trip.title);
 const editableNotes = ref(props.trip.description || "");
@@ -201,6 +218,10 @@ const tripDays = computed(() => {
 });
 
 const handleCoverUpload = (event) => {
+  if (!canEdit.value) {
+    alert("您沒有權限更改封面");
+    return;
+  }
   const file = event.target.files[0];
   if (file) {
     const reader = new FileReader();
@@ -250,6 +271,7 @@ const cancelCrop = () => {
 
 //儲存名稱
 const saveTitle = () => {
+  if (!canEdit.value) return;
   if (editableTitle.value !== props.trip.title) {
     emit("update-title", editableTitle.value);
     titleSaved.value = true;
@@ -260,6 +282,7 @@ const saveTitle = () => {
 
 //儲存日期
 const saveDates = () => {
+  if (!canEdit.value) return;
   if (
     editableStartDate.value !== props.trip.startDate ||
     editableEndDate.value !== props.trip.endDate
@@ -275,6 +298,7 @@ const saveDates = () => {
 
 //儲存筆記
 const saveNotes = () => {
+  if (!canEdit.value) return;
   if (editableNotes.value !== props.trip.description) {
     emit("update-notes", editableNotes.value);
     noteSaved.value = true;

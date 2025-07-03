@@ -26,7 +26,7 @@
             @click="handleOpenForm"
             class="animated-gradient-modern text-white text-xl px-10 py-3 rounded-full shadow-md shadow-black/40 cursor-pointer bg-gradient-trip hover:bg-gradient-trip-hover"
           >
-            建立行程
+            {{ $t("travel.createTrip") }}
           </button>
         </div>
 
@@ -41,8 +41,24 @@
                 v-for="item in tripStore.trips"
                 :key="item.id"
                 @click="editingTripId = item.id"
-                class="navbar-style rounded-2xl shadow-md shadow-black/40 verflow-hidden relative cursor-pointer hover:ring-2 hover:ring-gray-400 transition"
+                class="navbar-style rounded-2xl shadow-md shadow-black/40 cursor-pointer hover:ring-2 hover:ring-gray-400 transition z-0"
               >
+                <div class="relative">
+                  <button
+                    @click.stop="deleteSchedule(item.id)"
+                    title="刪除行程"
+                    class="absolute top-2 right-3 text-gray-600 bg-white px-2 rounded-2xl hover:text-red-500 text-md"
+                  >
+                    {{ $t("travel.deleteTrip") }}
+                  </button>
+                  <button
+                    @click.stop="openShareModal(item.id)"
+                    title="共享行程"
+                    class="absolute top-2 right-25 text-gray-600 bg-white px-2 rounded-2xl hover:text-blue-500 text-md"
+                  >
+                    {{ $t("travel.shareTrip") }}
+                  </button>
+                </div>
                 <img
                   :src="
                     item.coverURL || 'https://placehold.co/600x300?text=封面圖'
@@ -57,18 +73,13 @@
                   <p class="text-white text-m">
                     {{ item.startDate }} - {{ item.endDate }}
                   </p>
-                  <p class="text-white text-m mt-2">{{ item.description }}</p>
+                  <!-- <p class="text-white text-m mt-2">{{ item.description }}</p> -->
                 </div>
-                <button
-                  @click.stop="deleteSchedule(item.id)"
-                  title="刪除行程"
-                  class="absolute bottom-2 right-2 text-gray-600 bg-white px-2 rounded-2xl hover:text-red-500 text-md"
-                >
-                  刪除行程
-                </button>
               </div>
             </div>
-            <div v-else class="text-gray-400 text-center">尚未建立任何行程</div>
+            <div v-else class="text-gray-400 text-center">
+              {{ $t("travel.noTrips") }}
+            </div>
           </div>
 
           <!-- 編輯行程 -->
@@ -101,6 +112,11 @@
         @close="showPayModal = false"
       />
     </div>
+    <ShareTripModal
+      :is-open="showShareModal"
+      :trip-id="shareTripId"
+      @close="closeShareModal"
+    />
   </div>
 </template>
 
@@ -112,6 +128,7 @@ import axios from "axios";
 import GoogleMapView from "@/views/GoogleMapView.vue";
 import ScheduleDetail from "@/views/scheduleDetail.vue";
 import { useTripStore } from "@/stores/tripStore";
+import ShareTripModal from "@/components/ShareTripModal.vue";
 import PaymentModal from "@/components/PaymentModal.vue";
 
 const router = useRouter();
@@ -128,6 +145,8 @@ const itineraryRef = ref(null);
 const dailyPlanRef = ref(null);
 const mapRef = ref(null);
 const scheduleDetailRef = ref(null);
+const showShareModal = ref(false);
+const shareTripId = ref(null);
 const payResult = ref(null);
 
 const selectedTrip = computed(() => {
@@ -166,7 +185,7 @@ onMounted(() => {
 const handleOpenForm = () => {
   const token = localStorage.getItem("token");
   if (!token) {
-    alert("請先登入會員");
+    alert($t("travel.loginRequired"));
     return;
   }
 
@@ -211,7 +230,7 @@ const handleCloseDetail = () => {
 
 //刪除行程
 const deleteSchedule = async (id) => {
-  const confirmed = confirm("確定刪除這個行程嗎?");
+  const confirmed = confirm($t("travel.confirmDelete"));
   if (!confirmed) return;
 
   const token = localStorage.getItem("token");
@@ -225,9 +244,9 @@ const deleteSchedule = async (id) => {
     );
 
     tripStore.trips = tripStore.trips.filter((s) => s.id !== id);
-    alert("刪除成功");
+    alert($t("travel.deleteSuccess"));
   } catch (err) {
-    alert("刪除失敗，請稍後再試");
+    alert($t("travel.deleteFailure"));
   }
 };
 
@@ -237,6 +256,16 @@ function handlePlaceSelect(place) {
 
 function callItinerary() {
   mapRef.value?.callItinerary();
+}
+
+function openShareModal(id) {
+  shareTripId.value = id;
+  showShareModal.value = true;
+}
+
+function closeShareModal() {
+  showShareModal.value = false;
+  shareTripId.value = null;
 }
 
 // 暴露方法給父元件使用
